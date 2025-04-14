@@ -1,0 +1,485 @@
+---
+title: "Research Guide"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-location: body
+    toc-depth: 5
+    toc-expand: true
+  pdf: default
+execute:
+  keep-md: true
+---
+
+<br>
+
+
+<br><br>
+
+```{r setup, warning=F, message=F, include=F}
+library( htmltools )
+library( dplyr )
+library( purrr )
+library( pointblank )
+library( knitr )
+library( gt )
+library( kableExtra )
+library( psych )
+library( data.table )
+library( gt)
+library( treemap )
+library( plotly )
+library( wordcloud )
+library( wordcloud2 )
+library( tm )
+library( stringr)
+```
+
+```{r, echo=F, message=FALSE, include=FALSE}
+
+libs <- c("dplyr")
+
+lapply(libs, require, character.only = TRUE)
+
+# source functions 
+files <-
+  c("R//00-utils.R",  #has some useful internal functions
+    "R//02-02-ingest-utils.R", #has some useful internal functions
+    "R//03-00-BUILD-RG-DICT.R",
+    "R//03-01-create-sections.R",
+    "R//03-01-layouts.R",
+    "R//03-02-treemap.R",
+    "R//03-03-booleplot.R",
+    "R//03-04-wordcloud.R"
+  )
+
+files <- paste0("..//", files) # remove "..//" when working on document, keep for render
+
+lapply(files, source)
+
+
+# import DGF - to be read in through render quarto later
+dgf <- readxl::read_xlsx("../DGF.xlsx" )
+
+
+
+# Each variable type needs its own section because each plot type
+# needs its own fig width and height. 
+# To add a new variable type, 
+# 1. add new vtype_class to the dgf
+# 2. add new layout to R/layouts.R
+# 3. add necessary function that the new layout object needs to read
+# 4. add new layout div tags to the end of this file 
+# 5. add new dfg.TYPE data frame and section to this file to run create_all_sections( dgf.TYPE )
+
+dgf.log <-  dgf[dgf$vtype_class == "logical", ]
+dgf.fact <-  dgf[dgf$vtype_class == "factor", ]
+dgf.chr <-  dgf[dgf$vtype_class == "character", ]
+dgf.num <-  dgf[dgf$vtype_class == "numeric", ]
+
+
+```
+
+
+## Logical
+
+```{r logical, results="asis"}
+create_all_sections( dgf.log )
+
+```
+
+## Factor
+
+```{r factor, results="asis"}
+create_all_sections( dgf.fact )
+```
+
+## Numeric 
+
+```{r numeric, results="asis", fig.width=8, fig.height=2}
+create_all_sections( dgf.num )
+```
+
+## Character
+
+```{r character, results="asis", fig.width=8, fig.height=6}
+create_all_sections( dgf.chr )
+```
+
+
+
+```{=html}
+<style>
+
+@import url('https://fonts.cdnfonts.com/css/aharoni');
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;  
+    grid-column-gap: 20px;
+  grid-row-gap: 10px;
+  grid-template-areas:
+    "a a a"
+    "b b b"
+    "c d d"
+    "e f g" 
+    "h h h"
+    "i i i"
+    "j k k"
+    "m o o"
+    "n o o"
+    "p p p";
+}
+
+
+.div1 { 
+  grid-area: a;
+  padding-bottom: 15px;
+}
+
+.div2 { 
+    grid-area: b;
+    padding-left: 30px;
+}
+
+.div3 { 
+    grid-area: c;
+    padding-left: 30px;
+}
+
+.div4 { 
+    grid-area: d;
+    padding-left: 20px;
+}
+
+.div5 { 
+    grid-area: e;
+    padding-left: 30px;
+}
+
+.div6 { 
+    grid-area: f;
+    padding-left: 20px;
+}
+
+.div7 { 
+    grid-area: f;
+    padding-left: 20px;
+}
+
+.div8 { 
+    grid-area: h;
+    padding-left: 30px;
+}
+
+.div9 { 
+    grid-area: g;
+    padding-left: 50px;
+}
+
+.div10 { 
+    grid-area: e;
+    padding-left: 30px;
+}
+
+.div11 { 
+    grid-area: h;
+    padding-left: 20px;
+}
+
+.div12 { 
+    grid-area: f;
+    padding-left: 30px;
+}
+
+.div13 { 
+    grid-area: i;
+    padding-left: 30px;
+}
+
+.div14 { 
+    grid-area: e;
+    padding-left: 30px;
+}
+
+.div15 { 
+    grid-area: f;
+    padding-left: 20px;
+}
+
+.div16 { 
+    grid-area: h;
+    padding-left: 20px;
+}
+
+.div17 { 
+    grid-area: e;
+    padding-left: 20px;
+}
+
+.div18 { 
+    grid-area: f;
+    padding-left: 20px;
+}
+
+.div19 { 
+    grid-area: i;
+    padding-left: 20px;
+}
+h1.title { 
+  color: black;
+  font-family: 'Aharoni', sans-serif;
+  font-size: 2.5em; }
+h2.anchored { color: lightgray; }
+h3.anchored { color: gray; }
+
+h4 {
+    /* text-decoration: underline; */
+    /* text-underline-offset: 10px; */
+    /* text-decoration-thickness: 2px; */
+    font-family: Georgia, Times, "Times New Roman", serif; 
+    /* font-family: 'Fira Code'; */
+    /* font-family: 'Aharoni', sans-serif; */
+    font-size: 2.2em;
+    font-weight: 700;  
+    /* line-height: 120px; */ 
+    border-bottom:3px solid #000; 
+    /* font-size:14px; */
+    /* line-height:12px; */
+    width:100%;
+}
+
+h5 { font-size: 0.9em; }
+
+.div2 p { 
+    font-family: Verdana;
+    font-size: 1.1em;
+}
+
+.div3 td { 
+    font-family: "Aharoni", sans-serif;
+    font-size: 0.9em;
+}
+
+.div4 p { 
+    font-family: "Calibri", sans-serif;
+    font-size: 1.1em;
+}
+
+.div9 p { 
+    font-family: "Anonymous Pro";
+    font-size: 0.8em;
+    color: gray;
+    text-align: justify;
+}
+
+.div9 strong { 
+    font-family: "Calibri", sans-serif;
+    font-size: 1.6em;
+    color: black;
+}
+
+
+.div4 table {
+    margin-left: 20px;
+    font-family: "Anonymous Pro";
+}
+
+.div5 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div6 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div7 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div12 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div13 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div14 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+
+.div5 table {
+    margin-left: 20px;
+}
+
+.table>tbody {
+    border-top: none;
+}
+
+.table>:not(caption)>*>* {
+    padding: 0rem 0rem;
+}
+
+tbody, tfoot, tr, td, th {
+    border-color: inherit;
+    border-style: none; 
+    border-width: 0;
+}
+
+
+.div5 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div5 th {
+  display:none;
+}
+
+.div6 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div6 th {
+  display:none;
+}
+
+.div7 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div7 th {
+  display:none;
+}
+
+.div8 img, svg {
+    /* vertical-align: bottom;*/
+    align-self: end;
+    justify-self: end;
+}
+
+.div9 img, svg {
+    /* vertical-align: bottom;*/
+    align-self: end;
+    justify-self: end;
+}
+
+#pb_agent .gt_table {
+    border-top-width: 0px; 
+    /* border-top-color: #A8A8A8; */
+}  
+
+#pb_agent .gt_title {
+    font-size: 1.3em !important;
+}
+
+#pb_agent .gt_left { color: black !important; }
+
+@media print {
+   body {
+   display:table;
+   table-layout:fixed;
+   padding-top:2.5cm;
+   padding-bottom:3cm;
+   padding-left:1.5cm;
+   padding-right:1.5cm;
+   height:auto;
+    }
+}
+
+</style>
+```
+```{r, eval=F, echo=F}
+#############
+#############       NUMERIC 
+#############
+
+#   num layout
+#   ----------
+#    "a a a"  
+#    "b b b"  
+#    "c d d"  
+#    "e f g"  
+#    "h i i"   
+#
+#    a = div1
+#    b = div2
+#    c = div3
+#    d = div4
+#    e = div5
+#    f = div6
+#    g = div7
+#    h = div8
+#    i = div9
+
+# FIRST COLUMN: divider to use
+# SECOND COLUMN: which column of DGF to use for source
+# THIRD COLUMN: title to add to the section
+# FOURTH COLUMN: function to use
+
+layout.num <- 
+ c( "div2 ;;  dd_label      ;;  LABEL           ;;  v_to_txt",
+    "div3 ;;  data_type     ;;  DATA TYPE       ;;  v_to_txt",
+    "div4 ;;  dd_desc       ;;  DESCRIPTION     ;;  v_to_txt",
+    "div5 ;;  rg_stats      ;;  PROPERTIES      ;;  get_properties",  
+    "div6 ;;  rg_stats      ;;  QUANTILES       ;;  get_quantiles",
+    "div7 ;;  rg_stats      ;;  STATISTICS      ;;  get_statistics",
+    "div8 ;;  rg_graphics   ;;  HISTOGRAM       ;;  get_hist",
+    "div9 ;;  rg_sample     ;;  EXAMPLE VALUES  ;;  get_examples"  )
+
+
+#############
+#############       FACTOR 
+#############
+
+#   fct layout
+#   ----------
+#    "a a a"  
+#    "b b b"  
+#    "c d d"   
+#    "n p p"  
+#    "o p p"  
+#
+#    a = div1
+#    b = div2
+#    c = div3
+#    d = div4
+#    n = div13
+#    o = div14
+#    p = div15
+
+#############
+#############       CHARACTER 
+#############
+
+#   chr layout
+#   ----------
+#    "a a a"  
+#    "b b b"  
+#    "c d d"   
+#    "h i i"  
+#    "j k k"   
+#
+#    a = div1
+#    b = div2
+#    c = div3
+#    d = div4
+#    g = div7
+#    h = div8
+#    i = div9
+#    j = div10
+#    k = div11
+
+```
