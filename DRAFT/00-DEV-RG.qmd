@@ -1,0 +1,421 @@
+---
+title: "Research Guide"
+format:
+  html:
+    embed-resources: true
+    echo: false
+---
+
+<br><br><br>
+
+```{r, warning=F, message=F, include=F}
+library( tidyverse )
+library( jsonlite )
+library( dplyr )
+library( knitr )
+
+# library( datagoodr )
+source( "00-utils.R" )
+source( "03-00-utils.R" )
+source( "03-01-layouts.R" )
+source( "03-01-create-sections.R" )
+source( "03-02-treemap.R" ) 
+source( "03-03-booleplot.R" ) 
+# source( "03-04-wordcloud.R" ) 
+source( "03-05-tables.R" )
+source( "03-06-barplot.R" ) 
+source( "03-07-booleplot.R" )
+```
+
+```{r, echo=F}
+# for dev purposes: 
+# fn should be sent through render_qmd() arguments normally
+fn.dgf <- "../data-dev/DGF-CORE-CO-2019-V1.xlsx"
+dgf <- load_dgf( fn.dgf )
+fn.df <- "../data-dev/DEMO-DATA-SMALL.csv"
+df <-  read.csv( fn.df  )
+```
+
+
+```{r, echo=F}
+# CUSTOMIZING YOUR TEMPLATE
+
+#      LAYOUT OPTIONS
+#        IN THE CSS
+#   --------------------
+#    " div1  div1  div1"  
+#    " div2  div2  div2"  
+#    " div3  div4  div4"  
+#    " div5  div6  div7"  
+#    " div8  div9  div9"  
+#    "div10 div11 div11"  
+#    "div12 div12 div12"  
+#    "div13 div15 div15"  
+#    "div14 div15 div15" 
+
+
+
+#   First Column:  Page placement using <div> sections 
+#   Second Column: dgf column to use
+#   Third Column:  Label of the element on the page
+#   Fourth Column: function to call 
+
+layout.numeric <- 
+ c( "div2 ;; dd_label     ;; LABEL         ;; v_to_txt",
+    "div3 ;; data_type    ;; DATA TYPE     ;; v_to_txt",
+    "div4 ;; dd_desc      ;; DESCRIPTION   ;; v_to_txt",
+    "div5 ;; vname        ;; PROPERTIES    ;; get_properties",  
+    "div6 ;; vname        ;; QUANTILES     ;; get_quantiles",
+    "div7 ;; vname        ;; STATS         ;; get_stats_num",
+    "div8 ;; vname        ;; HIST          ;; get_histogram",
+    "div9 ;; vname        ;; PREVIEW       ;; get_examples_num"   )
+    
+layout.character <- 
+ c( "div2  ;; dd_label     ;; LABEL         ;; v_to_txt",
+    "div3  ;; data_type    ;; DATA TYPE     ;; v_to_txt",
+    "div4  ;; dd_desc      ;; DESCRIPTION   ;; v_to_txt",
+    "div8  ;; vname        ;; PROPERTIES    ;; get_properties", 
+    "div9  ;; vname        ;; PREVIEW       ;; get_examples_chr", 
+    "div10 ;; vname        ;; STATS         ;; get_stats_chr", 
+    "div11 ;; vname        ;; ''            ;; get_wordcloud"  )
+    
+layout.factor <- 
+ c( "div2  ;; dd_label     ;; LABEL         ;; v_to_txt",
+    "div3  ;; data_type    ;; DATA TYPE     ;; v_to_txt",
+    "div4  ;; dd_desc      ;; DESCRIPTION   ;; v_to_txt",
+    "div4  ;; dd_f_levels  ;; LEVELS        ;; f_to_tbl",
+    "div12 ;; vname        ;; PROPERTIES    ;; get_properties", 
+    "div13 ;; vname        ;; STATS         ;; get_stats_fact",
+    "div14 ;; vname        ;; ''            ;; get_treemap"  )
+```
+
+
+## Testing 
+
+```{r, results="asis"}
+layout.demo <- 
+ c( "div2  ;; dd_label     ;; LABEL         ;; v_to_txt",
+    "div3  ;; data_type    ;; DATA TYPE     ;; v_to_txt",
+    "div4  ;; dd_desc      ;; DESCRIPTION   ;; v_to_txt",
+    "div4  ;; dd_f_levels  ;; LEVELS        ;; f_to_tbl"  )
+
+dd <- parse_design( layout.demo )
+dd$TYPE <- "factor"
+
+L <- dgf_to_list( dgf )
+xx <- L[["NTMAJ12"]]
+
+create_div( div.num="div2", all.layouts=dd, xx )
+create_div( div.num="div3", all.layouts=dd, xx )
+create_div( div.num="div4", all.layouts=dd, xx )
+
+create_section( VNAME="NTMAJ12", all.layouts, L )
+```
+
+
+
+```
+{{< pagebreak >}} 
+
+::::: {.parent} 
+
+::: {.div1} 
+
+#### NTMAJ12
+
+::: 
+
+::: {.div2} 
+
+**LABEL**: NTMAJ12
+
+
+
+
+::: 
+
+::: {.div3} 
+
+**DATA TYPE**: factor
+
+
+
+
+::: 
+
+::: {.div4} 
+
+**DESCRIPTION**: NTEE major group (12)
+
+
+|f_level |label |
+|:-------|:-----|
+|AR      |AR    |
+|BH      |BH    |
+|ED      |ED    |
+|EH      |EH    |
+|EN      |EN    |
+|HE      |HE    |
+|HU      |HU    |
+|IN      |IN    |
+|MU      |MU    |
+|PU      |PU    |
+|RE      |RE    |
+|UN      |UN    |
+
+
+::: 
+
+:::::  
+
+```
+
+
+
+## Data Dictionary 
+
+```{r, results="asis"}
+create_all_sections( dgf )
+```
+
+
+
+
+
+
+
+
+<br>
+<hr>
+<br>
+
+
+
+
+
+
+<link href='https://fonts.googleapis.com/css?family=Fira Code' rel='stylesheet'> <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Anonymous+Pro" />
+
+````{=html}
+<style>
+
+@import url('https://fonts.cdnfonts.com/css/aharoni');
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;  
+    grid-column-gap: 20px;
+  grid-row-gap: 10px;
+  grid-template-areas:
+    "a a a"
+    "b b b"
+    "c d d"
+    "e f g" 
+    "h i i"
+    "j k k"
+    "m m m"
+    "n p p"
+    "o p p";
+}
+
+
+.div1 { grid-area: a; }
+
+.div2 { 
+    grid-area: b;
+    padding-left: 50px;
+}
+
+.div3 { 
+    grid-area: c;
+    padding-left: 50px;
+}
+
+.div4 { 
+    grid-area: d;
+    padding-left: 20px;
+}
+
+.div5 { 
+    grid-area: e;
+    padding-left: 50px;
+}
+
+.div6 { 
+    grid-area: f;
+    padding-left: 20px;
+}
+
+.div7 { 
+    grid-area: g;
+    padding-left: 20px;
+}
+
+.div8 { 
+    grid-area: h;
+    padding-left: 50px;
+}
+
+.div9 { 
+    grid-area: i;
+    padding-left: 20px;
+}
+
+.div10 { 
+    grid-area: j;
+    padding-left: 50px;
+}
+
+.div11 { 
+    grid-area: k;
+    padding-left: 20px;
+}
+
+.div12 { 
+    grid-area: m;
+    padding-left: 50px;
+}
+
+.div13 { 
+    grid-area: n;
+    padding-left: 50px;
+}
+
+.div14 { 
+    grid-area: o;
+    padding-left: 50px;
+}
+
+.div15 { 
+    grid-area: p;
+    padding-left: 20px;
+}
+
+h1.title { color: lightgray; }
+h2.anchored { color: lightgray; }
+h3.anchored { color: gray; }
+
+h4 {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-thickness: 2px;
+    font-family: Georgia, Times, "Times New Roman", serif; 
+    /* font-family: 'Fira Code'; */
+    /* font-family: 'Aharoni', sans-serif; */
+    font-size: 2.2em;
+    font-weight: 700;  
+    /* line-height: 120px; */ 
+}
+
+h5 { font-size: 0.9em; }
+
+.div2 p { 
+    font-family: Verdana;
+    font-size: 1.1em;
+}
+
+.div3 td { 
+    font-family: 'Aharoni', sans-serif;
+    font-size: 0.9em;
+}
+
+.div4 p { 
+    font-family:"Calibri", sans-serif;
+    font-size: 0.8em;
+}
+
+.div4 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div4 table {
+    margin-left: 20px;
+}
+
+.div5 td { 
+    font-family: "Anonymous Pro";
+    font-size: 0.9em;
+}
+
+.div5 table {
+    margin-left: 20px;
+}
+
+.table>tbody {
+    border-top: none;
+}
+
+.table>:not(caption)>*>* {
+    padding: 0rem 0rem;
+}
+
+tbody, tfoot, tr, td, th {
+    border-color: inherit;
+    border-style: none; 
+    border-width: 0;
+}
+
+
+.div5 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div5 th {
+  display:none;
+}
+
+.div6 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div6 th {
+  display:none;
+}
+
+.div7 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div7 th {
+  display:none;
+}
+
+.div8 img, svg {
+    /* vertical-align: bottom;*/
+    align-self: end;
+    justify-self: end;
+}
+
+
+#pb_agent .gt_table {
+    border-top-width: 0px; 
+    /* border-top-color: #A8A8A8; */
+}  
+
+#pb_agent .gt_title {
+    font-size: 1.3em !important;
+}
+
+#pb_agent .gt_left { color: black !important; }
+
+@media print {
+   body {
+   display:table;
+   table-layout:fixed;
+   padding-top:2.5cm;
+   padding-bottom:3cm;
+   padding-left:1.5cm;
+   padding-right:1.5cm;
+   height:auto;
+    }
+}
+
+</style>
+
+
+
