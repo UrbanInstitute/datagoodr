@@ -1,0 +1,452 @@
+---
+title: "Research Guide"
+format:
+  html:
+    embed-resources: true
+editor: visual
+---
+
+<br><br><br>
+
+```{r, warning=F, message=F, include=F}
+library( htmltools )
+library( dplyr )
+library( pointblank )
+library( knitr )
+library( gt )
+library( kableExtra )
+library( psych )
+```
+
+```{r, echo=F}
+
+# source functions 
+# import DGF 
+# read data
+```
+
+DGF (dd) - vname - vtype - vlabel - vdesc - ftable - scope - loc
+
+```{r, results="asis"}
+
+for( i in 1:nrow(dd) )
+{
+  vname <- dd$vname[i]
+  v <- d[[vname]]
+  vtype <- dd$vtype[i]
+  vlabel <- dd$vlabel[i]
+  vdesc <- dd$vdesc[i]
+  scope <- dd$scope[i]
+  loc <- dd$loc[i]
+  
+  ftable <- NULL
+  
+  if( vtype == "factor" )
+  { ftable <- get_ftable( dd$ftable[i] ) }
+  
+  print_v( 
+    vname=vname,
+    v=v,
+    vtype=vtype,
+    vlabel=vlabel,
+    vdesc=vdesc,
+    scope=scope,
+    loc=loc,
+    ftable=ftable )
+}
+
+cat( "{{< pagebreak >}} \n\n")
+
+```
+
+<br>
+
+<hr>
+
+<br>
+
+```{r, eval=F}
+#| echo: false
+
+get_section <- function( row.name )
+{
+  ds <- dplyr::filter( dfg, var_name== row.name )
+  create_section( x1=ds$desc, x2=ds$k, x3=ds$loc )
+}
+
+print_dd <- function( dfg, vars=c("r2","r2","r3"), group.name=NULL )
+{
+   # for( i in vars )
+   # {
+   #   get_section( row.name=i )
+   # }
+   dfg2 <- dplyr::filter( dfg, var_name %in% vars )
+   sapply( dfg2, get_section )
+}
+```
+
+<link href='https://fonts.googleapis.com/css?family=Fira Code' rel='stylesheet'> <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Anonymous+Pro" />
+
+````{=html}
+<style>
+
+@import url('https://fonts.cdnfonts.com/css/aharoni');
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;  /* repeat(2, 0.2fr) 1fr 1fr; */
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    grid-template-areas:
+      "a a a"
+      "b b b"
+      "c d d"
+      "e e e" ;
+}
+
+/* grid-row-start / grid-column-start / grid-row-end / grid-column-end */
+/* .div1 { grid-area: 1 / 1 / 2 / 4; } */
+/* .div2 { grid-area: 2 / 1 / 3 / 4; } */
+/* .div3 { grid-area: 3 / 1 / 4 / 2; } */
+/* .div4 { grid-area: 3 / 2 / 4 / 4; } */
+
+
+.div1 { grid-area: a; }
+
+.div2 { 
+    grid-area: b;
+    padding-left: 50px;
+}
+
+.div3 { 
+    grid-area: c;
+    padding-left: 50px;
+}
+
+.div4 { 
+    grid-area: d;
+    padding-left: 20px;
+}
+
+.div5 { 
+    grid-area: e;
+    padding-left: 50px;
+}
+
+h1.title { color: lightgray; }
+h2.anchored { color: lightgray; }
+h3.anchored { color: gray; }
+
+h4 {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-thickness: 2px;
+    font-family: Georgia, Times, "Times New Roman", serif; 
+    /* font-family: 'Fira Code'; */
+    /* font-family: 'Aharoni', sans-serif; */
+    font-size: 2.2em;
+    font-weight: 700;  
+    /* line-height: 120px; */ 
+}
+
+h5 { font-size: 0.9em; }
+
+.div2 p { 
+    font-family: Verdana;
+    font-size: 1.1em;
+}
+
+.div3 td { 
+    /* font-family: "Anonymous Pro"; */
+    /* font-family: Georgia, Times, "Times New Roman", serif; */ 
+    /* font-weight: 400; */
+    font-family: 'Aharoni', sans-serif;
+    font-size: 0.9em;
+}
+
+.div4 p { 
+    font-family:"Calibri", sans-serif;
+    font-size: 0.8em;
+}
+
+.div4 td { 
+    font-family: "Anonymous Pro";
+    /* font-weight: 400; */
+    font-size: 0.9em;
+}
+
+.div4 table {
+    margin-left: 20px;
+}
+
+.div5 td { 
+    font-family: "Anonymous Pro";
+    /* font-weight: 400; */
+    font-size: 0.9em;
+}
+
+.div5 table {
+    margin-left: 20px;
+}
+
+.table>tbody {
+    border-top: none;
+}
+
+.table>:not(caption)>*>* {
+    padding: 0rem 0rem;
+}
+
+tbody, tfoot, tr, td, th {
+    border-color: inherit;
+    border-style: none; 
+    border-width: 0;
+}
+
+
+#pb_agent .gt_table {
+    border-top-width: 0px; 
+    /* border-top-color: #A8A8A8; */
+}  
+
+#pb_agent .gt_title {
+    font-size: 1.3em !important;
+}
+
+#pb_agent .gt_left { color: black !important; }
+
+</style>
+
+
+
+
+
+```{=html}
+<style>
+
+@import url('https://fonts.cdnfonts.com/css/aharoni');
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;  /* repeat(2, 0.2fr) 1fr 1fr 1fr; */
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    grid-template-areas:
+      "a a a"
+      "b b b"
+      "c d d"
+      "e f g" 
+      "h i i";
+}
+
+
+
+.div1 { grid-area: a; }
+
+.div2 { 
+    grid-area: b;
+    padding-left: 50px;
+}
+
+.div3 { 
+    grid-area: c;
+    padding-left: 50px;
+}
+
+.div4 { 
+    grid-area: d;
+    padding-left: 20px;
+}
+
+.div5 { 
+    grid-area: e;
+    padding-left: 50px;
+}
+
+.div6 { 
+    grid-area: f;
+    padding-left: 50px;
+}
+
+.div7 { 
+    grid-area: g;
+    padding-left: 50px;
+}
+
+.div8 { 
+    grid-area: h;
+    padding-left: 50px;
+    display: grid;
+}
+
+.div8 .cell-output-display { 
+    display: grid;
+}
+
+.div8 p { 
+    display: grid;
+}
+
+
+.div9 { 
+    grid-area: i;
+    padding-left: 20px;
+}
+
+h1.title { color: lightgray; }
+h2.anchored { color: lightgray; }
+h3.anchored { color: gray; }
+
+h4 {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-thickness: 2px;
+    font-family: Georgia, Times, "Times New Roman", serif; 
+    /* font-family: 'Fira Code'; */
+    /* font-family: 'Aharoni', sans-serif; */
+    font-size: 1.8em;
+    font-weight: 700;  
+    /* line-height: 120px; */ 
+}
+
+h5 { font-size: 0.9em; }
+
+.div2 p { 
+    font-family: Verdana;
+    font-size: 1.1em;
+}
+
+.div3 td { 
+    /* font-family: "Anonymous Pro"; */
+    /* font-family: Georgia, Times, "Times New Roman", serif; */ 
+    /* font-weight: 400; */
+    font-family: 'Aharoni', sans-serif;
+    font-size: 0.9em;
+}
+
+.div4 p { 
+    font-family:"Calibri", sans-serif;
+    font-size: 0.8em;
+}
+
+.div4 td { 
+    font-family: "Anonymous Pro";
+    /* font-weight: 400; */
+    font-size: 0.9em;
+}
+
+.div4 table {
+    margin-left: 20px;
+}
+
+.div5 td { 
+    font-family: "Anonymous Pro";
+    /* font-weight: 400; */
+    font-size: 0.9em;
+}
+
+.div5 table {
+    margin-left: 20px;
+}
+
+.div6 td { 
+    font-family: "Anonymous Pro";
+    /* font-weight: 400; */
+    font-size: 0.9em;
+}
+
+.div6 table {
+    margin-left: 20px;
+}
+
+.div7 td { 
+    font-family: "Anonymous Pro";
+    /* font-weight: 400; */
+    font-size: 0.9em;
+}
+
+.div7 table {
+    margin-left: 20px;
+}
+
+.table {
+    width: 80%;
+}
+
+.table>tbody {
+    border-top: none;
+}
+
+.table>:not(caption)>*>* {
+    padding: 0rem 0rem;
+}
+
+tbody, tfoot, tr, td, th {
+    border-color: inherit;
+    border-style: none; 
+    border-width: 0;
+}
+
+
+.div5 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div5 th {
+  display:none;
+}
+
+.div6 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div6 th {
+  display:none;
+}
+
+.div7 tr {
+  border-bottom: 1px solid;
+  border-color: #D3D3D3;
+}
+
+.div7 th {
+  display:none;
+}
+
+.div8 img, svg {
+    /* vertical-align: bottom;*/
+    align-self: end;
+    justify-self: end;
+}
+
+#pb_agent .gt_table {
+    border-top-width: 0px; 
+    /* border-top-color: #A8A8A8; */
+}  
+
+#pb_agent .gt_title {
+    font-size: 1.3em !important;
+}
+
+#pb_agent .gt_left { color: black !important; }
+
+
+@media print {
+   body {
+   display:table;
+   table-layout:fixed;
+   padding-top:2.5cm;
+   padding-bottom:3cm;
+   padding-left:1.5cm;
+   padding-right:1.5cm;
+   height:auto;
+    }
+}
+
+
+</style>
+````
