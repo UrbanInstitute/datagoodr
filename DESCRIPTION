@@ -1,0 +1,32 @@
+Package: datagoodr
+Type: Package
+Title: Gooder Data Means Gooder Research
+Version: 0.1.0
+Author: person("Olivia", "Beck", , "obeck@urban.org", role = c("aut", "cre")),
+    person("Jesse", "Lecy", , "jlecy@urban.org", role = c("aut", "cre"))
+Maintainer: Jesse Lecy <jlecy@urban.org>
+Description: Calculates governance scores for nonprofits using factor analysis.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    magrittr,
+    knitr,
+    DescTools,
+    crosswalkr,
+    data.table,
+    hablar,
+    jsonlite,
+    kableExtra,
+    openxlsx,
+    purrr,
+    quarto,
+    readr,
+    rlang,
+    stringr,
+    tm,
+    treemap,
+    wordcloud
+VignetteBuilder: knitr
+RoxygenNote: 7.2.3

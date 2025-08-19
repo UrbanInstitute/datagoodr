@@ -1,0 +1,8 @@
+^.*[.]Rproj$
+^\.Rproj\.user$
+^DRAFT$
+^dev$
+^working-example$
+^pptx$
+^data-dev$
+^qmd-templates$
