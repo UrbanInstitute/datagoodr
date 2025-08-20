@@ -114,7 +114,7 @@ get_graphics_num <- function(VNAME, df ){
   med = median(x, na.rm = TRUE)
   min = min(x, na.rm = TRUE)
   max = max(x, na.rm = TRUE)
-  sk = skew(x)
+  sk = psych::skew(x)
 
   #windsorize
   x <- x[!is.na(x)]

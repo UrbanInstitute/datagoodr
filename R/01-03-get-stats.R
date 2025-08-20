@@ -56,7 +56,18 @@ get_properties <- function( VNAME, df ){
 }
 
 
-## Internal functions in get_properties
+#' Check missing data
+#'
+#' internal function for get_properties to return amount of missing data
+#'
+#' @param x vector
+#'
+#' @return number of missing values in `x`
+#'
+#' @details
+#' internal function for \link{get_properties}
+#'
+#' @keywords internal
 is_missing <- function(x) {
   v1 <- is.na(x)
   v2 <- is.nan(x)
@@ -69,10 +80,33 @@ is_missing <- function(x) {
 }
 
 
+#' Most common value
+#'
+#' Internal function for \link{get_properties} to find most common value.
+#'
+#' @param x vector
+#'
+#' @return most common value in `x`
+#'
+#' @details
+#' internal function for \link{get_properties}
+#'
+#' @keywords internal
 most_common_val <- function(x) {
   # use data table for speed:
-  mc <- data.table::as.data.table(x)[, .N, by=x][, x[N == max(N)]]
-  return( as.character(mc[1]))
+  x <- c(x)
+  tibble(x = x) %>%
+    count(x) %>%
+    filter(n==max(n)) %>%
+    slice(1) %>%
+    pull(x) %>%
+    as.character %>%
+    return()
+
+  # counts <- data.table::as.data.table(x)[, .N, by=x]
+  # most.counts <- counts[counts$N == max(counts$N), x]
+  # if(is.null(most.counts) | length(most.counts) == 0){return(NA)}
+  # return( as.character(most.counts[1]))
 }
 
 
@@ -144,21 +178,21 @@ get_stats_chr <-  function(VNAME, df){
                                     median(n, na.rm = TRUE),
                                     mean(n, na.rm = TRUE),
                                     max(n, na.rm = TRUE),
-                                    skew(n)), 2),
+                                    psych::skew(n)), 2),
                WORDS = round(c(min(spaces, na.rm = TRUE),
                                median(spaces, na.rm = TRUE),
                                mean(spaces, na.rm = TRUE),
                                max(spaces, na.rm = TRUE),
-                               skew(spaces)), 2))
+                               psych::skew(spaces)), 2))
 
   ## Testing histogram in table - isn't saving as JSON object properly - can add back in later
   # tab <- rbind(tab, c("Histogram", "", ""))
-  # tab$CHARACTERS[6] <-  HTML(spec_hist(n)$svg_text)
-  # tab$WORDS[6] <-  HTML(spec_hist(spaces)$svg_text)
+  # tab$CHARACTERS[6] <-  htmltools::HTML(kableExtra::spec_hist(n)$svg_text)
+  # tab$WORDS[6] <-  htmltools::HTML(kableExtra::spec_hist(spaces)$svg_text)
   #
   data_list <- list(
     STATS = tab,
-    HIST = list(HTML(spec_hist(n)$svg_text), HTML(spec_hist(spaces)$svg_text))
+    HIST = list(htmltools::HTML(kableExtra::spec_hist(n)$svg_text), htmltools::HTML(kableExtra::spec_hist(spaces)$svg_text))
   )
 
   #return tab as json object
@@ -252,7 +286,7 @@ get_stats_num <- function( VNAME, df ){
             quantile( x, probs=0.75, na.rm=T, names=F ),
             quantile( x, probs=0.95, na.rm=T, names=F ),
             max(x, na.rm = TRUE),
-            skew(x))
+            psych::skew(x))
   )
 
   tab$VAL <- round(tab$VAL , 2)
