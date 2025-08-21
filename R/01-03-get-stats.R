@@ -97,9 +97,9 @@ most_common_val <- function(x) {
   x <- c(x)
   tibble(x = x) %>%
     count(x) %>%
-    filter(n==max(n)) %>%
-    slice(1) %>%
-    pull(x) %>%
+    dplyr::filter(n==max(n)) %>%
+    dplyr::slice(1) %>%
+    dplyr::pull(x) %>%
     as.character %>%
     return()
 
