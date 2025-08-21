@@ -394,16 +394,68 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
   sink(log.file, type = "output", append = TRUE)
 
-  mess.quarto <- capture.output(
-    quarto::quarto_render(
-      input = paths$research.guide.template, #system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
-      execute_params = list(dgf_file = paste0("../", paths$dgf.use)),
-      output_format = "all",
-      # output_file = paste0("research-guide-", format(Sys.time(), "%Y-%m-%d")),
-      execute_dir = paths$research.guide
-      ),
-    type = "output"
+
+  #
+  # mess.quarto <- capture.output(
+  #   quarto::quarto_render(
+  #     input = paths$research.guide.template, #system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
+  #     execute_params = list(dgf_file = paste0("../", paths$dgf.use)),
+  #     output_format = "all",
+  #     # output_file = paste0("research-guide-", format(Sys.time(), "%Y-%m-%d")),
+  #     execute_dir = paths$research.guide
+  #     ),
+  #   type = "output"
+  # )
+
+  if(is.null(rg.name) | rg.name == "research-guide"){
+    quarto.name <- paste0("research-guide",  format(Sys.time(), "%Y-%m-%d"))
+  }else{
+    quarto.name <- rg.name
+  }
+
+  result <- tryCatch(
+    {
+      # Capture console output during render
+      mess.quarto <- capture.output(
+        quarto::quarto_render(
+          input = paths$research.guide.template,
+          execute_params = list(dgf_file = paste0("../", paths$dgf.use)),
+          output_format = "all",
+          execute_dir = paths$research.guide,
+          output_file = "quarto.name"
+        ),
+        type = "output"
+      )
+
+      # Action if render succeeds
+      mess <- "✅ Quarto render succeeded!"
+      log_message(mess, log.file, TRUE)
+
+
+      TRUE
+    },
+    error = function(e) {
+      # Action if render fails
+      mess <- "❌ Quarto render failed:"
+      message(mess)
+      message(e$message)
+
+      # Optionally log the error
+      log_message(paste(mess, e$message), log.file, TRUE)
+
+      FALSE  # return value indicating failure
+    }
   )
+
+  # if quarto document doesn't render, abort mission
+  if (!result) {
+    mess <- "Abort Mission"
+    log_message(mess, log.file, TRUE)
+    stop()
+  }
+
+
+
   sink()
   cat(paste(mess.quarto, "\n"))
 
@@ -422,28 +474,31 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
 
-  #### Step 4: Refresh the DGF ----------------
-
-  mess <- paste(
-    "Step 4: Refresh the DGF",
-    "When the data set is updated, this step is meant to compare the old data set to the new one. If anything changed, the DGF should also updated. This updating is designed to be done through the rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated in the DGF without actually verifying each individual entry.",
-    "In the new data set for each variable, generate the hash value. If the new hash valuematches the one in the rg_hash column of the old DGF, no need to update that variable, great! If the new hash value does not match the  one in the rg_hash column of the old DGF, then that variable's rg_[preview/properties/stats/graphics/hash] need to be updated.",
-    "This step is not currently opperational so we skip it for now....",
-    collapse = " \n"
-  )
-  log_message(mess, log.file, TRUE)
 
 
 
-  ## Step 5: Customize -----------------
-
-  mess <- paste(
-    "Step 5: Customize the Research Guide",
-    "The R/05*.R functions are designed for customization of the RG. This could be templates,  div arrangements, fonts, colors, or 'polishing' functions for the variables (such as `dollarize` for monetary values).",
-    "This step is not currently opperational so we skip it for now....",
-    collapse = " \n"
-  )
-  log_message(mess, log.file, TRUE)
+  # #### Step 4: Refresh the DGF ----------------
+  #
+  # mess <- paste(
+  #   "Step 4: Refresh the DGF",
+  #   "When the data set is updated, this step is meant to compare the old data set to the new one. If anything changed, the DGF should also updated. This updating is designed to be done through the rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated in the DGF without actually verifying each individual entry.",
+  #   "In the new data set for each variable, generate the hash value. If the new hash value matches the one in the rg_hash column of the old DGF, no need to update that variable, great! If the new hash value does not match the  one in the rg_hash column of the old DGF, then that variable's rg_[preview/properties/stats/graphics/hash] need to be updated.",
+  #   "This step is not currently operational so we skip it for now....",
+  #   collapse = " \n"
+  # )
+  # log_message(mess, log.file, TRUE)
+  #
+  #
+  #
+  # ## Step 5: Customize -----------------
+  #
+  # mess <- paste(
+  #   "Step 5: Customize the Research Guide",
+  #   "The R/05*.R functions are designed for customization of the RG. This could be templates,  div arrangements, fonts, colors, or 'polishing' functions for the variables (such as `dollarize` for monetary values).",
+  #   "This step is not currently operational so we skip it for now....",
+  #   collapse = " \n"
+  # )
+  # log_message(mess, log.file, TRUE)
 
 
   ## Mission complete ---------------
