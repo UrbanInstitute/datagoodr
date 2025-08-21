@@ -6,3 +6,4 @@
 ^pptx$
 ^data-dev$
 ^qmd-templates$
+^.*\.Rproj$
