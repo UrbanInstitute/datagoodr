@@ -55,6 +55,20 @@ log_message <- function(message, logfile = "datagoodr.txt", console = TRUE) {
 #' @details
 #' Run the entire datagoodr workflow.....
 #'
+#' @examples
+#' \dontrun{
+#' ## Testing datagoor funciton
+#' library(datagoodr )
+#' datagoodr(
+#'   wd = "~/Desktop",
+#'   folder.name = NULL,
+#'   location.data.raw <- paste0(getwd(), "/data-dev/DEMO-DATA-SMALL.csv"),
+#'   create.dgf.params = list(use.df.types = FALSE,
+#'                            guess.factors = TRUE,
+#'                            guess.dates = FALSE),
+#'   rg.name = "test-research-guide"
+#' )
+#' }
 #'
 #' @export
 datagoodr <- function(wd = getwd(), folder.name = NULL,
@@ -294,41 +308,42 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
-  ## Manual updates to the dgf?
-  mess <- "Do you want to update the dgf manually? [y/n]"
-  log_message(paste(mess, collapse = "\n"), log.file, FALSE)
-  dgf.manual <- readline(mess)
-  dgf.manual <- tolower(dgf.manual)
-  log_message(paste(dgf.manual, collapse = "\n"), log.file, FALSE)
+  ## Manual updates to the dgf? - not operational right now, but this is what it might look like
+  # mess <- "Do you want to update the dgf manually? [y/n]"
+  # log_message(paste(mess, collapse = "\n"), log.file, FALSE)
+  # dgf.manual <- readline(mess)
+  # dgf.manual <- tolower(dgf.manual)
+  # log_message(paste(dgf.manual, collapse = "\n"), log.file, FALSE)
+  #
+  #
+  # while(!(dgf.manual %in% c("y", "n", "yes", "no"))){
+  #   mess = "Invalid input. Do you want to update the dgf manually? [y/n]"
+  #   log_message(paste(mess, collapse = "\n"), log.file, FALSE)
+  #   dgf.manual <- readline(mess)
+  #   dgf.manual <- tolower(dgf.manual)
+  #   log_message(paste(dgf.manual, collapse = "\n"), log.file, FALSE)
+  # }
+  # if(dgf.manual %in% c("y", "yes")){
+  #   mess = paste("Save updated DGF in DGF/ subdirectory.",
+  #                "Remember to write your changes in a change log.")
+  #   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+  #   mess = "Type in the name of the file in the DGF/ subdirectory that contains the updated DGF you wish to use to create the RG:"
+  #   dgf.use.name <- readline(mess)
+  #   paths$dgf.use <- paste0(paths$dgf, "/", dgf.use.name, collapse = "")
+  #
+  #
+  #   while(!file.exists(paths$dgf.use)){
+  #     mess <- paste("The file", dgf.use.name, "does not exist in the DGF/ subdirectory. \n Type in the name of the file in the DGF/ subdirectory that contains the updated DGF you wish to use to create the RG:")
+  #     log_message(paste(mess, collapse = "\n"), log.file, FALSE)
+  #     dgf.use.name <- readline(mess)
+  #     log_message(paste(dgf.use.name, collapse = "\n"), log.file, FALSE)
+  #     paths$dgf.use <- paste0(paths$dgf, dgf.use.name, collapse = "")
+  #     }
+  # }else{
+  #   paths$dgf.use <- paths$dgf.file.xlsx
+  # }
 
-
-  while(!(dgf.manual %in% c("y", "n", "yes", "no"))){
-    mess = "Invalid input. Do you want to update the dgf manually? [y/n]"
-    log_message(paste(mess, collapse = "\n"), log.file, FALSE)
-    dgf.manual <- readline(mess)
-    dgf.manual <- tolower(dgf.manual)
-    log_message(paste(dgf.manual, collapse = "\n"), log.file, FALSE)
-  }
-  if(dgf.manual %in% c("y", "yes")){
-    mess = paste("Save updated DGF in DGF/ subdirectory.",
-                 "Remember to write your changes in a change log.")
-    log_message(paste(mess, collapse = "\n"), log.file, TRUE)
-    mess = "Type in the name of the file in the DGF/ subdirectory that contains the updated DGF you wish to use to create the RG:"
-    dgf.use.name <- readline(mess)
-    paths$dgf.use <- paste0(paths$dgf, "/", dgf.use.name, collapse = "")
-
-
-    while(!file.exists(paths$dgf.use)){
-      mess <- paste("The file", dgf.use.name, "does not exist in the DGF/ subdirectory. \n Type in the name of the file in the DGF/ subdirectory that contains the updated DGF you wish to use to create the RG:")
-      log_message(paste(mess, collapse = "\n"), log.file, FALSE)
-      dgf.use.name <- readline(mess)
-      log_message(paste(dgf.use.name, collapse = "\n"), log.file, FALSE)
-      paths$dgf.use <- paste0(paths$dgf, dgf.use.name, collapse = "")
-      }
-  }else{
-    paths$dgf.use <- paths$dgf.file.xlsx
-  }
-
+  paths$dgf.use <- paths$dgf.file.xlsx
   mess <- paste("The file that contains the DGF we will use to make the RG in the next step is ",
                 paths$dgf.use)
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
@@ -371,21 +386,29 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
                 system.file("qmd-templates", "RG.qmd", package = "datagoodr"))
   log_message(mess, log.file, TRUE)
 
-  ## Replace all instances of "file_name_placeholder" in YAML to correct file name
-  replace_in_qmd <- function(file, old, new) {
-    txt <- readLines(file)
-    txt <- gsub(old, new, txt, fixed = TRUE)  # fixed=TRUE treats old as literal
-    writeLines(txt, file)
-  }
+  ## Copy rg template to research-guide subdirectory
+  file.copy(system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
+            paths$research.guide)
+  file.rename(paste0(paths$research.guide, "RG.qmd"),
+              paste0(paths$research.guide, "RG-template.qmd"))
+  paths$research.guide.template <- paste0(paths$research.guide, "RG-template.qmd")
+
   #make quarto document name
   if(is.null(rg.name) | rg.name == "research-guide"){
     quarto.name <- paste0("research-guide-",  format(Sys.time(), "%Y-%m-%d"))
   }else{
     quarto.name <- rg.name
   }
-  replace_in_qmd(paths$research.guide.template,
-                 "file_name_placeholder",
-                 paste0('"', quarto.name, '"'))
+
+  ## Replace all instances of "file_name_placeholder" in YAML to correct file name
+  quarto.txt <- base::readLines( paste0(paths$research.guide, "RG-template.qmd"))
+  good.txt <- gsub("file_name_placeholder",
+                   paste0('"', quarto.name, '"'),
+                   quarto.txt,
+                   fixed = TRUE)
+  base::writeLines(good.txt,  paste0(paths$research.guide, "RG-template.qmd"))
+
+
 
 
   mess <- paste("Research guide template sucessfully saved to research-guide/ subdirectory.")
@@ -419,6 +442,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
         type = "output"
       )
 
+      sink()
       # Action if render succeeds
       log_message(mess.quarto, log.file, TRUE)
 
@@ -452,13 +476,13 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
 
 
-  cat(paste(mess.quarto, "\n"))
-
-  file.types <- c(".md", ".html", ".pdf")
-  for(ft in file.types){
-    file.rename(paste0(paths$project, "/", paths$research.guide, "RG-template", ft),
-                paste0(paths$project,  "/", paths$research.guide, "research-guide-", format(Sys.time(), "%Y-%m-%d"),ft))
-  }
+  # cat(paste(mess.quarto, "\n"))
+  #
+  # file.types <- c(".md", ".html", ".pdf")
+  # for(ft in file.types){
+  #   file.rename(paste0(paths$project, "/", paths$research.guide, "RG-template", ft),
+  #               paste0(paths$project,  "/", paths$research.guide, "research-guide-", format(Sys.time(), "%Y-%m-%d"),ft))
+  # }
 
   mess <- paste(
     "Research Guide sucessfully created in research-guide/ subdirectory. \n",
