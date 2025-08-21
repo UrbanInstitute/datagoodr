@@ -17,7 +17,7 @@ datagoodr(
 
 \item{folder.name}{character string of folder project output will be put into. Defaut is "datagoodr-TODAYSDATE".}
 
-\item{path.raw.data}{character string of path to raw dataset that is to be documented. File extension can be .csv or .xlsx. See data-dev/demo-data-small.csv for an example.}
+\item{path.raw.data}{character string of absolute path to raw dataset that is to be documented. File extension can be .csv or .xlsx. See data-dev/demo-data-small.csv for an example.}
 
 \item{create.dgf.params}{list of function arguments for creating the dgf. See \link{create_dgf} for available function arguments (df argument is not needed). Defaul is NULL which uses the default arguments for \link{create_dgf}.}
 

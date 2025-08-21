@@ -23,11 +23,3 @@ Invisibly returns the log line written (a character string).
 Appends a timestamped message to a log file. By default, the message is also
 printed to the console for immediate feedback.
 }
-\examples{
-\dontrun{
-log_message("Starting data processing")
-log_message("Step 1 complete", logfile = "process_log.txt")
-log_message("Only in file", console = FALSE)
-}
-
-}

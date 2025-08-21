@@ -51,8 +51,7 @@ dgf_to_list <- function( dgf ) {
 #' Used inside \link{get_design}.
 #' @seealso [check_length()]
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 parse_design <- function( x ) {
   x <- gsub( ";;$", ";; ", x )
   L <- strsplit( x, ";;" )
@@ -77,8 +76,7 @@ parse_design <- function( x ) {
 #' Used in \link{parse_design}.
 #'
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 check_length <- function(x) {
   # add empty element if no label is provided
   if( length(x) == 3 )
@@ -111,8 +109,7 @@ check_length <- function(x) {
 #'
 #'
 #' @seealso [parse_design()]
-#' @keywords internal
-#' @noRd
+#' @export
 get_design  <- function() {
 
   #  ---------------------------------------------
@@ -124,7 +121,17 @@ get_design  <- function() {
 
   #  ----------------------------------------------
 
-  layouts <- grep( "layout[.]", ls( envir=.GlobalEnv ), value=T )
+  # Get layout character strings from datagoodr package data
+  all.goodr.data <- data(package = "datagoodr")$results[, "Item"]
+  all.names <-  grep("^layout\\.", all.goodr.data, value = TRUE)
+
+  # Load all layout.DATATYPE objects
+  lapply(all.names, function(x) {
+    data(list = x, package = "datagoodr")
+  })
+
+  # combine all layout options
+  layouts <- grep( "^layout[.]", ls( envir=.GlobalEnv ), value=T )
   design.df <- purrr::map( layouts, f ) |> dplyr::bind_rows()
   return( design.df )
 }
@@ -178,8 +185,7 @@ get_design  <- function() {
 #'
 #' @return No return value, called for side effects (writes markdown text).
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 create_div1 <- function( x="vname" )
 {
   cat( "::: {.div1} \n\n" )
@@ -205,8 +211,7 @@ create_div1 <- function( x="vname" )
 #' printed for that div in the quarto document.
 #'
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 create_div <- function( div.num="div2", all.layouts, xx ) {
 
   DATA_TYPE <- xx[["vtype_class"]] # change data_type to vtype_class
@@ -254,8 +259,7 @@ create_div <- function( div.num="div2", all.layouts, xx ) {
 #'
 #' @seealso [create_all_sections()]
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 create_section <- function( VNAME="EIN", all.layouts, L ) {
 
   xx <<- L[[ VNAME ]] #make this a global variable?
@@ -293,11 +297,10 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
 #' - Iterates over each variable name, calling [create_section()] to
 #'   generate its report section.
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 create_all_sections <- function( dgf ) {
 
-  all.layouts <- get_design()
+  all.layouts <<- get_design() # This does not need to be a global when using these functions outside of a package build enviornment. But it does when it is inside a package. I cannot figure out why.
 
   #for testing purposes - remove later
   # only run working divs for numeric

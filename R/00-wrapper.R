@@ -12,14 +12,7 @@
 #'
 #' @return Invisibly returns the log line written (a character string).
 #'   Used for side effects (writing to file and printing).
-#'
-#' @examples
-#' \dontrun{
-#' log_message("Starting data processing")
-#' log_message("Step 1 complete", logfile = "process_log.txt")
-#' log_message("Only in file", console = FALSE)
-#' }
-#'
+#' @export
 log_message <- function(message, logfile = "datagoodr.txt", console = TRUE) {
   timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
@@ -50,7 +43,7 @@ log_message <- function(message, logfile = "datagoodr.txt", console = TRUE) {
 #'
 #' @param wd charterer string of project output location. Default is the current working directory.
 #' @param folder.name character string of folder project output will be put into. Defaut is "datagoodr-TODAYSDATE".
-#' @param path.raw.data  character string of path to raw dataset that is to be documented. File extension can be .csv or .xlsx. See data-dev/demo-data-small.csv for an example.
+#' @param path.raw.data  character string of absolute path to raw dataset that is to be documented. File extension can be .csv or .xlsx. See data-dev/demo-data-small.csv for an example.
 #' @param create.dgf.params list of function arguments for creating the dgf. See \link{create_dgf} for available function arguments (df argument is not needed). Defaul is NULL which uses the default arguments for \link{create_dgf}.
 #' @param rg.name character string to name the final research guide output. Default is "research-guide".
 #'
@@ -69,7 +62,11 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
                       create.dgf.params = NULL,
                       rg.name = "research-guide"){
 
-  ### Get Working dirctory and set up file structure ------------
+  old.wd <- getwd()
+  on.exit(setwd(old.wd), add = TRUE)
+
+
+  ### Get Working directory and set up file structure ------------
   if(is.null(wd)){
     wd <- getwd()
     #for testing purposes wd <- "~/Desktop"
@@ -110,29 +107,53 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   )
   log_message(mess, log.file, TRUE)
 
+
   mess <- c(
-    "File directory successfully created",
+    "Prjoect file directory successfully created",
     capture.output(fs::dir_tree(location.project))
   )
 
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
 
+
   # create list of paths to be used.
-  # for testing purposes path.raw.data <- paste0(getwd(), "/data-dev/DEMO-DATA-SMALL.csv")
+  # for testing purposes path.raw.data <- paste0(old.wd, "/data-dev/DEMO-DATA-SMALL.csv")
+  # path.raw.data <- '/Users/oliviabeck/Box Sync/datagoodr/data-dev/DEMO-DATA-SMALL.csv'
   paths <- list(
     wd = wd,
     project = paste0(wd, "/", folder.name),
     data.raw.orig = path.raw.data
   )
 
-  paths$data.raw <- paste0(paths$project, "/data-raw/")
-  paths$data.processed <- paste0(paths$project, "/data-processed/")
-  paths$data.final <- paste0(paths$project, "/data-final/")
-  paths$dgf <- paste0(paths$project, "/DGF/")
-  paths$research.guide <- paste0(paths$project, "/research-guide/")
-  paths$custom.funcs <- paste0(paths$project, "custom.funcs/")
+  paths$data.raw <- paste0( "data-raw/")
+  paths$data.processed <- paste0("data-processed/")
+  paths$data.final <- paste0("data-final/")
+  paths$dgf <- paste0( "DGF/")
+  paths$research.guide <- paste0( "research-guide/")
+  paths$custom.funcs <- paste0("custom.funcs/")
 
+  # paths$data.raw <- paste0(paths$project, "/data-raw/")
+  # paths$data.processed <- paste0(paths$project, "/data-processed/")
+  # paths$data.final <- paste0(paths$project, "/data-final/")
+  # paths$dgf <- paste0(paths$project, "/DGF/")
+  # paths$research.guide <- paste0(paths$project, "/research-guide/")
+  # paths$custom.funcs <- paste0(paths$project, "custom.funcs/")
+
+
+  # move working directory to project directory
+
+  mess <- paste("Current working direcoty is", old.wd)
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+
+  mess <- paste("Switching working directory to project directory at", paths$project)
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+  setwd(paths$project)
+
+  mess <- c(    capture.output(fs::dir_tree(location.project))
+  )
+
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
 
   ### Raw Data ----------------------------
@@ -305,7 +326,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
       paths$dgf.use <- paste0(paths$dgf, dgf.use.name, collapse = "")
       }
   }else{
-    paths$dgf.use <- paths$dgf.file.csv
+    paths$dgf.use <- paths$dgf.file.xlsx
   }
 
   mess <- paste("The file that contains the DGF we will use to make the RG in the next step is ",
@@ -313,7 +334,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
   mess <- c(
-    paste("Raw data successfully copied to data-raw/ subdirectory." ),
+    'File structure at the end of Step 1:',
     capture.output(fs::dir_tree(location.project))
   )
 
@@ -337,7 +358,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
 
-  ### Step 3 : Render the Reserach Guide -----------------------------------------
+  ### Step 3 : Render the Research Guide -----------------------------------------
   mess <- c(
     "",
     "===========================================",
@@ -350,6 +371,19 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
                 system.file("qmd-templates", "RG.qmd", package = "datagoodr"))
   log_message(mess, log.file, TRUE)
 
+  ## copy RG template to project folder
+  file.copy(system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
+            paths$research.guide)
+  file.rename(paste0(paths$research.guide, "RG.qmd"),
+              paste0(paths$research.guide, "RG-template.qmd"))
+  paths$research.guide.template <- paste0(paths$research.guide, "RG-template.qmd")
+
+  mess <- paste("Research guide template sucessfully saved to research-guide/ subdirectory.")
+  log_message(mess, log.file, TRUE)
+
+  mess <-  capture.output(fs::dir_tree(location.project))
+  log_message(mess, log.file, TRUE)
+
 
   paths$research.guide.render <- paste0(paths$research.guide, rg.name)
 
@@ -358,9 +392,75 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   log_message(mess, log.file, TRUE)
 
 
-  quarto::quarto_render(
-    system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
-    execute_params = list(dgf_file = paths$dgf.use))
+  sink(log.file, type = "output", append = TRUE)
+
+  mess.quarto <- capture.output(
+    quarto::quarto_render(
+      input = paths$research.guide.template, #system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
+      execute_params = list(dgf_file = paste0("../", paths$dgf.use)),
+      output_format = "all",
+      # output_file = paste0("research-guide-", format(Sys.time(), "%Y-%m-%d")),
+      execute_dir = paths$research.guide
+      ),
+    type = "output"
+  )
+  sink()
+  cat(paste(mess.quarto, "\n"))
+
+  file.types <- c(".md", ".html", ".pdf")
+  for(ft in file.types){
+    file.rename(paste0(paths$project, "/", paths$research.guide, "RG-template", ft),
+                paste0(paths$project,  "/", paths$research.guide, "research-guide-", format(Sys.time(), "%Y-%m-%d"),ft))
+  }
+
+  mess <- paste(
+    "Research Guide sucessfully created in research-guide/ subdirectory. \n",
+    "Directory stucture at the end of Step 3")
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+
+  mess <- capture.output(fs::dir_tree(location.project))
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+
+
+  #### Step 4: Refresh the DGF ----------------
+
+  mess <- paste(
+    "Step 4: Refresh the DGF",
+    "When the data set is updated, this step is meant to compare the old data set to the new one. If anything changed, the DGF should also updated. This updating is designed to be done through the rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated in the DGF without actually verifying each individual entry.",
+    "In the new data set for each variable, generate the hash value. If the new hash valuematches the one in the rg_hash column of the old DGF, no need to update that variable, great! If the new hash value does not match the  one in the rg_hash column of the old DGF, then that variable's rg_[preview/properties/stats/graphics/hash] need to be updated.",
+    "This step is not currently opperational so we skip it for now....",
+    collapse = " \n"
+  )
+  log_message(mess, log.file, TRUE)
+
+
+
+  ## Step 5: Customize -----------------
+
+  mess <- paste(
+    "Step 5: Customize the Research Guide",
+    "The R/05*.R functions are designed for customization of the RG. This could be templates,  div arrangements, fonts, colors, or 'polishing' functions for the variables (such as `dollarize` for monetary values).",
+    "This step is not currently opperational so we skip it for now....",
+    collapse = " \n"
+  )
+  log_message(mess, log.file, TRUE)
+
+
+  ## Mission complete ---------------
+  mess <- "🚀 Mission Complete! All tasks finished successfully."
+  log_message(mess, log.file, TRUE)
+
+  mess <- "Final project directory structure is"
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+
+  mess <- capture.output(fs::dir_tree(location.project))
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+
+  mess <- paste("Returning to oringial working directory", old.wd)
+  log_message(paste(mess, collapse = "\n"), log.file, TRUE)
+
+  setwd(old.wd)
+
 
 
 }

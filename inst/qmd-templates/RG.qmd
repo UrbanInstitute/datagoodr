@@ -7,11 +7,13 @@ format:
     toc-location: body
     toc-depth: 5
     toc-expand: true
-  pdf: default
+  pdf: 
+    output-file: "output_file_name"
+    output-ext: "pdf"
 execute:
   keep-md: true
 params: 
-  dgf_file: "../data-dev/DGF.xlsx"
+  dgf_file:  "../DGF/DGF.xlsx"
 ---
 
 <br>
@@ -39,7 +41,7 @@ library( tm )
 library( stringr)
 ```
 
-```{r, echo=F, message=FALSE, include=FALSE}
+```{r read-data, echo=FALSE, message=FALSE, include=FALSE}
 
 libs <- c("dplyr")
 
@@ -63,25 +65,34 @@ library(datagoodr)
 # files <- paste0("..//", files) # remove "..//" when working on document, keep for render
 # 
 # lapply(files, source)
-
-
 # import DGF - to be read in through render quarto later
 # dgf <- readxl::read_xlsx("../DGF.xlsx" )
 data_file <- (params$dgf_file)
+# cat(data_file)
 filetype.dgf <- tools::file_ext(data_file)
+# cat(filetype.dgf)
 
 # dgf <- readxl::read_excel(data_file)
 if(filetype.dgf == "csv"){
     dgf <- readr::read_csv(data_file)
-  }else if(filetype.dgf %in% c("xls, xlsx")){
+  }else if(filetype.dgf %in% c("xls", "xlsx")){
     dgf <- readxl::read_excel(data_file)
   }else{
     mess <- "DGF file cannot be read. Abort mission."
     cat(mess)
     knitr::knit_exit()
   }
+# 
+# if (exists("dgf")) {
+#   print(head(dgf))
+# } else {
+#   cat("Data frame 'dgf' does not exist.")
+# }
+
+```
 
 
+```{r split-data, echo=F, message=FALSE, include=FALSE}
 # Each variable type needs its own section because each plot type
 # needs its own fig width and height. 
 # To add a new variable type, 
@@ -95,6 +106,20 @@ dgf.log <-  dgf[dgf$vtype_class == "logical", ]
 dgf.fact <-  dgf[dgf$vtype_class == "factor", ]
 dgf.chr <-  dgf[dgf$vtype_class == "character", ]
 dgf.num <-  dgf[dgf$vtype_class == "numeric", ]
+
+
+## Needed for layouts
+## This is not needed when using the functions in 03*.R outside of a package build. 
+## But inside of a package build environment, these need to be global variables
+# Get layout character strings from datagoodr package data
+all.goodr.data <- data(package = "datagoodr")$results[, "Item"]
+all.names <-  grep("^layout\\.", all.goodr.data, value = TRUE)
+
+# Load all layout.DATATYPE objects
+lapply(all.names, function(x) {
+  data(list = x, package = "datagoodr")
+})
+
 
 
 ```
