@@ -7,11 +7,14 @@ format:
     toc-location: body
     toc-depth: 5
     toc-expand: true
+    output-file: file_name_placeholder
+    output-ext: html
   pdf: 
-    output-file: "output_file_name"
+    output-file: file_name_placeholder
     output-ext: "pdf"
 execute:
   keep-md: true
+  output: file_name_placeholder
 params: 
   dgf_file:  "../DGF/DGF.xlsx"
 ---

@@ -7,3 +7,6 @@
 ^data-dev$
 ^qmd-templates$
 ^.*\.Rproj$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
