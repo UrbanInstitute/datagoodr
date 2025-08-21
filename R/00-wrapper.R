@@ -371,12 +371,22 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
                 system.file("qmd-templates", "RG.qmd", package = "datagoodr"))
   log_message(mess, log.file, TRUE)
 
-  ## copy RG template to project folder
-  file.copy(system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
-            paths$research.guide)
-  file.rename(paste0(paths$research.guide, "RG.qmd"),
-              paste0(paths$research.guide, "RG-template.qmd"))
-  paths$research.guide.template <- paste0(paths$research.guide, "RG-template.qmd")
+  ## Replace all instances of "file_name_placeholder" in YAML to correct file name
+  replace_in_qmd <- function(file, old, new) {
+    txt <- readLines(file)
+    txt <- gsub(old, new, txt, fixed = TRUE)  # fixed=TRUE treats old as literal
+    writeLines(txt, file)
+  }
+  #make quarto document name
+  if(is.null(rg.name) | rg.name == "research-guide"){
+    quarto.name <- paste0("research-guide-",  format(Sys.time(), "%Y-%m-%d"))
+  }else{
+    quarto.name <- rg.name
+  }
+  replace_in_qmd(paths$research.guide.template,
+                 "file_name_placeholder",
+                 paste0('"', quarto.name, '"'))
+
 
   mess <- paste("Research guide template sucessfully saved to research-guide/ subdirectory.")
   log_message(mess, log.file, TRUE)
@@ -395,23 +405,6 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   sink(log.file, type = "output", append = TRUE)
 
 
-  #
-  # mess.quarto <- capture.output(
-  #   quarto::quarto_render(
-  #     input = paths$research.guide.template, #system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
-  #     execute_params = list(dgf_file = paste0("../", paths$dgf.use)),
-  #     output_format = "all",
-  #     # output_file = paste0("research-guide-", format(Sys.time(), "%Y-%m-%d")),
-  #     execute_dir = paths$research.guide
-  #     ),
-  #   type = "output"
-  # )
-
-  if(is.null(rg.name) | rg.name == "research-guide"){
-    quarto.name <- paste0("research-guide",  format(Sys.time(), "%Y-%m-%d"))
-  }else{
-    quarto.name <- rg.name
-  }
 
   result <- tryCatch(
     {
@@ -421,13 +414,14 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
           input = paths$research.guide.template,
           execute_params = list(dgf_file = paste0("../", paths$dgf.use)),
           output_format = "all",
-          execute_dir = paths$research.guide,
-          output_file = "quarto.name"
+          execute_dir = paths$research.guide
         ),
         type = "output"
       )
 
       # Action if render succeeds
+      log_message(mess.quarto, log.file, TRUE)
+
       mess <- "✅ Quarto render succeeded!"
       log_message(mess, log.file, TRUE)
 
@@ -443,6 +437,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
       # Optionally log the error
       log_message(paste(mess, e$message), log.file, TRUE)
 
+      sink()
       FALSE  # return value indicating failure
     }
   )
@@ -451,12 +446,12 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   if (!result) {
     mess <- "Abort Mission"
     log_message(mess, log.file, TRUE)
+    sink()
     stop()
   }
 
 
 
-  sink()
   cat(paste(mess.quarto, "\n"))
 
   file.types <- c(".md", ".html", ".pdf")
