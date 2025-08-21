@@ -18,5 +18,5 @@ This function does not return a value; it prints the formatted table to the RG a
 Read rg_properties column of DGF and print properties in a table in the RG
 }
 \details{
-The function is an internal function of `create_div` in R/03-01-create-sections.R.
+The function is an internal function of \link{create_div} in R/03-01-create-sections.R.
 }

@@ -17,10 +17,12 @@ Imports:
     crosswalkr,
     data.table,
     hablar,
+    htmltools,
     jsonlite,
     kableExtra,
     openxlsx,
     purrr,
+    psych,
     quarto,
     readr,
     rlang,
@@ -28,5 +30,13 @@ Imports:
     tm,
     treemap,
     wordcloud
+Suggets:
+    fs,
+    tools
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
+Suggests: 
+    spelling
+Language: en-US
+Depends: 
+    R (>= 2.10)

@@ -1,5 +1,17 @@
 # LAYOUTS WILL BE SAVED AS DATA OBJECTS
 
+#' Numeric variable layout definitions
+#'
+#' Internal layout specification for numeric variables. Each element
+#' is a string describing a div, variable, label, and function to use.
+#'
+#' @format A character vector.
+#'
+#' @details
+#' Called in \link{get_design} to define layout options.
+#'
+#' @keywords internal
+#' @noRd
 layout.numeric <-
   c( "div2 ;; vlabel         ;; LABEL         ;; v_to_txt",
      "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
@@ -11,7 +23,18 @@ layout.numeric <-
 
 #    "div6 ;; vname        ;; QUANTILES     ;; get_quantiles",
 
-
+#' Character variable layout definitions
+#'
+#' Internal layout specification for character string variables. Each element
+#' is a string describing a div, variable, label, and function to use.
+#'
+#' @format A character vector.
+#'
+#' @details
+#' Called in \link{get_design} to define layout options.
+#'
+#' @keywords internal
+#' @noRd
 layout.character <-
   c( "div2  ;; vlabel        ;; LABEL         ;; v_to_txt",
      "div3  ;; vtype_class   ;; DATA TYPE     ;; v_to_txt",
@@ -21,6 +44,19 @@ layout.character <-
      "div12 ;; rg_stats      ;; STATS         ;; paste_stats_chr",
      "div13 ;; rg_graphics   ;; Word Cloud    ;; v_to_wordcloud"  )
 
+
+#' Factor variable layout definitions
+#'
+#' Internal layout specification for factor variables. Each element
+#' is a string describing a div, variable, label, and function to use.
+#'
+#' @format A character vector.
+#'
+#' @details
+#' Called in \link{get_design} to define layout options.
+#'
+#' @keywords internal
+#' @noRd
 layout.factor <-
   c( "div2 ;; vlabel         ;; LABEL         ;; v_to_txt",
      "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
@@ -29,6 +65,19 @@ layout.factor <-
      "div15 ;; rg_stats      ;; MOST COMMON VALUES  ;; paste_stats_fact",
      "div16 ;; rg_graphics   ;; TREEMAP             ;; paste_treemap"  )
 
+
+#' Logical/Boolean variable layout definitions
+#'
+#' Internal layout specification for logical/Boolean variables. Each element
+#' is a string describing a div, variable, label, and function to use.
+#'
+#' @format A character vector.
+#'
+#' @details
+#' Called in \link{get_design} to define layout options.
+#'
+#' @keywords internal
+#' @noRd
 layout.logical <-
   c("div2 ;; vlabel         ;; LABEL         ;; v_to_txt",
     "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
@@ -38,4 +87,12 @@ layout.logical <-
     "div19 ;; rg_graphics   ;; BOOLPLOT      ;; paste_booleplot"  )
 
 
-
+### Save these in the R package
+# usethis::use_data(
+#   layout.numeric,
+#   layout.character,
+#   layout.factor,
+#   layout.logical,
+#   internal = TRUE,
+#   overwrite = TRUE
+# )

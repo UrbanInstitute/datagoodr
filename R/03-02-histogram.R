@@ -58,7 +58,25 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
 # FORMAT NUMBER LABELS
 # SO THEY ARE ALWAYS A
 # UNIFORM WIDTH FOR GRAPHS
-
+#' Format numbers into human-readable strings for graphing
+#'
+#' Converts numeric values into rounded or abbreviated strings, using K/M/B/T
+#' suffixes for thousands, millions, billions, and trillions.
+#'
+#' @param x A numeric value to format.
+#'
+#' @return A character string representing the formatted number.
+#'
+#' @details
+#' - Negative numbers are rounded to 3 decimal places.
+#' - Numbers between 0 and 10 are rounded to 2 decimal places.
+#' - Numbers between 10 and 100 are rounded to 1 decimal place.
+#' - Numbers in the thousands, millions, billions, and trillions are
+#'   abbreviated with `K`, `M`, `B`, or `T`.
+#' - Numbers ≥ 10^15 are returned as `"BFN"`.
+#'
+#' @keywords internal
+#' @noRd
 make3 <- function(x){
   # need to fix for
   # large negative nums

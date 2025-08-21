@@ -1,9 +1,35 @@
+####################################
 ### Internal Functions
+####################################
+
+#' Convert JSON text to a nested R list
+#'
+#' This internal helper function takes a JSON string and converts it
+#' into a nested R list using \pkg{jsonlite}.
+#'
+#' @param json_text A character string containing valid JSON.
+#'
+#' @return A nested list representation of the JSON.
+#'
+#' @keywords internal
+#' @noRd
 json_to_list <- function(json_text) {
   lst <- jsonlite::fromJSON(json_text, simplifyVector = FALSE)
   return(lst)
 }
 
+
+#' Convert JSON text to a data frame
+#'
+#' This internal helper function takes a JSON string and converts it
+#' into a data frame using \pkg{jsonlite}.
+#'
+#' @param json_text A character string containing valid JSON.
+#'
+#' @return A data frame representation of the JSON.
+#'
+#' @keywords internal
+#' @noRd
 json_to_df <- function(json_text) {
   df <- jsonlite::fromJSON(json_text)
   return(as.data.frame(df))
@@ -12,6 +38,25 @@ json_to_df <- function(json_text) {
 
 
 ###  CONVERT CELL VALUE TO DD MARKDOWN TEXT --------
+#' Convert a cell value to Markdown text
+#'
+#' Take a variable name and its label,
+#' looks up the value from the object `xx`, and prints it as
+#' a Markdown string in definition-list style.
+#'
+#' @param VNAME A character string; the name of the variable in `xx`.
+#' @param LABEL A character string; the label to display before the value.
+#'
+#' @return Invisibly returns the constructed Markdown string. The string is
+#'   also printed to the quarto document render using [cat()].
+#'
+#' @details
+#' The global object `xx` is expected to be available in the environment
+#' and contain a named element corresponding to `VNAME`. `xx` is defined in
+#' the \link{create_section} function in R/03-01-create-sections.R.
+#'
+#' @keywords internal
+#' @noRd
 v_to_txt <- function( VNAME, LABEL )
 {
   value  <- xx[[VNAME]]
@@ -34,7 +79,7 @@ v_to_txt <- function( VNAME, LABEL )
 #' @return This function does not return a value; it prints the formatted table to the RG as html code
 #'
 #' @details
-#' The function is an internal function of `create_div` in R/03-01-create-sections.R.
+#' The function is an internal function of \link{create_div} in R/03-01-create-sections.R.
 #'
 #'
 #' @import knitr
@@ -250,6 +295,27 @@ paste_preview_num  <- function( VNAME, LABEL = "STATS" ){
 
 
 ## function to trim a text block to the first 48 characters
+#' Trim and summarize a delimited text block
+#'
+#' Splits a text string on `;;`, trims whitespace,
+#' truncates long values, and constructs a condensed summary block.
+#'
+#' @param x A character string, typically containing values separated by `;;`.
+#'
+#' @return A single character string (`BLOCK`) that represents a condensed
+#'   summary of the most frequent values in `x`. The output is truncated to
+#'   400 characters.
+#'
+#' @details
+#' - The input string is split on `;;` and each piece is trimmed.
+#' - Values longer than 48 characters are truncated.
+#' - A frequency table of values is constructed, and the most common values
+#'   are joined back together with `;;`.
+#' - At most 200 values are included, and the result is truncated to 400
+#'   characters.
+#'
+#' @keywords internal
+#' @noRd
 trim_txt_block <- function( x ){
 
   x <- stringr::str_split(x, ";;", simplify = FALSE)[[1]]

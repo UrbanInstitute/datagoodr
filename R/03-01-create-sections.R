@@ -1,5 +1,21 @@
-
-
+#' Convert the DGF data frame to a named list
+#'
+#' Transforms variables present in DGF into a list.
+#'
+#' @param dgf A data frame or matrix representing the DGF.
+#'
+#' @return A list where each element corresponds to a column of the input `dgf`.
+#'   The element names are the row names of `dgf`, and the top row of `dgf`
+#'   is used as the list element names.
+#'
+#' @details
+#' - The input is transposed and coerced to a data frame.
+#' - The first row of the transposed object is used to set column names.
+#' - Each column is then converted into a named vector, with names taken
+#'   from the row names of the transposed data frame.
+#'
+#' @keywords internal
+#' @noRd
 dgf_to_list <- function( dgf ) {
 
   m <- t(dgf)
@@ -18,7 +34,25 @@ dgf_to_list <- function( dgf ) {
 }
 
 
-
+#' Parse design strings into a data frame
+#'
+#' This function parses a character string (or vector of strings) containing
+#' fields separated by `;;` into a tidy data frame. It trims whitespace,
+#' checks element lengths with `check_length()`, and binds the parsed rows
+#' together.
+#'
+#' @param x A character vector, where each element contains values separated
+#'   by `;;`.
+#'
+#' @return A data frame, where each input string is split into fields and
+#'   represented as a row.
+#'
+#' @details
+#' Used inside \link{get_design}.
+#' @seealso [check_length()]
+#'
+#' @keywords internal
+#' @noRd
 parse_design <- function( x ) {
   x <- gsub( ";;$", ";; ", x )
   L <- strsplit( x, ";;" )
@@ -28,7 +62,23 @@ parse_design <- function( x ) {
   return( d )
 }
 
-
+#' Check and standardize design element length
+#'
+#' Ensures a parsed design element has the correct length and structure.
+#' If only three elements are present, an empty string is appended as the
+#' fourth element. If the length is not four, an error is thrown.
+#'
+#' @param x A character vector representing a parsed design element.
+#'
+#' @return A named character vector of length four with names
+#'   `"DIV"`, `"VNAME"`, `"LABEL"`, and `"FUNCTION"`.
+#'
+#' @details
+#' Used in \link{parse_design}.
+#'
+#'
+#' @keywords internal
+#' @noRd
 check_length <- function(x) {
   # add empty element if no label is provided
   if( length(x) == 3 )
@@ -46,7 +96,24 @@ check_length <- function(x) {
 # GET ALL LAYOUTS FROM ENV
 # AND RETURN DESIGN MATRIX
 
-get_design <- function() {
+#' Initialize design for each section
+#'
+#' Finds all objects in the global environment with names matching
+#' `"layout."`, parses them with [parse_design()], and combines them
+#' into a single data frame with a `TYPE` column derived from the
+#' object name.
+#'
+#' @return A data frame containing all compiled layout designs with
+#'   their associated type.
+#'
+#' @details
+#' Used in \link{create_all_sections}
+#'
+#'
+#' @seealso [parse_design()]
+#' @keywords internal
+#' @noRd
+get_design  <- function() {
 
   #  ---------------------------------------------
   #  compile all layouts into a design df
@@ -101,6 +168,18 @@ get_design <- function() {
 ## or can we retrieve at the higher level?
 
 
+#' Create a level-1 div section in markdown
+#'
+#' Writes a formatted `div1` block to the quarto document. `div1` is the
+#' variable name for all variable types.
+#'
+#' @param x Character string, the label or variable name to include
+#'   in the header. Defaults to `"vname"`.
+#'
+#' @return No return value, called for side effects (writes markdown text).
+#'
+#' @keywords internal
+#' @noRd
 create_div1 <- function( x="vname" )
 {
   cat( "::: {.div1} \n\n" )
@@ -109,7 +188,25 @@ create_div1 <- function( x="vname" )
 }
 
 
-
+#' Create all non-level-1 div section in markdown
+#'
+#' Writes a formatted `div` block to the quarto document. Format of the `div`
+#' block is determined by the `all.layouts` table.
+#'
+#' @param x Character string, the label or variable name to include
+#'   in the header. Defaults to `"vname"`.
+#' @param all.layouts output of \link{get_design}
+#' @param xx defined as a global variable in \link{create_section}.
+#'
+#' @return No return value, called for side effects (writes markdown text).
+#'
+#' @details
+#' If div name of `x` is not included in `all.layouts`, nothing will be
+#' printed for that div in the quarto document.
+#'
+#'
+#' @keywords internal
+#' @noRd
 create_div <- function( div.num="div2", all.layouts, xx ) {
 
   DATA_TYPE <- xx[["vtype_class"]] # change data_type to vtype_class
@@ -137,14 +234,33 @@ create_div <- function( div.num="div2", all.layouts, xx ) {
 }
 
 
-
-
-
+#' Create a section for a variable
+#'
+#' Generates a formatted section in Quarto for a given variable.
+#' Uses layouts from `all.layouts` and content from `L` to construct div blocks.
+#'
+#' @param VNAME Character string, the name of the variable to create a section for.
+#'   Defaults to `"EIN"`.
+#' @param all.layouts Output of \link{get_design()}.
+#' @param L A named list of variable-specific content. `L[[VNAME]]` should
+#'   be the output of `dgf_to_list( dgf )` where `dgf` is the dgf as a data frame.
+#'
+#' @return No return value; the function writes formatted Quarto content
+#'   to the output.
+#'
+#' @details
+#' The function sets `xx <<- L[[VNAME]]` in the global environment for
+#'   downstream div functions to access.
+#'
+#' @seealso [create_all_sections()]
+#'
+#' @keywords internal
+#' @noRd
 create_section <- function( VNAME="EIN", all.layouts, L ) {
 
   xx <<- L[[ VNAME ]] #make this a global variable?
   xx[["VNAME"]] <- VNAME
-  DATA_TYPE <- xx[["vtype_class"]] #change data_type to vtype_class
+  DATA_TYPE <- xx[["vtype_class"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]
@@ -160,7 +276,25 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
 
 }
 
-
+#' Create sections for all variables in a DGF
+#'
+#' Generates Quarto report sections for each variable in the
+#' provided DGF object. Uses the layouts obtained from [get_design()]
+#' and content from [dgf_to_list()].
+#'
+#' @param dgf the DGF as a data frame
+#'
+#' @return No return value; the function writes formatted Quarto
+#'   content for each variable to the output.
+#'
+#' @details
+#' - Converts the DGF data frame into a list of variables using [dgf_to_list()].
+#' - Retrieves the design layouts with [get_design()].
+#' - Iterates over each variable name, calling [create_section()] to
+#'   generate its report section.
+#'
+#' @keywords internal
+#' @noRd
 create_all_sections <- function( dgf ) {
 
   all.layouts <- get_design()
