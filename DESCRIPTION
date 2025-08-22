@@ -2,8 +2,10 @@ Package: datagoodr
 Type: Package
 Title: Gooder Data Means Gooder Research
 Version: 0.1.0
-Author: person("Olivia", "Beck", , "obeck@urban.org", role = c("aut", "cre")),
-    person("Jesse", "Lecy", , "jlecy@urban.org", role = c("aut", "cre"))
+Authors@R: c(
+    person("Olivia", "Beck", , "obeck@urban.org", role = c("aut")),
+    person("Jesse", "Lecy", , "jlecy@urban.org", role = c("aut", "cre")),
+    person("Urban Inistitue National Center for Charitable Statistics", role = c("fnd")))
 Maintainer: Jesse Lecy <jlecy@urban.org>
 Description: Calculates governance scores for nonprofits using factor analysis.
 License: GPL (>= 3)

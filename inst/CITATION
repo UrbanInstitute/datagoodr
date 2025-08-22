@@ -1,0 +1,8 @@
+bibentry(
+  bibtype  = "Misc",
+  title    = "datagoodr Package for R",
+  author   = c(person("Olivia", "Beck"), person("Jesse", "Lecy")),
+  year     = "2025",
+  url      = "https://urbaninstitute.github.io/datagoodr/",
+  version  = "v1.0.0-beta",
+)

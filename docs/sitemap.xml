@@ -4,6 +4,12 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/datagoodr-workflow.html</loc>
+  </url>
+  <url>
+    <loc>/articles/index.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -37,7 +43,16 @@
     <loc>/reference/datagoodr.html</loc>
   </url>
   <url>
+    <loc>/reference/dgf.detailed.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dgf.html</loc>
+  </url>
+  <url>
     <loc>/reference/dollarize.html</loc>
+  </url>
+  <url>
+    <loc>/reference/example.df.html</loc>
   </url>
   <url>
     <loc>/reference/first_n.html</loc>

@@ -23,7 +23,8 @@ NULL
 #' @return A data frame containing the data from the "DGF" sheet of the specified Excel file.
 #'
 #' @import openxlsx
-#' @export
+#' @keywords internal
+#' @noRd
 load_dgf <- function( filename="DGF.xlsx" ) {
   dgf <- openxlsx::read.xlsx( xlsxFile=filename, sheet="DGF" )
   return(dgf)

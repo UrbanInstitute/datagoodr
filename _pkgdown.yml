@@ -2,4 +2,31 @@ url: ~
 destination: docs
 template:
   bootstrap: 5
+  bootswatch: simplex
 
+navbar:
+  structure:
+    left:  [intro, reference, articles]
+
+
+reference:
+  - title: DataGoodR Workflow
+    contents:
+    - datagoodr
+  - title: Data Governance File (DGF)
+    contents:
+    - create_dgf
+    - create_all_sections
+  - title: Data
+    contents:
+    - example.df
+    - dgf
+    - dgf.detailed
+
+
+home:
+  links:
+  - text: NCCS Homepage
+    href: https://nccs.urban.org
+  - text: 990 Efile Data
+    href: https://nccs.urban.org/nccs/datasets/efile/

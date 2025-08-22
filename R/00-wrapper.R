@@ -12,7 +12,7 @@
 #'
 #' @return Invisibly returns the log line written (a character string).
 #'   Used for side effects (writing to file and printing).
-#' @export
+#' @keywords internal
 log_message <- function(message, logfile = "datagoodr.txt", console = TRUE) {
   timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 

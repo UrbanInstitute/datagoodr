@@ -38,6 +38,12 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/datagoodr-workflow.html">datagoodr-workflow</a>
+  </div>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -54,58 +60,13 @@
 <div class="page-header"><h1 id="datagoodr">datagoodr<a class="anchor" aria-label="anchor" href="#datagoodr"></a>
 </h1></div>
 <p>R package for documenting and profiling research datasets. Gooder data means gooder research.</p>
+<p>See Vignette for manual and wrapper function workflow.</p>
 <div class="section level2">
 <h2 id="acronyms">Acronyms<a class="anchor" aria-label="anchor" href="#acronyms"></a>
 </h2>
 <ul>
 <li>RG = Research Guide</li>
 <li>DGF = Data Governance File/Framework</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="current-file-structure">Current file structure;<a class="anchor" aria-label="anchor" href="#current-file-structure"></a>
-</h2>
-<ul>
-<li>
-<p>data-dev/ contains all the data for testing purposes</p>
-<ul>
-<li>DEMO-DATA-SMALL.CSV is the small data set used for testing</li>
-<li>DGF-CORE-CO-2019-V1.xlsx is a template of what the DGF should looks like that was created by hand to serve as an example.</li>
-<li>DGF-CORE-CO-2019-blank.xlsx is used in the datagoodr pipeline for examples of adding meta data to each variable.</li>
-<li>DGF.csv and DGF.xlsx are examples of generated DGF from Step 01 (see below)</li>
-</ul>
-</li>
-<li>
-<p>dev/ contains some documentation of the work flow and tasks that still need to be done</p>
-<ul>
-<li>03-work-flow.md describes the workflow for Step 3 (see below)</li>
-<li>data-type-funcs.md describes the functions and their locations for each data type in Steps 1 and 3 below</li>
-<li>TO-DO.md is a list of things that still need to be addressed</li>
-</ul>
-</li>
-<li><p>DRAFT/ is all the draft scripts</p></li>
-<li><p>pptx/ are various powerpoints describing the overall goals of the datagoodr package</p></li>
-<li>
-<p>qmd-templates contains quarto documents templates for the final research guide</p>
-<ul>
-<li>qmd-templates-DRAFT/ contains all the draft files</li>
-<li>test-render/ contains testing scripts</li>
-<li>RG_files contains meta data that is updated with RG.md is rendered</li>
-<li>RG.qmd is the script to generate the research guide from Step 3 below</li>
-<li>RG.html, .html.md, .md, .pdf are the rendered RG</li>
-</ul>
-</li>
-<li>
-<p>R/ contains all the R scripts used in the datagoodr pipeline</p>
-<ul>
-<li>01*.R scripts are scripts used for Step 1</li>
-<li>02*.R scripts are scripts used for Step 2</li>
-<li>03*.R scripts are scripts used for Step 3</li>
-<li>04*.R scripts are scripts used for Step 4</li>
-<li>05*.R scripts are scripts used for Step 5</li>
-</ul>
-</li>
-<li><p>working-example/ contains scripts and instructions for a working example of the datagoodr package.</p></li>
 </ul>
 </div>
 <div class="section level2">
@@ -135,20 +96,86 @@
 <p>This step inputs the DGF you made in step 1 (and validated in step 2) then makes the research guide in PDF and HTML file types.</p>
 <p>If you are only generating documentation for this data set one time, you can stop here. Step 4 and 5 are for when you need to regularly update the data, and thus regularly update the associated RG.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="step-4-refresh-the-dgf">Step 4: Refresh the DGF<a class="anchor" aria-label="anchor" href="#step-4-refresh-the-dgf"></a>
-</h2>
+<div class="section level3">
+<h3 id="step-4-refresh-the-dgf">Step 4: Refresh the DGF<a class="anchor" aria-label="anchor" href="#step-4-refresh-the-dgf"></a>
+</h3>
 <p>When the data set is updated, this step is meant to compare the old data set to the new one. If anything changed, the DGF should also updated. This updating is designed to be done through the rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated in the DGF without actually verifying each individual entry.</p>
 <p>In the new data set for each variable, generate the hash value. If the new hash value matches the one in the rg_hash column of the old DGF, no need to update that variable, great! If the new hash value does not match the one in the rg_hash column of the old DGF, then that variable’s rg_[preview/properties/stats/graphics/hash] need to be updated.</p>
 </div>
-<div class="section level2">
-<h2 id="step-5-customize">Step 5: Customize<a class="anchor" aria-label="anchor" href="#step-5-customize"></a>
-</h2>
+<div class="section level3">
+<h3 id="step-5-customize">Step 5: Customize<a class="anchor" aria-label="anchor" href="#step-5-customize"></a>
+</h3>
 <p>The R/05*.R functions are designed for customization of the RG. This could be templates, div arrangements, fonts, colors, or “polishing” functions for the variables (such as <code>dollarize</code> for monetary values).</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+<div class="section level2">
+<h2 id="current-file-structure">Current file structure;<a class="anchor" aria-label="anchor" href="#current-file-structure"></a>
+</h2>
+<ul>
+<li><p>data/ contains all .rda data files used in datagoodr R package.</p></li>
+<li>
+<p>data-dev/ contains all the data for testing purposes</p>
+<ul>
+<li>DEMO-DATA-SMALL.CSV is the small data set used for testing</li>
+<li>DGF-CORE-CO-2019-V1.xlsx is a template of what the DGF should looks like that was created by hand to serve as an example.</li>
+<li>DGF-CORE-CO-2019-blank.xlsx is used in the datagoodr pipeline for examples of adding meta data to each variable.</li>
+<li>DGF.csv and DGF.xlsx are examples of generated DGF from Step 01 (see below)</li>
+</ul>
+</li>
+<li>
+<p>dev/ contains some documentation of the work flow and tasks that still need to be done</p>
+<ul>
+<li>03-work-flow.md describes the workflow for Step 3 (see below)</li>
+<li>data-type-funcs.md describes the functions and their locations for each data type in Steps 1 and 3 below</li>
+<li>TO-DO.md is a list of things that still need to be addressed</li>
+</ul>
+</li>
+<li><p>docs/ is all files for pkgdown website</p></li>
+<li><p>DRAFT/ is all the draft scripts</p></li>
+<li>
+<p>inst/</p>
+<ul>
+<li>CITATION is citation file</li>
+<li>qmd-templates/RG.qmd is the RG Quarto document template used in the <code>datagoodr</code> wrapper funciton.</li>
+</ul>
+</li>
+<li><p>man/ all man files for R package.</p></li>
+<li><p>pptx/ are various powerpoints describing the overall goals of the datagoodr package</p></li>
+<li>
+<p>qmd-templates/ contains quarto documents templates for the final research guide</p>
+<ul>
+<li>qmd-templates-DRAFT/ contains all the draft files</li>
+<li>test-render/ contains testing scripts</li>
+<li>RG_files contains meta data that is updated with RG.md is rendered</li>
+<li>RG.qmd is the script to generate the research guide from Step 3 below</li>
+<li>RG.html, .html.md, .md, .pdf are the rendered RG</li>
+</ul>
+</li>
+<li>
+<p>R/ contains all the R scripts used in the datagoodr pipeline</p>
+<ul>
+<li>00*.R scripts are for data files, utils funcitons, and wrapper function.</li>
+<li>01*.R scripts are scripts used for Step 1</li>
+<li>02*.R scripts are scripts used for Step 2</li>
+<li>03*.R scripts are scripts used for Step 3</li>
+<li>04*.R scripts are scripts used for Step 4</li>
+<li>05*.R scripts are scripts used for Step 5</li>
+</ul>
+</li>
+<li><p>vignettes/ includes code on how to use datagoodr workflow manually and with <code>datagoodr</code> wrapper function.</p></li>
+<li><p>working-example/ contains scripts and instructions for a working example of the datagoodr functions.</p></li>
+</ul>
+</div>
+</div>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://nccs.urban.org" class="external-link">NCCS Homepage</a></li>
+<li><a href="https://nccs.urban.org/nccs/datasets/efile/" class="external-link">990 Efile Data</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 3)</li>
@@ -166,7 +193,9 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Jesse Lecy <br><small class="roles"> Maintainer </small>  </li>
+<li>Olivia Beck <br><small class="roles"> Author </small>  </li>
+<li>Jesse Lecy <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Urban Inistitue National Center for Charitable Statistics <br><small class="roles"> Funder </small>  </li>
 </ul>
 </div>
 
@@ -178,7 +207,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Jesse Lecy.</p>
+<p>Developed by Olivia Beck, Jesse Lecy, Urban Inistitue National Center for Charitable Statistics.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -23,3 +23,4 @@ Invisibly returns the log line written (a character string).
 Appends a timestamped message to a log file. By default, the message is also
 printed to the console for immediate feedback.
 }
+\keyword{internal}

@@ -3,6 +3,9 @@
 
 The following code executes a working example of the datagoodR workflow. 
 
+See Vignette for manual and wrapper function workflow. 
+
+
 ## Step 0: Save data file in data-dev/ directory. 
 
 Currently data-dev/DEMO-DATA-SMALL.csv is a good example. 

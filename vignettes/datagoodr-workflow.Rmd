@@ -16,4 +16,173 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(datagoodr)
+wd <- "../working-example" #this is the datagoodr/working-example folder
 ```
+
+
+The following code executes a working example of the datagoodR workflow. 
+
+## Manual Steps
+
+###  Step 0: Load/Save Data 
+
+Load or save the data you wish to use. The `example.df` data set is the same as 
+the csv saved at datagoodr/data-dev/DEMO-DATA-SMALL.csv.
+
+```{r step0}
+data("example.df", package = "datagoodr")
+# datafile is located at
+# system.file("example.df", package = "datagoodr")
+```
+
+
+
+### Step 1: Create the DGF
+
+This step inputs a data file then outputs 
+the DGF as an excel and csv file. These files can then be manually (or iteratively)
+updated until they have all the information you want. 
+
+
+The goal of the DGF is to store the "minimum" amount of information to render the 
+research guide without needed to read the raw data into the quarto document in
+step 3. 
+
+If we want to create a DGF with the default settings, we run the following code. 
+
+```{r step1, eval = FALSE}
+## create the DGF from just the data frame with no extra styling
+# this creates DGF-V1.csv and DGF-V1.xlsx
+create_dgf(example.df,
+           file = paste0(wd, "DGF-V1"))
+
+```
+
+
+Say we want to add some more detailed information to our DGF, such as the descriptions 
+of the variables, the factor levels, etc. We first define the additional information we want to add. Then we create the DGF with this information. 
+
+```{r step1-detailed, eval = FALSE}
+info <-
+  "vname,dd_desc,data_type_convert,data_type_format\n
+  F9_00_ORG_NAME_L1,Organization name line 1,NA,NA\n
+  F0_00_ORG_CONTACT,Contact person (from IRS files),NA,NA\n
+  F9_00_ORG_ADDR_L1,Organization street address line 1,NA,NA\n
+  F9_00_ORG_ADDR_CITY,Organization city,NA,NA\n
+  EIN,EIN,as.character,as_EIN\n
+  SUBSECCD,IRS subsection code,NA,NA\n
+  BMF_ACTIV1,IRS Activity Code 1,as.factor,NA\n
+  NTMAJ12,NTEE major group (12),NA,NA\n
+  NTEE1,NTEE major group,NA,NA\n
+  NTEEFINAL,NA,as.factor,NA\n
+  NTEESRC,NA,NA,NA\n
+  DEDUCTCD,IRS Deductibility code,NA,NA\n
+  OUTREAS,Reason why out of scope,as.factor,NA\n
+  F9_05_UBIZ_IMCOME_OVER_LIMIT_X,\"Had unrelated business gross income of $1,000 or   more\",as.factor,NA\n
+  OUTNCCS,Out of Scope flag,as.factor,NA\n
+  COUNTY_FIPS,State + County FIPS code,NA,NA\n
+  CEO_CENSUSTRACT,Census tract,NA,NA\n
+  F9_00_TAX_PERIOD_END_DATE,Tax period end date,NA,as_yyyymm\n
+  F9_00_TAX_PERIOD_END_DATE_PY,Tax period end date - prior year,NA,as_yyyymm\n
+  F9_00_TAX_PERIOD_BEGIN_DATE,Tax period begin date,as.character,as_yyyymm\n
+  F9_00_TAX_ACCPER,Tax period end date,NA,as_mm\n
+  F9_08_REV_TOT_TOT,Total revenue - total,NA,NA\n
+  F9_10_ASSET_TOT_BOY,Total assets - beginning of year,NA,NA\n
+  F9_10_ASSET_TOT_EOY,Total assets - end of year,NA,NA\n
+  F9_10_NAFB_TOT_BOY,Net assets or fund balances - beginning of year,NA,NA\n
+  F9_09_EXP_TOT_TOT,Total functional expenses - total expenses,NA,NA\n
+  F9_01_EXP_TOT_PY,Total expenses - prior year,NA,NA\n"
+
+# cat(info)
+info <- readr::read_csv(info)
+
+create_dgf(example.df,
+           vdesc = info$dd_desc,
+           vconvert = info$data_type_convert,
+           vformat = info$data_type_format,
+           file =  paste0(wd, "DGF-V2")
+)
+```
+
+
+
+### Step 2: Validate the DGF
+
+This step would include many of the DGF validation steps in the R/02*.R files. 
+This is not currently operational. The goal of this step is to validate each 
+column to make sure it is in a format that step 3 can handle. 
+
+### Step 3: Render the RG
+
+
+This step inputs the DGF you made in step 1 (and validated in step 2) 
+then renders datagoodr/inst/qmd-templates/RG.qmd file. This file makes the research guide in PDF 
+and HTML file type in the current working directory. 
+
+
+```{r step3, eval = FALSE}
+
+# set the path to the most recent version of the DGF that you want to use
+# the path is relative to where the RG.qmd file is (sorry, this is mildly annoying)
+# so the correct file path for this example is...
+path_to_dgf <-"../working-example/DGF-V2.xlsx"
+
+
+## Then we render the quarto document (in the qmd-templates folder)
+quarto::quarto_render(
+  "qmd-templates/RG.qmd",
+  execute_params = list(dgf_file = path_to_dgf))
+
+# The rendered versions should be in qmd-templates/RG.html and qmd-templates/RG.pdf
+
+```
+
+
+
+
+If you are only generating documentation for this data set one time, you can stop 
+here. Step 4 and 5 are for when you need to regularly update the data, and thus 
+regularly update the associated RG. 
+
+
+### Step 4: Refresh the DGF
+
+When the data set is updated, this step is meant to compare the old data set to the new one. 
+If anything changed, the DGF should also updated. This updating is designed to be done through the 
+rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated 
+in the DGF without actually verifying each individual entry. 
+
+In the new data set for each variable, generate the hash value. If the new hash value
+matches the one in the rg_hash column of the old DGF, no need to update that variable, great! 
+If the new hash value does not match the  one in the rg_hash column of the old DGF, then 
+that variable's rg_[preview/properties/stats/graphics/hash] need to be updated. 
+
+
+### Step 5: Customize
+
+The R/05*.R functions are designed for customization of the RG. This could be templates, 
+div arrangements, fonts, colors, or "polishing" functions for the variables (such as `dollarize`
+for monetary values). 
+
+## Wrapper Funtion
+
+We have built a wrapper function that creates a project folder, 
+runs Steps 1 and 3, and documents all actions in a log file. 
+To use the wrapper function, run the following code: 
+
+```{r wrapper, eval = FALSE}
+datagoodr(
+  wd = getwd(), # specify the directory you want the project output to be in
+  folder.name = NULL, # specify the project folder name, default is datagoodr-TODAYS-DATE
+  location.data.raw <- system.file("example.df", package = "datagoodr"), #filepath of rawdata set
+  create.dgf.params = list(use.df.types = FALSE, #list of parameters for DGF
+                           guess.factors = TRUE,
+                           guess.dates = FALSE,
+                           vdesc = info$dd_desc,
+                           vconvert = info$data_type_convert,
+                           vformat = info$data_type_format),
+  rg.name = "test-research-guide"
+)
+
+```
+
