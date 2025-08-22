@@ -96,7 +96,7 @@ most_common_val <- function(x) {
   # use data table for speed:
   x <- c(x)
   tibble(x = x) %>%
-    count(x) %>%
+    dplyr::count(x) %>%
     dplyr::filter(n==max(n)) %>%
     dplyr::slice(1) %>%
     dplyr::pull(x) %>%
