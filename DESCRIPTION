@@ -9,7 +9,7 @@ Description: Calculates governance scores for nonprofits using factor analysis.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Suggets:
     dplyr,
     magrittr,
     knitr,
@@ -29,14 +29,12 @@ Imports:
     stringr,
     tm,
     treemap,
-    wordcloud
-Suggets:
+    wordcloud,
     fs,
-    tools
+    tools,
+    spelling
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
-Suggests: 
-    spelling
 Language: en-US
 Depends: 
     R (>= 2.10)
