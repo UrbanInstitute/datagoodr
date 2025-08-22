@@ -34,7 +34,7 @@
 #' }
 #'
 #' @details See \url{https://nonprofit-open-data-collective.github.io/irs990efile/data-dictionary/data-dictionary.html} for full data dictionary.
-example.df
+NULL
 
 
 #' DGF Default
@@ -48,7 +48,8 @@ example.df
 #' data(df)
 #' create_dgf(df, file = "dgf")
 #' }
-dgf
+NULL
+
 
 #' DGF Detailed
 #'
@@ -57,6 +58,7 @@ dgf
 #' @format Result of \link{create_dgf} with \link{example.df} data using formatting options.
 #' @details This data set was generated using the code in the example section of this help file.
 #' See datagoodr/working-example/README.md for more details on how this dgf was created.
+#' See datagoodr/R/02-02-ingest-utils.R for the non base R functions in `info$data_type_format` in the example below.
 #' @examples
 #' \dontrun{
 #' data(df)
@@ -100,7 +102,8 @@ dgf
 #'            vformat = info$data_type_format,
 #'            file = "dgf-detailed")
 #' }
-dgf.detailed
+NULL
+
 
 
 

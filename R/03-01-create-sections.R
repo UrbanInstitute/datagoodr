@@ -51,7 +51,8 @@ dgf_to_list <- function( dgf ) {
 #' Used inside \link{get_design}.
 #' @seealso [check_length()]
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 parse_design <- function( x ) {
   x <- gsub( ";;$", ";; ", x )
   L <- strsplit( x, ";;" )
@@ -76,7 +77,8 @@ parse_design <- function( x ) {
 #' Used in \link{parse_design}.
 #'
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 check_length <- function(x) {
   # add empty element if no label is provided
   if( length(x) == 3 )
@@ -109,7 +111,8 @@ check_length <- function(x) {
 #'
 #'
 #' @seealso [parse_design()]
-#' @export
+#' @keywords internal
+#' @noRd
 get_design  <- function() {
 
   #  ---------------------------------------------
@@ -185,7 +188,8 @@ get_design  <- function() {
 #'
 #' @return No return value, called for side effects (writes markdown text).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 create_div1 <- function( x="vname" )
 {
   cat( "::: {.div1} \n\n" )
@@ -211,7 +215,8 @@ create_div1 <- function( x="vname" )
 #' printed for that div in the quarto document.
 #'
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 create_div <- function( div.num="div2", all.layouts, xx ) {
 
   DATA_TYPE <- xx[["vtype_class"]] # change data_type to vtype_class
@@ -259,7 +264,8 @@ create_div <- function( div.num="div2", all.layouts, xx ) {
 #'
 #' @seealso [create_all_sections()]
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 create_section <- function( VNAME="EIN", all.layouts, L ) {
 
   xx <<- L[[ VNAME ]] #make this a global variable?

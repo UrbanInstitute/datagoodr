@@ -32,37 +32,21 @@ load_dgf <- function( filename="DGF.xlsx" ) {
 
 
 
-#' Pipe operator
+
+#' Create a summary of variable types and examples (internal)
 #'
-#' See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
+#' Generates a data frame summarizing the class and a sample value for each
+#' column in a data frame.
 #'
-#' @name %>%
-#' @rdname pipe
+#' @param df A `data.frame` to summarize.
+#'
+#' @return A data frame with columns:
+#'   - `VAR`: variable names,
+#'   - `TYPE`: the class of each variable,
+#'   - `EXAMPLE`: the first non-missing value from each variable.
+#'
 #' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
-#' @usage lhs \%>\% rhs
-#' @param lhs A value or the magrittr placeholder.
-#' @param rhs A function call using the magrittr semantics.
-#' @return The result of calling `rhs(lhs)`.
-NULL
-
-
-
-
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname get_class_df
-#' @export
+#' @noRd
 get_class_df <- function(df)
 {
   v <- sapply( df, class )
@@ -88,7 +72,8 @@ get_class_df <- function(df)
 #' dollarize(1234567.89) # Returns "$1,234,568"
 #' dollarize(c(1000, 2500.75, 999999.99)) # Returns c("$1,000", "$2,501", "$1,000,000")
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 dollarize <- function(x)
 {
   x <- round(x,0)
@@ -117,11 +102,11 @@ dollarize <- function(x)
 #' first_n(c(1.234567, 2.345678, 3.456789), 2)
 #' first_n(as.Date(c("2021-01-01", "2021-02-01", "2021-03-01")), 2)
 #'
-#' @export
 #' @seealso
 #'  \code{\link[stringr]{str_trunc}}
 #' @rdname first_n
-#' @export
+#' @keywords internal
+#' @noRd
 #' @importFrom stringr str_trunc
 first_n <- function( x, n=5 )
 {
@@ -140,21 +125,18 @@ first_n <- function( x, n=5 )
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param f PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[jsonlite]{toJSON, fromJSON}}
-#' @rdname jsonify_f
-#' @export
+#' Convert a factor to a formatted JSON string (internal)
+#'
+#' Converts a factor variable into a JSON-formatted string showing factor levels
+#' and labels. Removes quotes and truncates to the first 50 levels if necessary.
+#'
+#' @param f A factor or a vector that can be coerced to a factor.
+#'
+#' @return A JSON-formatted character string representing the factor levels and
+#'   labels.
+#'
+#' @keywords internal
+#' @noRd
 #' @importFrom jsonlite toJSON
 jsonify_f <- function(f)
 {
@@ -183,19 +165,17 @@ jsonify_f <- function(f)
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param f PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname get_levels
-#' @export
+#' Get factor levels as a formatted string (internal)
+#'
+#' Converts a factor to a character string of its levels separated by
+#' `";; \n"`. Truncates to the first 50 levels if the factor has more than 50.
+#'
+#' @param f A factor or a vector that can be coerced to a factor.
+#'
+#' @return A single character string listing the factor levels.
+#'
+#' @keywords internal
+#' @noRd
 get_levels <- function(f)
 {
   f <- factor(f)
@@ -232,7 +212,8 @@ get_levels <- function(f)
 #' get_dupes(df, vhash)  # Identify and print duplicate variables
 #' }
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 get_dupes <- function( df, vhash ) {
 
   hh <- vhash  # sapply( df, rlang::hash )

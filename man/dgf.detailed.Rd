@@ -12,6 +12,7 @@ An example of a generated DGF with formatting options.
 \details{
 This data set was generated using the code in the example section of this help file.
 See datagoodr/working-example/README.md for more details on how this dgf was created.
+See datagoodr/R/02-02-ingest-utils.R for the non base R functions in `info$data_type_format` in the example below.
 }
 \examples{
 \dontrun{

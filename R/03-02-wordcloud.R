@@ -18,7 +18,8 @@
 #' The function is an internal function of `create_div` in R/03-01-create-sections.R.
 #'
 #' @import treemap
-#' @export
+#' @keywords internal
+#' @noRd
 v_to_wordcloud <- function( VNAME, LABEL = "WORD CLOUD" ) {
 
   # for testing VNAME <- div.fxs$VNAME

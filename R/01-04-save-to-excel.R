@@ -1,10 +1,18 @@
-#' @title Saves DGF to excel
+#' Save DGF data frame to a styled Excel workbook
 #'
-#' @description Write the DGF to excel.
+#' Writes a dgf data frame to an Excel workbook with pre-defined styles,
+#' including colored headers, alternating row fills, monospace fonts for code columns,
+#' and frozen panes. Opens the workbook in Excel after saving.
 #'
-#' @details used inside of 01-00-CREATE-DGF.R
+#' @param df DGF as data frame to write to Excel.
+#' @param filename Name of the Excel file to create. Defaults to `"DGF.xlsx"`.
 #'
-#' @export
+#' @return Invisibly returns `NULL`. Opens the Excel file in Excel.
+#'
+#' @importFrom openxlsx createWorkbook addWorksheet writeData setRowHeights setColWidths
+#'   modifyBaseFont createStyle addStyle freezePane saveWorkbook openXL
+#' @keywords internal
+#' @noRd
 save_to_excel <- function( df, filename="DGF.xlsx" )
 {
 

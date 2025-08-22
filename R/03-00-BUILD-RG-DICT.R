@@ -83,7 +83,8 @@ v_to_txt <- function( VNAME, LABEL )
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 
   # for testing VNAME <- div.fxs$VNAME
@@ -118,7 +119,8 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_stats_num <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
@@ -150,7 +152,8 @@ paste_stats_num <- function( VNAME, LABEL = "STATS" ){
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
@@ -190,7 +193,8 @@ paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_stats_fact <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
@@ -221,7 +225,8 @@ paste_stats_fact <- function( VNAME, LABEL = "STATS" ){
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_stats_log <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
@@ -260,7 +265,8 @@ paste_stats_log <- function( VNAME, LABEL = "STATS" ){
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_preview_num  <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
@@ -351,7 +357,8 @@ trim_txt_block <- function( x ){
 #'
 #'
 #' @import knitr
-#' @export
+#' @keywords internal
+#' @noRd
 paste_preview_chr <-function( VNAME, LABEL = "PREVIEW" ){
 
   # for testing VNAME <- div.fxs$VNAME

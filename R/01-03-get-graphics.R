@@ -21,7 +21,8 @@
 #'   \item `"logical"`: Calls `get_graphics_log(VNAME, df)`
 #'   \item Other classes: Calls `get_graphics_chr(VNAME, df)`
 #' }
-#' @export
+#' @keywords internal
+#' @noRd
 get_graphics <- function(VNAME, df, VCLASS){
 
   if(VCLASS == "numeric"){
@@ -39,6 +40,22 @@ get_graphics <- function(VNAME, df, VCLASS){
 ### Character (Word Cloud) ------------------------------------
 
 # outputs table of 50 most common strings and their associated frequencies
+#' Generate frequency table for character columns (internal)
+#'
+#' Computes the 50 most common strings in a character column of a data frame
+#' along with their frequencies, and returns the result as JSON.
+#'
+#' @param VNAME Name of the column to process.
+#' @param df A data frame containing the column.
+#'
+#' @return A JSON representation of the frequency table for the top 50 values.
+#'
+#' @details
+#' later used in \link{v_to_wordcloud}.
+#'
+#'
+#' @keywords internal
+#' @noRd
 get_graphics_chr <- function(VNAME, df){
 
   # VNAME <- xx[VNAME]
@@ -48,12 +65,27 @@ get_graphics_chr <- function(VNAME, df){
   ddd <- head(simplify_char( v ), 50)
   ret <- jsonify_df(ddd)
   return(ret)
-  #later use R/03-04-wordcloud.R
+  #later use R/03-02-wordcloud.R
 }
 
 
 ### Logical (Bar Plot/ Boolean Plot) ------------------------------------
 # outputs table of 2 strings (and any NA's ) and their associated frequencies
+#' Generate frequency table for logical columns (internal)
+#'
+#' Converts a logical column to character, counts the occurrences of `TRUE`, `FALSE`, and `NA`,
+#' and returns a JSON-formatted frequency table suitable for plotting.
+#'
+#' @param VNAME Name of the logical column to process.
+#' @param df A data frame containing the column.
+#'
+#' @return A JSON representation of the frequency table for the logical values.
+#'
+#' @details
+#' Later used in \link{paste_booleplot}.
+#'
+#' @keywords internal
+#' @noRd
 get_graphics_log <-  function( VNAME, df ) {
 
     # VNAME <- xx[VNAME]
@@ -64,7 +96,7 @@ get_graphics_log <-  function( VNAME, df ) {
     t <- as.data.frame(table( f ))
     ret <- jsonify_df(t)
     return(ret)
-    #later use R/03-03-booleplot.R
+    #later use R/03-02-booleplot.R
 }
 
 
@@ -72,6 +104,22 @@ get_graphics_log <-  function( VNAME, df ) {
 
 # outputs table of (max) 50 most common factors and their frequencies
 # anything with less than 2% frequency gets put into "other" category
+#' Generate frequency table for factor columns (internal)
+#'
+#' Computes the frequency and percentage of each level in a factor column.
+#' Levels that account for less than 2% of total are grouped into "other".
+#' Returns the result as JSON suitable for plotting.
+#'
+#' @param VNAME Name of the factor column to process.
+#' @param df A data frame containing the column.
+#'
+#' @return A JSON representation of the frequency table for factor levels.
+#' @details
+#' Later used in \link{paste_treemap}.
+#'
+#'
+#' @keywords internal
+#' @noRd
 get_graphics_fact <- function(VNAME, df ){
 
   # VNAME <- xx[VNAME]
@@ -102,6 +150,33 @@ get_graphics_fact <- function(VNAME, df ){
 ### Numeric (histogram)---------------------------------------
 
 # list of information needed to generate histogram
+#' Generate numeric summary and histogram data (internal)
+#'
+#' Computes summary statistics and a histogram for a numeric column.
+#' Values are windsorized at the 5th and 90th percentiles and further
+#' truncated based on skew. Returns a JSON object suitable for plotting.
+#'
+#' @param VNAME Name of the numeric column to process.
+#' @param df A data frame containing the column.
+#'
+#' @return A JSON object containing:
+#'   \itemize{
+#'     \item breaks: histogram breaks
+#'     \item density: density values
+#'     \item y: counts
+#'     \item mids: midpoints
+#'     \item mean: mean value
+#'     \item median: median value
+#'     \item min: minimum value
+#'     \item max: maximum value
+#'   }
+#'
+#' @details
+#' Later used in \link{paste_histogram}.
+#'
+#'
+#' @keywords internal
+#' @noRd
 get_graphics_num <- function(VNAME, df ){
 
   # VNAME <- xx[VNAME]
@@ -160,6 +235,22 @@ get_graphics_num <- function(VNAME, df ){
 ##############################
 
 # simplifies character string to first 400 characters
+#' Simplify character vector and compute word frequencies (internal)
+#'
+#' Splits a character vector into words, removes common English stop words
+#' (both lower and upper case), removes punctuation, and counts word frequencies.
+#' Only the top 400 words are returned if the list is longer.
+#'
+#' @param v A character vector.
+#'
+#' @return A data frame with two columns:
+#'   \itemize{
+#'     \item `ww`: unique words
+#'     \item `Freq`: frequency of each word
+#'   }
+#'
+#' @keywords internal
+#' @noRd
 simplify_char <- function(v) {
 
   ww <- strsplit( v, " " ) |> unlist()

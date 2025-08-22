@@ -2,7 +2,7 @@
 % Please edit documentation in R/01-00-CREATE-DGF.R
 \name{create_dgf}
 \alias{create_dgf}
-\title{create DGF file}
+\title{Create a Data Guide File (DGF) from a data frame (internal)}
 \usage{
 create_dgf(
   df,
@@ -24,9 +24,45 @@ create_dgf(
   file = "DGF"
 )
 }
+\arguments{
+\item{df}{A data frame to generate the DGF from, or a character string
+specifying the path to a CSV file.}
+
+\item{vtypes}{Optional named vector specifying variable types.}
+
+\item{use.df.types}{Logical; if `TRUE`, preserves original data frame types.}
+
+\item{guess.factors}{Logical; if `TRUE`, attempts to convert character
+variables to factors.}
+
+\item{guess.dates}{Logical; if `TRUE`, attempts to convert columns to dates.}
+
+\item{dd}{Optional additional data dictionary information.}
+
+\item{vname, vlabel, vdesc, vtype, vconvert, vformat, vname_alias}{Optional vectors
+providing variable names, labels, descriptions, types, conversion functions,
+formats, and aliases.}
+
+\item{keep.dd.cols}{Optional vector of column names to retain from an existing
+data dictionary.}
+
+\item{preview_dd, preview_dp}{Logical; controls previewing of data dictionary
+or data preview.}
+
+\item{file}{Character string specifying the base name for output files
+(without extension). Defaults to `"DGF"`.}
+}
+\value{
+A data frame representing the Data Guide File (DGF) with all
+  metadata, statistics, and summary information. DGF is saved as csv and xlsx
+  files in the current working directory.
+}
 \description{
-some description text
+Generates a standardized Data Guide File (DGF) including variable names,
+labels, descriptions, data types, factor levels, conversion rules, and
+summary statistics. Optionally reads a CSV/Excel file if a filename is
+provided instead of a data frame.
 }
 \details{
-some additional details
+See \link{dgf} and \link{dgf.detailed} data sets for examples of how to use this funciton.
 }

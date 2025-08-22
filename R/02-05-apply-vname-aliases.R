@@ -9,19 +9,16 @@
 # write.csv( d2, "DEMO-DATA-FULL.csv", row.names=F, na="" )
 # write.csv( d3, "DEMO-DATA-SMALL.csv", row.names=F, na="" )
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param x PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname parse_nm
-#' @export
+#' Parse and clean a delimited string into unique elements (internal)
+#'
+#' Splits a string by `";;"`, trims whitespace, and returns unique elements.
+#'
+#' @param x A character string containing elements separated by `";;"`.
+#'
+#' @return A character vector of unique, trimmed elements.
+#'
+#' @keywords internal
+#' @noRd
 parse_nm <- function(x) {
 
   x <-
@@ -38,21 +35,19 @@ parse_nm <- function(x) {
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param nm PARAM_DESCRIPTION
-#' @param x PARAM_DESCRIPTION
-#' @param y PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname replace_name
-#' @export
+#' Replace variable names based on aliases (internal)
+#'
+#' Replaces elements in a character vector that match any alias with a
+#' standardized name, and prints messages about the replacement.
+#'
+#' @param nm A character vector of variable names to update.
+#' @param x A character string or vector of aliases to match.
+#' @param y The new name to replace matching elements with.
+#'
+#' @return The updated character vector with matched names replaced by `y`.
+#'
+#' @keywords internal
+#' @noRd
 replace_name <- function( nm, x, y ) {
 
   aliases <- parse_nm( x )
@@ -102,21 +97,19 @@ replace_name <- function( nm, x, y ) {
 #
 # new is the replacement variable name
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @param old PARAM_DESCRIPTION
-#' @param new PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname rename_all
-#' @export
+#' Rename multiple columns in a data frame based on alias mappings (internal)
+#'
+#' Iterates over old and new name pairs and replaces matching column names in
+#' a data frame using `replace_name()`.
+#'
+#' @param df A `data.frame` whose columns will be renamed.
+#' @param old A character vector of old column names or aliases.
+#' @param new A character vector of new names corresponding to `old`.
+#'
+#' @return The data frame with renamed columns.
+#'
+#' @keywords internal
+#' @noRd
 rename_all <- function( df, old, new ) {
 
   nm <- names( df )
