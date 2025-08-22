@@ -354,7 +354,7 @@ all.layouts <- get_design()
 ## Let's start with character
 dgf <- dgf[dgf$vtype_class == "logical", ]
 
-dgf.content <- dgf_to_list( dgf )
+dgf.content <- datagoodr:::dgf_to_list( dgf )
 all.vars <- names( dgf.content )
 
 #walk( all.vars, create_section, all.layouts, dgf.content )

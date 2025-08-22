@@ -62,7 +62,7 @@ log_message <- function(message, logfile = "datagoodr.txt", console = TRUE) {
 #' datagoodr(
 #'   wd = "~/Desktop",
 #'   folder.name = NULL,
-#'   location.data.raw <- paste0(getwd(), "/data-dev/DEMO-DATA-SMALL.csv"),
+#'   location.data.raw = paste0(getwd(), "/data-dev/DEMO-DATA-SMALL.csv"),
 #'   create.dgf.params = list(use.df.types = FALSE,
 #'                            guess.factors = TRUE,
 #'                            guess.dates = FALSE),
@@ -114,7 +114,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   mess <- c(
     "",
     "===========================================",
-    paste0("🛰️ datagoor mission control:"),
+    paste0("🛰️ datagodor mission control:"),
     paste0("Status: All systems go"),
     paste0("Process initiated at: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
     "==========================================="
@@ -157,7 +157,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
   # move working directory to project directory
 
-  mess <- paste("Current working direcoty is", old.wd)
+  mess <- paste("Current working directory is", old.wd)
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
   mess <- paste("Switching working directory to project directory at", paths$project)
@@ -298,7 +298,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   cat(c(dgf.output), "\n", file = paths$dgf.file.txt)
 
 
-  mess <- paste("DGF succefully created!")
+  mess <- paste("DGF successfully created!")
   log_message(mess, log.file, TRUE)
 
   mess <- c(
@@ -411,7 +411,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
 
 
-  mess <- paste("Research guide template sucessfully saved to research-guide/ subdirectory.")
+  mess <- paste("Research guide template successfully saved to research-guide/ subdirectory.")
   log_message(mess, log.file, TRUE)
 
   mess <-  capture.output(fs::dir_tree(location.project))
@@ -485,7 +485,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   # }
 
   mess <- paste(
-    "Research Guide sucessfully created in research-guide/ subdirectory. \n",
+    "Research Guide successfully created in research-guide/ subdirectory. \n",
     "Directory stucture at the end of Step 3")
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
