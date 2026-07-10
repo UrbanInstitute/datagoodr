@@ -63,6 +63,11 @@ Calls inspect_dgf() before, and update_dgf() afterwards.
 
 - [x] Sometimes the "most common value" in the `[get/paste]_properties` table is NA and so the percentage also turns to NA. `most_common_val()` was rewritten in base R to handle numeric, character, NA, and empty inputs cleanly (2026-07-10). The percentage handling in `paste_properties` may still warrant a look.
 
+- [x] `create_dgf()` edge case fixed (2026-07-10): a `vformat` that changes a
+  numeric column's type (e.g. `dollarize`) no longer crashes `get_stats_num`.
+  vformat is now treated as a display transform - preview/properties use the
+  formatted values, while numeric/logical stats & graphics are computed on the
+  underlying values. Verified byte-identical output for the DGF-V2 example.
 - the `vformat` column of the DGF isn't really integrated into the RG when pasting values in specific formats. Future versions should allow for this customization. 
 
 - dgf standardization and validation is not yet integrated. 

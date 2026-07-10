@@ -145,6 +145,12 @@ create_dgf <- function(         # ----------------
 
 
   ## Do the format
+  #
+  # vformat applies a *display* transformation to each column (e.g. zero-pad
+  # EINs, style dates). It only shapes how values are previewed, so the
+  # formatted frame (df_fmt) is kept separate from the underlying converted
+  # data (df). Statistics and graphics for numeric/logical variables must be
+  # computed on the real values, not their formatted strings (df_stats below).
 
   if(!is.null(vformat)){
     df_converted <- sapply(seq_along(vformat), function(i) {
@@ -162,34 +168,45 @@ create_dgf <- function(         # ----------------
     }, simplify = FALSE)  # Keep output as a list to avoid unintended type conversion
 
     # Convert back to a data frame
-    df <- as.data.frame(df_converted)
-    names(df ) <- vname
+    df_fmt <- as.data.frame(df_converted)
+    names(df_fmt) <- vname
   }else{
     vformat <- rep("", N_col)
+    df_fmt <- df
   }
+
+  # Data used for stats/graphics: formatted values for factor/character
+  # (so, e.g., dates display as they are formatted), but the underlying
+  # unformatted values for numeric/logical (so histograms and numeric
+  # summaries are computed on real numbers, never on formatted strings).
+  df_stats <- df_fmt
+  is.numlog <- vclass %in% c("numeric", "logical")
+  df_stats[ is.numlog ] <- df[ is.numlog ]
 
 
   ## HASH VALUES OF COLUMNS
 
-  rg_hash <- sapply( df, rlang::hash )
-  duplicates  <- get_dupes( df, rg_hash )
+  rg_hash <- sapply( df_fmt, rlang::hash )
+  duplicates  <- get_dupes( df_fmt, rg_hash )
   names(rg_hash) <- NULL
 
   ## VARIABLE TYPES
 
-  raw_first5    <- sapply( df, first_n ) %>% as.character()
+  raw_first5    <- sapply( df_fmt, first_n ) %>% as.character()
   if(is.null(vconvert)){vconvert<- rep( "", N_col )}
   if(is.null(format)){vformat<- rep( "", N_col )}
-  vtype         <- sapply( df, class ) %>% as.character()
+  vtype         <- sapply( df_fmt, class ) %>% as.character()
   vtype_class   <- vclass
   vformat_out   <- rep( "", N_col )
 
   ## get_properties/stats/graphics
+  ## Preview and properties use the formatted values (df_fmt); stats and
+  ## graphics use df_stats, which keeps numeric/logical columns unformatted.
 
-  rg_preview <- sapply(vname, get_examples, df = df)
-  rg_properties <- mapply(get_properties, VNAME = vname, MoreArgs = list(df =df))
-  rg_stats <- mapply(get_stats, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df) )
-  rg_graphics <- mapply(get_graphics, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df) )
+  rg_preview <- sapply(vname, get_examples, df = df_fmt)
+  rg_properties <- mapply(get_properties, VNAME = vname, MoreArgs = list(df = df_fmt))
+  rg_stats <- mapply(get_stats, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df_stats) )
+  rg_graphics <- mapply(get_graphics, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df_stats) )
 
   ## CREATE FACTOR LABEL TABLES (JSON CELLS)
 
