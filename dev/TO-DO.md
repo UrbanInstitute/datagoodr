@@ -89,7 +89,30 @@ DGF (or captured-able) but never rendered. Now wired in:
 - Verified end-to-end: STEP3 renders LEVELS (13), QUANTILES (8), and
   SCOPE/LENGTH/LOCATION CODE (27) into RG.html.
 
-## Update create_rg() function
+## DONE: Step 5 customization backbone (2026-07-10)
+
+See dev/05-customization-design.md for the full plan.
+
+- [x] `create_rg()` / `create_dd()` scaffold a project (.qmd pointed at the DGF
+      + starter DG.R); `use_datagoodr_template()` copies a template.
+- [x] Two flavors: RG (full profile) and DD (descriptors only). DD =
+      `get_design(style = "dd")` filtered to v_to_txt / paste_levels.
+- [x] `create_all_sections(dgf, style =, layouts =)` and `get_design(style =,
+      layouts =)` support the DD/RG switch and layout overrides.
+- [x] Layout override: a `layout.*` defined in DG.R / the QMD global env wins
+      over the package default; an explicit `layouts` arg wins over both.
+- [x] Templates ship in inst/templates/ (RG.qmd, DD.qmd, DG.R); the .qmd
+      sources DG.R at render if present. Demoed in working-example/STEP5.R.
+- Removed stale draft scaffolding (build_rg/build_dd/customize_template,
+  inst/qmd-templates/).
+
+Still to do at the customize stage (see design doc):
+- Granular per-variable API (decouple render engine from `xx`/`all.layouts`
+  globals) for inline narrative use.
+- Aesthetic pass (CSS + gt color tables, ydata-inspired).
+- standardize() / format() / create_vr(); date/time data type.
+
+## Update create_rg() function (superseded - see above)
 
 
 ## Notes on things that should be updated in the future

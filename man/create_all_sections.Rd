@@ -4,19 +4,26 @@
 \alias{create_all_sections}
 \title{Create sections for all variables in a DGF}
 \usage{
-create_all_sections(dgf)
+create_all_sections(dgf, style = c("rg", "dd"), layouts = NULL)
 }
 \arguments{
 \item{dgf}{the DGF as a data frame}
+
+\item{style}{Either `"rg"` (research guide, full profile) or `"dd"` (data
+dictionary, descriptors only). Passed to [get_design()]. Defaults to
+`"rg"`.}
+
+\item{layouts}{Optional named list of layout character vectors overriding
+the package defaults. Passed to [get_design()]. Defaults to `NULL`.}
 }
 \value{
 No return value; the function writes formatted Quarto
   content for each variable to the output.
 }
 \description{
-Generates Quarto report sections for each variable in the
-provided DGF object. Uses the layouts obtained from [get_design()]
-and content from [dgf_to_list()].
+Generates Quarto report sections for each variable in the provided DGF
+object, using the layouts from [get_design()] and the content from
+[dgf_to_list()].
 }
 \details{
 - Converts the DGF data frame into a list of variables using [dgf_to_list()].

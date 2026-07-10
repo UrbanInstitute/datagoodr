@@ -8,3 +8,7 @@ Rplots.pdf
 
 # Step 4 working-example output (regenerate via STEP4.R)
 working-example/DGF-V3.*
+
+# Step 5 scaffolded example projects (regenerate via STEP5.R)
+working-example/my-guide/
+working-example/my-dictionary/

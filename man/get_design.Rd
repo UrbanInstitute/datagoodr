@@ -2,19 +2,28 @@
 % Please edit documentation in R/03-01-create-sections.R
 \name{get_design}
 \alias{get_design}
-\title{Initialize design for each section}
+\title{Compile the section design for each variable type}
 \usage{
-get_design()
+get_design(style = c("rg", "dd"), layouts = NULL)
+}
+\arguments{
+\item{style}{Either `"rg"` (research guide — the full data profile) or
+`"dd"` (data dictionary — only the text descriptors and the factor level
+table). Defaults to `"rg"`.}
+
+\item{layouts}{Optional named list of layout character vectors
+(`numeric`/`character`/`factor`/`logical`) that overrides the package
+defaults. Defaults to `NULL`.}
 }
 \value{
-A data frame containing all compiled layout designs with
-  their associated type.
+A data frame containing the compiled layout design with columns
+  `TYPE`, `DIV`, `VNAME`, `LABEL`, and `FUNCTION`.
 }
 \description{
-Finds all objects in the global environment with names matching
-`"layout."`, parses them with [parse_design()], and combines them
-into a single data frame with a `TYPE` column derived from the
-object name.
+Parses the layout objects with [parse_design()] and combines them into a
+single design data frame with a `TYPE` column. By default the package's
+layout objects are used; a QMD template or `DG.R` can supply its own via
+`layouts`.
 }
 \details{
 Used in \link{create_all_sections}

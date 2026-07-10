@@ -99,6 +99,14 @@ preserved, and added / removed variables are reported. See
 
 ## Step 5: Customize
 
-The R/05*.R functions are designed for customization of the RG. This could be templates, 
-div arrangements, fonts, colors, or "polishing" functions for the variables (such as `dollarize`
-for monetary values). 
+`create_rg()` and `create_dd()` scaffold a self-contained project - a Quarto
+document (research guide with full data profiles, or data dictionary with
+descriptors only) pointed at your DGF, plus a starter `DG.R`. Customize without
+editing the package by:
+
+- editing `DG.R` to override formatting/graphic functions or a layout object
+  (e.g. drop a section, or redefine `dollarize` for monetary values);
+- editing the `<style>` block in the `.qmd` for the page grid, fonts, colors;
+- adding long-form narrative around the automatically generated sections.
+
+See `working-example/STEP5.R`.

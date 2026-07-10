@@ -1,110 +1,134 @@
-# COPY TEMPLATE TO LOCAL DIRECTORY TO CUSTOMIZE
-# template: rg.qmd, dd.qmd, vr.qmd
+# Step 5: scaffold a customizable documentation project from the package
+# templates. A project directory holds the data, the DGF (rules file), a DG.R
+# customization file, and a .qmd that renders the report:
+#
+#   my-project/
+#     DGF.xlsx              the rules file
+#     DG.R                  custom formatting/graphic functions & layout overrides
+#     research-guide.qmd    (or data-dictionary.qmd)
 
-customize_template <- function( template="rg.qmd", wd=NULL ) {
 
-  # lib.path <- (.libPaths())[1]
-  # pkg.path <- paste0( lib.path, "/", "datagood" )
-  
-  # online template?
-  # download.file( 
-  #   url = URL,  
-  #   destfile = "./custom.qmd" )
-  
-  if( is.null(wd) ){ wd <- getwd() }
-  qmd.path <- system.file( "qmd", template, package = "datagood" )
-  file.copy( from=qmd.path, to=wd, overwrite=FALSE )
+#' Copy a datagoodr report template into a project
+#'
+#' Installs one of the package's Quarto templates (research guide or data
+#' dictionary) into a directory, along with a starter `DG.R` customization
+#' file, so it can be edited and rendered locally.
+#'
+#' @param dir Directory to write into. Created if it does not exist. Defaults
+#'   to the current working directory.
+#' @param flavor `"rg"` for the research guide (full data profile) or `"dd"`
+#'   for the data dictionary (descriptors only). Defaults to `"rg"`.
+#' @param dg Logical; also copy a starter `DG.R` if one is not already present.
+#'   Defaults to `TRUE`.
+#' @param overwrite Logical; overwrite an existing `.qmd` of the same name.
+#'   Defaults to `FALSE`.
+#'
+#' @return Invisibly, the path to the copied template.
+#' @seealso [create_rg()], [create_dd()]
+#' @export
+use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
+                                    dg = TRUE, overwrite = FALSE ) {
 
-  filepath <- paste0( wd, "/", template )
-  shell( filepath )
+  flavor   <- match.arg( flavor )
+  template <- if( flavor == "rg" ) "RG.qmd" else "DD.qmd"
+  out.name <- if( flavor == "rg" ) "research-guide.qmd" else "data-dictionary.qmd"
+
+  src <- system.file( "templates", template, package = "datagoodr" )
+  if( src == "" )
+  { stop( "Template not found. Is datagoodr installed?", call. = FALSE ) }
+
+  if( ! dir.exists(dir) ) dir.create( dir, recursive = TRUE )
+
+  dest <- file.path( dir, out.name )
+  if( file.exists(dest) && ! overwrite )
+  { stop( dest, " already exists; use overwrite = TRUE.", call. = FALSE ) }
+  file.copy( src, dest, overwrite = overwrite )
+
+  if( dg ) {
+    dg.dest <- file.path( dir, "DG.R" )
+    if( ! file.exists(dg.dest) )
+    { file.copy( system.file("templates", "DG.R", package = "datagoodr"),
+                 dg.dest ) }
+  }
+
+  message( "Created ", dest )
+  invisible( dest )
 }
 
 
-# RESEARCH GUIDE
-#   data dictionary +
-#   data profiles 
+# internal: scaffold a report qmd pointed at a DGF, optionally rendering it.
+build_report <- function( dgf, dir, file, flavor, render, overwrite ) {
 
-build_rg <- 
-    function( dgfile="DGF.xlsx",
-              template="default",
-              output.file="validation-report.HTML", 
-              preview=TRUE ) {
+  # allow a DGF data frame: write it out next to the report
+  if( is.data.frame(dgf) ) {
+    dgf.path <- file.path( dir, "DGF.xlsx" )
+    if( ! dir.exists(dir) ) dir.create( dir, recursive = TRUE )
+    save_to_excel( dgf, filename = dgf.path )
+    dgf <- "DGF.xlsx"
+  }
 
-  wd <- getwd()
-  filepath <- paste0( wd, "/", output.file )
-  
-  if( template == "default" )
-  { qmd.path <- system.file( "qmd", "rg.qmd", package = "datagood" ) }
-  if( ! template == "default" )
-  { qmd.path <- template }
-  
-  quarto::quarto_render( 
-    input = qmd.path, 
-    output_file = filepath,
-    execute_params = list( dgf=dgfile ) )
+  dest <- use_datagoodr_template( dir = dir, flavor = flavor,
+                                  dg = TRUE, overwrite = overwrite )
+  # the copier names the file; rename if the caller asked for something else
+  if( basename(dest) != file ) {
+    new.dest <- file.path( dir, file )
+    file.rename( dest, new.dest )
+    dest <- new.dest
+  }
 
-  # preview file
-  if( preview ){ shell( filepath ) }
+  # point the template at the supplied DGF path
+  txt <- readLines( dest, warn = FALSE )
+  txt <- sub( '(\\s*dgf_file:\\s*).*', paste0( '\\1"', dgf, '"' ), txt )
+  writeLines( txt, dest )
 
-  return( filepath )
+  if( render )
+  { quarto::quarto_render( dest, execute_params = list( dgf_file = dgf ) ) }
+
+  message( "Created ", dest,
+           if( render ) " (rendered)" else " (edit, then render)" )
+  invisible( dest )
 }
 
 
-
-
-# DATA DICTIONARY
-
-build_dd <- 
-    function( dgfile="DGF.xlsx",
-              template="default",
-              output.file="validation-report.HTML", 
-              preview=TRUE ) {
-
-  wd <- getwd()
-  filepath <- paste0( wd, "/", output.file )
-  
-  if( template == "default" )
-  { qmd.path <- system.file( "qmd", "dd.qmd", package = "datagood" ) }
-  if( ! template == "default" )
-  { qmd.path <- template }
-  
-  quarto::quarto_render( 
-    input = qmd.path, 
-    output_file = filepath,
-    execute_params = list( dgf=dgfile ) )
-
-  # preview file
-  if( preview ){ shell( filepath ) }
-
-  return( filepath )
+#' Create a research guide project from a DGF
+#'
+#' Scaffolds a research-guide Quarto document (full data profile) pointed at a
+#' DGF, plus a starter `DG.R`, ready to customize and render.
+#'
+#' @param dgf Path to a DGF `.xlsx` file, or a DGF data frame (which is written
+#'   to `DGF.xlsx` in `dir`).
+#' @param dir Directory to scaffold into. Defaults to the current directory.
+#' @param file Name for the report document. Defaults to
+#'   `"research-guide.qmd"`.
+#' @param render Logical; render the document immediately. Defaults to `FALSE`
+#'   (scaffold only, so the user can annotate it first).
+#' @param overwrite Logical; overwrite an existing document. Defaults to
+#'   `FALSE`.
+#'
+#' @return Invisibly, the path to the scaffolded (or rendered) document.
+#' @seealso [create_dd()], [use_datagoodr_template()]
+#' @export
+create_rg <- function( dgf, dir = ".", file = "research-guide.qmd",
+                       render = FALSE, overwrite = FALSE ) {
+  build_report( dgf, dir, file, flavor = "rg",
+                render = render, overwrite = overwrite )
 }
 
 
-
-
-# VALIDATION REPORT 
-
-build_vr <- 
-    function( dgfile="DGF.xlsx",
-              template="default",
-              output.file="validation-report.HTML", 
-              preview=TRUE ) {
-
-  wd <- getwd()
-  filepath <- paste0( wd, "/", output.file )
-  
-  if( template == "default" )
-  { qmd.path <- system.file( "qmd", "vr.qmd", package = "datagood" ) }
-  if( ! template == "default" )
-  { qmd.path <- template }
-  
-  quarto::quarto_render( 
-    input = qmd.path, 
-    output_file = filepath,
-    execute_params = list( dgf=dgfile ) )
-
-  # preview file
-  if( preview ){ shell( filepath ) }
-
-  return( filepath )
+#' Create a data dictionary project from a DGF
+#'
+#' Scaffolds a data-dictionary Quarto document (descriptors only — no data
+#' profiles) pointed at a DGF, plus a starter `DG.R`.
+#'
+#' @inheritParams create_rg
+#' @param file Name for the report document. Defaults to
+#'   `"data-dictionary.qmd"`.
+#'
+#' @return Invisibly, the path to the scaffolded (or rendered) document.
+#' @seealso [create_rg()], [use_datagoodr_template()]
+#' @export
+create_dd <- function( dgf, dir = ".", file = "data-dictionary.qmd",
+                       render = FALSE, overwrite = FALSE ) {
+  build_report( dgf, dir, file, flavor = "dd",
+                render = render, overwrite = overwrite )
 }

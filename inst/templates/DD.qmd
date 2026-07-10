@@ -1,5 +1,5 @@
 ---
-title: "Research Guide"
+title: "Data Dictionary"
 format:
   html:
     embed-resources: true
@@ -7,17 +7,19 @@ format:
     toc-location: body
     toc-depth: 5
     toc-expand: true
-    output-file: file_name_placeholder
-    output-ext: html
-  pdf: 
-    output-file: file_name_placeholder
-    output-ext: "pdf"
+  pdf: default
 execute:
   keep-md: true
-  output: file_name_placeholder
-params: 
-  dgf_file:  "../DGF/DGF.xlsx"
+params:
+  dgf_file: "DGF.xlsx"
 ---
+
+<!-- datagoodr data dictionary template.
+     Same layouts as the research guide, but rendered with style = "dd" so only
+     the descriptor sections (label, type, scope, length, description, levels,
+     location) appear - no data profiles.
+     Customize via DG.R and the <style> block below.
+     Render with:  quarto::quarto_render("data-dictionary.qmd") -->
 
 <br>
 
@@ -34,68 +36,29 @@ library( gt )
 library( kableExtra )
 library( psych )
 library( data.table )
-library( gt )
-library( tools )
 library( treemap )
 library( plotly )
 library( wordcloud )
 library( wordcloud2 )
 library( tm )
-library( stringr)
+library( stringr )
 ```
 
-```{r read-data, echo=FALSE, message=FALSE, include=FALSE}
+```{r, echo=F, message=FALSE, include=FALSE}
 
-libs <- c("dplyr")
+# All report-building functions come from the installed package.
+library( datagoodr )
 
-lapply(libs, require, character.only = TRUE)
-
-
-library(datagoodr)
-# # source functions 
-# files <-
-#   c("R//00-utils.R",  #has some useful internal functions
-#     "R//02-02-ingest-utils.R", #has some useful internal functions
-#     "R//03-00-BUILD-RG-DICT.R",
-#     "R//03-01-create-sections.R",
-#     "R//03-01-layouts.R",
-#     "R//03-02-histogram.R",
-#     "R//03-02-treemap.R",
-#     "R//03-02-booleplot.R",
-#     "R//03-02-wordcloud.R"
-#   )
-
-# files <- paste0("..//", files) # remove "..//" when working on document, keep for render
-# 
-# lapply(files, source)
-# import DGF - to be read in through render quarto later
-# dgf <- readxl::read_xlsx("../DGF.xlsx" )
-data_file <- (params$dgf_file)
-# cat(data_file)
-filetype.dgf <- tools::file_ext(data_file)
-# cat(filetype.dgf)
-
-# dgf <- readxl::read_excel(data_file)
-if(filetype.dgf == "csv"){
-    dgf <- readr::read_csv(data_file)
-  }else if(filetype.dgf %in% c("xls", "xlsx")){
-    dgf <- readxl::read_excel(data_file)
-  }else{
-    mess <- "DGF file cannot be read. Abort mission."
-    cat(mess)
-    knitr::knit_exit()
-  }
-# 
-# if (exists("dgf")) {
-#   print(head(dgf))
-# } else {
-#   cat("Data frame 'dgf' does not exist.")
-# }
-
-```
+# Source the project customization file (custom functions / layout overrides)
+# if it sits next to this document.
+if( file.exists("DG.R") ) source("DG.R")
 
 
-```{r split-data, echo=F, message=FALSE, include=FALSE}
+# Import the DGF (rules file). The path comes from the YAML `dgf_file` param.
+data_file <- params$dgf_file
+dgf <- readxl::read_excel(data_file)
+
+
 # Each variable type needs its own section because each plot type
 # needs its own fig width and height. 
 # To add a new variable type, 
@@ -111,46 +74,32 @@ dgf.chr <-  dgf[dgf$vtype_class == "character", ]
 dgf.num <-  dgf[dgf$vtype_class == "numeric", ]
 
 
-## Needed for layouts
-## This is not needed when using the functions in 03*.R outside of a package build. 
-## But inside of a package build environment, these need to be global variables
-# Get layout character strings from datagoodr package data
-all.goodr.data <- data(package = "datagoodr")$results[, "Item"]
-all.names <-  grep("^layout\\.", all.goodr.data, value = TRUE)
-
-# Load all layout.DATATYPE objects
-lapply(all.names, function(x) {
-  data(list = x, package = "datagoodr")
-})
-
-
-
 ```
 
 
 ## Logical
 
 ```{r logical, results="asis", echo=FALSE}
-create_all_sections( dgf.log )
+create_all_sections( dgf.log, style = "dd" )
 
 ```
 
 ## Factor
 
 ```{r factor, results="asis", echo=FALSE}
-create_all_sections( dgf.fact )
+create_all_sections( dgf.fact, style = "dd" )
 ```
 
-## Numeric 
+## Numeric
 
-```{r numeric, results="asis", fig.width=8, fig.height=2, echo=FALSE}
-create_all_sections( dgf.num )
+```{r numeric, results="asis", echo=FALSE}
+create_all_sections( dgf.num, style = "dd" )
 ```
 
 ## Character
 
-```{r character, results="asis", fig.width=8, fig.height=6, echo=FALSE}
-create_all_sections( dgf.chr )
+```{r character, results="asis", echo=FALSE}
+create_all_sections( dgf.chr, style = "dd" )
 ```
 
 
@@ -211,8 +160,8 @@ create_all_sections( dgf.chr )
     padding-left: 20px;
 }
 
-.div7 { 
-    grid-area: f;
+.div7 {
+    grid-area: g;
     padding-left: 20px;
 }
 
@@ -221,8 +170,8 @@ create_all_sections( dgf.chr )
     padding-left: 30px;
 }
 
-.div9 { 
-    grid-area: g;
+.div9 {
+    grid-area: i;
     padding-left: 50px;
 }
 

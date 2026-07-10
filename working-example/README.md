@@ -54,6 +54,9 @@ variables are reported. The updated DGF is written to `DGF-V3.*`.
 
 ## Step 5: Customize
 
-The R/05*.R functions are designed for customization of the RG. This could be templates, 
-div arrangements, fonts, colors, or "polishing" functions for the variables (such as `dollarize`
-for monetary values). 
+Run the STEP5.R file to scaffold a customizable documentation project.
+`create_rg()` (full data profile) and `create_dd()` (descriptors only) copy a
+Quarto template pointed at your DGF plus a starter `DG.R`. Customize by editing
+`DG.R` (override formatting/graphic functions or a layout object), the `<style>`
+block in the `.qmd` (page grid, fonts, colors), or by adding narrative around
+the automatic sections. Non-customizers can just render the default template.

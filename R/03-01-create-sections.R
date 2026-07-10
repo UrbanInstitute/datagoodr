@@ -94,15 +94,22 @@ check_length <- function(x) {
 # GET ALL LAYOUTS FROM ENV
 # AND RETURN DESIGN MATRIX
 
-#' Initialize design for each section
+#' Compile the section design for each variable type
 #'
-#' Finds all objects in the global environment with names matching
-#' `"layout."`, parses them with [parse_design()], and combines them
-#' into a single data frame with a `TYPE` column derived from the
-#' object name.
+#' Parses the layout objects with [parse_design()] and combines them into a
+#' single design data frame with a `TYPE` column. By default the package's
+#' layout objects are used; a QMD template or `DG.R` can supply its own via
+#' `layouts`.
 #'
-#' @return A data frame containing all compiled layout designs with
-#'   their associated type.
+#' @param style Either `"rg"` (research guide — the full data profile) or
+#'   `"dd"` (data dictionary — only the text descriptors and the factor level
+#'   table). Defaults to `"rg"`.
+#' @param layouts Optional named list of layout character vectors
+#'   (`numeric`/`character`/`factor`/`logical`) that overrides the package
+#'   defaults. Defaults to `NULL`.
+#'
+#' @return A data frame containing the compiled layout design with columns
+#'   `TYPE`, `DIV`, `VNAME`, `LABEL`, and `FUNCTION`.
 #'
 #' @details
 #' Used in \link{create_all_sections}
@@ -110,27 +117,45 @@ check_length <- function(x) {
 #'
 #' @seealso [parse_design()]
 #' @export
-get_design  <- function() {
+get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
+
+  style <- match.arg( style )
 
   #  ---------------------------------------------
-  #  compile all layout definitions into a single design data frame.
-  #  The layout.* objects are package data (see R/03-01-layouts.R and
-  #  R/sysdata.rda); reference them directly so this resolves from the
-  #  package namespace when installed and from the global environment
-  #  when the scripts are sourced during development.
+  #  compile layout definitions into a single design data frame.
+  #  By default the package layout.* objects are used (see R/03-01-layouts.R
+  #  and R/sysdata.rda). A QMD template or DG.R can override them by passing a
+  #  named list of layout character vectors to `layouts`.
   #  ---------------------------------------------
 
-  layouts <- list(
-    numeric   = layout.numeric,
-    character = layout.character,
-    factor    = layout.factor,
-    logical   = layout.logical )
+  if( is.null(layouts) ) {
+    # Prefer a user override defined in the global environment (e.g. in a
+    # project DG.R or the QMD itself); otherwise use the package default.
+    resolve <- function( nm ) {
+      if( exists( nm, envir = globalenv(), inherits = FALSE ) )
+      { get( nm, envir = globalenv() ) }
+      else
+      { get( nm, envir = asNamespace("datagoodr") ) }
+    }
+    layouts <- list(
+      numeric   = resolve("layout.numeric"),
+      character = resolve("layout.character"),
+      factor    = resolve("layout.factor"),
+      logical   = resolve("layout.logical") )
+  }
 
   design.df <-
     purrr::imap( layouts,
                  function( obj, nm ){
                    cbind( TYPE = nm, parse_design( obj ) ) } ) |>
     dplyr::bind_rows()
+
+  # A data dictionary keeps only the dictionary rows (text descriptors and the
+  # factor level table); a research guide keeps the full profile.
+  if( style == "dd" ) {
+    dict.fx <- c( "v_to_txt", "paste_levels" )
+    design.df <- design.df[ trimws(design.df$FUNCTION) %in% dict.fx, ]
+  }
 
   return( design.df )
 }
@@ -281,11 +306,16 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
 
 #' Create sections for all variables in a DGF
 #'
-#' Generates Quarto report sections for each variable in the
-#' provided DGF object. Uses the layouts obtained from [get_design()]
-#' and content from [dgf_to_list()].
+#' Generates Quarto report sections for each variable in the provided DGF
+#' object, using the layouts from [get_design()] and the content from
+#' [dgf_to_list()].
 #'
 #' @param dgf the DGF as a data frame
+#' @param style Either `"rg"` (research guide, full profile) or `"dd"` (data
+#'   dictionary, descriptors only). Passed to [get_design()]. Defaults to
+#'   `"rg"`.
+#' @param layouts Optional named list of layout character vectors overriding
+#'   the package defaults. Passed to [get_design()]. Defaults to `NULL`.
 #'
 #' @return No return value; the function writes formatted Quarto
 #'   content for each variable to the output.
@@ -297,28 +327,17 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
 #'   generate its report section.
 #'
 #' @export
-create_all_sections <- function( dgf ) {
+create_all_sections <- function( dgf, style = c("rg", "dd"), layouts = NULL ) {
 
-  all.layouts <<- get_design() # This does not need to be a global when using these functions outside of a package build enviornment. But it does when it is inside a package. I cannot figure out why.
+  style <- match.arg( style )
+  all.layouts <- get_design( style = style, layouts = layouts )
 
-  #for testing purposes - remove later
-  # only run working divs for numeric
-  # all.layouts <- all.layouts %>%
-  #   filter(DIV %in% c("div2", "div3", "div4", "div5", "div6", "div7", "div8" ))
-
-  #  --------------------------------
   #  DGF AS A LIST OF VARIABLES
-  #  --------------------------
+  dgf.content <- dgf_to_list( dgf )
 
-     dgf.content <- dgf_to_list( dgf )
-
-  #  --------------------------------
-  #  BUILD A REPORT SECTION FOR EACH
-  #  VARIABLE IN THE DATASET
-  #  --------------------------------
-
-     all.vars <- names( dgf.content )
-     purrr::walk( all.vars, create_section, all.layouts, dgf.content )
+  #  BUILD A REPORT SECTION FOR EACH VARIABLE IN THE DATASET
+  all.vars <- names( dgf.content )
+  purrr::walk( all.vars, create_section, all.layouts, dgf.content )
 
 }
 
