@@ -2,26 +2,21 @@
 % Please edit documentation in R/02-04-validate-json.R
 \name{show_invalid}
 \alias{show_invalid}
-\title{FUNCTION_TITLE}
+\title{Print the invalid JSON cells in a vector}
 \usage{
 show_invalid(v)
 }
 \arguments{
-\item{v}{PARAM_DESCRIPTION}
+\item{v}{A character vector of JSON strings.}
 }
 \value{
-OUTPUT_DESCRIPTION
+Invisibly returns `NULL`; called for its printed side effects.
 }
 \description{
-FUNCTION_DESCRIPTION
+Identifies the elements of `v` that are not valid JSON and prints, for each,
+its parse error message followed by the offending string. Useful for
+debugging a DGF after manual edits.
 }
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+\seealso{
+[validate_json()], [get_json_error()]
 }

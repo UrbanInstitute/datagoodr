@@ -2,29 +2,21 @@
 % Please edit documentation in R/02-04-validate-json.R
 \name{get_json_error}
 \alias{get_json_error}
-\title{FUNCTION_TITLE}
+\title{Return the parse error for an invalid JSON string}
 \usage{
 get_json_error(x)
 }
 \arguments{
-\item{x}{PARAM_DESCRIPTION}
+\item{x}{A single JSON string.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character string describing the JSON parse error, or `NULL` if
+  `x` is valid JSON.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Validates a single JSON string and returns the error message produced by
+[jsonlite::validate()], or `NULL` when the string is valid.
 }
 \seealso{
-\code{\link[jsonlite]{validate}}
+[validate_json()], \code{\link[jsonlite]{validate}}
 }

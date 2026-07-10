@@ -2,30 +2,24 @@
 % Please edit documentation in R/02-00-INGEST-RAW.R
 \name{apply_name_aliases}
 \alias{apply_name_aliases}
-\title{FUNCTION_TITLE}
+\title{Rename raw columns to their DGF variable names}
 \usage{
 apply_name_aliases(df, dgf)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame of raw data.}
 
-\item{dgf}{PARAM_DESCRIPTION}
+\item{dgf}{A DGF data frame containing `vname`, `vname_alias`, and `vlabel`
+columns.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The data frame with columns renamed and labelled per the DGF.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Uses the `vname`, `vname_alias`, and `vlabel` columns of a DGF to rename
+the columns of a raw data frame from their alias (raw) names to their
+canonical DGF names, attaching labels. Columns without an alias keep their
+existing name.
 }
 \seealso{
 \code{\link[crosswalkr]{renamefrom}}

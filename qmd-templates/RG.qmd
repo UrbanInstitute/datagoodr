@@ -40,26 +40,8 @@ library( stringr)
 
 ```{r, echo=F, message=FALSE, include=FALSE}
 
-libs <- c("dplyr")
-
-lapply(libs, require, character.only = TRUE)
-
-# source functions 
-files <-
-  c("R//00-utils.R",  #has some useful internal functions
-    "R//02-02-ingest-utils.R", #has some useful internal functions
-    "R//03-00-BUILD-RG-DICT.R",
-    "R//03-01-create-sections.R",
-    "R//03-01-layouts.R",
-    "R//03-02-histogram.R",
-    "R//03-02-treemap.R",
-    "R//03-02-booleplot.R",
-    "R//03-02-wordcloud.R"
-  )
-
-files <- paste0("..//", files) # remove "..//" when working on document, keep for render
-
-lapply(files, source)
+# All report-building functions now come from the installed package.
+library( datagoodr )
 
 
 # import DGF - to be read in through render quarto later

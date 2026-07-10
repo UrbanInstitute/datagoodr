@@ -2,29 +2,22 @@
 % Please edit documentation in R/00-utils.R
 \name{jsonify_f}
 \alias{jsonify_f}
-\title{FUNCTION_TITLE}
+\title{Convert a factor's levels to a formatted JSON string}
 \usage{
 jsonify_f(f)
 }
 \arguments{
-\item{f}{PARAM_DESCRIPTION}
+\item{f}{A factor (or a vector coercible to a factor).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A single character string containing the pretty-printed JSON
+  representation of the factor's levels and labels.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Builds a level/label lookup table from a factor and serialises it to a
+JSON string, adding whitespace so the result is readable when stored in a
+DGF cell. The table is truncated to the first 50 levels.
 }
 \seealso{
-\code{\link[jsonlite]{toJSON, fromJSON}}
+\code{\link[jsonlite]{toJSON}}
 }

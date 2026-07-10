@@ -32,36 +32,14 @@ load_dgf <- function( filename="DGF.xlsx" ) {
 
 
 
-#' Pipe operator
+#' Summarise the class and an example value for each column
 #'
-#' See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
+#' Builds a small data frame reporting, for every column of `df`, the column
+#' name, its class, and the first non-missing value as an example.
 #'
-#' @name %>%
-#' @rdname pipe
-#' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
-#' @usage lhs \%>\% rhs
-#' @param lhs A value or the magrittr placeholder.
-#' @param rhs A function call using the magrittr semantics.
-#' @return The result of calling `rhs(lhs)`.
-NULL
-
-
-
-
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname get_class_df
+#' @param df A data frame.
+#'
+#' @return A data frame with columns `VAR`, `TYPE`, and `EXAMPLE`.
 #' @export
 get_class_df <- function(df)
 {
@@ -140,19 +118,17 @@ first_n <- function( x, n=5 )
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param f PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[jsonlite]{toJSON, fromJSON}}
+#' Convert a factor's levels to a formatted JSON string
+#'
+#' Builds a level/label lookup table from a factor and serialises it to a
+#' JSON string, adding whitespace so the result is readable when stored in a
+#' DGF cell. The table is truncated to the first 50 levels.
+#'
+#' @param f A factor (or a vector coercible to a factor).
+#'
+#' @return A single character string containing the pretty-printed JSON
+#'   representation of the factor's levels and labels.
+#' @seealso \code{\link[jsonlite]{toJSON}}
 #' @rdname jsonify_f
 #' @export
 #' @importFrom jsonlite toJSON
@@ -183,17 +159,15 @@ jsonify_f <- function(f)
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param f PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' Return a factor's levels as a single delimited string
+#'
+#' Collapses the levels of a factor into one character string, separated by
+#' `" ;; \n"`. If the factor has more than 50 levels, only the first 50 are
+#' used and a warning is issued.
+#'
+#' @param f A factor (or a vector coercible to a factor).
+#'
+#' @return A single character string listing the factor levels.
 #' @rdname get_levels
 #' @export
 get_levels <- function(f)

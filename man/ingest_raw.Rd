@@ -2,28 +2,25 @@
 % Please edit documentation in R/02-00-INGEST-RAW.R
 \name{ingest_raw}
 \alias{ingest_raw}
-\title{FUNCTION_TITLE}
+\title{Ingest a raw dataset using DGF rules (Step 2, work in progress)}
 \usage{
 ingest_raw(df, path = NULL)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame of raw data to ingest.}
 
-\item{path}{PARAM_DESCRIPTION, Default: NULL}
+\item{path}{Directory containing the project `dgf.R` rules file. Defaults
+to `NULL`, which uses the current working directory.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with DGF rules applied.
 }
 \description{
-FUNCTION_DESCRIPTION
+Orchestrates the Step 2 ingest workflow: sources a project `dgf.R` rules
+file, then applies the DGF's variable-name aliases (and, once implemented,
+type-conversion and standardization rules) to the raw data frame.
 }
 \details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+This function is part of the not-yet-operational Step 2 pipeline;
+  several steps remain stubbed out.
 }

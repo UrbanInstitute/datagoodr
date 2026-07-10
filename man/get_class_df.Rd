@@ -2,26 +2,17 @@
 % Please edit documentation in R/00-utils.R
 \name{get_class_df}
 \alias{get_class_df}
-\title{FUNCTION_TITLE}
+\title{Summarise the class and an example value for each column}
 \usage{
 get_class_df(df)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with columns `VAR`, `TYPE`, and `EXAMPLE`.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Builds a small data frame reporting, for every column of `df`, the column
+name, its class, and the first non-missing value as an example.
 }

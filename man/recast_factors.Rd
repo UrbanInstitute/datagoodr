@@ -2,26 +2,22 @@
 % Please edit documentation in R/01-02-data-type-factors.R
 \name{recast_factors}
 \alias{recast_factors}
-\title{FUNCTION_TITLE}
+\title{Convert guessed factor columns to factors}
 \usage{
 recast_factors(df)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The input data frame with guessed-categorical columns coerced to
+  factors.
 }
 \description{
-FUNCTION_DESCRIPTION
+Uses [is_factor_df()] to identify columns that should be treated as
+categorical and converts each of them to a factor, leaving all other
+columns unchanged.
 }
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+\seealso{
+[is_factor_df()]
 }

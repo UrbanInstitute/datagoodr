@@ -2,31 +2,27 @@
 % Please edit documentation in R/02-00-INGEST-RAW.R
 \name{apply_raw_convert_fx}
 \alias{apply_raw_convert_fx}
-\title{FUNCTION_TITLE}
+\title{Apply DGF type-conversion functions to raw columns}
 \usage{
 apply_raw_convert_fx(df, dgf)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame of raw data.}
 
-\item{dgf}{PARAM_DESCRIPTION}
+\item{dgf}{A DGF data frame with `vname` and `raw_convert` columns.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The data frame with conversion functions applied to the relevant
+  columns.
 }
 \description{
-FUNCTION_DESCRIPTION
+For each conversion function named in a DGF's `raw_convert` column, applies
+that function to the columns assigned to it, transforming the raw data into
+its intended types.
 }
 \details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Part of the not-yet-operational Step 2 pipeline.
 }
 \seealso{
-\code{\link[dplyr]{mutate_all}}
+\code{\link[dplyr]{mutate_at}}, [parse_functions()]
 }

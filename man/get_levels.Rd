@@ -2,26 +2,18 @@
 % Please edit documentation in R/00-utils.R
 \name{get_levels}
 \alias{get_levels}
-\title{FUNCTION_TITLE}
+\title{Return a factor's levels as a single delimited string}
 \usage{
 get_levels(f)
 }
 \arguments{
-\item{f}{PARAM_DESCRIPTION}
+\item{f}{A factor (or a vector coercible to a factor).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A single character string listing the factor levels.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Collapses the levels of a factor into one character string, separated by
+`" ;; \n"`. If the factor has more than 50 levels, only the first 50 are
+used and a warning is issued.
 }

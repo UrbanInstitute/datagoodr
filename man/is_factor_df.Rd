@@ -2,26 +2,21 @@
 % Please edit documentation in R/01-02-data-type-factors.R
 \name{is_factor_df}
 \alias{is_factor_df}
-\title{FUNCTION_TITLE}
+\title{Guess factor columns across a data frame}
 \usage{
 is_factor_df(df)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named logical vector, one element per column, indicating which
+  columns should be treated as factors.
 }
 \description{
-FUNCTION_DESCRIPTION
+Applies [is_factor()] to every column of a data frame, suppressing the
+per-column console diagnostics.
 }
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+\seealso{
+[is_factor()], [recast_factors()]
 }

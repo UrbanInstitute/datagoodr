@@ -2,30 +2,26 @@
 % Please edit documentation in R/02-05-apply-vname-aliases.R
 \name{replace_name}
 \alias{replace_name}
-\title{FUNCTION_TITLE}
+\title{Replace variable names matching an alias}
 \usage{
 replace_name(nm, x, y)
 }
 \arguments{
-\item{nm}{PARAM_DESCRIPTION}
+\item{nm}{A character vector of current variable names.}
 
-\item{x}{PARAM_DESCRIPTION}
+\item{x}{A `";;"`-delimited string (or vector) of aliases to match against
+`nm`.}
 
-\item{y}{PARAM_DESCRIPTION}
+\item{y}{The single replacement name to substitute for matched aliases.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The `nm` vector with matched names replaced by `y`.
 }
 \description{
-FUNCTION_DESCRIPTION
+Given a vector of current names, replaces any that match one of the aliases
+in `x` with the single replacement name `y`. A message reports what was
+replaced, and a warning is issued if more than one name matches.
 }
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+\seealso{
+[rename_all()], [parse_nm()]
 }

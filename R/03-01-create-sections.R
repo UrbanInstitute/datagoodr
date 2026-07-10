@@ -113,26 +113,25 @@ check_length <- function(x) {
 get_design  <- function() {
 
   #  ---------------------------------------------
-  #  compile all layouts into a design df
+  #  compile all layout definitions into a single design data frame.
+  #  The layout.* objects are package data (see R/03-01-layouts.R and
+  #  R/sysdata.rda); reference them directly so this resolves from the
+  #  package namespace when installed and from the global environment
+  #  when the scripts are sourced during development.
+  #  ---------------------------------------------
 
-     f <- function(x){
-       lab <- gsub( "layout[.]", "", x )
-       cbind( TYPE=lab, parse_design( get(x) ) ) }
+  layouts <- list(
+    numeric   = layout.numeric,
+    character = layout.character,
+    factor    = layout.factor,
+    logical   = layout.logical )
 
-  #  ----------------------------------------------
+  design.df <-
+    purrr::imap( layouts,
+                 function( obj, nm ){
+                   cbind( TYPE = nm, parse_design( obj ) ) } ) |>
+    dplyr::bind_rows()
 
-  # Get layout character strings from datagoodr package data
-  all.goodr.data <- data(package = "datagoodr")$results[, "Item"]
-  all.names <-  grep("^layout\\.", all.goodr.data, value = TRUE)
-
-  # Load all layout.DATATYPE objects
-  lapply(all.names, function(x) {
-    data(list = x, package = "datagoodr")
-  })
-
-  # combine all layout options
-  layouts <- grep( "^layout[.]", ls( envir=.GlobalEnv ), value=T )
-  design.df <- purrr::map( layouts, f ) |> dplyr::bind_rows()
   return( design.df )
 }
 
@@ -224,11 +223,11 @@ create_div <- function( div.num="div2", all.layouts, xx ) {
   div.fxs <-
     layout.type %>%
     dplyr::filter( DIV == div.num ) %>%
-    select( FUNCTION, VNAME, LABEL )
+    dplyr::select( FUNCTION, VNAME, LABEL )
 
   cat( paste0( "::: {.", div.num, "} \n\n" ) )
 
-  pwalk( div.fxs,
+  purrr::pwalk( div.fxs,
      function( FUNCTION, ... ) {
        args <- list(...)
        txt <- do.call( FUNCTION, args )
@@ -275,7 +274,7 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   create_div1( VNAME )
   # create_div( div="div2", layout.type, xx )
   # create_div( div="div3", layout.type, xx )
-  walk( all.divs, create_div, layout.type, xx )
+  purrr::walk( all.divs, create_div, layout.type, xx )
   cat( ":::::  \n\n\n\n\n\n" )
 
 }
@@ -319,7 +318,7 @@ create_all_sections <- function( dgf ) {
   #  --------------------------------
 
      all.vars <- names( dgf.content )
-     walk( all.vars, create_section, all.layouts, dgf.content )
+     purrr::walk( all.vars, create_section, all.layouts, dgf.content )
 
 }
 

@@ -1,25 +1,31 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param x PARAM_DESCRIPTION
-#' @param unique.p PARAM_DESCRIPTION, Default: 0.05
-#' @param unique.n PARAM_DESCRIPTION, Default: 100
-#' @param top.n PARAM_DESCRIPTION, Default: 25
-#' @param max.variance PARAM_DESCRIPTION, Default: 2
-#' @param b.to.f PARAM_DESCRIPTION, Default: FALSE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[DescTools]{IsDate}}
-#'  \code{\link[hablar]{retype}}
+#' Guess whether a vector should be treated as a factor
+#'
+#' Applies a series of heuristics to decide whether a vector represents a
+#' categorical (factor) variable rather than free text, an identifier, a
+#' continuous number, a date, or a logical. Character and integer vectors are
+#' flagged as factors when they have few unique values relative to their
+#' length, use fixed-width standardized codes, are dominated by their most
+#' common levels, or form an approximate integer sequence. Diagnostic details
+#' about the decision are printed to the console.
+#'
+#' @param x A vector of any type to evaluate.
+#' @param unique.p Maximum proportion of unique values for `x` to be
+#'   considered a factor. Default `0.05`.
+#' @param unique.n Maximum count of unique values for `x` to be considered a
+#'   factor. The more conservative of `unique.p`/`unique.n` is used. Default `100`.
+#' @param top.n Number of most-common levels used when testing whether a few
+#'   levels account for the bulk of the data. Default `25`.
+#' @param max.variance Variance threshold below which an integer vector is
+#'   treated as categorical. Default `2`.
+#' @param b.to.f Logical; if `TRUE`, binary (0/1 or single-value) vectors are
+#'   converted to factors. Default `FALSE`.
+#'
+#' @return A single logical value: `TRUE` if `x` should be treated as a
+#'   factor, otherwise `FALSE`.
+#' @seealso \code{\link[DescTools]{IsDate}}, \code{\link[hablar]{retype}}
 #' @rdname is_factor
-#' @export 
+#' @export
 #' @importFrom DescTools IsDate
 #' @importFrom hablar retype
 is_factor <- function(        # --------------------
@@ -277,19 +283,18 @@ is_factor <- function(        # --------------------
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' Guess factor columns across a data frame
+#'
+#' Applies [is_factor()] to every column of a data frame, suppressing the
+#' per-column console diagnostics.
+#'
+#' @param df A data frame.
+#'
+#' @return A named logical vector, one element per column, indicating which
+#'   columns should be treated as factors.
+#' @seealso [is_factor()], [recast_factors()]
 #' @rdname is_factor_df
-#' @export 
+#' @export
 is_factor_df <- function( df )
 {
   invisible( capture.output( 
@@ -300,19 +305,19 @@ is_factor_df <- function( df )
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' Convert guessed factor columns to factors
+#'
+#' Uses [is_factor_df()] to identify columns that should be treated as
+#' categorical and converts each of them to a factor, leaving all other
+#' columns unchanged.
+#'
+#' @param df A data frame.
+#'
+#' @return The input data frame with guessed-categorical columns coerced to
+#'   factors.
+#' @seealso [is_factor_df()]
 #' @rdname recast_factors
-#' @export 
+#' @export
 recast_factors <- function( df )
 {
   ff <- is_factor_df( df )

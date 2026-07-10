@@ -93,20 +93,13 @@ is_missing <- function(x) {
 #'
 #' @keywords internal
 most_common_val <- function(x) {
-  # use data table for speed:
   x <- c(x)
-  tibble(x = x) %>%
-    count(x) %>%
-    dplyr::filter(n==max(n)) %>%
-    dplyr::slice(1) %>%
-    dplyr::pull(x) %>%
-    as.character %>%
-    return()
-
-  # counts <- data.table::as.data.table(x)[, .N, by=x]
-  # most.counts <- counts[counts$N == max(counts$N), x]
-  # if(is.null(most.counts) | length(most.counts) == 0){return(NA)}
-  # return( as.character(most.counts[1]))
+  # Count every distinct value, including NA, and return the most frequent
+  # one as a character string (NA can legitimately be the most common value).
+  counts <- table(x, useNA = "ifany")
+  if (length(counts) == 0) return(NA_character_)
+  counts <- sort(counts, decreasing = TRUE)
+  return(as.character(names(counts)[1]))
 }
 
 

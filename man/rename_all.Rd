@@ -2,30 +2,26 @@
 % Please edit documentation in R/02-05-apply-vname-aliases.R
 \name{rename_all}
 \alias{rename_all}
-\title{FUNCTION_TITLE}
+\title{Rename data frame columns using an alias mapping}
 \usage{
 rename_all(df, old, new)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame whose columns should be renamed.}
 
-\item{old}{PARAM_DESCRIPTION}
+\item{old}{A character vector of aliases (each element optionally
+`";;"`-delimited) identifying columns to rename.}
 
-\item{new}{PARAM_DESCRIPTION}
+\item{new}{A character vector of replacement names, parallel to `old`.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The data frame with renamed columns.
 }
 \description{
-FUNCTION_DESCRIPTION
+Renames the columns of `df` by applying [replace_name()] for each
+`old`/`new` pair, where each `old` entry may be a `";;"`-delimited set of
+aliases mapping to a single `new` name.
 }
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+\seealso{
+[replace_name()]
 }

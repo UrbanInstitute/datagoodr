@@ -1,15 +1,19 @@
 Package: datagoodr
 Type: Package
-Title: Gooder Data Means Gooder Research
+Title: Document and Profile Research Datasets
 Version: 0.1.0
-Author: person("Olivia", "Beck", , "obeck@urban.org", role = c("aut", "cre")),
-    person("Jesse", "Lecy", , "jlecy@urban.org", role = c("aut", "cre"))
-Maintainer: Jesse Lecy <jlecy@urban.org>
-Description: Calculates governance scores for nonprofits using factor analysis.
+Authors@R: c(
+    person("Olivia", "Beck", email = "obeck@urban.org", role = "aut"),
+    person("Jesse", "Lecy", email = "jlecy@urban.org", role = c("aut", "cre")))
+Description: Tools for documenting and profiling research datasets. datagoodr
+    generates a Data Governance File (DGF) that captures the minimum metadata,
+    summary statistics, and graphics needed to describe a dataset, then renders
+    a formatted Research Guide (RG) report from that file. Gooder data means
+    gooder research.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
     dplyr,
     magrittr,
     knitr,
@@ -25,18 +29,24 @@ Imports:
     psych,
     quarto,
     readr,
+    readxl,
     rlang,
     stringr,
     tm,
     treemap,
     wordcloud
-Suggets:
+Suggests:
     fs,
-    tools
-VignetteBuilder: knitr
-RoxygenNote: 7.2.3
-Suggests: 
+    tools,
+    gt,
+    plotly,
+    pointblank,
+    wordcloud2,
+    testthat (>= 3.0.0),
     spelling
+VignetteBuilder: knitr
+RoxygenNote: 7.3.3
 Language: en-US
-Depends: 
+Depends:
     R (>= 2.10)
+Config/testthat/edition: 3

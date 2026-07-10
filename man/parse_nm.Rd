@@ -2,26 +2,18 @@
 % Please edit documentation in R/02-05-apply-vname-aliases.R
 \name{parse_nm}
 \alias{parse_nm}
-\title{FUNCTION_TITLE}
+\title{Split a delimited alias string into unique names}
 \usage{
 parse_nm(x)
 }
 \arguments{
-\item{x}{PARAM_DESCRIPTION}
+\item{x}{A single character string containing one or more names separated
+by `";;"`.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character vector of unique, whitespace-trimmed names.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Splits a `";;"`-delimited string of variable-name aliases into a trimmed
+vector of unique names.
 }

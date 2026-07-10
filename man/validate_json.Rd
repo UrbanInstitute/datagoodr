@@ -2,29 +2,21 @@
 % Please edit documentation in R/02-04-validate-json.R
 \name{validate_json}
 \alias{validate_json}
-\title{FUNCTION_TITLE}
+\title{Check whether each element of a vector is valid JSON}
 \usage{
 validate_json(v)
 }
 \arguments{
-\item{v}{PARAM_DESCRIPTION}
+\item{v}{A character vector of JSON strings.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A logical vector, one element per input, `TRUE` where the string is
+  valid JSON.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Vectorised wrapper around [jsonlite::validate()] used to verify that the
+JSON-encoded cells of a DGF are well formed.
 }
 \seealso{
-\code{\link[jsonlite]{validate}}
+[get_json_error()], [show_invalid()], \code{\link[jsonlite]{validate}}
 }

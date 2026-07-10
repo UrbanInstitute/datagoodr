@@ -2,26 +2,23 @@
 % Please edit documentation in R/02-00-INGEST-RAW.R
 \name{parse_functions}
 \alias{parse_functions}
-\title{FUNCTION_TITLE}
+\title{Collect and check the conversion functions named in a DGF}
 \usage{
 parse_functions(raw_convert)
 }
 \arguments{
-\item{raw_convert}{PARAM_DESCRIPTION}
+\item{raw_convert}{A character vector of function names (typically the
+`raw_convert` column of a DGF).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character vector of the unique function names.
 }
 \description{
-FUNCTION_DESCRIPTION
+Takes the unique function names listed in a DGF's `raw_convert` column and
+verifies that each is a defined function, erroring if any are missing.
 }
 \details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Part of the not-yet-operational Step 2 pipeline. Note: the current
+  existence check has known defects (missing `vapply` template, inverted
+  condition) and is not yet wired into the tested workflow.
 }

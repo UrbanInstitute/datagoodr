@@ -2,7 +2,7 @@
 % Please edit documentation in R/01-02-data-type-factors.R
 \name{is_factor}
 \alias{is_factor}
-\title{FUNCTION_TITLE}
+\title{Guess whether a vector should be treated as a factor}
 \usage{
 is_factor(
   x,
@@ -14,35 +14,36 @@ is_factor(
 )
 }
 \arguments{
-\item{x}{PARAM_DESCRIPTION}
+\item{x}{A vector of any type to evaluate.}
 
-\item{unique.p}{PARAM_DESCRIPTION, Default: 0.05}
+\item{unique.p}{Maximum proportion of unique values for `x` to be
+considered a factor. Default `0.05`.}
 
-\item{unique.n}{PARAM_DESCRIPTION, Default: 100}
+\item{unique.n}{Maximum count of unique values for `x` to be considered a
+factor. The more conservative of `unique.p`/`unique.n` is used. Default `100`.}
 
-\item{top.n}{PARAM_DESCRIPTION, Default: 25}
+\item{top.n}{Number of most-common levels used when testing whether a few
+levels account for the bulk of the data. Default `25`.}
 
-\item{max.variance}{PARAM_DESCRIPTION, Default: 2}
+\item{max.variance}{Variance threshold below which an integer vector is
+treated as categorical. Default `2`.}
 
-\item{b.to.f}{PARAM_DESCRIPTION, Default: FALSE}
+\item{b.to.f}{Logical; if `TRUE`, binary (0/1 or single-value) vectors are
+converted to factors. Default `FALSE`.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A single logical value: `TRUE` if `x` should be treated as a
+  factor, otherwise `FALSE`.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Applies a series of heuristics to decide whether a vector represents a
+categorical (factor) variable rather than free text, an identifier, a
+continuous number, a date, or a logical. Character and integer vectors are
+flagged as factors when they have few unique values relative to their
+length, use fixed-width standardized codes, are dominated by their most
+common levels, or form an approximate integer sequence. Diagnostic details
+about the decision are printed to the console.
 }
 \seealso{
-\code{\link[DescTools]{IsDate}}
- \code{\link[hablar]{retype}}
+\code{\link[DescTools]{IsDate}}, \code{\link[hablar]{retype}}
 }
