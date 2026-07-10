@@ -70,9 +70,11 @@ Data inside each cell of the DGF is generally stored in JSON format.
 
 ### Step 2: Validate the DGF
 
-This step would include many of the DGF validation steps in the R/02*.R files. 
-This is not currently operational. The goal of this step is to validate each 
-column to make sure it is in a format that step 3 can process correctly. 
+This step validates the DGF with `inspect_dgf()` before it is rendered, to make
+sure each column is in a format Step 3 can process correctly: required columns
+present, renderable `vtype_class` values, valid JSON in the JSON columns,
+defined `vconvert`/`vformat` functions, and a populated `rg_hash`. See
+`working-example/STEP2.R`.
 
 ### Step 3: Render the RG
 

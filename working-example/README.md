@@ -22,9 +22,12 @@ step 3.
 
 ## Step 2: Validate the DGF
 
-This step would include many of the DGF validation steps in the R/02*.R files. 
-This is not currently operational. The goal of this step is to validate each 
-column to make sure it is in a format that step 3 can handle. 
+Run the STEP2.R file to validate the DGF before rendering. `inspect_dgf()`
+checks that each column is in a format Step 3 can handle: all required columns
+are present, every `vtype_class` is renderable, the JSON columns still contain
+valid JSON, every function named in `vconvert`/`vformat` is defined, and every
+variable has an `rg_hash`. It prints a report and returns `report$valid` plus a
+list of any problems found.
 
 ## Step 3: Render the RG
 

@@ -28,12 +28,21 @@ data-in -> DGF -> Research Guide pipeline runs via `library(datagoodr)`
 
 
 
-## Create inspect_dgf() function
+## DONE: Create inspect_dgf() function (2026-07-10)
 
-After the user has updated fields in Excel make sure they did not break anything. 
+`inspect_dgf()` (R/02-06-inspect-dgf.R) validates a DGF after manual edits.
+It is wired into `working-example/STEP2.R` and covered by tests.
 
-- [ ] Check to make sure all json cells are still valid json objects: [validate_json()](https://github.com/lecy/datagood2/blob/main/R/02-01-ingest-raw-utils.R) 
-- [ ] If functions are referenced in the data_type_convert column make sure they are defined in dgf.R. 
+- [x] Check to make sure all json cells are still valid json objects
+      (`dd_f_level`, `rg_properties`, `rg_stats`, `rg_graphics`; note
+      `rg_preview` is ";;"-delimited text, not JSON)
+- [x] If functions are referenced in the `vconvert`/`vformat` columns make
+      sure they are defined
+- [x] Also checks required columns, renderable `vtype_class`, and `rg_hash`
+- Also cleaned up: removed stale draft util files (02-01/02-02) whose
+  functions referenced dead column names; moved the real format helpers
+  (`as_EIN`, `as_mm`, `as_yyyy`, `as_yyyymm`) into R/02-01-format-functions.R
+  and exported/documented them.
 
 ## Create ingest_raw() function 
 
