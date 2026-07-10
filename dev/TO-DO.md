@@ -48,9 +48,23 @@ It is wired into `working-example/STEP2.R` and covered by tests.
 
 Calls inspect_dgf() before, and update_dgf() afterwards. 
 
-## Create update_dgf() function
+## DONE: Create update_dgf() function (2026-07-10)
 
-- [ ] check rg_hash column, update rg fields if data has changed 
+`update_dgf()` (R/04-00-REFRESH-DGF.R) refreshes a DGF against updated data.
+
+- [x] check rg_hash column, update rg fields if data has changed
+- Unchanged variables keep their curated DGF row verbatim; changed/added
+  variables get refreshed data summaries; removed variables are reported.
+- Curated fields (vdesc/vname_alias/vscope/vloc/vconvert/vformat) are
+  preserved, and hand-edited factor level labels are carried across a data
+  change for levels that still exist.
+- Returns the updated DGF with `status` (unchanged/changed/added per variable)
+  and `removed` attributes. Demoed in working-example/STEP4.R; covered by tests.
+- NOTE (future optimization): update_dgf currently rebuilds the DGF from the
+  new data via create_dgf(), then keeps old rows for unchanged variables. It is
+  correct and preserves curation, but recomputes summaries for unchanged
+  variables. A future version could extract create_dgf's per-variable
+  derivation so unchanged variables are skipped entirely.
 
 ## DONE: Wire missing dictionary/summary sections into the RG (2026-07-10)
 

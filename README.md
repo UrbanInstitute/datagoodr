@@ -88,15 +88,13 @@ regularly update the associated RG.
 
 ## Step 4: Refresh the DGF
 
-When the data set is updated, this step is meant to compare the old data set to the new one. 
-If anything changed, the DGF should also updated. This updating is designed to be done through the 
-rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated 
-in the DGF without actually verifying each individual entry. 
-
-In the new data set for each variable, generate the hash value. If the new hash value
-matches the one in the rg_hash column of the old DGF, no need to update that variable, great! 
-If the new hash value does not match the  one in the rg_hash column of the old DGF, then 
-that variable's rg_[preview/properties/stats/graphics/hash] need to be updated. 
+When the data set is updated, `update_dgf()` compares the new data to the old
+DGF through the `rg_hash` column. For each variable it regenerates the hash:
+if it matches the old DGF, that variable is unchanged and its curated row is
+kept; if it differs, that variable's `rg_[preview/properties/stats/graphics/hash]`
+are refreshed. Curated fields and hand-edited factor level labels are
+preserved, and added / removed variables are reported. See
+`working-example/STEP4.R`.
 
 
 ## Step 5: Customize

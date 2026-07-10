@@ -5,3 +5,6 @@
 Rplots.pdf
 .DS_Store
 ~$*
+
+# Step 4 working-example output (regenerate via STEP4.R)
+working-example/DGF-V3.*
