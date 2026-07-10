@@ -22,8 +22,7 @@
 
 paste_booleplot <- function( VNAME, LABEL = "BAR PLOT" ) {
 
-  # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   v <- json_to_df(info)
 
   v[ is.na(v) ] <- "NA"

@@ -2,6 +2,31 @@
 ### Internal Functions
 ####################################
 
+# Per-variable render context.
+#
+# The render/paste functions need the current variable's DGF row (a named list
+# keyed by DGF column). Rather than a bare global `xx`, the current row is held
+# in this package-internal environment and read via get_xx(). create_section()
+# (full render) and the dg_*() granular helpers set it with set_xx().
+.dg_env <- new.env( parent = emptyenv() )
+
+#' @keywords internal
+#' @noRd
+set_xx <- function( x ) {
+  .dg_env$xx <- x
+  invisible( x )
+}
+
+#' @keywords internal
+#' @noRd
+get_xx <- function() {
+  if( is.null(.dg_env$xx) )
+  { stop( "No datagoodr variable context is set. Call a dg_*() helper ",
+          "(e.g. dg_stats(dgf, \"VNAME\")) or render via create_all_sections().",
+          call. = FALSE ) }
+  .dg_env$xx
+}
+
 #' Convert JSON text to a nested R list
 #'
 #' This internal helper function takes a JSON string and converts it
@@ -59,7 +84,7 @@ json_to_df <- function(json_text) {
 #' @noRd
 v_to_txt <- function( VNAME, LABEL )
 {
-  value  <- xx[[VNAME]]
+  value  <- get_xx()[[VNAME]]
   # Show blank (not "NA") for empty/unfilled metadata fields such as SCOPE
   # or LOCATION CODE.
   if( is.null(value) || length(value) == 0 || is.na(value) ) value <- ""
@@ -90,7 +115,7 @@ v_to_txt <- function( VNAME, LABEL )
 paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
@@ -126,7 +151,7 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 #' @export
 paste_levels <- function( VNAME, LABEL = "LEVELS" ){
 
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   if( is.null(info) || is.na(info) || trimws(info) == "" )
   { return( invisible(NULL) ) }
 
@@ -171,7 +196,7 @@ paste_levels <- function( VNAME, LABEL = "LEVELS" ){
 paste_stats_num <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
 
   # The numeric stats table also carries the quantiles; those are shown in a
@@ -210,7 +235,7 @@ paste_stats_num <- function( VNAME, LABEL = "STATS" ){
 #' @export
 paste_quantiles <- function( VNAME, LABEL = "QUANTILES" ){
 
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
 
   tab <- tab[ tab$STAT %in% c("Q - 05", "Q - 25", "Median", "Q - 75", "Q - 95"), ]
@@ -243,7 +268,7 @@ paste_quantiles <- function( VNAME, LABEL = "QUANTILES" ){
 paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   info.list <- json_to_list(info)
   info.tab <- as.data.frame(do.call(rbind, info.list[[1]]))
   info.hist <- as.data.frame(do.call(rbind, info.list[[2]]))
@@ -283,7 +308,7 @@ paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
 paste_stats_fact <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
@@ -314,7 +339,7 @@ paste_stats_fact <- function( VNAME, LABEL = "STATS" ){
 paste_stats_log <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
@@ -353,7 +378,7 @@ paste_stats_log <- function( VNAME, LABEL = "STATS" ){
 paste_preview_num  <- function( VNAME, LABEL = "STATS" ){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   info.txt <- trim_txt_block( info )
   info.txt <- unlist(stringr::str_split(info.txt, " ;; "))
 
@@ -444,7 +469,7 @@ trim_txt_block <- function( x ){
 paste_preview_chr <-function( VNAME, LABEL = "PREVIEW" ){
 
   # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   info.txt <- trim_txt_block( info )
   info.txt <- unlist(stringr::str_split(info.txt, " ;; "))
 

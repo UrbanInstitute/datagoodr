@@ -21,8 +21,7 @@
 #' @export
 paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
 
-  # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   v <- json_to_df(info)
   v$x <- as.character(v$x)
 

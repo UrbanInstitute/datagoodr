@@ -4,15 +4,12 @@
 \alias{create_div}
 \title{Create all non-level-1 div section in markdown}
 \usage{
-create_div(div.num = "div2", all.layouts, xx)
+create_div(div.num = "div2", all.layouts)
 }
 \arguments{
+\item{div.num}{Character string naming the div to render (e.g. `"div2"`).}
+
 \item{all.layouts}{output of \link{get_design}}
-
-\item{xx}{defined as a global variable in \link{create_section}.}
-
-\item{x}{Character string, the label or variable name to include
-in the header. Defaults to `"vname"`.}
 }
 \value{
 No return value, called for side effects (writes markdown text).
@@ -22,6 +19,7 @@ Writes a formatted `div` block to the quarto document. Format of the `div`
 block is determined by the `all.layouts` table.
 }
 \details{
-If div name of `x` is not included in `all.layouts`, nothing will be
-printed for that div in the quarto document.
+The current variable's content is read from the render context (set by
+\link{create_section} or a `dg_*()` helper). If `div.num` is not included in
+`all.layouts`, nothing is printed for that div.
 }

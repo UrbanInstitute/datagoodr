@@ -21,8 +21,7 @@
 #' @export
 v_to_wordcloud <- function( VNAME, LABEL = "WORD CLOUD" ) {
 
-  # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   v <- json_to_df(info)
 
   # get for scaling - this isn't perfect but it works for now

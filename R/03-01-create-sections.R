@@ -223,22 +223,21 @@ create_div1 <- function( x="vname" )
 #' Writes a formatted `div` block to the quarto document. Format of the `div`
 #' block is determined by the `all.layouts` table.
 #'
-#' @param x Character string, the label or variable name to include
-#'   in the header. Defaults to `"vname"`.
+#' @param div.num Character string naming the div to render (e.g. `"div2"`).
 #' @param all.layouts output of \link{get_design}
-#' @param xx defined as a global variable in \link{create_section}.
 #'
 #' @return No return value, called for side effects (writes markdown text).
 #'
 #' @details
-#' If div name of `x` is not included in `all.layouts`, nothing will be
-#' printed for that div in the quarto document.
+#' The current variable's content is read from the render context (set by
+#' \link{create_section} or a `dg_*()` helper). If `div.num` is not included in
+#' `all.layouts`, nothing is printed for that div.
 #'
 #'
 #' @export
-create_div <- function( div.num="div2", all.layouts, xx ) {
+create_div <- function( div.num="div2", all.layouts ) {
 
-  DATA_TYPE <- xx[["vtype_class"]] # change data_type to vtype_class
+  DATA_TYPE <- get_xx()[["vtype_class"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
 
   # skip div if not included in design
@@ -278,16 +277,18 @@ create_div <- function( div.num="div2", all.layouts, xx ) {
 #'   to the output.
 #'
 #' @details
-#' The function sets `xx <<- L[[VNAME]]` in the global environment for
-#'   downstream div functions to access.
+#' The function publishes `L[[VNAME]]` to the render context (see `set_xx`) so
+#' the downstream div functions can read it.
 #'
 #' @seealso [create_all_sections()]
 #'
 #' @export
 create_section <- function( VNAME="EIN", all.layouts, L ) {
 
-  xx <<- L[[ VNAME ]] #make this a global variable?
+  xx <- L[[ VNAME ]]
   xx[["VNAME"]] <- VNAME
+  set_xx( xx )                         # publish to the render context
+
   DATA_TYPE <- xx[["vtype_class"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
@@ -297,9 +298,7 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   cat( "::::: {.parent} \n\n" )
 
   create_div1( VNAME )
-  # create_div( div="div2", layout.type, xx )
-  # create_div( div="div3", layout.type, xx )
-  purrr::walk( all.divs, create_div, layout.type, xx )
+  purrr::walk( all.divs, create_div, layout.type )
   cat( ":::::  \n\n\n\n\n\n" )
 
 }

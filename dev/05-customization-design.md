@@ -47,8 +47,11 @@ my-project/
   `use_datagoodr_template()`, `create_rg()`, `create_dd()`, DG.R sourcing,
   `get_design(style=)` + `create_all_sections(style=, layouts=)` for DD/RG and
   layout override.
-- later: granular per-variable API (decouple engine from `xx`/`all.layouts`
-  globals), aesthetic pass (CSS + gt color tables, ydata-inspired),
+- granular per-variable API (DONE 2026-07-10): engine decoupled from the
+  `xx`/`all.layouts` globals via a package context env (get_xx/set_xx);
+  dg_section()/dg_stats()/dg_quantiles()/dg_properties()/dg_preview()/
+  dg_levels()/dg_graphic()/dg_field() render one variable or one element inline.
+- later: aesthetic pass (CSS + gt color tables, ydata-inspired),
   standardize()/format()/create_vr(), date/time data type.
 
 ## Build order

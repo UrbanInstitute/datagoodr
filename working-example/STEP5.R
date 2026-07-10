@@ -30,3 +30,21 @@ create_dd( "working-example/DGF-V2.xlsx", dir = "working-example/my-dictionary" 
 
 ## Then render (or pass render = TRUE above to scaffold and render in one step):
 # quarto::quarto_render( "working-example/my-guide/research-guide.qmd" )
+
+
+## ---------------------------------------------------------------------------
+## Granular, inline documentation
+## ---------------------------------------------------------------------------
+## Beyond auto-rendering every variable, you can weave a single variable - or
+## one element of its profile - into long-form narrative (call these inside a
+## `results = "asis"` chunk in a Quarto document):
+
+dgf <- readxl::read_xlsx( "working-example/DGF-V2.xlsx" )
+
+dg_section( dgf, "NTMAJ12" )                 # one variable's full profile
+dg_stats( dgf, "F9_08_REV_TOT_TOT" )         # just the summary stats
+dg_quantiles( dgf, "F9_08_REV_TOT_TOT" )     # just the quantiles
+dg_levels( dgf, "NTMAJ12" )                  # just the factor levels
+dg_graphic( dgf, "F9_08_REV_TOT_TOT" )       # just the graphic (set fig dims)
+dg_field( dgf, "EIN", "vdesc", "Description" ) # any DGF text field
+

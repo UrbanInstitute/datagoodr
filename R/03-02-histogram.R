@@ -21,8 +21,7 @@
 #' @export
 paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
 
-  # for testing VNAME <- div.fxs$VNAME
-  info <- xx[[VNAME]]
+  info <- get_xx()[[VNAME]]
   x.info <- json_to_list(info)
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )

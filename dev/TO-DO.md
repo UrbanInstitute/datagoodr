@@ -106,9 +106,14 @@ See dev/05-customization-design.md for the full plan.
 - Removed stale draft scaffolding (build_rg/build_dd/customize_template,
   inst/qmd-templates/).
 
+Done since:
+- [x] Granular per-variable API (2026-07-10): the render engine no longer uses
+      the bare `xx`/`all.layouts` globals - the current variable's row is held
+      in a package-internal context env (get_xx/set_xx). Exposed dg_section(),
+      dg_stats(), dg_quantiles(), dg_properties(), dg_preview(), dg_levels(),
+      dg_graphic(), dg_field() for inline narrative use. R/03-03-granular.R.
+
 Still to do at the customize stage (see design doc):
-- Granular per-variable API (decouple render engine from `xx`/`all.layouts`
-  globals) for inline narrative use.
 - Aesthetic pass (CSS + gt color tables, ydata-inspired).
 - standardize() / format() / create_vr(); date/time data type.
 

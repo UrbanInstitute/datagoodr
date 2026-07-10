@@ -24,8 +24,8 @@ Generates a formatted section in Quarto for a given variable.
 Uses layouts from `all.layouts` and content from `L` to construct div blocks.
 }
 \details{
-The function sets `xx <<- L[[VNAME]]` in the global environment for
-  downstream div functions to access.
+The function publishes `L[[VNAME]]` to the render context (see `set_xx`) so
+the downstream div functions can read it.
 }
 \seealso{
 [create_all_sections()]
