@@ -4,10 +4,10 @@
 
 # Columns every DGF produced by create_dgf() must contain.
 .dgf_required_cols <- c(
-  "vname", "vlabel", "vdesc", "vname_alias", "duplicates", "dd_f_level",
-  "raw_first5", "raw_type", "vconvert", "vtype", "vtype_class", "vformat",
-  "rg_properties", "rg_preview", "rg_stats", "rg_graphics", "rg_hash",
-  "dgf_standardize", "dgf_validate")
+  "vname", "vlabel", "vdesc", "vname_alias", "vscope", "vloc", "duplicates",
+  "dd_f_level", "raw_first5", "raw_type", "vconvert", "vtype", "vtype_class",
+  "vlength", "vformat", "rg_properties", "rg_preview", "rg_stats",
+  "rg_graphics", "rg_hash", "dgf_standardize", "dgf_validate")
 
 # Columns whose non-empty cells must contain valid JSON. Note that rg_preview
 # is intentionally excluded: it holds a " ;; "-delimited plain-text list of

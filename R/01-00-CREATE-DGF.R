@@ -35,6 +35,8 @@ create_dgf <- function(         # ----------------
          vconvert = NULL,
          vformat = NULL,
          vname_alias = NULL,
+         vscope = NULL,
+         vloc = NULL,
          keep.dd.cols=NULL,
          preview_dd=F,
          preview_dp= F,
@@ -81,6 +83,8 @@ create_dgf <- function(         # ----------------
   vlabel       <- names(df)
   if(is.null(vdesc)){vdesc <- rep("", N_col)}
   if(is.null(vname_alias)){vname_alias<-rep("", N_col)}
+  if(is.null(vscope)){vscope <- rep("", N_col)}
+  if(is.null(vloc)){vloc <- rep("", N_col)}
   raw_type      <- sapply( df, class ) %>% as.character()
 
 
@@ -119,7 +123,14 @@ create_dgf <- function(         # ----------------
 
   dd_f_level <- mapply(function(vname, type, df){
     if(type %in% c("factor", "logical")){
-      tab <- data.frame(levels = levels(df[,vname]))
+      # Store a two-column dictionary: the level code and an editable label.
+      # The label is seeded to the code so users can add human-readable
+      # descriptions (e.g. "AR" -> "Arts") in Excel during Step 2.
+      # Use [[ ]] so a single column is returned as a vector even when df is a
+      # tibble (df[, vname] on a tibble returns a 1-column tibble, whose
+      # levels() is NULL).
+      lv <- levels(df[[vname]])
+      tab <- data.frame(level = lv, label = lv)
       tab <- jsonify_df(tab)
       return(tab)
       }else{
@@ -199,6 +210,14 @@ create_dgf <- function(         # ----------------
   vtype_class   <- vclass
   vformat_out   <- rep( "", N_col )
 
+  ## FIELD LENGTH (max character width of the underlying values)
+  vlength <- sapply( df_stats, function(x){
+    x <- x[ ! is.na(x) ]
+    if( length(x) == 0 ) return( 0L )
+    max( nchar( as.character(x) ) )
+  })
+  names(vlength) <- NULL
+
   ## get_properties/stats/graphics
   ## Preview and properties use the formatted values (df_fmt); stats and
   ## graphics use df_stats, which keeps numeric/logical columns unformatted.
@@ -238,8 +257,10 @@ create_dgf <- function(         # ----------------
       vlabel,            # variable label
       vdesc,             #variable description
       vname_alias,       #variable alias
+      vscope,            #variable scope (user-supplied metadata)
+      vloc,              #location code (user-supplied metadata)
       duplicates,        #duplicated variable?
-      dd_f_level,        #levels if a factor/logical variable
+      dd_f_level,        #levels/labels if a factor/logical variable
       # dd_f_order,        #order to variables if applicable
       #2nd group
       raw_first5,        #first 5 raw values
@@ -247,6 +268,7 @@ create_dgf <- function(         # ----------------
       vconvert,          #covert data function
       vtype,             #final variable type
       vtype_class,       #final variable class (our internal purposes)
+      vlength,           #field length (max character width)
       vformat,           #final variable output stylings
       rg_properties,     #data properties
       rg_preview,        #data preview

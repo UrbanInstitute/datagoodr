@@ -8,6 +8,25 @@ test_that("create_dgf returns one row per variable with the expected columns", {
                     "rg_stats", "rg_graphics", "rg_hash") %in% names(dgf)))
 })
 
+test_that("create_dgf includes the metadata/schema columns", {
+  dgf <- build_demo_dgf()
+  expect_true(all(c("vscope", "vloc", "vlength") %in% names(dgf)))
+  # vscope/vloc default to blank, vlength is the max character width
+  expect_true(all(dgf$vscope == ""))
+  expect_true(is.numeric(dgf$vlength) || all(grepl("^[0-9]+$", dgf$vlength)))
+})
+
+test_that("dd_f_level captures a two-column level/label dictionary", {
+  dgf <- build_demo_dgf()
+  # 'cat' is a factor with levels A, B, C
+  lv <- dgf$dd_f_level[dgf$vname == "cat"]
+  expect_true(validate_json(lv))
+  tab <- jsonlite::fromJSON(lv)
+  expect_setequal(names(tab), c("level", "label"))
+  expect_setequal(tab$level, c("A", "B", "C"))
+  expect_equal(tab$level, tab$label)   # label seeded to the code
+})
+
 test_that("create_dgf classifies each variable type correctly", {
   dgf <- build_demo_dgf()
   types <- setNames(dgf$vtype_class, dgf$vname)

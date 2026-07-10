@@ -52,6 +52,29 @@ Calls inspect_dgf() before, and update_dgf() afterwards.
 
 - [ ] check rg_hash column, update rg fields if data has changed 
 
+## DONE: Wire missing dictionary/summary sections into the RG (2026-07-10)
+
+The factor level dictionary and several planned sections were captured in the
+DGF (or captured-able) but never rendered. Now wired in:
+
+- [x] LEVELS - `dd_f_level` now stores a two-column level/label dictionary
+      (label seeded to the code, editable in Excel); new `paste_levels()`
+      renderer; added to factor & logical layouts.
+- [x] QUANTILES - new `paste_quantiles()` reads the quantile rows from
+      `rg_stats`; `paste_stats_num()` now shows the remaining stats; added to
+      the numeric layout (own grid slot so it no longer collides with STATS).
+- [x] SCOPE / LENGTH / LOCATION CODE - new DGF columns (`vscope`, `vloc`
+      user-supplied; `vlength` = max field width, auto-computed); wired into
+      all four layouts, grouped like the demo (DATA TYPE+SCOPE+LENGTH and
+      DESCRIPTION+LEVELS+LOCATION CODE).
+- [x] Fixed a latent bug: `dd_f_level` used `df[, vname]`, which returns a
+      1-col tibble (levels() == NULL) for readr-loaded data, so levels were
+      only captured when `vconvert` happened to coerce to a base data.frame.
+      Now uses `df[[vname]]`.
+- [x] `v_to_txt()` renders blank (not "NA") for empty metadata fields.
+- Verified end-to-end: STEP3 renders LEVELS (13), QUANTILES (8), and
+  SCOPE/LENGTH/LOCATION CODE (27) into RG.html.
+
 ## Update create_rg() function
 
 

@@ -60,6 +60,9 @@ json_to_df <- function(json_text) {
 v_to_txt <- function( VNAME, LABEL )
 {
   value  <- xx[[VNAME]]
+  # Show blank (not "NA") for empty/unfilled metadata fields such as SCOPE
+  # or LOCATION CODE.
+  if( is.null(value) || length(value) == 0 || is.na(value) ) value <- ""
   txt <- paste0( "**", LABEL, "**", ": ",  value, "\n\n" )
   cat( txt )
 }
@@ -100,6 +103,52 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 
 
 ###########################################
+### Paste factor/logical levels
+###########################################
+
+#' Print the level dictionary of a factor/logical variable into the RG
+#'
+#' Reads the `dd_f_level` column of the DGF (a JSON table of level codes and
+#' their editable labels) and prints it as a two-column LEVELS table.
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"dd_f_level"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"LEVELS"`.
+#'
+#' @return No return value; prints the LEVELS table to the RG. Nothing is
+#'   printed when the variable has no levels.
+#'
+#' @details Internal to \link{create_div} in R/03-01-create-sections.R. The
+#'   table is capped at the first 50 levels.
+#'
+#' @import knitr
+#' @export
+paste_levels <- function( VNAME, LABEL = "LEVELS" ){
+
+  info <- xx[[VNAME]]
+  if( is.null(info) || is.na(info) || trimws(info) == "" )
+  { return( invisible(NULL) ) }
+
+  tab <- json_to_df(info)
+
+  # No levels captured (e.g. empty JSON array) - nothing to print
+  if( nrow(tab) == 0 || ncol(tab) < 2 )
+  { return( invisible(NULL) ) }
+
+  if( nrow(tab) > 50 )
+  { tab <- tab[ 1:50, ] }
+
+  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
+  cat( txt )
+
+  k <- knitr::kable( tab, align=c("l","l"), col.names=c("","") )
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
+
+
+###########################################
 #### Paste Stats
 ###########################################
 
@@ -125,6 +174,11 @@ paste_stats_num <- function( VNAME, LABEL = "STATS" ){
   info <- xx[[VNAME]]
   tab <- json_to_df(info)
 
+  # The numeric stats table also carries the quantiles; those are shown in a
+  # separate QUANTILES section (see paste_quantiles), so exclude them here.
+  tab <- tab[ ! tab$STAT %in% c("Q - 05", "Q - 25", "Q - 75", "Q - 95"), ]
+  rownames(tab) <- NULL   # drop leaked row indices from the subset
+
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
   cat( txt )
 
@@ -133,6 +187,41 @@ paste_stats_num <- function( VNAME, LABEL = "STATS" ){
   cat( "\n\n" )
 
   # return( df )
+}
+
+
+### Numeric quantiles ---------
+#' Print the quantiles of a numeric variable into the RG
+#'
+#' Reads the `rg_stats` column of the DGF and prints just the quantile rows
+#' (Q-05, Q-25, Median, Q-75, Q-95) as a QUANTILES table. The remaining
+#' summary statistics are shown by [paste_stats_num()].
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_stats"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"QUANTILES"`.
+#'
+#' @return No return value; prints the QUANTILES table to the RG.
+#'
+#' @details Internal to \link{create_div} in R/03-01-create-sections.R.
+#'
+#' @import knitr
+#' @export
+paste_quantiles <- function( VNAME, LABEL = "QUANTILES" ){
+
+  info <- xx[[VNAME]]
+  tab <- json_to_df(info)
+
+  tab <- tab[ tab$STAT %in% c("Q - 05", "Q - 25", "Median", "Q - 75", "Q - 95"), ]
+  rownames(tab) <- NULL   # drop leaked row indices from the subset
+
+  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
+  cat( txt )
+
+  k <- knitr::kable( tab, align=c("l","r"))
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
 }
 
 ### Character --------

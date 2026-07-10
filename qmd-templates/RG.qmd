@@ -151,8 +151,8 @@ create_all_sections( dgf.chr )
     padding-left: 20px;
 }
 
-.div7 { 
-    grid-area: f;
+.div7 {
+    grid-area: g;
     padding-left: 20px;
 }
 
@@ -161,8 +161,8 @@ create_all_sections( dgf.chr )
     padding-left: 30px;
 }
 
-.div9 { 
-    grid-area: g;
+.div9 {
+    grid-area: i;
     padding-left: 50px;
 }
 

@@ -18,6 +18,8 @@ create_dgf(
   vconvert = NULL,
   vformat = NULL,
   vname_alias = NULL,
+  vscope = NULL,
+  vloc = NULL,
   keep.dd.cols = NULL,
   preview_dd = F,
   preview_dp = F,

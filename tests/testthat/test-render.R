@@ -20,5 +20,22 @@ test_that("create_all_sections renders markdown for each variable type", {
                 info = paste("no parent div for type", ty))
     expect_true(any(grepl("pagebreak", out)),
                 info = paste("no pagebreak for type", ty))
+    # every type shows the metadata fields
+    expect_true(any(grepl("SCOPE", out)))
+    expect_true(any(grepl("LENGTH", out)))
+    expect_true(any(grepl("LOCATION CODE", out)))
   }
+})
+
+test_that("factor sections render a LEVELS table and numeric sections QUANTILES", {
+  dgf <- build_demo_dgf()
+
+  fac <- suppressMessages(suppressWarnings(
+    capture.output(create_all_sections(dgf[dgf$vtype_class == "factor", ]))))
+  expect_true(any(grepl("LEVELS", fac)))
+
+  num <- suppressMessages(suppressWarnings(
+    capture.output(create_all_sections(dgf[dgf$vtype_class == "numeric", ]))))
+  expect_true(any(grepl("QUANTILES", num)))
+  expect_true(any(grepl("STATS", num)))
 })
