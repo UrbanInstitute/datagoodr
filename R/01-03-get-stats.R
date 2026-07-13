@@ -19,64 +19,47 @@
 #' @export
 get_properties <- function( VNAME, df ){
 
-  # VNAME <- xx[VNAME]  # for testing VNAME <- all.vars[1]
-  # stats <- get_stats(VNAME)
-  #
-  # x <- dat[[VNAME]] #this should be the input data set
+  x <- unlist( df[[VNAME]] )
+  n <- length(x)
+  is.num <- is.numeric(x)
+  chr <- as.character(x)
 
-  x <- unlist(df[[VNAME]])
+  comma <- function(v) formatC( as.integer(v), big.mark = ",", format = "d" )
+  pct   <- function(v) paste0( "(", round( v / n * 100, 1 ), "%)" )
 
-  tab <- data.frame(
-    STAT = c( "Rows",  "Distinct",  "Most Common Value",
-              "Zero", "All Empty", "Missing/NA",
-              "Infinite"),
-    VAL =  c( length(x),
-              length(unique(x)),
-              most_common_val(x),
-              sum( x == 0, na.rm=T ),
-              sum( x == "", na.rm=T ),
-              is_missing(x),
-              sum( is.infinite(x) )))
+  ## exhaustive, mutually-comparable missingness checks
+  na.count    <- sum( is.na(x) )                                  # NA / NaN
+  empty.count <- sum( ! is.na(x) & ( trimws(chr) == "" | chr == "." ) )
+  zero.count  <- if( is.num ) sum( x == 0, na.rm = TRUE ) else 0L
+  inf.count   <- if( is.num ) sum( is.infinite(x) )        else 0L
 
-  tab$PER <- c("",
-               "",
-               round(mean(x == tab$VAL[3], na.rm = T) * 100, 0), # of the values that are not missing, what percetnage of them are the most common value
-               round(as.numeric(tab$VAL[4:7])/as.numeric(tab$VAL[1]) * 100,1))
+  ## most common NON-MISSING value (and its share of all rows)
+  keep <- ! is.na(x) & trimws(chr) != "" & chr != "."
+  vals <- x[ keep ]
+  if( length(vals) > 0 ) {
+    mc.val   <- most_common_val( vals )
+    mc.count <- max( table( as.character(vals) ) )
+    mc.per   <- paste0( "(", round( mc.count / n * 100, 0 ), "%)" )
+    if( is.num ) mc.val <- comma( as.numeric(mc.val) )
+  } else {
+    mc.val <- "-"; mc.per <- ""
+  }
 
+  ## assemble rows in order; include a missingness row only when it occurs
+  rows <- list(
+    c( "Rows",     comma(n),                    "" ),
+    c( "Distinct", comma( length(unique(x)) ),  pct( length(unique(x)) ) )
+  )
+  if( na.count    > 0 ) rows <- c( rows, list(c("Missing/NA",    comma(na.count),    pct(na.count)   )) )
+  if( empty.count > 0 ) rows <- c( rows, list(c("Missing/Empty", comma(empty.count), pct(empty.count))) )
+  if( zero.count  > 0 ) rows <- c( rows, list(c("Zero",          comma(zero.count),  pct(zero.count) )) )
+  if( inf.count   > 0 ) rows <- c( rows, list(c("Infinite",      comma(inf.count),   pct(inf.count)  )) )
+  rows <- c( rows, list(c("Most Common", mc.val, mc.per)) )
 
-  per.index <- nchar(tab$PER) > 0
-  tab$PER[per.index] <- paste0("(", tab$PER[per.index], "%)")
+  tab <- as.data.frame( do.call( rbind, rows ), stringsAsFactors = FALSE )
+  names(tab) <- c( "STAT", "VAL", "PER" )
 
-  f <- function(x){ format(x,big.mark=",") }
-  tab$VAL <- sapply( tab$VAL, f )
-  ret <-jsonify_df(tab)
-  return(ret)
-  #return tab as json object
-
-}
-
-
-#' Check missing data
-#'
-#' internal function for get_properties to return amount of missing data
-#'
-#' @param x vector
-#'
-#' @return number of missing values in `x`
-#'
-#' @details
-#' internal function for \link{get_properties}
-#'
-#' @keywords internal
-is_missing <- function(x) {
-  v1 <- is.na(x)
-  v2 <- is.nan(x)
-  v3 <- is.infinite(x)
-  v4 <- grepl( "^[ ]{0,}$", x )
-  v5 <- x == "NA"
-  v6 <- x == "."
-  missing <- v1 | v2 | v3 | v4 | v5 | v6
-  return( sum( missing, na.rm=T ) )
+  jsonify_df( tab )
 }
 
 
@@ -183,9 +166,20 @@ get_stats_chr <-  function(VNAME, df){
   # tab$CHARACTERS[6] <-  htmltools::HTML(kableExtra::spec_hist(n)$svg_text)
   # tab$WORDS[6] <-  htmltools::HTML(kableExtra::spec_hist(spaces)$svg_text)
   #
+  ## top-6 full strings by frequency (for the MOST COMMON table). Words are
+  ## atomised for the word cloud, so the whole strings are tabulated here.
+  xc <- as.character(x)
+  xc <- xc[ !is.na(xc) & trimws(xc) != "" & xc != "." ]
+  tt <- sort( table(xc), decreasing = TRUE )
+  k  <- seq_len( min(6, length(tt)) )
+  common <- data.frame( Value     = names(tt)[k],
+                        Frequency = as.integer(tt)[k],
+                        stringsAsFactors = FALSE )
+
   data_list <- list(
     STATS = tab,
-    HIST = list(htmltools::HTML(kableExtra::spec_hist(n)$svg_text), htmltools::HTML(kableExtra::spec_hist(spaces)$svg_text))
+    HIST = list(htmltools::HTML(kableExtra::spec_hist(n)$svg_text), htmltools::HTML(kableExtra::spec_hist(spaces)$svg_text)),
+    COMMON = common
   )
 
   #return tab as json object
@@ -270,7 +264,7 @@ get_stats_num <- function( VNAME, df ){
 
   tab <- data.frame(
     STAT = c("Minimum", "Q - 05", "Q - 25", "Median", "Mean",
-             "Q - 75", "Q - 95", "Maximum", "Skew"),
+             "Q - 75", "Q - 95", "Maximum", "Skew", "Kurtosis"),
     VAL = c(min(x, na.rm = TRUE),
             quantile( x, probs=0.05, na.rm=T, names=F ),
             quantile( x, probs=0.25, na.rm=T, names=F ),
@@ -279,7 +273,8 @@ get_stats_num <- function( VNAME, df ){
             quantile( x, probs=0.75, na.rm=T, names=F ),
             quantile( x, probs=0.95, na.rm=T, names=F ),
             max(x, na.rm = TRUE),
-            psych::skew(x))
+            psych::skew(x),
+            psych::kurtosi(x))
   )
 
   tab$VAL <- round(tab$VAL , 2)

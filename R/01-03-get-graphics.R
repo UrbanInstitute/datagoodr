@@ -116,30 +116,24 @@ get_graphics_num <- function(VNAME, df ){
   max = max(x, na.rm = TRUE)
   sk = psych::skew(x)
 
-  #windsorize
-  x <- x[!is.na(x)]
-  lower <- quantile(x, probs = c(0.05), na.rm = TRUE)
-  upper <- quantile(x, probs = c(0.9), na.rm = TRUE)
-  x <- x[x >= lower & x <= upper]
-  # x[x < lower ] <- lower
-  # x[x > upper ] <- upper
-
-
-  #cutoff according to the skew
-  if(sk >0){
-    quant <- 0.75 +  0.25 / (log(sk+20))
-    cutoff <- quantile(x, quant)
-    x <- x[x<=cutoff]
-  }else{
-    quant <- 0.25 * (1-1/log(sk+20))
-    cutoff <- quantile(x, quant)
-    x <- x[x>=cutoff]
+  # Winsorize with Tukey IQR fences so outliers don't dominate the x-scale and
+  # the bulk's shape is visible (fences adapt to a skewed spread, unlike a flat
+  # percentile clip). The true min/max/mean/median are stored above and shown
+  # on the chart; a dominant bar (e.g. a pile of zeros) is capped at render.
+  x   <- x[ !is.na(x) ]
+  q   <- quantile( x, c(0.25, 0.75), names = FALSE )
+  iqr <- q[2] - q[1]
+  if( iqr > 0 ) {
+    lo <- q[1] - 1.5 * iqr
+    hi <- q[2] + 1.5 * iqr
+  } else {                                   # near-constant: fall back to P1/P99
+    lo <- quantile( x, 0.01, names = FALSE )
+    hi <- quantile( x, 0.99, names = FALSE )
   }
+  xw <- x[ x >= lo & x <= hi ]
+  if( length( unique(xw) ) < 2 ) xw <- x     # degenerate clip -> use all
 
-
-
-  # cut off upper values
-  h <- hist( x, 100, plot=F )
+  h <- hist( xw, 100, plot = FALSE )
   b <- h$breaks
   d <- h$density/sum(h$density)
   y <- h$counts

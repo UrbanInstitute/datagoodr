@@ -243,6 +243,7 @@ paste_quantiles <- function( VNAME, LABEL = "QUANTILES" ){
   tab <- json_to_df(info)
 
   tab <- tab[ tab$STAT %in% c("Q - 05", "Q - 25", "Median", "Q - 75", "Q - 95"), ]
+  tab$STAT[ tab$STAT == "Median" ] <- "Q - 50"   # show as a quantile here
   rownames(tab) <- NULL   # drop leaked row indices from the subset
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
@@ -291,6 +292,39 @@ paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
   # return( df )
 }
 
+
+
+### Character - most common strings --------
+#' Print the most common strings of a character variable into the RG
+#'
+#' Reads the most-common-values component of the character `rg_stats` cell and
+#' prints a Value/Frequency table. Prints nothing if that component is not
+#' present (e.g. a DGF generated before this element was added).
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_stats"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"MOST COMMON"`.
+#'
+#' @return No return value; prints the table (or nothing) to the RG.
+#' @import knitr
+#' @export
+paste_stats_chr_common <- function( VNAME, LABEL = "MOST COMMON" ){
+
+  info      <- get_xx()[[VNAME]]
+  info.list <- json_to_list(info)
+  if( length(info.list) < 3 || is.null(info.list[[3]]) )
+  { return( invisible(NULL) ) }
+
+  tab <- as.data.frame( do.call( rbind, info.list[[3]] ) )
+  if( nrow(tab) == 0 ) return( invisible(NULL) )
+  colnames(tab) <- c("Value", "Frequency")[ seq_len(ncol(tab)) ]
+
+  cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
+  k <- knitr::kable( tab, align = c("l", "r") )
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
 
 
 ### Factor --------

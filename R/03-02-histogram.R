@@ -4,112 +4,103 @@
 ### Paste Graphics - Numeric
 ###########################################
 
+#' Abbreviate numbers for compact, uniform axis/graphic labels
+#'
+#' Formats numbers with K/M/B/T suffixes (thousands, millions, billions,
+#' trillions) at a fixed number of significant figures, so labels stay short
+#' and roughly the same width. Negatives keep their sign; `0` maps to `"0"`.
+#' Vectorised.
+#'
+#' @param x A numeric vector.
+#' @param sig Significant figures to keep (default 3).
+#'
+#' @return A character vector of abbreviated numbers, e.g. `-61.5M`, `4.18B`.
+#' @examples
+#' abbrev_num(c(-61467591, 100, 3.9, 4178522311))
+#' @export
+abbrev_num <- function( x, sig = 3 ) {
+  one <- function( v ) {
+    if( is.na(v) )   return( NA_character_ )
+    if( v == 0 )     return( "0" )
+    sgn <- if( v < 0 ) "-" else ""
+    a   <- abs(v)
+    p   <- min( floor( log10(a) / 3 ), 4L )          # 0 . K . M . B . T
+    paste0( sgn, signif( a / 1000^p, sig ),
+            c("", "K", "M", "B", "T")[p + 1] )
+  }
+  vapply( x, one, character(1) )
+}
+
+
 ### Paste Histogram (Numeric) -------------------
-#' Print Graphics of a Numeric Variable into RG
+#' Print the histogram of a numeric variable into the RG
 #'
-#' Read rg_graphics column of DGF and print histogram in the RG
+#' Reads the `rg_graphics` column of the DGF and draws a clean, axis-free
+#' histogram of the winsorized distribution, with the true min/max abbreviated
+#' at the lower corners and mean/median marked (labels on top). A dominant
+#' spike (e.g. a pile of zeros) is capped so the rest of the shape stays
+#' visible, and mean/median lines are clamped to the plot so an outlier mean
+#' pins to the edge to signal skew.
 #'
-#' @param VNAME A character string specifying the name of the variable whose properties are to be displayed.
-#' @param LABEL A character string (from layout.TYPE object) for the section title. Defaults to `"HISTOGRAM"`.
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_graphics"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"HISTOGRAM"`.
 #'
-#' @return This function does not return a value; it prints the formatted histogram to the RG
-#'
-#' @details
-#' The function is an internal function of `create_div` in R/03-01-create-sections.R.
-#'
-#'
+#' @return No return value; draws the histogram into the RG.
+#' @details Internal to `create_div` in R/03-01-create-sections.R.
 #' @export
 paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
 
-  info <- get_xx()[[VNAME]]
-  x.info <- json_to_list(info)
+  info   <- get_xx()[[VNAME]]
+  x.info <- json_to_list( info )
 
-  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
-  cat( txt )
+  mids <- as.numeric( unlist( x.info$mids ) )
+  dens <- as.numeric( unlist( x.info$density ) )
+  avex <- as.numeric( unlist( x.info$mean ) )
+  medx <- as.numeric( unlist( x.info$median ) )
+  minx <- as.numeric( unlist( x.info$min ) )
+  maxx <- as.numeric( unlist( x.info$max ) )
 
-  par( mar=c(2,0,1,0) )
-  plot( x.info$mids, x.info$d,
-        type="h", bty="n", lwd=4, axes=F, col="gray30" )
+  cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
 
-  x1 <- unlist(x.info$mids[1])
-  x2 <- unlist(x.info$mids[length(x.info$mids)])
-  min.x <- x1 |> make3()
-  max.x <- x2 |> make3()
+  # cap a dominant bar so the rest of the shape is visible
+  srt  <- sort( dens, decreasing = TRUE )
+  ycap <- if( length(srt) >= 2 && srt[1] > 2 * srt[2] ) srt[2] * 1.15 else max(dens)
 
-  axis( side=1, at=c(x1,x2),
-        labels=c(x.info$min, x.info$max), cex.axis=1.3,
-        line=-0.5, tick=F, font=2, col.axis="gray40" )
+  par( mar = c(2, 0, 1.5, 0), xpd = NA )
+  plot( mids, pmin( dens, ycap ),
+        type = "h", lwd = 4, col = "gray70",
+        axes = FALSE, xlab = "", ylab = "", ylim = c(0, ycap) )
 
-  avex <- unlist(x.info$mean)
-  medx <- unlist(x.info$median)
+  usr <- par("usr")
 
-  abline( v=avex, lty=3, lwd=2, col="firebrick" )
-  abline( v=medx, lty=3, lwd=2, col="steelblue" )
-  axis( side=1, at=medx, label="median", font=2,
-        col.axis="steelblue", tick=F, line=-1 )
-  axis( side=1, at=avex, label="mean", font=2,
-        col.axis="firebrick", tick=F, line=-0.5 )
+  # true min / max at the lower corners (abbreviated, so nothing crops)
+  mtext( abbrev_num(minx), side = 1, at = usr[1], adj = 0, line = 0.1,
+         cex = 1.1, font = 2, col = "gray40" )
+  mtext( abbrev_num(maxx), side = 1, at = usr[2], adj = 1, line = 0.1,
+         cex = 1.1, font = 2, col = "gray40" )
+
+  # mean / median lines, clamped into the plot; labels on top
+  clamp    <- function(v) max( min( v, usr[2] ), usr[1] )
+  mean.pos <- clamp( avex )
+  med.pos  <- clamp( medx )
+
+  abline( v = med.pos,  lty = 3, lwd = 2, col = "steelblue" )
+  abline( v = mean.pos, lty = 3, lwd = 2, col = "firebrick" )
+  # Label placement: near an edge, push the text inward so it stays on-chart
+  # (e.g. an outlier mean clamped to the right edge). In the middle, offset
+  # median left / mean right so the two never collide when they sit close.
+  lab_adj <- function( pos, side ) {
+    frac <- ( pos - usr[1] ) / ( usr[2] - usr[1] )
+    if( frac > 0.85 ) return( 1 )                 # near right: extend left
+    if( frac < 0.15 ) return( 0 )                 # near left:  extend right
+    if( side == "median" ) 1.05 else -0.05        # middle: split them
+  }
+  mtext( "median", side = 3, at = med.pos,  line = -0.3, cex = 1,
+         font = 2, col = "steelblue", adj = lab_adj(med.pos,  "median") )
+  mtext( "mean",   side = 3, at = mean.pos, line = -0.3, cex = 1,
+         font = 2, col = "firebrick", adj = lab_adj(mean.pos, "mean") )
 
   cat( "\n\n" )
-
 }
-
-# FORMAT NUMBER LABELS
-# SO THEY ARE ALWAYS A
-# UNIFORM WIDTH FOR GRAPHS
-#' Format numbers into human-readable strings for graphing
-#'
-#' Converts numeric values into rounded or abbreviated strings, using K/M/B/T
-#' suffixes for thousands, millions, billions, and trillions.
-#'
-#' @param x A numeric value to format.
-#'
-#' @return A character string representing the formatted number.
-#'
-#' @details
-#' - Negative numbers are rounded to 3 decimal places.
-#' - Numbers between 0 and 10 are rounded to 2 decimal places.
-#' - Numbers between 10 and 100 are rounded to 1 decimal place.
-#' - Numbers in the thousands, millions, billions, and trillions are
-#'   abbreviated with `K`, `M`, `B`, or `T`.
-#' - Numbers ≥ 10^15 are returned as `"BFN"`.
-#'
-#' @keywords internal
-#' @noRd
-make3 <- function(x){
-  # need to fix for
-  # large negative nums
-  if( x < 0 ){
-    x <- paste0( round(x,3) )
-    return(x)
-  }
-  if( x >= 0 & x < 10 ){
-    x <- paste0( round(x,2)  )
-    return(x)
-  }
-  if( x >= 10 & x < 100 ){
-    x <- paste0( round(x,1)  )
-    return(x)
-  }
-  if( x > 10^2 & x < 10^6 ){
-    x <- paste0( round(x/(10^3),0), "K" )
-    return(x)
-  }
-  if( x >= 10^6 & x < 10^9 ){
-    x <- paste0( round(x/(10^6),0), "M" )
-    return(x)
-  }
-  if( x >= 10^9 & x < 10^12 ){
-    x <- paste0( round(x/(10^9),0), "B" )
-    return(x)
-  }
-  if( x >= 10^12 & x < 10^15 ){
-    x <- paste0( round(x/(10^12),0), "T" )
-    return(x)
-  }
-  if( x >= 10^15 ){
-    x <- "BFN"
-    return(x)
-  }
-}
-

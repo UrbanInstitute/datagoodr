@@ -20,48 +20,58 @@
 }
 
 /* --- per-variable grid ---------------------------------------------------- */
+/* Three equal columns. Each section (a div) is placed by flow, in layout
+   order, and sized with `grid-column: span N` -> 1/3, 2/3, or full width.
+   The div number stays the section's identity + style hook; only the span
+   sets width. Keep each visual row's spans summing to 3 (1+2, 1+1+1, 3). */
 .parent {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
+  width: 100%;
+  /* minmax(0, 1fr) keeps the three columns strictly equal and lets wide
+     content (long preview lines, wide tables) overflow instead of blowing
+     out a column. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: auto;
   grid-column-gap: var(--dg-gap-col);
   grid-row-gap: var(--dg-gap-row);
-  grid-template-areas:
-    "a a a"
-    "b b b"
-    "c d d"
-    "e f g"
-    "h h h"
-    "i i i"
-    "j k k"
-    "m o o"
-    "n o o"
-    "p p p";
   margin-bottom: 1.2em;
 }
 
-.div1  { grid-area: a; padding-bottom: 4px; }
-.div2  { grid-area: b; }
-.div3  { grid-area: c; }
-.div4  { grid-area: d; }
-.div5  { grid-area: e; }
-.div6  { grid-area: f; }
-.div7  { grid-area: g; }
-.div8  { grid-area: h; }
-.div9  { grid-area: i; }
-.div10 { grid-area: e; }
-.div11 { grid-area: h; }
-.div12 { grid-area: f; }
-.div13 { grid-area: i; }
-.div14 { grid-area: e; }
-.div15 { grid-area: f; }
-.div16 { grid-area: h; }
-.div17 { grid-area: e; }
-.div18 { grid-area: f; }
-.div19 { grid-area: i; }
+/* descriptor block (all types) */
+.div1  { grid-column: span 3; padding-bottom: 4px; }  /* title          */
+.div2  { grid-column: span 3; }                        /* label          */
+.div3  { grid-column: span 1; }                        /* type/scope/len */
+.div4  { grid-column: span 2; }                        /* description    */
 
-/* left metadata column (type/scope/length) gets a little indent to align
-   under the title's text; the right column starts at the second track. */
+/* numeric */
+.div5  { grid-column: span 1; }   /* properties */
+.div6  { grid-column: span 1; }   /* quantiles  */
+.div7  { grid-column: span 1; }   /* stats      */
+.div8  { grid-column: span 2; }   /* histogram  */
+.div9  { grid-column: span 1; }   /* preview    */
+
+/* character */
+.div10 { grid-column: span 1; }   /* properties  */
+.div11 { grid-column: span 1; }   /* preview     */
+.div12 { grid-column: span 1; }   /* stats       */
+.div13 { grid-column: span 2; }   /* word cloud  */
+.div21 { grid-column: span 1; }   /* most common */
+
+/* factor */
+.div14 { grid-column: span 1; }   /* properties + value/freq (stacked) */
+.div15 { grid-column: span 1; }
+.div16 { grid-column: span 2; }   /* treemap */
+
+/* logical */
+.div17 { grid-column: span 1; }   /* properties */
+.div18 { grid-column: span 1; }
+.div19 { grid-column: span 2; }   /* bar plot   */
+
+/* empty spacers usable directly from a layout object (e.g. "blank1") */
+.blank1 { grid-column: span 1; }
+.blank2 { grid-column: span 2; }
+
+/* left metadata column gets a small indent to sit under the title's text */
 .div3, .div5, .div10, .div14, .div17 { padding-left: 2px; }
 
 /* ==========================================================================
@@ -157,11 +167,12 @@ pre.dg-preview {
    ========================================================================== */
 
 .div5 p, .div6 p, .div7 p, .div10 p, .div12 p, .div13 p,
-.div14 p, .div15 p, .div17 p, .div18 p {
+.div14 p, .div15 p, .div17 p, .div18 p, .div21 p {
   margin: 0 0 0.15em 0;
 }
 .div5 strong, .div6 strong, .div7 strong, .div10 strong, .div12 strong,
-.div13 strong, .div14 strong, .div15 strong, .div17 strong, .div18 strong {
+.div13 strong, .div14 strong, .div15 strong, .div17 strong, .div18 strong,
+.div21 strong {
   font-family: var(--dg-sans);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -170,7 +181,7 @@ pre.dg-preview {
   color: var(--dg-label);
 }
 
-.div5 td, .div6 td, .div7 td, .div12 td, .div13 td, .div14 td {
+.div5 td, .div6 td, .div7 td, .div12 td, .div14 td, .div21 td {
   font-family: var(--dg-mono);
   font-size: 0.85em;
 }
@@ -178,6 +189,9 @@ pre.dg-preview {
 .div5 table, .div6 table, .div7 table {
   margin-left: 2px;
 }
+
+/* stack the two tables in the factor left column with a little breathing room */
+.div14 table + p { margin-top: 0.6em; }
 
 /* strip default table chrome; use tight cells + hairline row rules */
 .table { width: auto; }
@@ -190,14 +204,25 @@ tbody, tfoot, tr, td, th {
   border-width: 0;
 }
 
-.div5 tr, .div6 tr, .div7 tr,
-.div12 tr, .div13 tr, .div14 tr,
-.div15 tr, .div17 tr, .div18 tr {
+.div5 tr, .div6 tr, .div7 tr, .div10 tr, .div12 tr,
+.div14 tr, .div17 tr, .div21 tr {
   border-bottom: 1px solid var(--dg-rule);
 }
-.div5 th, .div6 th, .div7 th,
-.div12 th, .div13 th, .div14 th,
-.div15 th, .div17 th, .div18 th { display: none; }
+/* hide the header on the self-evident STAT/VAL/PER tables ... */
+.div5 th, .div6 th, .div7 th, .div10 th, .div17 th { display: none; }
+/* ... and on the factor PROPERTIES table (its first table), but keep the
+   VALUE/FREQUENCY header (its second table). div12 (CHARACTERS/WORDS) and
+   div21 (most-common VALUE/FREQUENCY) keep their headers too. */
+.div14 table:first-of-type th { display: none; }
+.div12 th, .div21 th {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.7em;
+  font-weight: 700;
+  color: var(--dg-label);
+  text-align: left;
+}
 
 /* graphics anchored to the bottom-right of their cell */
 .div8 img, .div8 svg, .div9 img, .div9 svg { align-self: end; justify-self: end; }

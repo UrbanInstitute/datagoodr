@@ -78,6 +78,9 @@ parse_design <- function( x ) {
 #'
 #' @export
 check_length <- function(x) {
+  # a bare blank spacer (e.g. "blank1") needs no variable/label/function
+  if( length(x) == 1 && grepl("^blank", x[1]) )
+  { x <- c( x, "", "", "" ) }
   # add empty element if no label is provided
   if( length(x) == 3 )
   { x <- c( x, "" ) }
@@ -236,6 +239,10 @@ create_div1 <- function( x="vname" )
 #'
 #' @export
 create_div <- function( div.num="div2", all.layouts ) {
+
+  # a blank spacer just emits an empty grid cell of its span
+  if( grepl("^blank", div.num) )
+  { cat( paste0( "::: {.", div.num, "} \n\n::: \n\n" ) ); return( invisible(NULL) ) }
 
   DATA_TYPE <- get_xx()[["vtype_class"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )

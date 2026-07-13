@@ -44,10 +44,11 @@ layout.character <-
      "div3  ;; vlength       ;; LENGTH        ;; v_to_txt",
      "div4  ;; vdesc         ;; DESCRIPTION   ;; v_to_txt",
      "div4  ;; vloc          ;; LOCATION CODE ;; v_to_txt",
-     "div10  ;; rg_properties ;; PROPERTIES    ;; paste_properties",
-     "div11  ;; rg_preview    ;; PREVIEW       ;; paste_preview_chr",
+     "div10 ;; rg_properties ;; PROPERTIES    ;; paste_properties",
+     "div21 ;; rg_stats      ;; MOST COMMON   ;; paste_stats_chr_common",
      "div12 ;; rg_stats      ;; STATS         ;; paste_stats_chr",
-     "div13 ;; rg_graphics   ;; Word Cloud    ;; v_to_wordcloud"  )
+     "div13 ;; rg_graphics   ;; WORD CLOUD    ;; v_to_wordcloud",
+     "div11 ;; rg_preview    ;; PREVIEW       ;; paste_preview_chr"  )
 
 
 #' Factor variable layout definitions
@@ -70,9 +71,9 @@ layout.factor <-
      "div4 ;; vdesc          ;; DESCRIPTION   ;; v_to_txt",
      "div4 ;; dd_f_level     ;; LEVELS        ;; paste_levels",
      "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
-     "div14 ;; rg_properties ;; PROPERTIES          ;; paste_properties",
-     "div15 ;; rg_stats      ;; MOST COMMON VALUES  ;; paste_stats_fact",
-     "div16 ;; rg_graphics   ;; TREEMAP             ;; paste_treemap"  )
+     "div14 ;; rg_properties ;; PROPERTIES   ;; paste_properties",
+     "div14 ;; rg_stats      ;; MOST COMMON  ;; paste_stats_fact",
+     "div16 ;; rg_graphics   ;; TREEMAP      ;; paste_treemap"  )
 
 
 #' Logical/Boolean variable layout definitions
@@ -96,8 +97,7 @@ layout.logical <-
     "div4 ;; dd_f_level     ;; LEVELS        ;; paste_levels",
     "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
     "div17 ;; rg_properties ;; PROPERTIES    ;; paste_properties",
-    "div18 ;; rg_stats      ;; VALUES        ;; paste_stats_log",
-    "div19 ;; rg_graphics   ;; BOOLPLOT      ;; paste_booleplot"  )
+    "div19 ;; rg_graphics   ;; VALUES        ;; paste_booleplot"  )
 
 
 ### Save these in the R package

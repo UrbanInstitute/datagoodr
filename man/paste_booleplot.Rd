@@ -2,21 +2,27 @@
 % Please edit documentation in R/03-02-booleplot.R
 \name{paste_booleplot}
 \alias{paste_booleplot}
-\title{Print Graphics of a Logical Variable into RG}
+\title{Print the bar plot of a logical variable into the RG}
 \usage{
-paste_booleplot(VNAME, LABEL = "BAR PLOT")
+paste_booleplot(VNAME, LABEL = "VALUES")
 }
 \arguments{
-\item{VNAME}{A character string specifying the name of the variable whose properties are to be displayed.}
+\item{VNAME}{A character string naming the DGF column to read (the layout
+passes `"rg_graphics"`).}
 
-\item{LABEL}{A character string (from layout.TYPE object) for the section title. Defaults to `"BAR PLOT"`.}
+\item{LABEL}{A character string for the section title. Defaults to
+`"VALUES"`.}
 }
 \value{
-This function does not return a value; it prints the formatted Booleplot to the RG
+No return value; draws the bar plot into the RG.
 }
 \description{
-Read rg_graphics column of DGF and print Booleplot in the RG
+Reads the `rg_graphics` column of the DGF and draws a horizontal bar plot of
+the value counts. Instead of an axis, each bar is labelled to its right with
+its count and share (`22.6K (90%)`), using [abbrev_num()] so large counts
+stay compact and never crop. Since a logical has only a few categories, this
+carries the count table inside the plot.
 }
 \details{
-The function is an internal function of `create_div` in R/03-01-create-sections.R.
+Internal to `create_div` in R/03-01-create-sections.R.
 }
