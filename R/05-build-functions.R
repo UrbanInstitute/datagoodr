@@ -8,6 +8,27 @@
 #     research-guide.qmd    (or data-dictionary.qmd)
 
 
+#' Return the datagoodr report stylesheet
+#'
+#' Reads the package's report CSS (`inst/templates/datagoodr.css`). The RG and
+#' DD templates emit it inside a `<style>` block, so a single stylesheet drives
+#' every report. To restyle, edit that file (or add overriding rules in your
+#' project `.qmd`).
+#'
+#' @details A project-local `datagoodr.css` (in the render directory) takes
+#'   precedence over the packaged one, so a scaffolded project can be restyled
+#'   by editing its own copy.
+#'
+#' @return A single character string of CSS (empty if no stylesheet is found).
+#' @export
+datagoodr_css <- function() {
+  path <- if( file.exists("datagoodr.css") ) "datagoodr.css"
+          else system.file( "templates", "datagoodr.css", package = "datagoodr" )
+  if( path == "" || ! file.exists(path) ) return( "" )
+  paste( readLines( path, warn = FALSE ), collapse = "\n" )
+}
+
+
 #' Copy a datagoodr report template into a project
 #'
 #' Installs one of the package's Quarto templates (research guide or data
@@ -50,6 +71,12 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
     { file.copy( system.file("templates", "DG.R", package = "datagoodr"),
                  dg.dest ) }
   }
+
+  # ship a local copy of the stylesheet so the project can be restyled
+  css.dest <- file.path( dir, "datagoodr.css" )
+  if( ! file.exists(css.dest) )
+  { file.copy( system.file("templates", "datagoodr.css", package = "datagoodr"),
+               css.dest ) }
 
   message( "Created ", dest )
   invisible( dest )

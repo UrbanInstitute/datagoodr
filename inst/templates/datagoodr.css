@@ -1,0 +1,212 @@
+/* ==========================================================================
+   datagoodr report stylesheet
+   Single source of truth for the RG / DD templates (served via datagoodr_css()).
+   Tweak the tokens in :root to restyle the whole report.
+   ========================================================================== */
+
+:root {
+  --dg-serif: Georgia, "Times New Roman", serif;
+  --dg-sans:  -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --dg-mono:  "Anonymous Pro", Consolas, Menlo, monospace;
+
+  --dg-ink:    #1a1a1a;   /* primary text            */
+  --dg-label:  #6b6b6b;   /* field / section labels  */
+  --dg-muted:  #8a8a8a;   /* secondary text          */
+  --dg-rule:   #dcdcdc;   /* hairline table rules     */
+  --dg-accent: #1a1a1a;   /* title underline          */
+
+  --dg-gap-row: 6px;
+  --dg-gap-col: 26px;
+}
+
+/* --- per-variable grid ---------------------------------------------------- */
+.parent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  grid-column-gap: var(--dg-gap-col);
+  grid-row-gap: var(--dg-gap-row);
+  grid-template-areas:
+    "a a a"
+    "b b b"
+    "c d d"
+    "e f g"
+    "h h h"
+    "i i i"
+    "j k k"
+    "m o o"
+    "n o o"
+    "p p p";
+  margin-bottom: 1.2em;
+}
+
+.div1  { grid-area: a; padding-bottom: 4px; }
+.div2  { grid-area: b; }
+.div3  { grid-area: c; }
+.div4  { grid-area: d; }
+.div5  { grid-area: e; }
+.div6  { grid-area: f; }
+.div7  { grid-area: g; }
+.div8  { grid-area: h; }
+.div9  { grid-area: i; }
+.div10 { grid-area: e; }
+.div11 { grid-area: h; }
+.div12 { grid-area: f; }
+.div13 { grid-area: i; }
+.div14 { grid-area: e; }
+.div15 { grid-area: f; }
+.div16 { grid-area: h; }
+.div17 { grid-area: e; }
+.div18 { grid-area: f; }
+.div19 { grid-area: i; }
+
+/* left metadata column (type/scope/length) gets a little indent to align
+   under the title's text; the right column starts at the second track. */
+.div3, .div5, .div10, .div14, .div17 { padding-left: 2px; }
+
+/* ==========================================================================
+   Visual hierarchy
+   L1 title  >  L2 label  >  L3 field labels  >  L4 values/data
+   ========================================================================== */
+
+/* L1 - variable name */
+h1.title { color: var(--dg-ink); font-family: var(--dg-serif); font-size: 2.3em; }
+h2.anchored { color: #c9c9c9; }
+h3.anchored { color: var(--dg-muted); }
+
+h4 {
+  font-family: var(--dg-serif);
+  font-size: 2.0em;
+  font-weight: 700;
+  color: var(--dg-ink);
+  border-bottom: 3px solid var(--dg-accent);
+  width: 100%;
+  margin: 0.1em 0 0.15em 0;
+  padding-bottom: 2px;
+}
+
+h5 { font-size: 0.9em; }
+
+/* L2 - the plain-language variable label (div2), printed without a prefix */
+.div2 p {
+  font-family: var(--dg-sans);
+  font-size: 1.3em;
+  font-weight: 400;
+  color: var(--dg-ink);
+  line-height: 1.3;
+  margin: 0.1em 0 0.5em 0;
+}
+
+/* L3 - field & section labels (DATA TYPE:, DEFINITION:, LEVELS:, ...) rendered
+   as <strong>. One consistent treatment across all descriptor divs. */
+.div3 strong, .div4 strong {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--dg-label);
+}
+
+/* L4 - values */
+.div3 p {
+  font-family: var(--dg-sans);
+  font-size: 0.95em;
+  color: var(--dg-ink);
+  line-height: 1.2;
+  margin: 0 0 0.15em 0;
+}
+
+.div4 p {
+  font-family: var(--dg-sans);
+  font-size: 0.95em;
+  color: var(--dg-ink);
+  line-height: 1.4;
+  margin: 0 0 0.55em 0;
+}
+
+/* --- factor level dictionary (LEVELS table) in div4 ----------------------- */
+.div4 table {
+  margin: 0.15em 0 0.4em 1.4em;
+  font-family: var(--dg-mono);
+  border-collapse: collapse;
+}
+.div4 td {
+  padding: 0 1.6em 0 0;
+  font-size: 0.9em;
+  line-height: 1.45;
+  color: var(--dg-ink);
+}
+.div4 th { display: none; }
+
+/* --- data preview: wrapped monospace block (wrap_preview / paste_preview) -- */
+pre.dg-preview {
+  font-family: var(--dg-mono);
+  font-size: 0.8em;
+  line-height: 1.4;
+  white-space: pre;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0.15em 0 0 0;
+  color: #333;
+}
+
+/* ==========================================================================
+   Data-profile tables (properties / quantiles / stats)
+   ========================================================================== */
+
+.div5 p, .div6 p, .div7 p, .div10 p, .div12 p, .div13 p,
+.div14 p, .div15 p, .div17 p, .div18 p {
+  margin: 0 0 0.15em 0;
+}
+.div5 strong, .div6 strong, .div7 strong, .div10 strong, .div12 strong,
+.div13 strong, .div14 strong, .div15 strong, .div17 strong, .div18 strong {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--dg-label);
+}
+
+.div5 td, .div6 td, .div7 td, .div12 td, .div13 td, .div14 td {
+  font-family: var(--dg-mono);
+  font-size: 0.85em;
+}
+
+.div5 table, .div6 table, .div7 table {
+  margin-left: 2px;
+}
+
+/* strip default table chrome; use tight cells + hairline row rules */
+.table { width: auto; }
+.table > tbody { border-top: none; }
+.table > :not(caption) > * > * { padding: 0.05rem 0.6rem 0.05rem 0; }
+
+tbody, tfoot, tr, td, th {
+  border-color: inherit;
+  border-style: none;
+  border-width: 0;
+}
+
+.div5 tr, .div6 tr, .div7 tr,
+.div12 tr, .div13 tr, .div14 tr,
+.div15 tr, .div17 tr, .div18 tr {
+  border-bottom: 1px solid var(--dg-rule);
+}
+.div5 th, .div6 th, .div7 th,
+.div12 th, .div13 th, .div14 th,
+.div15 th, .div17 th, .div18 th { display: none; }
+
+/* graphics anchored to the bottom-right of their cell */
+.div8 img, .div8 svg, .div9 img, .div9 svg { align-self: end; justify-self: end; }
+
+@media print {
+  body {
+    display: table;
+    table-layout: fixed;
+    padding: 2.5cm 1.5cm 3cm 1.5cm;
+    height: auto;
+  }
+}

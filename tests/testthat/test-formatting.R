@@ -24,6 +24,18 @@ test_that("wrap_preview accepts a single ';;'-delimited string", {
   expect_equal(wrap_preview("a ;; b ;; a", size = 80), "a ;; b ;; a")
 })
 
+test_that("an empty field label prints the value with no prefix", {
+  dgf <- build_demo_dgf()
+  out <- suppressMessages(suppressWarnings(
+    utils::capture.output(dg_field(dgf, "num", "vlabel", label = ""))))
+  txt <- paste(out, collapse = "")
+  expect_false(grepl("\\*\\*", txt))   # no bold "**LABEL**:" prefix
+  # a non-empty label still prints the prefix
+  out2 <- suppressMessages(suppressWarnings(
+    utils::capture.output(dg_field(dgf, "num", "vlabel", label = "LABEL"))))
+  expect_true(grepl("\\*\\*LABEL\\*\\*", paste(out2, collapse = "")))
+})
+
 test_that("paste_preview renders a de-duplicated text block, not a table", {
   dgf <- build_demo_dgf()
   out <- suppressMessages(suppressWarnings(

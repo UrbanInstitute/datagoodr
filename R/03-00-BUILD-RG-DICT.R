@@ -82,14 +82,18 @@ json_to_df <- function(json_text) {
 #'
 #' @keywords internal
 #' @noRd
-v_to_txt <- function( VNAME, LABEL )
+v_to_txt <- function( VNAME, LABEL = "" )
 {
   value  <- get_xx()[[VNAME]]
   # Show blank (not "NA") for empty/unfilled metadata fields such as SCOPE
   # or LOCATION CODE.
   if( is.null(value) || length(value) == 0 || is.na(value) ) value <- ""
-  txt <- paste0( "**", LABEL, "**", ": ",  value, "\n\n" )
-  cat( txt )
+  # An empty LABEL prints the value on its own (used for the prominent
+  # plain-language variable label); otherwise print "**LABEL**: value".
+  if( is.null(LABEL) || trimws(LABEL) == "" )
+  { cat( value, "\n\n" ) }
+  else
+  { cat( "**", LABEL, "**: ", value, "\n\n", sep = "" ) }
 }
 
 ###########################################

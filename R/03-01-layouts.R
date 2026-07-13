@@ -13,7 +13,7 @@
 #' @keywords internal
 #' @noRd
 layout.numeric <-
-  c( "div2 ;; vlabel         ;; LABEL         ;; v_to_txt",
+  c( "div2 ;; vlabel         ;;               ;; v_to_txt",
      "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
      "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
      "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
@@ -38,7 +38,7 @@ layout.numeric <-
 #' @keywords internal
 #' @noRd
 layout.character <-
-  c( "div2  ;; vlabel        ;; LABEL         ;; v_to_txt",
+  c( "div2  ;; vlabel        ;;               ;; v_to_txt",
      "div3  ;; vtype_class   ;; DATA TYPE     ;; v_to_txt",
      "div3  ;; vscope        ;; SCOPE         ;; v_to_txt",
      "div3  ;; vlength       ;; LENGTH        ;; v_to_txt",
@@ -63,7 +63,7 @@ layout.character <-
 #' @keywords internal
 #' @noRd
 layout.factor <-
-  c( "div2 ;; vlabel         ;; LABEL         ;; v_to_txt",
+  c( "div2 ;; vlabel         ;;               ;; v_to_txt",
      "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
      "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
      "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
@@ -88,7 +88,7 @@ layout.factor <-
 #' @keywords internal
 #' @noRd
 layout.logical <-
-  c("div2 ;; vlabel         ;; LABEL         ;; v_to_txt",
+  c("div2 ;; vlabel         ;;               ;; v_to_txt",
     "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
     "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
     "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",

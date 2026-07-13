@@ -1,3 +1,11 @@
+test_that("datagoodr_css returns the report stylesheet", {
+  css <- datagoodr_css()
+  expect_type(css, "character")
+  expect_gt(nchar(css), 200)
+  expect_match(css, "\\.parent")
+  expect_match(css, "--dg-ink")
+})
+
 test_that("get_design style controls which sections appear", {
   rg <- get_design("rg")
   dd <- get_design("dd")
