@@ -17,7 +17,7 @@ dg_properties(dgf, vname, label = "PROPERTIES")
 
 dg_quantiles(dgf, vname, label = "QUANTILES")
 
-dg_preview(dgf, vname, label = "PREVIEW")
+dg_preview(dgf, vname, label = "PREVIEW", size = 80)
 
 dg_levels(dgf, vname, label = "LEVELS")
 
@@ -32,6 +32,8 @@ dg_field(dgf, vname, field, label = toupper(field))
 
 \item{label}{Optional section label; defaults to the render function's own
 default (e.g. `"STATS"`).}
+
+\item{size}{Maximum line width for `dg_preview`, in characters (default 80).}
 
 \item{field}{DGF column name to print (for `dg_field`).}
 }

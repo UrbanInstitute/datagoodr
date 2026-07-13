@@ -95,15 +95,16 @@ dg_quantiles <- function( dgf, vname, label = "QUANTILES" ) {
 }
 
 #' @describeIn dg_element Preview of example values (numeric or character).
+#' @param size Maximum line width for `dg_preview`, in characters (default 80).
 #' @export
-dg_preview <- function( dgf, vname, label = "PREVIEW" ) {
+dg_preview <- function( dgf, vname, label = "PREVIEW", size = 80 ) {
   type <- set_dg_context( dgf, vname )
   f <- switch( type,
     numeric   = paste_preview_num,
     character = paste_preview_chr,
     stop( "Previews are only available for numeric and character variables ",
           "(got '", type, "').", call. = FALSE ) )
-  f( "rg_preview", label )
+  f( "rg_preview", label, size = size )
   invisible( NULL )
 }
 

@@ -359,137 +359,118 @@ paste_stats_log <- function( VNAME, LABEL = "STATS" ){
 ###########################################
 
 
-### Numeric --------------------------
-#' Print Preview of a Numeric Variable into RG
+#' Wrap preview values into a text block
 #'
-#' Read rg_preview column of DGF and print preview in a table in the RG
+#' Packs example values into lines no wider than `size` characters, separated
+#' by `sep`. Any single value longer than `size` is truncated to `size - 3`
+#' characters, given a trailing `...`, and placed on its own line.
 #'
-#' @param VNAME A character string specifying the name of the variable whose properties are to be displayed.
-#' @param LABEL A character string (from layout.TYPE object) for the section title. Defaults to `"PREVIEW"`.
+#' @param x A character vector of values, or a single `;;`-delimited string.
+#' @param size Maximum line width, in characters. Defaults to `80`.
+#' @param sep Separator placed between values packed onto the same line.
+#'   Defaults to `" ;; "`.
 #'
-#' @return This function does not return a value; it prints the formatted table to the RG as html code
-#'
-#' @details
-#' The function is an internal function of `create_div` in R/03-01-create-sections.R.
-#'
-#'
-#' @import knitr
+#' @return A character vector of wrapped lines.
+#' @examples
+#' wrap_preview(c("apple", "banana", "cherry"), size = 15)
 #' @export
-paste_preview_num  <- function( VNAME, LABEL = "STATS" ){
+wrap_preview <- function( x, size = 80, sep = " ;; " ) {
 
-  # for testing VNAME <- div.fxs$VNAME
-  info <- get_xx()[[VNAME]]
-  info.txt <- trim_txt_block( info )
-  info.txt <- unlist(stringr::str_split(info.txt, " ;; "))
+  if( length(x) == 1 )
+  { x <- stringr::str_split( x, ";;" )[[1]] }
+  x <- trimws( x )
+  x <- x[ nzchar(x) ]
 
-  n <- length(info.txt)
-  if(n > 20){
-    info.txt <- info.txt[sample(1:n, 20)]
-    n <-20
-  }else{
-    #remove the last entry if length is odd
-    is.even <- length(info.txt) %% 2 == 0
-    if(!is.even){info.txt <- info.txt[1:(length(info.txt)-1)]}
+  lines <- character(0)
+  cur   <- ""
+
+  for( val in x ) {
+    if( nchar(val) > size ) {
+      # long value: flush the current line, then give it its own truncated row
+      if( nzchar(cur) ) { lines <- c( lines, cur ); cur <- "" }
+      lines <- c( lines, paste0( substr( val, 1, size - 3 ), "..." ) )
+    } else {
+      candidate <- if( nzchar(cur) ) paste0( cur, sep, val ) else val
+      if( nchar(candidate) > size ) {
+        lines <- c( lines, cur )   # would overflow the line: start a new one
+        cur   <- val
+      } else {
+        cur <- candidate
+      }
+    }
   }
-  #make table of entries with 2 columns
-  tab <- matrix(info.txt, ncol = 2)
-
-
-  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
-  cat( txt )
-
-  k <- knitr::kable( tab, align=c("l","l")) %>%
-    kableExtra::kable_styling(full_width = TRUE) %>%
-    kableExtra::column_spec(1:ncol(tab), border_right = TRUE, border_left = TRUE) %>%
-    kableExtra::row_spec(1:nrow(tab), extra_css = "border: 1px solid black;")
-  cat( paste0( k, " \n" ) )
-  cat( "\n\n" )
-
+  if( nzchar(cur) ) lines <- c( lines, cur )
+  lines
 }
 
 
-## function to trim a text block to the first 48 characters
-#' Trim and summarize a delimited text block
+# internal: render the rg_preview values as a wrapped monospace text block.
+paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 80,
+                                 max.vals = 200 ) {
+
+  info <- get_xx()[[VNAME]]
+  vals <- unique( trimws( stringr::str_split( info, ";;" )[[1]] ) )
+  vals <- vals[ nzchar(vals) ]
+  if( length(vals) > max.vals ) vals <- vals[ seq_len(max.vals) ]
+
+  lines <- wrap_preview( vals, size = size )
+
+  # escape HTML-special characters so arbitrary values render safely in <pre>
+  esc <- function(s) {
+    s <- gsub( "&", "&amp;", s )
+    s <- gsub( "<", "&lt;",  s )
+    gsub( ">", "&gt;",  s )
+  }
+
+  cat( "**", LABEL, "**:\n\n", sep = "" )
+  cat( '<pre class="dg-preview">\n' )
+  cat( esc(lines), sep = "\n" )
+  cat( "\n</pre>\n\n" )
+}
+
+
+### Numeric --------------------------
+#' Print Preview of a Numeric Variable into RG
 #'
-#' Splits a text string on `;;`, trims whitespace,
-#' truncates long values, and constructs a condensed summary block.
+#' Reads the rg_preview column of the DGF and prints the example values as a
+#' wrapped text block (see [wrap_preview()]).
 #'
-#' @param x A character string, typically containing values separated by `;;`.
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_preview"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"PREVIEW"`.
+#' @param size Maximum line width, in characters. Defaults to `80`.
 #'
-#' @return A single character string (`BLOCK`) that represents a condensed
-#'   summary of the most frequent values in `x`. The output is truncated to
-#'   400 characters.
+#' @return No return value; prints the preview block to the RG.
 #'
 #' @details
-#' - The input string is split on `;;` and each piece is trimmed.
-#' - Values longer than 48 characters are truncated.
-#' - A frequency table of values is constructed, and the most common values
-#'   are joined back together with `;;`.
-#' - At most 200 values are included, and the result is truncated to 400
-#'   characters.
+#' Internal to `create_div` in R/03-01-create-sections.R.
 #'
-#' @keywords internal
-#' @noRd
-trim_txt_block <- function( x ){
-
-  x <- stringr::str_split(x, ";;", simplify = FALSE)[[1]]
-  x <- x |> trimws()
-
-  if( max(nchar(as.character(x)),na.rm=T) > 48 )
-  { x <- purrr::map_chr( x, function(x){ substr(x,1,48) } ) }
-
-  t <- table( x ) |> sort( d=T )
-  n <- length(t)
-  max.n <- min(length(x) , 200)
-
-
-  txt <- paste0( names(t)[1:max.n], collapse=" ;; " )
-  BLOCK <- substr( txt,   1, 400 ) |> trimws()
-  BLOCK <- gsub( " ?;{1,2} ?$", "", BLOCK )
-  return( BLOCK )
+#' @export
+paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 80 ){
+  paste_preview_block( VNAME, LABEL, size = size )
 }
 
 
 ### Character -----------------------------
 #' Print Preview of a Character Variable into RG
 #'
-#' Read rg_preview column of DGF and print preview in a table in the RG
+#' Reads the rg_preview column of the DGF and prints the example values as a
+#' wrapped text block (see [wrap_preview()]).
 #'
-#' @param VNAME A character string specifying the name of the variable whose properties are to be displayed.
-#' @param LABEL A character string (from layout.TYPE object) for the section title. Defaults to `"PREVIEW"`.
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_preview"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"PREVIEW"`.
+#' @param size Maximum line width, in characters. Defaults to `80`.
 #'
-#' @return This function does not return a value; it prints the formatted table to the RG as html code
+#' @return No return value; prints the preview block to the RG.
 #'
 #' @details
-#' The function is an internal function of `create_div` in R/03-01-create-sections.R.
+#' Internal to `create_div` in R/03-01-create-sections.R.
 #'
-#'
-#' @import knitr
 #' @export
-paste_preview_chr <-function( VNAME, LABEL = "PREVIEW" ){
-
-  # for testing VNAME <- div.fxs$VNAME
-  info <- get_xx()[[VNAME]]
-  info.txt <- trim_txt_block( info )
-  info.txt <- unlist(stringr::str_split(info.txt, " ;; "))
-
-  #remove the last entry if length is odd
-  is.even <- length(info.txt) %% 2 == 0
-  if(!is.even){info.txt <- info.txt[1:(length(info.txt)-1)]}
-
-  #make table of entries with 2 columns
-  tab <- matrix(info.txt, ncol = 2)
-
-  # paste to markdown
-  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
-  cat( txt )
-
-  k <-  knitr::kable( tab, align=c("l","l")) %>%
-    kableExtra::kable_styling(full_width = TRUE) %>%
-    kableExtra::column_spec(1:ncol(tab), border_right = TRUE, border_left = TRUE) %>%
-    kableExtra::row_spec(1:nrow(tab), extra_css = "border: 1px solid black;")
-  cat( paste0( k, " \n" ) )
-  cat( "\n\n" )
-
+paste_preview_chr <- function( VNAME, LABEL = "PREVIEW", size = 80 ){
+  paste_preview_block( VNAME, LABEL, size = size )
 }
 
