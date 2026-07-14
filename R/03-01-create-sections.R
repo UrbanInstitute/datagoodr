@@ -156,7 +156,7 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
   # A data dictionary keeps only the dictionary rows (text descriptors and the
   # factor level table); a research guide keeps the full profile.
   if( style == "dd" ) {
-    dict.fx <- c( "v_to_txt", "paste_levels" )
+    dict.fx <- c( "v_to_txt", "paste_levels_freq", "paste_levels_horizontal" )
     design.df <- design.df[ trimws(design.df$FUNCTION) %in% dict.fx, ]
   }
 
@@ -302,9 +302,12 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   all.divs <- all.divs[ ! all.divs == "div1" ]
 
   cat( "{{< pagebreak >}} \n\n")
-  cat( "::::: {.parent} \n\n" )
 
+  # The title sits OUTSIDE the grid so it stays flush-left (full-width rule)
+  # while the grid content below is indented under it (see .parent in the CSS).
   create_div1( VNAME )
+
+  cat( "::::: {.parent} \n\n" )
   purrr::walk( all.divs, create_div, layout.type )
   cat( ":::::  \n\n\n\n\n\n" )
 

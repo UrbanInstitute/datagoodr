@@ -70,26 +70,26 @@ dgf.num <-  dgf[dgf$vtype_class == "numeric", ]
 
 ## Logical
 
-```{r logical, results="asis", echo=FALSE}
+```{r logical, results="asis", fig.width=3, fig.height=1.5, echo=FALSE}
 create_all_sections( dgf.log )
 
 ```
 
 ## Factor
 
-```{r factor, results="asis", echo=FALSE}
+```{r factor, results="asis", fig.width=4, fig.height=3, echo=FALSE}
 create_all_sections( dgf.fact )
 ```
 
-## Numeric 
+## Numeric
 
-```{r numeric, results="asis", fig.width=8, fig.height=2, echo=FALSE}
+```{r numeric, results="asis", fig.width=6, fig.height=1.7, echo=FALSE}
 create_all_sections( dgf.num )
 ```
 
 ## Character
 
-```{r character, results="asis", fig.width=8, fig.height=6, echo=FALSE}
+```{r character, results="asis", fig.width=5.5, fig.height=4.5, echo=FALSE}
 create_all_sections( dgf.chr )
 ```
 

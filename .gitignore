@@ -12,3 +12,6 @@ working-example/DGF-V3.*
 # Step 5 scaffolded example projects (regenerate via STEP5.R)
 working-example/my-guide/
 working-example/my-dictionary/
+
+# Rendered preview (regenerate via STEP3)
+working-example/research-guide.html

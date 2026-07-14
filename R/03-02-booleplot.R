@@ -28,10 +28,10 @@ paste_booleplot <- function( VNAME, LABEL = "VALUES" ) {
   v[ is.na(v) ] <- "NA"
   v$Freq <- as.numeric( as.character( v$Freq ) )
 
-  pct <- round( v$Freq / sum(v$Freq) * 100, 0 )
+  pct <- formatC( v$Freq / sum(v$Freq) * 100, format = "f", digits = 1 )
   lab <- paste0( abbrev_num(v$Freq), "  (", pct, "%)" )
 
-  cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
+  if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
 
   # left margin holds the category names; right headroom holds the labels
   par( mar = c(1, 4.5, 1, 0.5), xpd = NA )

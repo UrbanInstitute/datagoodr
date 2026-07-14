@@ -4,7 +4,7 @@
 \alias{paste_preview_num}
 \title{Print Preview of a Numeric Variable into RG}
 \usage{
-paste_preview_num(VNAME, LABEL = "PREVIEW", size = 80)
+paste_preview_num(VNAME, LABEL = "PREVIEW", size = 68)
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout

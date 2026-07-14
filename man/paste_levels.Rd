@@ -4,7 +4,7 @@
 \alias{paste_levels}
 \title{Print the level dictionary of a factor/logical variable into the RG}
 \usage{
-paste_levels(VNAME, LABEL = "LEVELS")
+paste_levels(VNAME, LABEL = "CATEGORY MEANING")
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout

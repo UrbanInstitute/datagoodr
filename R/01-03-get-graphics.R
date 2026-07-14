@@ -133,7 +133,7 @@ get_graphics_num <- function(VNAME, df ){
   xw <- x[ x >= lo & x <= hi ]
   if( length( unique(xw) ) < 2 ) xw <- x     # degenerate clip -> use all
 
-  h <- hist( xw, 100, plot = FALSE )
+  h <- hist( xw, 25, plot = FALSE )
   b <- h$breaks
   d <- h$density/sum(h$density)
   y <- h$counts

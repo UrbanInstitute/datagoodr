@@ -55,6 +55,7 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
   info   <- get_xx()[[VNAME]]
   x.info <- json_to_list( info )
 
+  brk  <- as.numeric( unlist( x.info$breaks ) )
   mids <- as.numeric( unlist( x.info$mids ) )
   dens <- as.numeric( unlist( x.info$density ) )
   avex <- as.numeric( unlist( x.info$mean ) )
@@ -68,10 +69,12 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
   srt  <- sort( dens, decreasing = TRUE )
   ycap <- if( length(srt) >= 2 && srt[1] > 2 * srt[2] ) srt[2] * 1.15 else max(dens)
 
+  # draw the ~25 bins as solid dark-gray rectangles (white hairline between)
   par( mar = c(2, 0, 1.5, 0), xpd = NA )
-  plot( mids, pmin( dens, ycap ),
-        type = "h", lwd = 4, col = "gray70",
-        axes = FALSE, xlab = "", ylab = "", ylim = c(0, ycap) )
+  plot( range(brk), c(0, ycap), type = "n",
+        axes = FALSE, xlab = "", ylab = "", xaxs = "i" )
+  rect( brk[-length(brk)], 0, brk[-1], pmin( dens, ycap ),
+        col = "gray25", border = "white", lwd = 0.6 )
 
   usr <- par("usr")
 

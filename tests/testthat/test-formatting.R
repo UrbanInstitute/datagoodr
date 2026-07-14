@@ -29,11 +29,14 @@ test_that("an empty field label prints the value with no prefix", {
   out <- suppressMessages(suppressWarnings(
     utils::capture.output(dg_field(dgf, "num", "vlabel", label = ""))))
   txt <- paste(out, collapse = "")
-  expect_false(grepl("\\*\\*", txt))   # no bold "**LABEL**:" prefix
-  # a non-empty label still prints the prefix
+  expect_false(grepl("\\*\\*", txt))       # no bold "**LABEL**:" prefix
+  expect_false(grepl("dg-field", txt))     # empty label: bare value, no field cell
+  # a non-empty label emits the label/value cell markup (styled by datagoodr.css)
   out2 <- suppressMessages(suppressWarnings(
     utils::capture.output(dg_field(dgf, "num", "vlabel", label = "LABEL"))))
-  expect_true(grepl("\\*\\*LABEL\\*\\*", paste(out2, collapse = "")))
+  txt2 <- paste(out2, collapse = "")
+  expect_true(grepl("class=\"dg-k\">LABEL</span>", txt2))
+  expect_true(grepl("class=\"dg-v\">", txt2))
 })
 
 test_that("paste_preview renders a de-duplicated text block, not a table", {

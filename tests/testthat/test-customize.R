@@ -11,10 +11,11 @@ test_that("get_design style controls which sections appear", {
   dd <- get_design("dd")
 
   # research guide has the full set of render functions
-  expect_true(all(c("paste_properties", "paste_stats_num", "paste_histogram")
+  expect_true(all(c("paste_properties", "paste_stats_horizontal", "paste_histogram")
                   %in% trimws(rg$FUNCTION)))
-  # data dictionary keeps only the descriptor functions
-  expect_setequal(unique(trimws(dd$FUNCTION)), c("v_to_txt", "paste_levels"))
+  # data dictionary keeps only the descriptor + level functions
+  expect_setequal(unique(trimws(dd$FUNCTION)),
+                  c("v_to_txt", "paste_levels_freq", "paste_levels_horizontal"))
   expect_lt(nrow(dd), nrow(rg))
 })
 

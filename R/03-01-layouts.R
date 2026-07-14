@@ -12,6 +12,12 @@
 #'
 #' @keywords internal
 #' @noRd
+# Standard section template (shared div scheme across all four types so users
+# never have to reorient):
+#   div3 attributes (1/3) + div4 description (2/3)
+#   div5 PREVIEW label (1/3) + div6 preview data (2/3)
+#   div7 PROPERTIES (1/3)    + div8 graphic (2/3)
+#   div9 full-width extra table (3/3): STATS / levels / most-common
 layout.numeric <-
   c( "div2 ;; vlabel         ;;               ;; v_to_txt",
      "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
@@ -19,11 +25,11 @@ layout.numeric <-
      "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
      "div4 ;; vdesc          ;; DESCRIPTION   ;; v_to_txt",
      "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
-     "div5 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
-     "div6 ;; rg_stats       ;; QUANTILES     ;; paste_quantiles",
-     "div7 ;; rg_stats       ;; STATS         ;; paste_stats_num",
-     "div8 ;; rg_graphics    ;; HIST          ;; paste_histogram",
-     "div9 ;; rg_preview     ;; DATA PREVIEW  ;; paste_preview_num"   )
+     "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
+     "div6 ;; rg_preview     ;;               ;; paste_preview_num",
+     "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
+     "div8 ;; rg_graphics    ;;               ;; paste_histogram",
+     "div9 ;; rg_stats       ;; STATS         ;; paste_stats_horizontal"   )
 
 #' Character variable layout definitions
 #'
@@ -38,17 +44,17 @@ layout.numeric <-
 #' @keywords internal
 #' @noRd
 layout.character <-
-  c( "div2  ;; vlabel        ;;               ;; v_to_txt",
-     "div3  ;; vtype_class   ;; DATA TYPE     ;; v_to_txt",
-     "div3  ;; vscope        ;; SCOPE         ;; v_to_txt",
-     "div3  ;; vlength       ;; LENGTH        ;; v_to_txt",
-     "div4  ;; vdesc         ;; DESCRIPTION   ;; v_to_txt",
-     "div4  ;; vloc          ;; LOCATION CODE ;; v_to_txt",
-     "div10 ;; rg_properties ;; PROPERTIES    ;; paste_properties",
-     "div21 ;; rg_stats      ;; MOST COMMON   ;; paste_stats_chr_common",
-     "div12 ;; rg_stats      ;; STATS         ;; paste_stats_chr",
-     "div13 ;; rg_graphics   ;; WORD CLOUD    ;; v_to_wordcloud",
-     "div11 ;; rg_preview    ;; PREVIEW       ;; paste_preview_chr"  )
+  c( "div2 ;; vlabel         ;;                    ;; v_to_txt",
+     "div3 ;; vtype_class    ;; DATA TYPE          ;; v_to_txt",
+     "div3 ;; vscope         ;; SCOPE              ;; v_to_txt",
+     "div3 ;; vlength        ;; LENGTH             ;; v_to_txt",
+     "div4 ;; vdesc          ;; DESCRIPTION        ;; v_to_txt",
+     "div4 ;; vloc           ;; LOCATION CODE      ;; v_to_txt",
+     "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
+     "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
+     "div7 ;; rg_properties  ;; PROPERTIES         ;; paste_properties",
+     "div8 ;; rg_graphics    ;;                    ;; v_to_wordcloud",
+     "div9 ;; rg_stats       ;; MOST COMMON VALUES ;; paste_stats_chr_common"  )
 
 
 #' Factor variable layout definitions
@@ -69,11 +75,12 @@ layout.factor <-
      "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
      "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
      "div4 ;; vdesc          ;; DESCRIPTION   ;; v_to_txt",
-     "div4 ;; dd_f_level     ;; LEVELS        ;; paste_levels",
      "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
-     "div14 ;; rg_properties ;; PROPERTIES   ;; paste_properties",
-     "div14 ;; rg_stats      ;; MOST COMMON  ;; paste_stats_fact",
-     "div16 ;; rg_graphics   ;; TREEMAP      ;; paste_treemap"  )
+     "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
+     "div6 ;; rg_preview     ;;               ;; paste_preview_chr",
+     "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
+     "div8 ;; rg_graphics    ;;               ;; paste_treemap",
+     "div9 ;; dd_f_level     ;; FACTOR LEVELS ;; paste_levels_freq"  )
 
 
 #' Logical/Boolean variable layout definitions
@@ -89,15 +96,17 @@ layout.factor <-
 #' @keywords internal
 #' @noRd
 layout.logical <-
-  c("div2 ;; vlabel         ;;               ;; v_to_txt",
-    "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
-    "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
-    "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
-    "div4 ;; vdesc          ;; DESCRIPTION   ;; v_to_txt",
-    "div4 ;; dd_f_level     ;; LEVELS        ;; paste_levels",
-    "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
-    "div17 ;; rg_properties ;; PROPERTIES    ;; paste_properties",
-    "div19 ;; rg_graphics   ;; VALUES        ;; paste_booleplot"  )
+  c("div2 ;; vlabel         ;;                 ;; v_to_txt",
+    "div3 ;; vtype_class    ;; DATA TYPE       ;; v_to_txt",
+    "div3 ;; vscope         ;; SCOPE           ;; v_to_txt",
+    "div3 ;; vlength        ;; LENGTH          ;; v_to_txt",
+    "div4 ;; vdesc          ;; DESCRIPTION     ;; v_to_txt",
+    "div4 ;; vloc           ;; LOCATION CODE   ;; v_to_txt",
+    "div5 ;; rg_preview     ;; PREVIEW         ;; paste_label",
+    "div6 ;; rg_preview     ;;                 ;; paste_preview_chr",
+    "div7 ;; rg_properties  ;; PROPERTIES      ;; paste_properties",
+    "div8 ;; rg_graphics    ;;                 ;; paste_booleplot",
+    "div9 ;; dd_f_level     ;; CATEGORY LABELS ;; paste_levels_horizontal"  )
 
 
 ### Save these in the R package

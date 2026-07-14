@@ -27,7 +27,7 @@ test_that("create_all_sections renders markdown for each variable type", {
   }
 })
 
-test_that("factor sections render a LEVELS table and numeric sections QUANTILES", {
+test_that("factor sections render a LEVELS table and numeric sections STATS + quantiles", {
   dgf <- build_demo_dgf()
 
   fac <- suppressMessages(suppressWarnings(
@@ -36,6 +36,7 @@ test_that("factor sections render a LEVELS table and numeric sections QUANTILES"
 
   num <- suppressMessages(suppressWarnings(
     capture.output(create_all_sections(dgf[dgf$vtype_class == "numeric", ]))))
-  expect_true(any(grepl("QUANTILES", num)))
+  # STATS now carries the quantile rows (Q-50) instead of a separate QUANTILES
   expect_true(any(grepl("STATS", num)))
+  expect_true(any(grepl("Q - 50", num)))
 })

@@ -25,9 +25,6 @@ paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
   v <- json_to_df(info)
   v$x <- as.character(v$x)
 
-
-  v$Freq[4] <- 19
-
   total <- sum(v$Freq)
   v$PER <- v$Freq / total * 100
   min.per <- min(v$PER)
@@ -54,8 +51,7 @@ paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
 
   # raw_html <- as.character(tmap_plotly)
 
-  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
-  cat( txt )
+  if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
   treemap::treemap(tab.keep,
           index="x",
           vSize="Freq",
