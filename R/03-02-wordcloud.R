@@ -17,33 +17,88 @@
 #' @details
 #' The function is an internal function of `create_div` in R/03-01-create-sections.R.
 #'
-#' @import treemap
 #' @export
 v_to_wordcloud <- function( VNAME, LABEL = "WORD CLOUD" ) {
 
   info <- get_xx()[[VNAME]]
   v <- json_to_df(info)
+  v$ww   <- as.character( v$ww )
+  v$Freq <- suppressWarnings( as.numeric( as.character( v$Freq ) ) )
+  v <- v[ ! is.na(v$Freq) & nzchar( trimws(v$ww) ), , drop = FALSE ]
+  v <- v[ order( -v$Freq ), , drop = FALSE ]
 
-  # get for scaling - this isn't perfect but it works for now
-  scale.f <- get_scale_f( v )
-  scale.vec <- c(max(scale.f, 1), min(c(scale.f, 1)))
+  if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
 
+  if( nrow(v) == 0 ) { cat( "\n\n" ); return( invisible(NULL) ) }
 
-  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
-  cat( txt )
-
-  wordcloud::wordcloud(
-    words=v$ww, freq=v$Freq,
-    max.words=nrow(v),
-    min.freq=1,
-    random.order=FALSE,
-    scale=scale.vec,
-    rot.per=0, fixed.asp=F,
-    col=vc(), vfont=vf()  )
+  # Prefer ggwordcloud: a static ggplot with wordcloud2-style packing/hierarchy
+  # and no headless-browser screenshot. Fall back to the wordcloud package when
+  # ggwordcloud / ggplot2 are unavailable.
+  if( requireNamespace("ggwordcloud", quietly = TRUE) &&
+      requireNamespace("ggplot2",     quietly = TRUE) ) {
+    print( build_wordcloud_gg( v ) )
+  } else {
+    scale.f   <- get_scale_f( v )
+    scale.vec <- c( max(scale.f, 1), min(c(scale.f, 1)) )
+    wordcloud::wordcloud(
+      words = v$ww, freq = v$Freq, max.words = nrow(v), min.freq = 1,
+      random.order = FALSE, scale = scale.vec, rot.per = 0, fixed.asp = FALSE,
+      col = vc(), vfont = vf() )
+  }
 
   cat( "\n\n" )
+}
 
 
+#' Build a wordcloud2-style ggwordcloud plot
+#'
+#' Renders a word-frequency table as a static [ggplot2] word cloud using
+#' [ggwordcloud::geom_text_wordcloud_area()]: ~1/3 of words are rotated and
+#' colour ramps from steel to ink by frequency.
+#'
+#' The size aesthetic is deliberately decoupled from the raw frequency
+#' distribution so the cloud reads consistently across variables. Raw frequency
+#' ranges swing enormously between fields (e.g. ~5:1 for contact names vs ~66:1
+#' for street addresses); mapping that straight through `scale_size_area` makes
+#' peaked variables collapse into a small central clump and flat ones sprawl.
+#' Instead the frequencies are sqrt-compressed and rescaled into a fixed
+#' `[0.30, 1]` window, and a fixed word count is used, so both the footprint and
+#' the range of word sizes stay comparable regardless of input.
+#'
+#' @param v A data frame with columns `ww` (word) and `Freq` (numeric count).
+#' @param max.words Maximum number of words to place (default 40).
+#'
+#' @return A `ggplot` object.
+#' @keywords internal
+#' @noRd
+build_wordcloud_gg <- function( v, max.words = 40 ) {
+
+  if( nrow(v) > max.words ) v <- v[ seq_len(max.words), , drop = FALSE ]
+
+  # Compress the raw frequencies into a fixed size window. sqrt() gentles the
+  # peak of highly skewed distributions; rescaling to [0.30, 1] then pins the
+  # size range so it no longer depends on the distribution's shape (the floor
+  # keeps the smallest words legible; the ceiling caps the largest). Both size
+  # and colour read off this compressed value.
+  s <- sqrt( v$Freq )
+  v$sz <- scales::rescale( s / max(s), to = c(0.30, 1) )
+
+  # ~1/3 of words rotated 90 degrees; fixed seed keeps the layout stable across
+  # re-renders of the same variable.
+  set.seed( 42 )
+  v$rot <- sample( c(0, 0, 90), nrow(v), replace = TRUE )
+
+  ggplot2::ggplot( v, ggplot2::aes( label = ww, size = sz,
+                                    colour = sz, angle = rot ) ) +
+    ggwordcloud::geom_text_wordcloud_area(
+      family = "sans", fontface = "bold",
+      eccentricity = 0.65, shape = "circle",
+      rm_outside = FALSE, grid_margin = 1 ) +
+    ggplot2::scale_size_area( max_size = 22 ) +
+    ggplot2::scale_colour_gradient( low = "#7c93a8", high = "#12263a" ) +
+    ggplot2::theme_void() +
+    ggplot2::theme( legend.position = "none",
+                    plot.margin = ggplot2::margin(0, 0, 0, 0) )
 }
 
 

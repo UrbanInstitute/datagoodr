@@ -89,11 +89,22 @@ v_to_txt <- function( VNAME, LABEL = "" )
   # or LOCATION CODE.
   if( is.null(value) || length(value) == 0 || is.na(value) ) value <- ""
   # An empty LABEL prints the value on its own (used for the prominent
-  # plain-language variable label); otherwise print "**LABEL**: value".
+  # plain-language variable label). Otherwise emit the label and value as two
+  # separate cells so the stylesheet can align short metadata values into a
+  # column (div3) or flow prose after the label (div4) - see datagoodr.css.
   if( is.null(LABEL) || trimws(LABEL) == "" )
   { cat( value, "\n\n" ) }
   else
-  { cat( "**", LABEL, "**: ", value, "\n\n", sep = "" ) }
+  {
+    esc <- function( s ) {
+      s <- gsub( "&", "&amp;", s, fixed = TRUE )
+      s <- gsub( "<", "&lt;",  s, fixed = TRUE )
+      gsub( ">", "&gt;",  s, fixed = TRUE )
+    }
+    cat( "\n<div class=\"dg-field\"><span class=\"dg-k\">", esc( LABEL ),
+         "</span><span class=\"dg-v\">", esc( value ),
+         "</span></div>\n\n", sep = "" )
+  }
 }
 
 ###########################################
@@ -121,6 +132,12 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
   # for testing VNAME <- div.fxs$VNAME
   info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
+
+  # The most common value is shown in the separate MOST COMMON VALUES table, so
+  # drop it here. Filter defensively so DGFs built before this row was removed
+  # from get_properties() also render without it.
+  if( "STAT" %in% names(tab) )
+  { tab <- tab[ trimws(as.character(tab$STAT)) != "Most Common", , drop = FALSE ] }
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
   cat( txt )
@@ -153,7 +170,7 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 #'
 #' @import knitr
 #' @export
-paste_levels <- function( VNAME, LABEL = "LEVELS" ){
+paste_levels <- function( VNAME, LABEL = "CATEGORY MEANING" ){
 
   info <- get_xx()[[VNAME]]
   if( is.null(info) || is.na(info) || trimws(info) == "" )
@@ -168,10 +185,128 @@ paste_levels <- function( VNAME, LABEL = "LEVELS" ){
   if( nrow(tab) > 50 )
   { tab <- tab[ 1:50, ] }
 
-  txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
-  cat( txt )
+  lvl  <- as.character( tab[[1]] )
+  mean <- as.character( tab[[2]] )
 
-  k <- knitr::kable( tab, align=c("l","l"), col.names=c("","") )
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+
+  # The Meaning column only appears once labels have been customised (differ
+  # from the raw level codes); otherwise show just the Label column.
+  if( levels_customized( lvl, mean ) ) {
+    out <- data.frame( Label = lvl, Meaning = ifelse(is.na(mean), "", mean),
+                       stringsAsFactors = FALSE )
+    k <- knitr::kable( out, align = c("l","l") )
+  } else {
+    out <- data.frame( Label = lvl, stringsAsFactors = FALSE )
+    k <- knitr::kable( out, align = c("l") )
+  }
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
+
+
+# TRUE when at least one level label has been edited away from its raw code.
+levels_customized <- function( level, label ) {
+  level <- as.character( level ); label <- as.character( label )
+  any( !is.na(label) & nzchar( trimws(label) ) & trimws(label) != trimws(level) )
+}
+
+
+### Factor levels + frequency (+ optional meaning) --------------------------
+#' Print the combined FACTOR LEVELS table into the RG
+#'
+#' Joins the factor level frequencies (`rg_stats`) with the editable level
+#' dictionary (`dd_f_level`) into one table: Label | Frequency | Meaning. The
+#' Meaning column is shown only when the labels have been customised away from
+#' the raw level codes.
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"dd_f_level"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"FACTOR LEVELS"`.
+#'
+#' @return No return value; prints the table to the RG.
+#' @import knitr
+#' @export
+paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
+
+  freq <- get_xx()[["rg_stats"]]
+  dict <- get_xx()[["dd_f_level"]]
+  if( is.null(freq) || is.na(freq) || trimws(freq) == "" )
+  { return( invisible(NULL) ) }
+
+  ftab <- json_to_df(freq)                       # Value, Frequency (desc)
+  if( nrow(ftab) == 0 || ! all( c("Value","Frequency") %in% names(ftab) ) )
+  { return( invisible(NULL) ) }
+  ftab$Value     <- as.character( ftab$Value )
+  ftab$Frequency <- suppressWarnings( as.numeric( as.character( ftab$Frequency ) ) )
+
+  # look up an editable meaning for each level (blank when uncustomised)
+  meaning    <- rep( "", nrow(ftab) )
+  customized <- FALSE
+  if( ! is.null(dict) && ! is.na(dict) && trimws(dict) != "" ) {
+    dtab <- json_to_df(dict)
+    if( ncol(dtab) >= 2 ) {
+      lvl <- as.character( dtab[[1]] ); lab <- as.character( dtab[[2]] )
+      m   <- lab[ match( ftab$Value, lvl ) ]
+      meaning    <- ifelse( is.na(m), "", m )
+      customized <- levels_customized( ftab$Value, meaning )
+    }
+  }
+
+  # keep up to 50 rows; the full-width cell is height-capped and scrolls (CSS)
+  if( nrow(ftab) > 50 ) { ftab <- ftab[ 1:50, ]; meaning <- meaning[ 1:50 ] }
+  freq.fmt <- formatC( ftab$Frequency, big.mark = ",", format = "d" )
+
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+  if( customized ) {
+    out <- data.frame( Label = ftab$Value, Frequency = freq.fmt, Meaning = meaning,
+                       stringsAsFactors = FALSE )
+    k <- knitr::kable( out, align = c("l","r","l") )
+  } else {
+    out <- data.frame( Label = ftab$Value, Frequency = freq.fmt,
+                       stringsAsFactors = FALSE )
+    k <- knitr::kable( out, align = c("l","r") )
+  }
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
+
+
+### Logical category labels laid out horizontally --------------------------
+#' Print the logical CATEGORY LABELS transposed across a full-width row
+#'
+#' Reads the level dictionary (`dd_f_level`) and lays the categories out
+#' horizontally: one column per level code, with an editable meaning beneath
+#' each. The meaning row appears only once labels are customised.
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"dd_f_level"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"CATEGORY LABELS"`.
+#'
+#' @return No return value; prints the table to the RG.
+#' @import knitr
+#' @export
+paste_levels_horizontal <- function( VNAME, LABEL = "CATEGORY LABELS" ){
+
+  info <- get_xx()[[VNAME]]
+  if( is.null(info) || is.na(info) || trimws(info) == "" )
+  { return( invisible(NULL) ) }
+  tab <- json_to_df(info)
+  if( nrow(tab) == 0 || ncol(tab) < 2 ) return( invisible(NULL) )
+
+  lvl  <- as.character( tab[[1]] )
+  mean <- as.character( tab[[2]] )
+  customized <- levels_customized( lvl, mean )
+
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+
+  # columns = level codes; single row = meaning (blank until customised)
+  body <- if( customized ) ifelse( is.na(mean), "", mean ) else rep( "", length(lvl) )
+  out  <- as.data.frame( as.list( body ), stringsAsFactors = FALSE, check.names = FALSE )
+  names(out) <- lvl
+  k <- knitr::kable( out, align = rep("l", ncol(out)) )
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
 }
@@ -254,6 +389,106 @@ paste_quantiles <- function( VNAME, LABEL = "QUANTILES" ){
   cat( "\n\n" )
 }
 
+
+### Numeric combined stats + quantiles ---------
+#' Print the combined STATS table (summary + quantiles) into the RG
+#'
+#' Reads `rg_stats` and prints one table: Minimum, Mean, Maximum, then the
+#' quantiles Q-05 / Q-25 / Q-50 / Q-75 / Q-95. Skew and Kurtosis are shown in
+#' PROPERTIES (as LOW/MED/HIGH), so they are excluded here. Values are padded so
+#' their decimal points line up down the column (see [align_dec()]).
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_stats"`).
+#' @param LABEL A character string for the section title. Defaults to `"STATS"`.
+#'
+#' @return No return value; prints the STATS table to the RG.
+#' @import knitr
+#' @export
+paste_stats_combined <- function( VNAME, LABEL = "STATS" ){
+
+  info <- get_xx()[[VNAME]]
+  tab  <- json_to_df(info)
+  tab$STAT <- trimws( as.character( tab$STAT ) )
+
+  want <- c("Minimum","Mean","Maximum","Q - 05","Q - 25","Median","Q - 75","Q - 95")
+  tab  <- tab[ match( want, tab$STAT ), ]
+  tab  <- tab[ ! is.na(tab$STAT), ]
+  tab$STAT[ tab$STAT == "Median" ] <- "Q - 50"
+  tab$VAL <- align_dec( as.character( tab$VAL ) )
+  rownames(tab) <- NULL
+
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+  k <- knitr::kable( tab, align = c("l","r"), col.names = c("STAT","VAL") )
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
+
+
+#' Pad a column of formatted numbers so their decimal points align
+#'
+#' Given already-formatted number strings (commas allowed), pads the fractional
+#' side with non-breaking spaces so that, under right alignment in a monospace
+#' cell, every decimal point sits in the same column - rows without a decimal
+#' get blank placeholders where the fraction would be.
+#'
+#' @param x A character vector of formatted numbers (e.g. `"29,933"`,
+#'   `"362,012.5"`).
+#'
+#' @return A character vector padded for decimal alignment.
+#' @export
+align_dec <- function( x ) {
+  x    <- as.character( x )
+  neg  <- grepl( "^\\s*-", x )
+  core <- sub( "^\\s*-?", "", x )
+  has  <- grepl( "\\.", core )
+  intp <- ifelse( has, sub( "\\..*$", "", core ), core )
+  frac <- ifelse( has, sub( "^[^.]*\\.", "", core ), "" )
+  fw   <- max( nchar(frac), 0 )
+  nb   <- " "                                   # non-breaking space
+  fseg <- ifelse( nzchar(frac),
+                  paste0( ".", frac, strrep( nb, fw - nchar(frac) ) ),
+                  if( fw > 0 ) strrep( nb, fw + 1 ) else "" )
+  paste0( ifelse( neg, "-", "" ), intp, fseg )
+}
+
+
+### Numeric stats laid out horizontally ---------
+#' Print the numeric STATS transposed across a full-width row
+#'
+#' Reads `rg_stats` and prints Minimum, the quantiles, Mean and Maximum as a
+#' single-row (transposed) table so the summary spreads horizontally across the
+#' full width instead of stacking. Skew/Kurtosis live in PROPERTIES.
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_stats"`).
+#' @param LABEL A character string for the section title. Defaults to `"STATS"`.
+#'
+#' @return No return value; prints the STATS row to the RG.
+#' @import knitr
+#' @export
+paste_stats_horizontal <- function( VNAME, LABEL = "STATS" ){
+
+  info <- get_xx()[[VNAME]]
+  tab  <- json_to_df(info)
+  tab$STAT <- trimws( as.character( tab$STAT ) )
+
+  want <- c("Minimum","Q - 05","Q - 25","Median","Mean","Q - 75","Q - 95","Maximum")
+  tab  <- tab[ match( want, tab$STAT ), ]
+  tab  <- tab[ ! is.na(tab$STAT), ]
+  tab$STAT[ tab$STAT == "Median" ] <- "Q - 50"
+
+  # transpose: one value row, stat names as column headers
+  out <- as.data.frame( as.list( as.character( tab$VAL ) ), stringsAsFactors = FALSE,
+                        check.names = FALSE )
+  names(out) <- tab$STAT
+
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+  k <- knitr::kable( out, align = rep("r", ncol(out)) )
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
+
 ### Character --------
 #' Print Statistic of a Character Variable into RG
 #'
@@ -320,10 +555,37 @@ paste_stats_chr_common <- function( VNAME, LABEL = "MOST COMMON" ){
   if( nrow(tab) == 0 ) return( invisible(NULL) )
   colnames(tab) <- c("Value", "Frequency")[ seq_len(ncol(tab)) ]
 
+  # Add each value's share of all records as a (%) column. The denominator (total
+  # rows) is read from the already-computed PROPERTIES table so no rebuild is
+  # needed; if it can't be resolved, fall back to the plain Value/Frequency table.
+  n <- suppressWarnings( total_rows_from_properties() )
+  if( "Frequency" %in% names(tab) && ! is.na(n) && n > 0 ) {
+    freq <- suppressWarnings( as.numeric( as.character( tab$Frequency ) ) )
+    tab[["(%)"]] <- paste0( "(", formatC( freq / n * 100, format = "f", digits = 1 ), "%)" )
+    align <- c( "l", "r", "r" )
+  } else {
+    align <- c( "l", "r" )
+  }
+
   cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
-  k <- knitr::kable( tab, align = c("l", "r") )
+  k <- knitr::kable( tab, align = align )
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
+}
+
+
+# Total row count for the current variable, read from its PROPERTIES table
+# (the "Rows" stat). Returns NA when unavailable. Used to turn a raw frequency
+# into a share of all records.
+total_rows_from_properties <- function() {
+  info <- get_xx()[["rg_properties"]]
+  if( is.null(info) || length(info) == 0 || is.na(info) || trimws(info) == "" )
+  { return( NA_real_ ) }
+  props <- json_to_df( info )
+  if( ! all( c("STAT","VAL") %in% names(props) ) ) return( NA_real_ )
+  val <- props$VAL[ trimws(as.character(props$STAT)) == "Rows" ]
+  if( length(val) == 0 ) return( NA_real_ )
+  as.numeric( gsub( ",", "", as.character( val[1] ) ) )
 }
 
 
@@ -443,8 +705,11 @@ wrap_preview <- function( x, size = 80, sep = " ;; " ) {
 
 
 # internal: render the rg_preview values as a wrapped monospace text block.
-paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 80,
-                                 max.vals = 200 ) {
+# An empty LABEL prints just the block (the standard template puts the label in
+# its own cell). At most `max.lines` wrapped rows are shown so the preview stays
+# a compact 3-4 line strip.
+paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 68,
+                                 max.vals = 200, max.lines = 4 ) {
 
   info <- get_xx()[[VNAME]]
   vals <- unique( trimws( stringr::str_split( info, ";;" )[[1]] ) )
@@ -452,6 +717,7 @@ paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 80,
   if( length(vals) > max.vals ) vals <- vals[ seq_len(max.vals) ]
 
   lines <- wrap_preview( vals, size = size )
+  if( length(lines) > max.lines ) lines <- lines[ seq_len(max.lines) ]
 
   # escape HTML-special characters so arbitrary values render safely in <pre>
   esc <- function(s) {
@@ -460,10 +726,25 @@ paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 80,
     gsub( ">", "&gt;",  s )
   }
 
-  cat( "**", LABEL, "**:\n\n", sep = "" )
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
   cat( '<pre class="dg-preview">\n' )
   cat( esc(lines), sep = "\n" )
   cat( "\n</pre>\n\n" )
+}
+
+
+#' Print just a section label (no content) into the RG
+#'
+#' Used by the standard layout to place a section's label in its own left-hand
+#' cell (e.g. the PREVIEW label beside a full-width data preview).
+#'
+#' @param VNAME Ignored; present for a uniform layout-function signature.
+#' @param LABEL A character string for the label. Defaults to `"PREVIEW"`.
+#'
+#' @return No return value; prints the label to the RG.
+#' @export
+paste_label <- function( VNAME, LABEL = "PREVIEW" ){
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
 }
 
 
@@ -485,7 +766,7 @@ paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 80,
 #' Internal to `create_div` in R/03-01-create-sections.R.
 #'
 #' @export
-paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 80 ){
+paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68 ){
   paste_preview_block( VNAME, LABEL, size = size )
 }
 
@@ -508,7 +789,7 @@ paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 80 ){
 #' Internal to `create_div` in R/03-01-create-sections.R.
 #'
 #' @export
-paste_preview_chr <- function( VNAME, LABEL = "PREVIEW", size = 80 ){
+paste_preview_chr <- function( VNAME, LABEL = "PREVIEW", size = 68 ){
   paste_preview_block( VNAME, LABEL, size = size )
 }
 

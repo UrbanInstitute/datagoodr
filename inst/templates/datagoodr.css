@@ -27,6 +27,10 @@
 .parent {
   display: grid;
   width: 100%;
+  box-sizing: border-box;
+  /* the whole grid is indented under the flush-left variable title (which is
+     emitted outside .parent), matching the reference layout. */
+  padding-left: 3.2em;
   /* minmax(0, 1fr) keeps the three columns strictly equal and lets wide
      content (long preview lines, wide tables) overflow instead of blowing
      out a column. */
@@ -37,42 +41,54 @@
   margin-bottom: 1.2em;
 }
 
-/* descriptor block (all types) */
-.div1  { grid-column: span 3; padding-bottom: 4px; }  /* title          */
-.div2  { grid-column: span 3; }                        /* label          */
-.div3  { grid-column: span 1; }                        /* type/scope/len */
-.div4  { grid-column: span 2; }                        /* description    */
+/* keep every rendered graphic inside its cell - never overflow the column */
+.parent img, .parent svg {
+  max-width: 100%;
+  height: auto;
+}
 
-/* numeric */
-.div5  { grid-column: span 1; }   /* properties */
-.div6  { grid-column: span 1; }   /* quantiles  */
-.div7  { grid-column: span 1; }   /* stats      */
-.div8  { grid-column: span 2; }   /* histogram  */
-.div9  { grid-column: span 1; }   /* preview    */
-
-/* character */
-.div10 { grid-column: span 1; }   /* properties  */
-.div11 { grid-column: span 1; }   /* preview     */
-.div12 { grid-column: span 1; }   /* stats       */
-.div13 { grid-column: span 2; }   /* word cloud  */
-.div21 { grid-column: span 1; }   /* most common */
-
-/* factor */
-.div14 { grid-column: span 1; }   /* properties + value/freq (stacked) */
-.div15 { grid-column: span 1; }
-.div16 { grid-column: span 2; }   /* treemap */
-
-/* logical */
-.div17 { grid-column: span 1; }   /* properties */
-.div18 { grid-column: span 1; }
-.div19 { grid-column: span 2; }   /* bar plot   */
+/* Standard section template - one div scheme shared by every variable type:
+     div3 attributes (1/3)  + div4 description (2/3)
+     div5 PREVIEW label (1/3) + div6 preview data (2/3)
+     div7 PROPERTIES (1/3)  + div8 graphic (2/3)
+     div9 full-width extra table (3/3): STATS / levels / most-common values */
+.div1  { grid-column: span 3; padding-bottom: 4px; }  /* title (outside grid) */
+.div2  { grid-column: span 3; }   /* label            */
+.div3  { grid-column: span 1; }   /* type/scope/length */
+.div4  { grid-column: span 2; }   /* description       */
+.div5  { grid-column: span 1; }   /* preview label     */
+.div6  { grid-column: span 2; }   /* preview data      */
+.div7  { grid-column: span 1; }   /* properties        */
+.div8  { grid-column: span 2; }   /* graphic           */
+.div9  { grid-column: span 3; }   /* full-width table  */
 
 /* empty spacers usable directly from a layout object (e.g. "blank1") */
 .blank1 { grid-column: span 1; }
 .blank2 { grid-column: span 2; }
 
-/* left metadata column gets a small indent to sit under the title's text */
-.div3, .div5, .div10, .div14, .div17 { padding-left: 2px; }
+/* left-hand column cells get a small indent to sit under the title's text */
+.div3, .div5, .div7 { padding-left: 2px; }
+
+/* PROPERTIES (div7) shares a row with the tall word cloud (div8). The cell
+   still stretches to the row height (so the band rule below aligns at the top),
+   but its content is centered vertically to sit level with the graphic. */
+.div7 { display: flex; flex-direction: column; justify-content: center; }
+
+/* Band separators: a full-width hairline + breathing room at the start of each
+   major block (preview / properties+graphic / stats). Applying the rule to both
+   cells of a row spans it across all three columns (grid items stretch, so the
+   tops align). The dictionary block (div2/div3/div4) gets no top rule. */
+.div5, .div6,          /* PREVIEW band         */
+.div7, .div8,          /* PROPERTIES + graphic */
+.div9 {                /* stats / most-common  */
+  border-top: 1px solid var(--dg-rule);
+  padding-top: 0.9em;
+  margin-top: 0.5em;
+}
+
+/* the full-width extra table is height-capped and scrolls when long (e.g. a
+   factor with many levels, or a long most-common-values list) */
+.div9 { max-height: 22em; overflow-y: auto; }
 
 /* ==========================================================================
    Visual hierarchy
@@ -86,12 +102,13 @@ h3.anchored { color: var(--dg-muted); }
 
 h4 {
   font-family: var(--dg-serif);
-  font-size: 2.0em;
+  font-size: 2.5em;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--dg-ink);
   border-bottom: 3px solid var(--dg-accent);
   width: 100%;
-  margin: 0.1em 0 0.15em 0;
+  margin: 0.1em 0 0.2em 0;
   padding-bottom: 2px;
 }
 
@@ -135,26 +152,51 @@ h5 { font-size: 0.9em; }
   margin: 0 0 0.55em 0;
 }
 
-/* --- factor level dictionary (LEVELS table) in div4 ----------------------- */
-.div4 table {
-  margin: 0.15em 0 0.4em 1.4em;
-  font-family: var(--dg-mono);
-  border-collapse: collapse;
+/* --- descriptor fields (v_to_txt) ----------------------------------------- */
+/* Emitted as <div class="dg-field"><span class="dg-k">LABEL</span>
+   <span class="dg-v">value</span></div>. div3 = short metadata aligned into a
+   two-column definition block (dark label + bold mono value); div4 = uppercase
+   label followed by flowing prose (DESCRIPTION, LOCATION CODE). */
+.dg-field .dg-k {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72em;
+  font-weight: 700;
 }
-.div4 td {
-  padding: 0 1.6em 0 0;
-  font-size: 0.9em;
-  line-height: 1.45;
+
+.div3 .dg-field {
+  display: grid;
+  grid-template-columns: 6.2em 1fr;
+  align-items: baseline;
+  column-gap: 0.5em;
+  margin: 0 0 0.32em 0;
+}
+.div3 .dg-k { color: var(--dg-ink); }
+.div3 .dg-v {
+  font-family: var(--dg-mono);
+  font-weight: 700;
+  font-size: 0.92em;
   color: var(--dg-ink);
 }
-.div4 th { display: none; }
+
+.div4 .dg-field { margin: 0 0 0.55em 0; line-height: 1.4; }
+.div4 .dg-k { color: var(--dg-label); }
+.div4 .dg-k::after { content: ":\00a0"; }
+.div4 .dg-v {
+  font-family: var(--dg-sans);
+  font-size: 0.95em;
+  color: var(--dg-ink);
+}
 
 /* --- data preview: wrapped monospace block (wrap_preview / paste_preview) -- */
 pre.dg-preview {
   font-family: var(--dg-mono);
-  font-size: 0.8em;
+  font-size: 0.7em;
   line-height: 1.4;
   white-space: pre;
+  overflow-x: auto;      /* contain any stray long line inside the cell */
+  max-width: 100%;
   background: none;
   border: none;
   padding: 0;
@@ -166,13 +208,11 @@ pre.dg-preview {
    Data-profile tables (properties / quantiles / stats)
    ========================================================================== */
 
-.div5 p, .div6 p, .div7 p, .div10 p, .div12 p, .div13 p,
-.div14 p, .div15 p, .div17 p, .div18 p, .div21 p {
+/* section labels: div5 (PREVIEW), div7 (PROPERTIES), div9 (STATS/levels/...) */
+.div5 p, .div7 p, .div9 p {
   margin: 0 0 0.15em 0;
 }
-.div5 strong, .div6 strong, .div7 strong, .div10 strong, .div12 strong,
-.div13 strong, .div14 strong, .div15 strong, .div17 strong, .div18 strong,
-.div21 strong {
+.div5 strong, .div7 strong, .div9 strong {
   font-family: var(--dg-sans);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -181,17 +221,13 @@ pre.dg-preview {
   color: var(--dg-label);
 }
 
-.div5 td, .div6 td, .div7 td, .div12 td, .div14 td, .div21 td {
+/* mono cells in the properties (div7) and full-width (div9) tables */
+.div7 td, .div9 td {
   font-family: var(--dg-mono);
   font-size: 0.85em;
 }
 
-.div5 table, .div6 table, .div7 table {
-  margin-left: 2px;
-}
-
-/* stack the two tables in the factor left column with a little breathing room */
-.div14 table + p { margin-top: 0.6em; }
+.div7 table, .div9 table { margin-left: 2px; }
 
 /* strip default table chrome; use tight cells + hairline row rules */
 .table { width: auto; }
@@ -204,17 +240,15 @@ tbody, tfoot, tr, td, th {
   border-width: 0;
 }
 
-.div5 tr, .div6 tr, .div7 tr, .div10 tr, .div12 tr,
-.div14 tr, .div17 tr, .div21 tr {
+.div7 tr, .div9 tr {
   border-bottom: 1px solid var(--dg-rule);
 }
-/* hide the header on the self-evident STAT/VAL/PER tables ... */
-.div5 th, .div6 th, .div7 th, .div10 th, .div17 th { display: none; }
-/* ... and on the factor PROPERTIES table (its first table), but keep the
-   VALUE/FREQUENCY header (its second table). div12 (CHARACTERS/WORDS) and
-   div21 (most-common VALUE/FREQUENCY) keep their headers too. */
-.div14 table:first-of-type th { display: none; }
-.div12 th, .div21 th {
+/* hide the header on the self-evident STAT/VAL/PER properties table ... */
+.div7 th { display: none; }
+/* ... but keep it on the full-width extra table, where the columns aren't
+   self-evident (STATS names, factor LABEL/FREQUENCY/MEANING, most-common
+   VALUE/FREQUENCY, logical category codes). */
+.div9 th {
   font-family: var(--dg-sans);
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -224,8 +258,8 @@ tbody, tfoot, tr, td, th {
   text-align: left;
 }
 
-/* graphics anchored to the bottom-right of their cell */
-.div8 img, .div8 svg, .div9 img, .div9 svg { align-self: end; justify-self: end; }
+/* graphic anchored to the bottom-right of its cell */
+.div8 img, .div8 svg { align-self: end; justify-self: end; }
 
 @media print {
   body {

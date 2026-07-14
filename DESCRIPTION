@@ -31,10 +31,13 @@ Imports:
     readr,
     readxl,
     rlang,
+    scales,
     stringr,
     tm,
     treemap,
-    wordcloud
+    wordcloud,
+    ggplot2,
+    ggwordcloud
 Suggests:
     fs,
     tools,

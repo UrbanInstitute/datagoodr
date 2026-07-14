@@ -24,8 +24,12 @@ get_properties <- function( VNAME, df ){
   is.num <- is.numeric(x)
   chr <- as.character(x)
 
-  comma <- function(v) formatC( as.integer(v), big.mark = ",", format = "d" )
-  pct   <- function(v) paste0( "(", round( v / n * 100, 1 ), "%)" )
+  # format as an integer with thousands separators; use a double (format "f",
+  # 0 digits) so values above the 32-bit integer range don't overflow to NA.
+  comma <- function(v) formatC( as.numeric(v), big.mark = ",", format = "f", digits = 0 )
+  # All percentages carry exactly one decimal so the decimal point lines up
+  # when scanning the column (e.g. "13.0%" over "79.7%").
+  pct   <- function(v) paste0( "(", formatC( v / n * 100, format = "f", digits = 1 ), "%)" )
 
   ## exhaustive, mutually-comparable missingness checks
   na.count    <- sum( is.na(x) )                                  # NA / NaN
@@ -33,19 +37,9 @@ get_properties <- function( VNAME, df ){
   zero.count  <- if( is.num ) sum( x == 0, na.rm = TRUE ) else 0L
   inf.count   <- if( is.num ) sum( is.infinite(x) )        else 0L
 
-  ## most common NON-MISSING value (and its share of all rows)
-  keep <- ! is.na(x) & trimws(chr) != "" & chr != "."
-  vals <- x[ keep ]
-  if( length(vals) > 0 ) {
-    mc.val   <- most_common_val( vals )
-    mc.count <- max( table( as.character(vals) ) )
-    mc.per   <- paste0( "(", round( mc.count / n * 100, 0 ), "%)" )
-    if( is.num ) mc.val <- comma( as.numeric(mc.val) )
-  } else {
-    mc.val <- "-"; mc.per <- ""
-  }
-
-  ## assemble rows in order; include a missingness row only when it occurs
+  ## assemble rows in order; include a missingness row only when it occurs.
+  ## (The most common value is shown in the separate MOST COMMON VALUES table,
+  ## so it is intentionally omitted here.)
   rows <- list(
     c( "Rows",     comma(n),                    "" ),
     c( "Distinct", comma( length(unique(x)) ),  pct( length(unique(x)) ) )
@@ -54,7 +48,21 @@ get_properties <- function( VNAME, df ){
   if( empty.count > 0 ) rows <- c( rows, list(c("Missing/Empty", comma(empty.count), pct(empty.count))) )
   if( zero.count  > 0 ) rows <- c( rows, list(c("Zero",          comma(zero.count),  pct(zero.count) )) )
   if( inf.count   > 0 ) rows <- c( rows, list(c("Infinite",      comma(inf.count),   pct(inf.count)  )) )
-  rows <- c( rows, list(c("Most Common", mc.val, mc.per)) )
+
+  ## numeric shape as a category (LOW/MED/HIGH), not a raw statistic - the
+  ## properties table is customised per data type, and a label is easier to
+  ## scan than a skew/kurtosis number.
+  if( is.num ) {
+    xn <- x[ is.finite(x) ]
+    if( length(xn) > 2 && stats::sd(xn) > 0 ) {
+      sk <- psych::skew( xn )
+      ku <- psych::kurtosi( xn )
+      band <- function( v, cuts ) c("LOW","MED","HIGH")[ findInterval( abs(v), cuts ) + 1 ]
+      rows <- c( rows, list(
+        c( "Skew",     band( sk, c(0.5, 1) ), "" ),
+        c( "Kurtosis", band( ku, c(1,   3) ), "" ) ) )
+    }
+  }
 
   tab <- as.data.frame( do.call( rbind, rows ), stringsAsFactors = FALSE )
   names(tab) <- c( "STAT", "VAL", "PER" )
@@ -231,14 +239,10 @@ get_stats_fact <-  function(VNAME, df){
 
   x <- df[[VNAME]]
 
-  tab <- sort(table(x))
-  #grab top 5 values (or all of them if less than 5)
-  if(length(tab) <=5){
-    index <- length(tab):1
-  }else{
-    index <- length(tab):(length(tab)-5)
-  }
-  tab <- tab[ index ]
+  # Store the level frequencies (descending), capped at 50, so the render can
+  # build the combined FACTOR LEVELS table (level | frequency | meaning).
+  tab <- sort( table(x), decreasing = TRUE )
+  if( length(tab) > 50 ) tab <- tab[ seq_len(50) ]
   tab <- data.frame(tab)
   colnames(tab) <- c("Value", "Frequency")
 
