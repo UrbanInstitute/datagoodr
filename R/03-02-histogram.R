@@ -56,32 +56,33 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
   x.info <- json_to_list( info )
 
   brk  <- as.numeric( unlist( x.info$breaks ) )
-  mids <- as.numeric( unlist( x.info$mids ) )
   dens <- as.numeric( unlist( x.info$density ) )
   avex <- as.numeric( unlist( x.info$mean ) )
   medx <- as.numeric( unlist( x.info$median ) )
-  minx <- as.numeric( unlist( x.info$min ) )
-  maxx <- as.numeric( unlist( x.info$max ) )
 
-  cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
+  if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
 
   # cap a dominant bar so the rest of the shape is visible
   srt  <- sort( dens, decreasing = TRUE )
   ycap <- if( length(srt) >= 2 && srt[1] > 2 * srt[2] ) srt[2] * 1.15 else max(dens)
 
-  # draw the ~25 bins as solid dark-gray rectangles (white hairline between)
+  # draw the bins as solid rectangles, inset slightly so a thin gap separates them
   par( mar = c(2, 0, 1.5, 0), xpd = NA )
   plot( range(brk), c(0, ycap), type = "n",
         axes = FALSE, xlab = "", ylab = "", xaxs = "i" )
-  rect( brk[-length(brk)], 0, brk[-1], pmin( dens, ycap ),
-        col = "gray25", border = "white", lwd = 0.6 )
+  xl  <- brk[-length(brk)]; xr <- brk[-1]
+  gap <- ( xr - xl ) * 0.18                     # inset -> visible spacing between bars
+  rect( xl + gap/2, 0, xr - gap/2, pmin( dens, ycap ),
+        col = "#465A6F", border = NA )
 
   usr <- par("usr")
 
-  # true min / max at the lower corners (abbreviated, so nothing crops)
-  mtext( abbrev_num(minx), side = 1, at = usr[1], adj = 0, line = 0.1,
+  # Label the corners with the winsorized window actually drawn (range of the
+  # bins), not the true min/max - otherwise the axis would misrepresent where the
+  # bars stop. The true min/max are shown in the STATS section (MIN / MAX).
+  mtext( abbrev_num( min(brk) ), side = 1, at = usr[1], adj = 0, line = 0.1,
          cex = 1.1, font = 2, col = "gray40" )
-  mtext( abbrev_num(maxx), side = 1, at = usr[2], adj = 1, line = 0.1,
+  mtext( abbrev_num( max(brk) ), side = 1, at = usr[2], adj = 1, line = 0.1,
          cex = 1.1, font = 2, col = "gray40" )
 
   # mean / median lines, clamped into the plot; labels on top

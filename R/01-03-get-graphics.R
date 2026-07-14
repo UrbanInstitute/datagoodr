@@ -116,24 +116,22 @@ get_graphics_num <- function(VNAME, df ){
   max = max(x, na.rm = TRUE)
   sk = psych::skew(x)
 
-  # Winsorize with Tukey IQR fences so outliers don't dominate the x-scale and
-  # the bulk's shape is visible (fences adapt to a skewed spread, unlike a flat
-  # percentile clip). The true min/max/mean/median are stored above and shown
-  # on the chart; a dominant bar (e.g. a pile of zeros) is capped at render.
-  x   <- x[ !is.na(x) ]
-  q   <- quantile( x, c(0.25, 0.75), names = FALSE )
-  iqr <- q[2] - q[1]
-  if( iqr > 0 ) {
-    lo <- q[1] - 1.5 * iqr
-    hi <- q[2] + 1.5 * iqr
-  } else {                                   # near-constant: fall back to P1/P99
-    lo <- quantile( x, 0.01, names = FALSE )
-    hi <- quantile( x, 0.99, names = FALSE )
-  }
+  # Winsorize at the 5th/95th percentiles so long tails - including a handful of
+  # negative outliers common in financial indicators - don't dominate the x-scale
+  # and the bulk's shape stays visible. The true min/max/mean/median are stored
+  # above and shown on the chart; a dominant bar (e.g. a pile of zeros) is capped
+  # at render.
+  x  <- x[ !is.na(x) ]
+  lo <- quantile( x, 0.05, names = FALSE )
+  hi <- quantile( x, 0.95, names = FALSE )
   xw <- x[ x >= lo & x <= hi ]
   if( length( unique(xw) ) < 2 ) xw <- x     # degenerate clip -> use all
 
-  h <- hist( xw, 25, plot = FALSE )
+  # exactly 50 equal-width bins (a bare `breaks = 50` is only a suggestion that
+  # hist() rounds to "pretty" limits, giving an inconsistent bin count)
+  rng <- range( xw )
+  h <- hist( xw, breaks = seq( rng[1], rng[2], length.out = 51 ),
+             include.lowest = TRUE, plot = FALSE )
   b <- h$breaks
   d <- h$density/sum(h$density)
   y <- h$counts

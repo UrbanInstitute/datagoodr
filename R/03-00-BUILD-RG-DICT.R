@@ -133,11 +133,13 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
   info <- get_xx()[[VNAME]]
   tab <- json_to_df(info)
 
-  # The most common value is shown in the separate MOST COMMON VALUES table, so
-  # drop it here. Filter defensively so DGFs built before this row was removed
-  # from get_properties() also render without it.
+  # Drop rows that now live elsewhere: Most Common (shown in MOST COMMON VALUES)
+  # and Skew/Kurtosis (shown in the numeric STATS section). Filtered defensively
+  # so DGFs built before these rows were removed from get_properties() also
+  # render without them.
   if( "STAT" %in% names(tab) )
-  { tab <- tab[ trimws(as.character(tab$STAT)) != "Most Common", , drop = FALSE ] }
+  { tab <- tab[ ! trimws(as.character(tab$STAT)) %in%
+                  c("Most Common", "Skew", "Kurtosis"), , drop = FALSE ] }
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
   cat( txt )
@@ -473,15 +475,25 @@ paste_stats_horizontal <- function( VNAME, LABEL = "STATS" ){
   tab  <- json_to_df(info)
   tab$STAT <- trimws( as.character( tab$STAT ) )
 
-  want <- c("Minimum","Q - 05","Q - 25","Median","Mean","Q - 75","Q - 95","Maximum")
-  tab  <- tab[ match( want, tab$STAT ), ]
-  tab  <- tab[ ! is.na(tab$STAT), ]
-  tab$STAT[ tab$STAT == "Median" ] <- "Q - 50"
+  # source stat name -> short display label, in display order. Skew and Kurtosis
+  # are shown here (as actual values) rather than in the PROPERTIES table.
+  relabel <- c( "Minimum"  = "MIN",
+                "Maximum"  = "MAX",
+                "Mean"     = "MEAN",
+                "Q - 05"   = "Q05",
+                "Q - 25"   = "Q25",
+                "Median"   = "Q50",
+                "Q - 75"   = "Q75",
+                "Q - 95"   = "Q95",
+                "Skew"     = "SKEW",
+                "Kurtosis" = "KURTOSIS" )
+  idx  <- match( names(relabel), tab$STAT )
+  keep <- ! is.na(idx)
 
-  # transpose: one value row, stat names as column headers
-  out <- as.data.frame( as.list( as.character( tab$VAL ) ), stringsAsFactors = FALSE,
-                        check.names = FALSE )
-  names(out) <- tab$STAT
+  # transpose: one value row, short stat labels as column headers
+  out <- as.data.frame( as.list( as.character(tab$VAL)[ idx[keep] ] ),
+                        stringsAsFactors = FALSE, check.names = FALSE )
+  names(out) <- unname( relabel[keep] )
 
   if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
   k <- knitr::kable( out, align = rep("r", ncol(out)) )
@@ -716,7 +728,8 @@ paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 68,
   vals <- vals[ nzchar(vals) ]
   if( length(vals) > max.vals ) vals <- vals[ seq_len(max.vals) ]
 
-  lines <- wrap_preview( vals, size = size )
+  # values are stored ";;"-delimited but displayed separated by a middle dot
+  lines <- wrap_preview( vals, size = size, sep = " · " )
   if( length(lines) > max.lines ) lines <- lines[ seq_len(max.lines) ]
 
   # escape HTML-special characters so arbitrary values render safely in <pre>

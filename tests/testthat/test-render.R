@@ -36,7 +36,9 @@ test_that("factor sections render a LEVELS table and numeric sections STATS + qu
 
   num <- suppressMessages(suppressWarnings(
     capture.output(create_all_sections(dgf[dgf$vtype_class == "numeric", ]))))
-  # STATS now carries the quantile rows (Q-50) instead of a separate QUANTILES
+  # STATS carries the quantile columns with short labels (MIN/Q05/Q50/.../MAX)
+  # plus SKEW/KURTOSIS (moved out of the PROPERTIES table)
   expect_true(any(grepl("STATS", num)))
-  expect_true(any(grepl("Q - 50", num)))
+  expect_true(any(grepl("Q50", num)))
+  expect_true(any(grepl("SKEW", num)))
 })

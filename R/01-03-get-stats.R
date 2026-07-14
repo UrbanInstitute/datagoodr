@@ -49,20 +49,8 @@ get_properties <- function( VNAME, df ){
   if( zero.count  > 0 ) rows <- c( rows, list(c("Zero",          comma(zero.count),  pct(zero.count) )) )
   if( inf.count   > 0 ) rows <- c( rows, list(c("Infinite",      comma(inf.count),   pct(inf.count)  )) )
 
-  ## numeric shape as a category (LOW/MED/HIGH), not a raw statistic - the
-  ## properties table is customised per data type, and a label is easier to
-  ## scan than a skew/kurtosis number.
-  if( is.num ) {
-    xn <- x[ is.finite(x) ]
-    if( length(xn) > 2 && stats::sd(xn) > 0 ) {
-      sk <- psych::skew( xn )
-      ku <- psych::kurtosi( xn )
-      band <- function( v, cuts ) c("LOW","MED","HIGH")[ findInterval( abs(v), cuts ) + 1 ]
-      rows <- c( rows, list(
-        c( "Skew",     band( sk, c(0.5, 1) ), "" ),
-        c( "Kurtosis", band( ku, c(1,   3) ), "" ) ) )
-    }
-  }
+  # Skew and Kurtosis are intentionally NOT in the properties table - they are
+  # shown (as actual values) in the numeric STATS section instead.
 
   tab <- as.data.frame( do.call( rbind, rows ), stringsAsFactors = FALSE )
   names(tab) <- c( "STAT", "VAL", "PER" )
