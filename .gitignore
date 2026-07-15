@@ -15,3 +15,9 @@ working-example/my-dictionary/
 
 # Rendered preview (regenerate via STEP3)
 working-example/research-guide.html
+
+# Scratch copy of a rendered preview
+working-example/temp/
+
+# LaTeX temp files left behind by a pdf render
+tmp-pdfcrop-*.log

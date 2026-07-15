@@ -57,6 +57,8 @@ merge_level_labels <- function( old_json, new_json ) {
 #'   `.xlsx`. Defaults to `"DGF"`.
 #' @param verbose Logical; if `TRUE` (default) a summary of what changed is
 #'   printed.
+#' @param open Logical; open the refreshed DGF in Excel once written. Defaults
+#'   to [interactive()] — on at the console, off in scripts, tests, and CI.
 #'
 #' @return Invisibly, the updated DGF data frame. It carries a `"status"`
 #'   attribute: a named character vector labelling each variable as
@@ -64,7 +66,8 @@ merge_level_labels <- function( old_json, new_json ) {
 #'   listing variables no longer present in the data.
 #' @seealso [create_dgf()], [inspect_dgf()]
 #' @export
-update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE ) {
+update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
+                        open = interactive() ) {
 
   if( is.character(dgf) && length(dgf) == 1 ) dgf <- load_dgf( dgf )
   if( is.character(df)  && length(df)  == 1 )
@@ -97,7 +100,8 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE ) {
       vloc        = pick_chr("vloc"),
       vconvert    = pick_fx("vconvert"),
       vformat     = pick_fx("vformat"),
-      file        = tempfile("dgf-refresh") )
+      file        = tempfile("dgf-refresh"),
+      open        = FALSE )
   ) ) )
 
   # Classify each variable by comparing hashes.
@@ -138,7 +142,7 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE ) {
 
   # write output
   write.csv( dgf.new, paste0(file, ".csv"), row.names = FALSE )
-  save_to_excel( dgf.new, filename = paste0(file, ".xlsx") )
+  save_to_excel( dgf.new, filename = paste0(file, ".xlsx"), open = open )
 
   attr( dgf.new, "status" )  <- status
   attr( dgf.new, "removed" ) <- removed

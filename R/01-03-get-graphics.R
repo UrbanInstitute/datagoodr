@@ -38,11 +38,18 @@ get_graphics <- function(VNAME, df, VCLASS){
 
 ### Character (Word Cloud) ------------------------------------
 
-# outputs table of 50 most common strings and their associated frequencies
+#' Word-cloud data for a character variable (internal)
+#'
+#' Splits the variable's text into words, drops stop words and punctuation, and
+#' keeps the 50 most frequent remaining words with their counts.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: a two-column word/frequency table, stored in the
+#'   DGF's `rg_graphics` column and read back by [v_to_wordcloud()].
+#' @noRd
 get_graphics_chr <- function(VNAME, df){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
 
   v <- df[[VNAME]] #this should be the input data set
   ddd <- head(simplify_char( v ), 50)
@@ -53,11 +60,18 @@ get_graphics_chr <- function(VNAME, df){
 
 
 ### Logical (Bar Plot/ Boolean Plot) ------------------------------------
-# outputs table of 2 strings (and any NA's ) and their associated frequencies
+#' Bar-plot data for a logical variable (internal)
+#'
+#' Tabulates the variable's two categories, counting `NA` as its own level so
+#' missingness stays visible on the plot.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: a value/frequency table, stored in the DGF's
+#'   `rg_graphics` column and read back by [paste_booleplot()].
+#' @noRd
 get_graphics_log <-  function( VNAME, df ) {
-
-    # VNAME <- xx[VNAME]
-    # # for testing VNAME <- all.vars[1]
 
     f <- as.character(df[[VNAME]]) #this should be the input data set
     f[ is.na(f) ] <- "NA"
@@ -70,12 +84,24 @@ get_graphics_log <-  function( VNAME, df ) {
 
 ### Factor (treemap) ---------------------------------------
 
-# outputs table of (max) 50 most common factors and their frequencies
-# anything with less than 2% frequency gets put into "other" category
+#' Treemap data for a factor variable (internal)
+#'
+#' Tabulates the factor's levels by frequency and collapses the long tail into
+#' a single `"other"` category, so a variable with many rare levels still
+#' produces a readable treemap.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: a level/frequency table, stored in the DGF's
+#'   `rg_graphics` column and read back by [paste_treemap()].
+#'
+#' @details Levels holding at least 2% of values are kept individually; the
+#'   rest are summed into `"other"`. The collapse only happens when the largest
+#'   level itself clears 2% - otherwise every level is rare and the table is
+#'   returned as-is.
+#' @noRd
 get_graphics_fact <- function(VNAME, df ){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
 
   x <- df[[VNAME]] #this should be the input data set
   x <- as.character(x)
@@ -101,11 +127,23 @@ get_graphics_fact <- function(VNAME, df ){
 
 ### Numeric (histogram)---------------------------------------
 
-# list of information needed to generate histogram
+#' Histogram data for a numeric variable (internal)
+#'
+#' Bins the variable into 50 equal-width bins for plotting, and carries the
+#' true mean/median/min/max alongside so the chart can annotate them.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string holding `breaks`, `density`, `y`, `mids`, `mean`,
+#'   `median`, `min` and `max`, stored in the DGF's `rg_graphics` column and
+#'   read back by [paste_histogram()].
+#'
+#' @details Bins are computed on values winsorized to the 5th/95th percentiles
+#'   so long tails do not flatten the bulk of the distribution; the summary
+#'   statistics returned are computed on the unclipped data.
+#' @noRd
 get_graphics_num <- function(VNAME, df ){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
 
   x <- df[[VNAME]] #this should be the input data set
 
@@ -147,24 +185,5 @@ get_graphics_num <- function(VNAME, df ){
 
 
 
-##############################
-### Internal Funcs
-##############################
-
-# simplifies character string to first 400 characters
-simplify_char <- function(v) {
-
-  ww <- strsplit( v, " " ) |> unlist()
-  stop.words <- tm::stopwords("english")
-  stop.words <- c( stop.words, toupper(stop.words) )
-  ww <- ww[ ! ww %in% stop.words ]
-  ww <- gsub( "[[:punct:]]", "", ww )
-  ww <- ww[ ww != "" ]
-
-  dd <- as.data.frame(sort(table(ww),decreasing=T))
-  n.row <- nrow(dd)
-  if( n.row > 400 )
-  { dd <- dd[1:400,] }
-
-  return(dd)
-}
+# simplify_char() lives in R/03-02-wordcloud.R, next to the word-frequency code
+# it shares its stop-word handling with. get_graphics_chr() above calls it.

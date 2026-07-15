@@ -42,8 +42,6 @@ get_json_error <- function(x)
 }
   
 
-# vals <- dgf$dgf_values
-# validate_json( vals )
 
 
 
@@ -73,4 +71,3 @@ show_invalid <- function(v)
   return(invisible(NULL))
 }
 
-# show_invalid( vals )

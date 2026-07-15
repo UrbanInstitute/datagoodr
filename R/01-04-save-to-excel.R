@@ -4,8 +4,13 @@
 #'
 #' @details used inside of 01-00-CREATE-DGF.R
 #'
+#' @param df Data frame to write.
+#' @param filename Destination `.xlsx` path.
+#' @param open Logical; launch the saved file in Excel. Defaults to
+#'   [interactive()], so it stays off in scripts, tests, and CI.
+#'
 #' @export
-save_to_excel <- function( df, filename="DGF.xlsx" )
+save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
 {
 
   wb <- openxlsx::createWorkbook()
@@ -27,7 +32,6 @@ save_to_excel <- function( df, filename="DGF.xlsx" )
 
   openxlsx::modifyBaseFont( wb, fontSize=11, fontName='Calibri Light' )
 
-  # valign <- openxlsx::createStyle( valign = "center" )
   # openxlsx::addStyle( wb, sheet=1, style=valign,
   #           rows=1:nrow, cols=1:ncol,
   #           gridExpand=TRUE, stack=TRUE )
@@ -81,7 +85,6 @@ save_to_excel <- function( df, filename="DGF.xlsx" )
   openxlsx::addStyle( wb, sheet=1, browns,
     rows=2:nrow, cols=g4, gridExpand=TRUE, stack=T  )
 
-  # first3 <- openxlsx::createStyle( valign = "top" )
   # openxlsx::addStyle( wb, sheet=1, first3,
   #   rows=2:20, cols=5, stack=T )
 
@@ -112,7 +115,6 @@ save_to_excel <- function( df, filename="DGF.xlsx" )
 
   openxlsx::freezePane( wb, sheet=1, firstActiveRow=2, firstActiveCol=2 )
 
-  # unlocked <- openxlsx::createStyle( locked = FALSE )
   # openxlsx::addStyle( wb, sheet=1, unlocked,
   #   rows=2:nrow, cols=2:4, gridExpand=TRUE, stack=T  )
   # openxlsx::addStyle( wb, sheet=1, unlocked,
@@ -121,10 +123,9 @@ save_to_excel <- function( df, filename="DGF.xlsx" )
   #   rows=1:nrow, cols=1, stack=T  )
   # openxlsx::addStyle( wb, sheet=1, unlocked,
   #   rows=1, cols=1:ncol, stack=T  )
-  # openxlsx::protectWorksheet( wb, "DGF", protect = TRUE )
 
   openxlsx::saveWorkbook( wb, filename, overwrite = TRUE )
-  openxlsx::openXL( filename )
+  if( open ) openxlsx::openXL( filename )
   return(invisible(NULL))
 }
 
@@ -158,9 +159,5 @@ save_to_excel <- function( df, filename="DGF.xlsx" )
 # darkblue  headers: #44546A  cells: #E3E7ED
 # darkbrown headers: #833C0C  cells: #FEF2EC
 
-# wb <- loadWorkbook( "DGF2.xlsx" )
-# wb <- openxlsx( "DGF3.xlsx" )
-# wb <- read.xlsx( "DGF3.xlsx" )
 
-# save_to_excel( dgf )
 

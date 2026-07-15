@@ -109,7 +109,8 @@ layout.logical <-
     "div9 ;; dd_f_level     ;; CATEGORY LABELS ;; paste_levels_horizontal"  )
 
 
-### Save these in the R package
+### The default layouts ship as internal package data (R/sysdata.rda). After
+### editing any layout.* above, regenerate it by running:
 # usethis::use_data(
 #   layout.numeric,
 #   layout.character,

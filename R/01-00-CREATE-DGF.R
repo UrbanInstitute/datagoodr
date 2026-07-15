@@ -1,25 +1,47 @@
-
-
-# df,
-# vtypes=NULL,
-# use.df.types=FALSE,
-# guess.factors=TRUE,
-# dd=NULL,
-# vname=NULL,
-# vlabel=NULL,
-# vdesc=NULL,
-# vtype=NULL,
-# keep.dd.cols=NULL,
-# preview_dd=F,
-# preview_dp=F
-
-
 #' @title create DGF file
 #'
-#' @description some description text
+#' @description
+#' Builds a Data Governance File (DGF) from a dataset: one row per variable,
+#' carrying the metadata, summary statistics, and graphics data needed to
+#' render a Research Guide. Writes a `.csv` and an `.xlsx`, and returns the DGF
+#' data frame.
 #'
-#' @details some additional details
+#' @details
+#' Column types are inferred from the data (see `vtypes` / `use.df.types` /
+#' `guess.factors` to steer that), then each variable is profiled into the
+#' `rg_*` columns. The result is meant to be curated by hand - in Excel or via
+#' the `v*` arguments - and fed to [create_rg()].
 #'
+#' @param df A data frame to document, or a path to a `.csv` file to read.
+#' @param use.df.types Logical; keep the data frame's existing column types
+#'   instead of re-reading the data with `readr` to re-infer them. Defaults to
+#'   `FALSE`.
+#' @param guess.factors Logical; treat low-cardinality columns as factors.
+#'   Defaults to `TRUE`.
+#' @param vname,vlabel,vdesc,vtype Optional character vectors of per-variable
+#'   metadata (name, short label, long description, type), each the same length
+#'   and order as the columns of `df`. Default to blank.
+#' @param vconvert Optional character vector of type-conversion function names
+#'   (e.g. `"as_yyyy"`), one per column, applied to the data before profiling.
+#' @param vformat Optional character vector of display-formatting function names
+#'   (e.g. `"dollarize"`), one per column, applied to previews and graphics.
+#' @param vname_alias,vscope,vloc Optional character vectors of per-variable
+#'   alias, scope, and location-code metadata. Default to blank.
+#' @param dir Directory to write the DGF into. Created if it does not exist.
+#'   Defaults to `"."`. Ignored when `file` is an absolute path.
+#' @param file Output path stem (without extension) for the written `.csv` and
+#'   `.xlsx`. Defaults to `"DGF"`. Resolved relative to `dir` unless absolute.
+#' @param open Logical; open the new DGF in Excel once created. Defaults to
+#'   [interactive()] — on at the console, off in scripts, tests, and CI.
+#' @param vtypes,guess.dates,dd,keep.dd.cols,preview_dd,preview_dp Accepted but
+#'   currently ignored; the features they were intended to steer (explicit type
+#'   overrides, date/time detection, and data-dictionary merging) are not
+#'   implemented yet. See `dev/TO-DO.md`.
+#'
+#' @return The DGF as a data frame, one row per variable. Also writes
+#'   `<file>.csv` and `<file>.xlsx` as a side effect.
+#'
+#' @seealso [create_rg()], [update_dgf()], [inspect_dgf()]
 #' @export
 create_dgf <- function(         # ----------------
          df,
@@ -40,7 +62,9 @@ create_dgf <- function(         # ----------------
          keep.dd.cols=NULL,
          preview_dd=F,
          preview_dp= F,
-         file="DGF")
+         dir=".",
+         file="DGF",
+         open = interactive())
 
  {  # ---------------------------------------------
 
@@ -92,7 +116,6 @@ create_dgf <- function(         # ----------------
   if( guess.factors )
   { df <- recast_factors( df ) }
   guess_type <- sapply( df, class ) %>% as.character()
-  # data.frame(raw_type, guess_type)
 
   correct.guess <- substr(vconvert, 4,nchar(vconvert)) == guess_type
 
@@ -118,7 +141,6 @@ create_dgf <- function(         # ----------------
   }
   data_type_converted <- sapply( df, class )
 
-  # data.frame(raw_type, guess_type, data_type_converted) # see what converted
 
 
   dd_f_level <- mapply(function(vname, type, df){
@@ -149,11 +171,6 @@ create_dgf <- function(         # ----------------
   vt <- table( vclass )
   cat( "Data type summary:\n" )
   print( knitr::kable( vt ) )
-
-  # dates <- find_dates(df)
-  # if( guess.dates )
-  # { df <- recast_dates( df ) }
-
 
   ## Do the format
   #
@@ -227,21 +244,6 @@ create_dgf <- function(         # ----------------
   rg_stats <- mapply(get_stats, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df_stats) )
   rg_graphics <- mapply(get_graphics, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df_stats) )
 
-  ## CREATE FACTOR LABEL TABLES (JSON CELLS)
-
-  # is.factor    <- dgf_type == "factor"
-  # factor.names <- dgf_vname[ is.factor ]
-  #
-  # f_levels  <- rep( "", N )
-  # f_levels[ is.factor ] <-
-  #   sapply( df[ factor.names ], jsonify_f ) %>%
-  #   as.character()
-  #
-  # f_order  <- rep( "", N )
-  # f_order[ is.factor ] <-
-  #   sapply( df[ factor.names ], get_levels ) %>%
-  #   as.character()
-
   ## ADD BLANK RULE COLUMNS
 
   dgf_standardize  <- rep( "", N_col )
@@ -280,15 +282,21 @@ create_dgf <- function(         # ----------------
       )
 
 
-  path = paste0(file, ".xlsx")
-  write.csv( dgf, paste0(file, ".csv"), row.names=F )
-  save_to_excel( dgf, filename = path )
+  # `file` is a path stem (no extension); a .csv and an .xlsx are written from
+  # it. An absolute stem (e.g. tempfile()) is used as-is, so `dir` only anchors
+  # relative stems. dirname() also covers a subdirectory carried in the stem.
+  stem <- if( is_absolute_path(file) ) file else file.path( dir, file )
+  out.dir <- dirname( stem )
+  if( ! dir.exists( out.dir ) ) dir.create( out.dir, recursive = TRUE )
+
+  path = paste0(stem, ".xlsx")
+  write.csv( dgf, paste0(stem, ".csv"), row.names=F )
+  save_to_excel( dgf, filename = path, open = open )
 
   vt <- data.frame( VNAME=vname, TYPE=vclass )
   cat( "\nAssigned variable types:" )
   print( knitr::kable( vt ) )
 
-  # create_rules_file()
 
   return(dgf)
 }
@@ -297,6 +305,5 @@ create_dgf <- function(         # ----------------
 
 
 
-# dgf <- create_dgf( bb )
 
 

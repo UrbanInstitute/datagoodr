@@ -26,6 +26,33 @@ data-in -> DGF -> Research Guide pipeline runs via `library(datagoodr)`
 - [ ] add function to [create dgf rules file](https://github.com/lecy/datagood2/blob/main/R/01-05-write-dgf-rules-file.R) "dgf.R" 
 - [x] add rg_hash column
 
+### Re-integrate the six ignored arguments (found 2026-07-15)
+
+`create_dgf()` accepts six arguments that are never read in its body, so they
+are silently ignored today. They are documented as such in the roxygen block
+(R/01-00-CREATE-DGF.R) rather than removed, because removing them would break
+existing calls - `datagoodr()`'s own example and dev/testing-wrapper.R both
+pass `guess.dates`. Each needs to be wired up to its intended behaviour, or
+dropped deliberately:
+
+- [ ] `vtypes` - explicit per-column type overrides, to take precedence over
+      the inferred types (`use.df.types` / `guess.factors` currently decide
+      everything).
+- [ ] `guess.dates` - detect and recast date/time columns. The original
+      implementation called `find_dates()` / `recast_dates()`; neither function
+      exists anywhere in the package, so the call was commented out and the
+      argument left dangling. Blocked on the date/time data type (see the
+      customize-stage list below).
+- [ ] `dd` - merge an existing data dictionary into the new DGF (supply
+      vdesc/vlabel/etc. from a curated source instead of the `v*` vectors).
+- [ ] `keep.dd.cols` - which columns of that data dictionary to carry through.
+- [ ] `preview_dd` / `preview_dp` - print the data dictionary / data profile to
+      the console as the DGF is built.
+
+Method note: these were found by comparing each exported function's formals
+against the symbols actually referenced in its body. Worth re-running after any
+signature change - it also surfaced the dead `rg.name` in `datagoodr()`.
+
 
 
 ## DONE: Create inspect_dgf() function (2026-07-10)
@@ -47,6 +74,39 @@ It is wired into `working-example/STEP2.R` and covered by tests.
 ## Create ingest_raw() function 
 
 Calls inspect_dgf() before, and update_dgf() afterwards. 
+
+### Fix ingest_raw() - currently exported but cannot run (found 2026-07-15)
+
+**Purpose.** `ingest_raw()` takes the raw CSV and the current DGF, applies all
+of the data-type conversion and standardization steps the DGF prescribes, and
+emits a clean, import-stable version of the data. "Import-stable" is the point:
+re-reading the cooked file should reproduce the same types and values every
+time, rather than leaving them to `readr`'s inference.
+
+**Possible rename.** `ingest_raw()` describes when it runs, not what it does.
+Consider `cook_raw_data()` - or something else more descriptive of the
+transform - when it is implemented.
+
+**Current state.** `R/02-00-INGEST-RAW.R` is a stub that errors if called: it
+references `dgf` at `apply_name_aliases( df, dgf )`, but `dgf` is never defined
+- the line that would load it is commented out (`# dgf <- load excel`). The
+remaining pipeline steps are commented-out stubs. It is exported and appears in
+the package index, so a user can find it and call it.
+
+- [ ] `dgf` argument: accept the current DGF (a data frame, or a path to the
+      DGF `.xlsx`), matching how `update_dgf()` / `create_rg()` take theirs.
+      This replaces the `# dgf <- load excel` stub. `load_dgf()` already exists.
+- [ ] apply the `vconvert` type-conversion functions per column.
+- [ ] apply the standardization rules (`dgf_standardize`); `apply_stdz_rules()`
+      is referenced in the stub but does not exist anywhere and needs writing.
+      See also "dgf standardization and validation is not yet integrated" below.
+- [ ] wire in `apply_raw_convert_fx()`, which already exists and is exported but
+      is never called.
+- [ ] write the cooked data out; decide whether that is the caller's job or the
+      function's (cf. `create_dgf()`'s `dir`/`file` arguments).
+- [ ] call `inspect_dgf()` before and `update_dgf()` after, per the note above.
+- [ ] until it works, consider un-exporting it so it stays out of the public
+      index - it currently errors on any call.
 
 ## DONE: Create update_dgf() function (2026-07-10)
 
@@ -136,6 +196,16 @@ Still to do at the customize stage (see design doc):
 - the `vformat` column of the DGF isn't really integrated into the RG when pasting values in specific formats. Future versions should allow for this customization. 
 
 - dgf standardization and validation is not yet integrated. 
+
+- [ ] `get_dupes()` cleanup (found 2026-07-15): the `df` argument is vestigial -
+  it is never read. The body is `hh <- vhash  # sapply( df, rlang::hash )`, i.e.
+  the hashing moved out to the caller and `vhash` is now passed in ready-made,
+  but the signature kept `df`. The roxygen still documents `@param df` and the
+  example still passes it. Either drop `df` from the signature and the docs, or
+  restore it as the fallback (`if (missing(vhash)) vhash <- sapply(df, rlang::hash)`),
+  which would make the documented `get_dupes(df, vhash)` example honest. The
+  function is exported but never called inside the package or tests, so either
+  change is low-risk.
 
 
 

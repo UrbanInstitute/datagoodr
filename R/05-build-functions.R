@@ -83,14 +83,30 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
 }
 
 
-# internal: scaffold a report qmd pointed at a DGF, optionally rendering it.
+#' Scaffold a report qmd pointed at a DGF (internal)
+#'
+#' Shared body of [create_rg()] and [create_dd()]: installs the flavor's
+#' template into `dir`, points it at the DGF, and optionally renders it.
+#'
+#' @param dgf A DGF data frame, or a path to a DGF `.xlsx`. A data frame is
+#'   written out to `dir/DGF.xlsx` first, so the rendered document always reads
+#'   from a file.
+#' @param dir Directory to scaffold into. Created if it does not exist.
+#' @param file Name for the report document.
+#' @param flavor `"rg"` (full profile) or `"dd"` (descriptors only).
+#' @param render Logical; render the document after scaffolding it.
+#' @param overwrite Logical; overwrite an existing document of the same name.
+#'
+#' @return Invisibly, the path to the scaffolded (or rendered) document.
+#' @seealso [use_datagoodr_template()], which copies the template.
+#' @noRd
 build_report <- function( dgf, dir, file, flavor, render, overwrite ) {
 
   # allow a DGF data frame: write it out next to the report
   if( is.data.frame(dgf) ) {
     dgf.path <- file.path( dir, "DGF.xlsx" )
     if( ! dir.exists(dir) ) dir.create( dir, recursive = TRUE )
-    save_to_excel( dgf, filename = dgf.path )
+    save_to_excel( dgf, filename = dgf.path, open = FALSE )
     dgf <- "DGF.xlsx"
   }
 

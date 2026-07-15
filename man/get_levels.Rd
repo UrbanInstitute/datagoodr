@@ -14,6 +14,6 @@ A single character string listing the factor levels.
 }
 \description{
 Collapses the levels of a factor into one character string, separated by
-`" ;; \n"`. If the factor has more than 50 levels, only the first 50 are
+`" ;; \\n"`. If the factor has more than 50 levels, only the first 50 are
 used and a warning is issued.
 }

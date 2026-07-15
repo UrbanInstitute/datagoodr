@@ -207,7 +207,18 @@ paste_levels <- function( VNAME, LABEL = "CATEGORY MEANING" ){
 }
 
 
-# TRUE when at least one level label has been edited away from its raw code.
+#' Has the level dictionary been curated? (internal)
+#'
+#' @param level Character vector of raw level codes.
+#' @param label Character vector of editable labels, seeded to match `level`.
+#'
+#' @return `TRUE` when at least one label has been edited away from its raw
+#'   code.
+#'
+#' @details Drives whether the FACTOR LEVELS table shows its Meaning column:
+#'   until someone types a human-readable label in Excel, the column would only
+#'   repeat the codes, so it is suppressed.
+#' @noRd
 levels_customized <- function( level, label ) {
   level <- as.character( level ); label <- as.character( label )
   any( !is.na(label) & nzchar( trimws(label) ) & trimws(label) != trimws(level) )
@@ -352,7 +363,6 @@ paste_stats_num <- function( VNAME, LABEL = "STATS" ){
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
 
-  # return( df )
 }
 
 
@@ -527,7 +537,6 @@ paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
 
   # histogram in the table isn't currently working.
   # This is just an extra thing that would be cool if it did work but isn't technically necessary.
-  # info.tab[6, ] <- c("Histogram", info.hist$V1[1], info.hist$V1[2])
 
   txt <- paste0( "**", LABEL, "**", ": ", "\n\n" )
   cat( txt )
@@ -536,7 +545,6 @@ paste_stats_chr <- function( VNAME, LABEL = "STATS" ){
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
 
-  # return( df )
 }
 
 
@@ -586,9 +594,17 @@ paste_stats_chr_common <- function( VNAME, LABEL = "MOST COMMON" ){
 }
 
 
-# Total row count for the current variable, read from its PROPERTIES table
-# (the "Rows" stat). Returns NA when unavailable. Used to turn a raw frequency
-# into a share of all records.
+#' Row count for the current variable (internal)
+#'
+#' Reads the "Rows" stat out of the current variable's PROPERTIES table, which
+#' is what lets a raw frequency be shown as a share of all records.
+#'
+#' @return The row count as a numeric, or `NA_real_` when the properties table
+#'   is missing or has no "Rows" entry.
+#'
+#' @details Takes no arguments: it reads the current variable from the render
+#'   context via [get_xx()], so it is only meaningful inside a section render.
+#' @noRd
 total_rows_from_properties <- function() {
   info <- get_xx()[["rg_properties"]]
   if( is.null(info) || length(info) == 0 || is.na(info) || trimws(info) == "" )
@@ -630,7 +646,6 @@ paste_stats_fact <- function( VNAME, LABEL = "STATS" ){
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
 
-  # return( df )
 }
 
 #' Print Statistic of a Logical Variable into RG
@@ -661,7 +676,6 @@ paste_stats_log <- function( VNAME, LABEL = "STATS" ){
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
 
-  # return( df )
 }
 
 
@@ -716,10 +730,27 @@ wrap_preview <- function( x, size = 80, sep = " ;; " ) {
 }
 
 
-# internal: render the rg_preview values as a wrapped monospace text block.
-# An empty LABEL prints just the block (the standard template puts the label in
-# its own cell). At most `max.lines` wrapped rows are shown so the preview stays
-# a compact 3-4 line strip.
+#' Render preview values as a wrapped monospace block (internal)
+#'
+#' Shared body of [paste_preview_num()] and [paste_preview_chr()]: reads the
+#' `";;"`-delimited preview values from the render context and prints them as a
+#' compact `<pre>` strip.
+#'
+#' @param VNAME Character; the DGF column to read (normally `"rg_preview"`).
+#' @param LABEL Section label. Empty prints just the block - the standard
+#'   template puts the label in its own grid cell.
+#' @param size Wrap width in characters.
+#' @param max.vals Maximum number of distinct values to consider.
+#' @param max.lines Maximum wrapped rows to print, which is what keeps the
+#'   preview to a 3-4 line strip.
+#'
+#' @return No return value; prints markdown/HTML. Call inside a
+#'   `results = "asis"` chunk.
+#'
+#' @details Values are stored `";;"`-delimited but displayed separated by a
+#'   middle dot. HTML-special characters are escaped so arbitrary data renders
+#'   safely inside `<pre>`.
+#' @noRd
 paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 68,
                                  max.vals = 200, max.lines = 4 ) {
 

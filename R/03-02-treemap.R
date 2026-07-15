@@ -49,7 +49,6 @@ paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
   }
 
 
-  # raw_html <- as.character(tmap_plotly)
 
   if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
   treemap::treemap(tab.keep,

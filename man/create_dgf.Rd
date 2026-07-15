@@ -23,12 +23,64 @@ create_dgf(
   keep.dd.cols = NULL,
   preview_dd = F,
   preview_dp = F,
-  file = "DGF"
+  dir = ".",
+  file = "DGF",
+  open = interactive()
 )
 }
+\arguments{
+\item{df}{A data frame to document, or a path to a `.csv` file to read.}
+
+\item{vtypes, guess.dates, dd, keep.dd.cols, preview_dd, preview_dp}{Accepted but
+currently ignored; the features they were intended to steer (explicit type
+overrides, date/time detection, and data-dictionary merging) are not
+implemented yet. See `dev/TO-DO.md`.}
+
+\item{use.df.types}{Logical; keep the data frame's existing column types
+instead of re-reading the data with `readr` to re-infer them. Defaults to
+`FALSE`.}
+
+\item{guess.factors}{Logical; treat low-cardinality columns as factors.
+Defaults to `TRUE`.}
+
+\item{vname, vlabel, vdesc, vtype}{Optional character vectors of per-variable
+metadata (name, short label, long description, type), each the same length
+and order as the columns of `df`. Default to blank.}
+
+\item{vconvert}{Optional character vector of type-conversion function names
+(e.g. `"as_yyyy"`), one per column, applied to the data before profiling.}
+
+\item{vformat}{Optional character vector of display-formatting function names
+(e.g. `"dollarize"`), one per column, applied to previews and graphics.}
+
+\item{vname_alias, vscope, vloc}{Optional character vectors of per-variable
+alias, scope, and location-code metadata. Default to blank.}
+
+\item{dir}{Directory to write the DGF into. Created if it does not exist.
+Defaults to `"."`. Ignored when `file` is an absolute path.}
+
+\item{file}{Output path stem (without extension) for the written `.csv` and
+`.xlsx`. Defaults to `"DGF"`. Resolved relative to `dir` unless absolute.}
+
+\item{open}{Logical; open the new DGF in Excel once created. Defaults to
+[interactive()] — on at the console, off in scripts, tests, and CI.}
+}
+\value{
+The DGF as a data frame, one row per variable. Also writes
+  `<file>.csv` and `<file>.xlsx` as a side effect.
+}
 \description{
-some description text
+Builds a Data Governance File (DGF) from a dataset: one row per variable,
+carrying the metadata, summary statistics, and graphics data needed to
+render a Research Guide. Writes a `.csv` and an `.xlsx`, and returns the DGF
+data frame.
 }
 \details{
-some additional details
+Column types are inferred from the data (see `vtypes` / `use.df.types` /
+`guess.factors` to steer that), then each variable is profiled into the
+`rg_*` columns. The result is meant to be curated by hand - in Excel or via
+the `v*` arguments - and fed to [create_rg()].
+}
+\seealso{
+[create_rg()], [update_dgf()], [inspect_dgf()]
 }

@@ -7,7 +7,6 @@ format:
     toc-location: body
     toc-depth: 5
     toc-expand: true
-  pdf: default
 execute:
   keep-md: true
 params:
@@ -15,9 +14,10 @@ params:
 ---
 
 <!-- datagoodr research guide template.
+
      Customize without editing the package by editing:
        - DG.R          custom formatting/graphic functions & layout overrides
-       - datagoodr.css  the page grid, fonts, and colors
+       - datagoodr.css  the page grid, fonts, and colors 
      Render with:  quarto::quarto_render("research-guide.qmd") -->
 
 <br>
@@ -67,10 +67,10 @@ dgf <- readxl::read_excel(data_file)
 # 4. add new layout div tags to the end of this file 
 # 5. add new dfg.TYPE data frame and section to this file to run create_all_sections( dgf.TYPE )
 
-dgf.log <-  dgf[dgf$vtype_class == "logical", ]
-dgf.fact <-  dgf[dgf$vtype_class == "factor", ]
-dgf.chr <-  dgf[dgf$vtype_class == "character", ]
-dgf.num <-  dgf[dgf$vtype_class == "numeric", ]
+dgf.log  <-  dgf[ dgf$vtype_class == "logical",   ]
+dgf.fact <-  dgf[ dgf$vtype_class == "factor",    ]
+dgf.chr  <-  dgf[ dgf$vtype_class == "character", ]
+dgf.num  <-  dgf[ dgf$vtype_class == "numeric",   ]
 
 
 ```

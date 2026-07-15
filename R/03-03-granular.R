@@ -7,8 +7,20 @@
 # needed. Call them inside a `results = "asis"` chunk in a Quarto document.
 
 
-# internal: publish one variable's DGF row to the render context and return its
-# vtype_class.
+#' Publish one variable's DGF row to the render context (internal)
+#'
+#' The render functions read the current variable from a package-internal
+#' context env rather than taking it as an argument. This sets that context for
+#' a single variable, which is what lets the `dg_*()` helpers render one
+#' element without a prior [create_all_sections()] sweep.
+#'
+#' @param dgf A DGF data frame.
+#' @param vname The variable name (a value of `dgf$vname`).
+#'
+#' @return The variable's `vtype_class`, used by the callers to pick a
+#'   type-appropriate render function. Errors if `vname` is not in the DGF.
+#' @seealso [set_xx()], [get_xx()]
+#' @noRd
 set_dg_context <- function( dgf, vname ) {
   i <- match( vname, dgf$vname )
   if( is.na(i) )

@@ -10,7 +10,7 @@ create_section(VNAME = "EIN", all.layouts, L)
 \item{VNAME}{Character string, the name of the variable to create a section for.
 Defaults to `"EIN"`.}
 
-\item{all.layouts}{Output of \link{get_design()}.}
+\item{all.layouts}{Output of \link{get_design}.}
 
 \item{L}{A named list of variable-specific content. `L[[VNAME]]` should
 be the output of `dgf_to_list( dgf )` where `dgf` is the dgf as a data frame.}

@@ -77,7 +77,6 @@ is_factor <- function(        # --------------------
     { unique.n <- unique.p * length(x) }
   
   
-  # cat( paste0( "\n-----------------  ", deparse(substitute(x)), "\n\n" ) )
 
   cat( paste0( "Examining N cases: ", n, "\n" ) )
   cat( paste0( "Unique levels/values of x = ", length(unique(x)), "\n" ) )

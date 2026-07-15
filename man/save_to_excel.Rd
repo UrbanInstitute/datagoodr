@@ -4,7 +4,15 @@
 \alias{save_to_excel}
 \title{Saves DGF to excel}
 \usage{
-save_to_excel(df, filename = "DGF.xlsx")
+save_to_excel(df, filename = "DGF.xlsx", open = interactive())
+}
+\arguments{
+\item{df}{Data frame to write.}
+
+\item{filename}{Destination `.xlsx` path.}
+
+\item{open}{Logical; launch the saved file in Excel. Defaults to
+[interactive()], so it stays off in scripts, tests, and CI.}
 }
 \description{
 Write the DGF to excel.

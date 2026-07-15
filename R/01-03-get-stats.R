@@ -125,14 +125,20 @@ get_stats <- function(VNAME, df, VCLASS){
 
 ### Character ---------------------------
 
-# table of "Minimum", "Median",  "Mean", "Max", "Skew" for number of words in
-# each string and number of characters in each string
+#' Summary statistics for a character variable (internal)
+#'
+#' Free text has no meaningful numeric distribution, so this profiles the
+#' *shape* of the strings instead: how long they are, in characters and in
+#' words.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: minimum, median, mean, max and skew, reported in
+#'   parallel for character count and word count. Stored in the DGF's
+#'   `rg_stats` column and read back by [paste_stats_chr()].
+#' @noRd
 get_stats_chr <-  function(VNAME, df){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
-  #
-  # x <- dat[[VNAME]] #this should be the input data set
 
   x <- unlist(df[[VNAME]])
 
@@ -158,9 +164,6 @@ get_stats_chr <-  function(VNAME, df){
                                psych::skew(spaces)), 2))
 
   ## Testing histogram in table - isn't saving as JSON object properly - can add back in later
-  # tab <- rbind(tab, c("Histogram", "", ""))
-  # tab$CHARACTERS[6] <-  htmltools::HTML(kableExtra::spec_hist(n)$svg_text)
-  # tab$WORDS[6] <-  htmltools::HTML(kableExtra::spec_hist(spaces)$svg_text)
   #
   ## top-6 full strings by frequency (for the MOST COMMON table). Words are
   ## atomised for the word cloud, so the whole strings are tabulated here.
@@ -189,14 +192,21 @@ get_stats_chr <-  function(VNAME, df){
 
 ### Logical ------------------------
 
-#returns table with the frequencies of the two values (and any NA's)
-# could be combined with get_graphics_log to be more efficient
+#' Summary statistics for a logical variable (internal)
+#'
+#' Tabulates the frequency of each of the two values, counting `NA` as its own
+#' category so missingness is reported rather than dropped.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: a Value/Frequency table, stored in the DGF's
+#'   `rg_stats` column and read back by [paste_stats_log()].
+#'
+#' @details Duplicates the tabulation [get_graphics_log()] performs; the two
+#'   could share one pass over the column.
+#' @noRd
 get_stats_log <-  function(VNAME, df){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
-  #
-  # f <- dat[[VNAME]] #this should be the input data set
 
   f <- as.character(df[[VNAME]])
 
@@ -217,13 +227,19 @@ get_stats_log <-  function(VNAME, df){
 
 ### Factor ------------------------
 
-# table of 5 most common values and their associated counts
+#' Summary statistics for a factor variable (internal)
+#'
+#' Tabulates level frequencies in descending order, capped at the 50 most
+#' common, so a high-cardinality factor cannot flood the report.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: a Value/Frequency table, stored in the DGF's
+#'   `rg_stats` column. The render pairs it with the editable labels in
+#'   `dd_f_level` to build the level | frequency | meaning table.
+#' @noRd
 get_stats_fact <-  function(VNAME, df){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
-  #
-  # x <- dat[[VNAME]] #this should be the input data set
 
   x <- df[[VNAME]]
 
@@ -243,14 +259,18 @@ get_stats_fact <-  function(VNAME, df){
 
 
 ### Numeric ----------------------------
-# outputs table with min, q05, q25, q50, mean, q75, q95, max, and skewness
-
+#' Summary statistics for a numeric variable (internal)
+#'
+#' Builds the quantile and shape table shown in the report's STATS block.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: minimum, the 5th/25th/50th/75th/95th percentiles,
+#'   mean, maximum, skew and kurtosis. Stored in the DGF's `rg_stats` column
+#'   and read back by [paste_stats_num()] and [paste_quantiles()].
+#' @noRd
 get_stats_num <- function( VNAME, df ){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
-  #
-  # x <- dat[[VNAME]] #this should be the input data set
 
   x <- df[[VNAME]]
 
@@ -276,7 +296,6 @@ get_stats_num <- function( VNAME, df ){
   ret <- jsonify_df(tab)
   return(ret)
 
-  # return( df )
 }
 
 
@@ -286,6 +305,18 @@ get_stats_num <- function( VNAME, df ){
 #############################
 
 
+#' Serialize a named list of statistics to indented JSON (internal)
+#'
+#' @param df A named list or data frame of statistics.
+#'
+#' @return A JSON string, line-broken and indented so the cell stays legible
+#'   when a curator opens the DGF in Excel.
+#'
+#' @details The gsub chain is purely cosmetic whitespace - it only shapes how
+#'   the JSON reads in a spreadsheet cell. Use [jsonify_df()] for rectangular
+#'   tables, which get a different layout.
+#' @seealso [json_to_list()], which reads these back at render time.
+#' @noRd
 jsonify_stats <- function( df ) {
   jd <- jsonlite::toJSON( df )
   jd <- gsub( ",", ", \n    ", jd )
@@ -298,6 +329,17 @@ jsonify_stats <- function( df ) {
   return(jd)
 }
 
+#' Serialize a data frame to indented JSON (internal)
+#'
+#' @param df A data frame, typically a two-column value/frequency table.
+#'
+#' @return A JSON string with one record per line, so the cell stays legible
+#'   when a curator opens the DGF in Excel.
+#'
+#' @details The gsub chain is purely cosmetic whitespace. Use [jsonify_stats()]
+#'   for a flat named list of scalars.
+#' @seealso [json_to_df()], which reads these back at render time.
+#' @noRd
 jsonify_df <- function( df )
 {
   jd <- jsonlite::toJSON( df )
@@ -319,12 +361,23 @@ jsonify_df <- function( df )
 ##################################
 ### Get_example functions
 ###################################
-#not needed for logical or factor
-
+#' Example values for a variable's preview block (internal)
+#'
+#' Collects the variable's most frequent values into one delimited block for
+#' the report's PREVIEW section.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled (already display-formatted, so the
+#'   preview shows values as a reader will see them).
+#'
+#' @return A single `" ;; "`-delimited string, stored in the DGF's `rg_preview`
+#'   column and read back by [paste_preview_num()] / [paste_preview_chr()].
+#'
+#' @details Values are truncated to 48 characters each and the block to 400,
+#'   which is what keeps a long free-text field from overflowing its cell.
+#'   Not used for logical or factor variables - those show a level table.
+#' @noRd
 get_examples <- function(VNAME, df){
-
-  # VNAME <- xx[VNAME]
-  # # for testing VNAME <- all.vars[1]
 
   x <- df[[VNAME]] #this should be the input data set
 

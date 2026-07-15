@@ -1,13 +1,8 @@
 # SIMPLIFY WITH DATA.TABLE PACKAGE
 
-# nm1 <- c("X1", "X2", "X3")
-# nm2 <- c("Y1", "Y2", "Y3")
-# d <- data.table::setnames( d, old=nm1, new=nm2, skip_absent = TRUE )
 
 
 #
-# write.csv( d2, "DEMO-DATA-FULL.csv", row.names=F, na="" )
-# write.csv( d3, "DEMO-DATA-SMALL.csv", row.names=F, na="" )
 
 #' Split a delimited alias string into unique names
 #'
@@ -32,7 +27,6 @@ parse_nm <- function(x) {
   return(x)
 }
 
-# parse_nm( x= "name1 ;; name2 " )
 
 
 
@@ -83,11 +77,7 @@ replace_name <- function( nm, x, y ) {
 
 }
 
-# nm <- c( "var1", "var2", "var3" )  # df names
-# x  <- c( "var4,", "var5", "var2" ) # aliases
-# y  <- c( "VARx" )                  # replacement name
 #
-# replace_name( nm, x, y )
 
 
 

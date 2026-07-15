@@ -13,7 +13,7 @@ first_n(x, n = 5)
 }
 \value{
 A formatted character string containing up to the first N unique values from `x`,
-separated by " ;; \n". If `x` is numeric, values are rounded to three decimal places.
+separated by `" ;; \\n"`. If `x` is numeric, values are rounded to three decimal places.
 If `x` contains factors or dates, they are converted to character strings.
 }
 \description{

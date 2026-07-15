@@ -14,6 +14,24 @@
 NULL
 
 
+#' Is a path already anchored? (internal)
+#'
+#' @param path A character path.
+#'
+#' @return `TRUE` when `path` is absolute and so should not be resolved against
+#'   a `dir` argument.
+#'
+#' @details Covers POSIX (`/x`), home (`~/x`), Windows drives (`C:/x`) and UNC
+#'   (`\\\\server`). [tempfile()] returns an absolute path, so callers passing
+#'   one - the test fixtures and [update_dgf()] - must not have it rewritten
+#'   relative to `dir`.
+#' @seealso [create_dgf()], which uses this to decide whether `dir` applies.
+#' @noRd
+is_absolute_path <- function( path ) {
+  grepl( "^(~|/|\\\\|[A-Za-z]:)", path )
+}
+
+
 #' Load DGF from DGF Excel Sheet
 #'
 #' This function reads DGF from an Excel file and returns the contents of the "DGF" sheet as a data frame.
@@ -87,7 +105,7 @@ dollarize <- function(x)
 #' @param n An integer specifying the number of unique values to return. Defaults to 5.
 #'
 #' @return A formatted character string containing up to the first N unique values from `x`,
-#' separated by " ;; \n". If `x` is numeric, values are rounded to three decimal places.
+#' separated by `" ;; \\n"`. If `x` is numeric, values are rounded to three decimal places.
 #' If `x` contains factors or dates, they are converted to character strings.
 #'
 #' @examples
@@ -95,7 +113,6 @@ dollarize <- function(x)
 #' first_n(c(1.234567, 2.345678, 3.456789), 2)
 #' first_n(as.Date(c("2021-01-01", "2021-02-01", "2021-03-01")), 2)
 #'
-#' @export
 #' @seealso
 #'  \code{\link[stringr]{str_trunc}}
 #' @rdname first_n
@@ -162,7 +179,7 @@ jsonify_f <- function(f)
 #' Return a factor's levels as a single delimited string
 #'
 #' Collapses the levels of a factor into one character string, separated by
-#' `" ;; \n"`. If the factor has more than 50 levels, only the first 50 are
+#' `" ;; \\n"`. If the factor has more than 50 levels, only the first 50 are
 #' used and a warning is issued.
 #'
 #' @param f A factor (or a vector coercible to a factor).

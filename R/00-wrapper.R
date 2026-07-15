@@ -132,8 +132,6 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
 
   # create list of paths to be used.
-  # for testing purposes path.raw.data <- paste0(old.wd, "/data-dev/DEMO-DATA-SMALL.csv")
-  # path.raw.data <- '/Users/oliviabeck/Box Sync/datagoodr/data-dev/DEMO-DATA-SMALL.csv'
   paths <- list(
     wd = wd,
     project = paste0(wd, "/", folder.name),
@@ -146,14 +144,6 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
   paths$dgf <- paste0( "DGF/")
   paths$research.guide <- paste0( "research-guide/")
   paths$custom.funcs <- paste0("custom.funcs/")
-
-  # paths$data.raw <- paste0(paths$project, "/data-raw/")
-  # paths$data.processed <- paste0(paths$project, "/data-processed/")
-  # paths$data.final <- paste0(paths$project, "/data-final/")
-  # paths$dgf <- paste0(paths$project, "/DGF/")
-  # paths$research.guide <- paste0(paths$project, "/research-guide/")
-  # paths$custom.funcs <- paste0(paths$project, "custom.funcs/")
-
 
   # move working directory to project directory
 
@@ -308,41 +298,9 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
 
-  ## Manual updates to the dgf? - not operational right now, but this is what it might look like
-  # mess <- "Do you want to update the dgf manually? [y/n]"
-  # log_message(paste(mess, collapse = "\n"), log.file, FALSE)
-  # dgf.manual <- readline(mess)
-  # dgf.manual <- tolower(dgf.manual)
-  # log_message(paste(dgf.manual, collapse = "\n"), log.file, FALSE)
-  #
-  #
-  # while(!(dgf.manual %in% c("y", "n", "yes", "no"))){
-  #   mess = "Invalid input. Do you want to update the dgf manually? [y/n]"
-  #   log_message(paste(mess, collapse = "\n"), log.file, FALSE)
-  #   dgf.manual <- readline(mess)
-  #   dgf.manual <- tolower(dgf.manual)
-  #   log_message(paste(dgf.manual, collapse = "\n"), log.file, FALSE)
-  # }
-  # if(dgf.manual %in% c("y", "yes")){
-  #   mess = paste("Save updated DGF in DGF/ subdirectory.",
-  #                "Remember to write your changes in a change log.")
-  #   log_message(paste(mess, collapse = "\n"), log.file, TRUE)
-  #   mess = "Type in the name of the file in the DGF/ subdirectory that contains the updated DGF you wish to use to create the RG:"
-  #   dgf.use.name <- readline(mess)
-  #   paths$dgf.use <- paste0(paths$dgf, "/", dgf.use.name, collapse = "")
-  #
-  #
-  #   while(!file.exists(paths$dgf.use)){
-  #     mess <- paste("The file", dgf.use.name, "does not exist in the DGF/ subdirectory. \n Type in the name of the file in the DGF/ subdirectory that contains the updated DGF you wish to use to create the RG:")
-  #     log_message(paste(mess, collapse = "\n"), log.file, FALSE)
-  #     dgf.use.name <- readline(mess)
-  #     log_message(paste(dgf.use.name, collapse = "\n"), log.file, FALSE)
-  #     paths$dgf.use <- paste0(paths$dgf, dgf.use.name, collapse = "")
-  #     }
-  # }else{
-  #   paths$dgf.use <- paths$dgf.file.xlsx
-  # }
-
+  ## The DGF is used as generated. Prompting the user to hand-edit it in Excel
+  ## first and nominate the edited file would need an interactive readline loop,
+  ## which cannot run under the sink()/capture.output() logging used here.
   paths$dgf.use <- paths$dgf.file.xlsx
   mess <- paste("The file that contains the DGF we will use to make the RG in the next step is ",
                 paths$dgf.use)
@@ -381,44 +339,34 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
     "==========================================="  )
   log_message(mess, log.file, TRUE)
 
-  mess <- paste("Research guide template is saved in the datagoodr R package at datagoodr/inst/qmd-templates.qmd.",
+  rg.template <- system.file("templates", "RG.qmd", package = "datagoodr")
+  if( ! nzchar(rg.template) )
+  { stop("Could not locate the RG template in the installed datagoodr package.",
+         call. = FALSE) }
+
+  mess <- paste("Research guide template is saved in the datagoodr R package at datagoodr/inst/templates/RG.qmd.",
                 "That file on your system is located at",
-                system.file("qmd-templates", "RG.qmd", package = "datagoodr"))
+                rg.template)
   log_message(mess, log.file, TRUE)
 
-  ## Copy rg template to research-guide subdirectory
-  file.copy(system.file("qmd-templates", "RG.qmd", package = "datagoodr"),
-            paths$research.guide)
+  ## Copy the template into research-guide/ under the report's own name: quarto
+  ## names its output after the input file, so this is what makes `rg.name`
+  ## reach the rendered .html.
+  quarto.name <- if( is.null(rg.name) || rg.name == "research-guide" )
+                 { paste0( "research-guide-", format(Sys.time(), "%Y-%m-%d") ) }
+                 else
+                 { rg.name }
+
+  file.copy(rg.template, paths$research.guide)
   file.rename(paste0(paths$research.guide, "RG.qmd"),
-              paste0(paths$research.guide, "RG-template.qmd"))
-  paths$research.guide.template <- paste0(paths$research.guide, "RG-template.qmd")
-
-  #make quarto document name
-  if(is.null(rg.name) | rg.name == "research-guide"){
-    quarto.name <- paste0("research-guide-",  format(Sys.time(), "%Y-%m-%d"))
-  }else{
-    quarto.name <- rg.name
-  }
-
-  ## Replace all instances of "file_name_placeholder" in YAML to correct file name
-  quarto.txt <- base::readLines( paste0(paths$research.guide, "RG-template.qmd"))
-  good.txt <- gsub("file_name_placeholder",
-                   paste0('"', quarto.name, '"'),
-                   quarto.txt,
-                   fixed = TRUE)
-  base::writeLines(good.txt,  paste0(paths$research.guide, "RG-template.qmd"))
-
-
-
+              paste0(paths$research.guide, quarto.name, ".qmd"))
+  paths$research.guide.template <- paste0(paths$research.guide, quarto.name, ".qmd")
 
   mess <- paste("Research guide template sucessfully saved to research-guide/ subdirectory.")
   log_message(mess, log.file, TRUE)
 
   mess <-  capture.output(fs::dir_tree(location.project))
   log_message(mess, log.file, TRUE)
-
-
-  paths$research.guide.render <- paste0(paths$research.guide, rg.name)
 
 
   mess <- "Rendering RG in quarto ............"
@@ -476,14 +424,6 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
 
 
-  # cat(paste(mess.quarto, "\n"))
-  #
-  # file.types <- c(".md", ".html", ".pdf")
-  # for(ft in file.types){
-  #   file.rename(paste0(paths$project, "/", paths$research.guide, "RG-template", ft),
-  #               paste0(paths$project,  "/", paths$research.guide, "research-guide-", format(Sys.time(), "%Y-%m-%d"),ft))
-  # }
-
   mess <- paste(
     "Research Guide sucessfully created in research-guide/ subdirectory. \n",
     "Directory stucture at the end of Step 3")
@@ -496,28 +436,11 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
 
 
-  # #### Step 4: Refresh the DGF ----------------
-  #
-  # mess <- paste(
-  #   "Step 4: Refresh the DGF",
-  #   "When the data set is updated, this step is meant to compare the old data set to the new one. If anything changed, the DGF should also updated. This updating is designed to be done through the rg_hash column of the DGF. The hashing allows us to check if a variable needs to up updated in the DGF without actually verifying each individual entry.",
-  #   "In the new data set for each variable, generate the hash value. If the new hash value matches the one in the rg_hash column of the old DGF, no need to update that variable, great! If the new hash value does not match the  one in the rg_hash column of the old DGF, then that variable's rg_[preview/properties/stats/graphics/hash] need to be updated.",
-  #   "This step is not currently operational so we skip it for now....",
-  #   collapse = " \n"
-  # )
-  # log_message(mess, log.file, TRUE)
-  #
-  #
-  #
-  # ## Step 5: Customize -----------------
-  #
-  # mess <- paste(
-  #   "Step 5: Customize the Research Guide",
-  #   "The R/05*.R functions are designed for customization of the RG. This could be templates,  div arrangements, fonts, colors, or 'polishing' functions for the variables (such as `dollarize` for monetary values).",
-  #   "This step is not currently operational so we skip it for now....",
-  #   collapse = " \n"
-  # )
-  # log_message(mess, log.file, TRUE)
+  ## Steps 4 (refresh) and 5 (customize) are deliberately not part of this
+  ## one-shot wrapper: they are iterative and now have their own entry points -
+  ## update_dgf() re-derives a DGF against new data via the rg_hash column, and
+  ## the R/05-build-functions.R API (create_rg/use_datagoodr_template/DG.R)
+  ## covers customization.
 
 
   ## Mission complete ---------------

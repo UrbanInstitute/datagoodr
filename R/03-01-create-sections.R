@@ -164,7 +164,6 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
 }
 
 
-#  get_design() |> knitr::kable()
 #
 #  |TYPE      |DIV   |VNAME    |LABEL       |FUNCTION         |
 #  |:---------|:-----|:--------|:-----------|:----------------|
@@ -276,7 +275,7 @@ create_div <- function( div.num="div2", all.layouts ) {
 #'
 #' @param VNAME Character string, the name of the variable to create a section for.
 #'   Defaults to `"EIN"`.
-#' @param all.layouts Output of \link{get_design()}.
+#' @param all.layouts Output of \link{get_design}.
 #' @param L A named list of variable-specific content. `L[[VNAME]]` should
 #'   be the output of `dgf_to_list( dgf )` where `dgf` is the dgf as a data frame.
 #'

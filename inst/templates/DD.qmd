@@ -7,7 +7,6 @@ format:
     toc-location: body
     toc-depth: 5
     toc-expand: true
-  pdf: default
 execute:
   keep-md: true
 params:

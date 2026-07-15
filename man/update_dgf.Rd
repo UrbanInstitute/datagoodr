@@ -4,7 +4,7 @@
 \alias{update_dgf}
 \title{Refresh a DGF against updated data (Step 4)}
 \usage{
-update_dgf(dgf, df, file = "DGF", verbose = TRUE)
+update_dgf(dgf, df, file = "DGF", verbose = TRUE, open = interactive())
 }
 \arguments{
 \item{dgf}{An existing DGF: a data frame, or a path to a DGF `.xlsx` file.}
@@ -16,6 +16,9 @@ update_dgf(dgf, df, file = "DGF", verbose = TRUE)
 
 \item{verbose}{Logical; if `TRUE` (default) a summary of what changed is
 printed.}
+
+\item{open}{Logical; open the refreshed DGF in Excel once written. Defaults
+to [interactive()] — on at the console, off in scripts, tests, and CI.}
 }
 \value{
 Invisibly, the updated DGF data frame. It carries a `"status"`
