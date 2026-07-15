@@ -103,3 +103,15 @@ create_all_sections( dgf.chr )
 # copy overrides the packaged one). Edit that file to restyle the report.
 cat( "<style>\n", datagoodr_css(), "\n</style>\n" )
 ```
+
+```{r datagoodr-record, echo=FALSE, results="asis"}
+# Provenance for this render - which DGF produced this file, its content hash,
+# package/R/quarto versions, and when. Written as an HTML comment, so it travels
+# with the report without appearing in it; read it back with
+# datagoodr::read_render_record("research-guide.html").
+#
+#   visible  = TRUE  also prints it as a table in the report
+#   identify = TRUE  adds your username and absolute paths. Off by default:
+#                    this file is meant to be shared.
+render_record( dgf, params$dgf_file, params$data_file )
+```
