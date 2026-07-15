@@ -17,9 +17,10 @@
 #' @details
 #' The function is an internal function of `create_div` in R/03-01-create-sections.R.
 #'
-#' @import treemap
 #' @export
 paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
+
+  need_pkg( "treemap" )
 
   info <- get_xx()[[VNAME]]
   v <- json_to_df(info)

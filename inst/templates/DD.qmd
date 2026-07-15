@@ -25,27 +25,10 @@ params:
 
 <br><br>
 
-```{r setup, warning=F, message=F, include=F}
-library( htmltools )
-library( dplyr )
-library( purrr )
-library( pointblank )
-library( knitr )
-library( gt )
-library( kableExtra )
-library( psych )
-library( data.table )
-library( treemap )
-library( plotly )
-library( wordcloud )
-library( wordcloud2 )
-library( tm )
-library( stringr )
-```
+```{r setup, echo=F, message=FALSE, warning=FALSE, include=FALSE}
 
-```{r, echo=F, message=FALSE, include=FALSE}
-
-# All report-building functions come from the installed package.
+# datagoodr is the only package this report needs to attach. Everything it
+# renders is a datagoodr function, and those load what they need themselves.
 library( datagoodr )
 
 # Source the project customization file (custom functions / layout overrides)

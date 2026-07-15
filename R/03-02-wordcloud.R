@@ -20,6 +20,8 @@
 #' @export
 v_to_wordcloud <- function( VNAME, LABEL = "WORD CLOUD" ) {
 
+  need_pkg( "ggplot2", "ggwordcloud", "scales", "tm", "wordcloud" )
+
   info <- get_xx()[[VNAME]]
   v <- json_to_df(info)
   v$ww   <- as.character( v$ww )
@@ -166,6 +168,9 @@ get_scale_f <- function( df ) {
 #' @keywords internal
 #' @noRd
 simplify_char <- function(v) {
+
+  # also reached from get_graphics_chr() at DGF-build time, not just at render
+  need_pkg( "tm" )
 
   ww <- strsplit( v, " " ) |> unlist()
   stop.words <- tm::stopwords("english")

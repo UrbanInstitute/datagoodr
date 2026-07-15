@@ -140,6 +140,8 @@ get_stats <- function(VNAME, df, VCLASS){
 #' @noRd
 get_stats_chr <-  function(VNAME, df){
 
+  need_pkg( "psych", "htmltools", "kableExtra" )
+
   x <- unlist(df[[VNAME]])
 
   #number of characters
@@ -271,6 +273,8 @@ get_stats_fact <-  function(VNAME, df){
 #'   and read back by [paste_stats_num()] and [paste_quantiles()].
 #' @noRd
 get_stats_num <- function( VNAME, df ){
+
+  need_pkg( "psych" )
 
   x <- df[[VNAME]]
 

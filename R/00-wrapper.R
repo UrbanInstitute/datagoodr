@@ -76,6 +76,9 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
                       create.dgf.params = NULL,
                       rg.name = "research-guide"){
 
+  # fs::dir_tree is used throughout this wrapper's logging
+  need_pkg( "fs" )
+
   old.wd <- getwd()
   on.exit(setwd(old.wd), add = TRUE)
 

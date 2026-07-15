@@ -26,8 +26,6 @@
 #' @seealso \code{\link[DescTools]{IsDate}}, \code{\link[hablar]{retype}}
 #' @rdname is_factor
 #' @export
-#' @importFrom DescTools IsDate
-#' @importFrom hablar retype
 is_factor <- function(        # --------------------
 
     x, 
@@ -39,6 +37,7 @@ is_factor <- function(        # --------------------
     
 {   # -----------------------------------------------
 
+  need_pkg( "DescTools", "hablar" )
 
   # exclude NA, NaN, and Inf
 

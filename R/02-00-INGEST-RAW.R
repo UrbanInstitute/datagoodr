@@ -52,8 +52,9 @@ ingest_raw <- function( df, path=NULL ) {
 #' @seealso \code{\link[crosswalkr]{renamefrom}}
 #' @rdname apply_name_aliases
 #' @export
-#' @importFrom crosswalkr renamefrom
 apply_name_aliases <- function( df, dgf ) {
+
+  need_pkg( "crosswalkr" )
 
   cw <-
     dgf %>%

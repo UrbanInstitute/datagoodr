@@ -145,6 +145,8 @@ get_graphics_fact <- function(VNAME, df ){
 #' @noRd
 get_graphics_num <- function(VNAME, df ){
 
+  need_pkg( "psych" )
+
   x <- df[[VNAME]] #this should be the input data set
 
   # these values should be saved in the dgf for the quantiles table

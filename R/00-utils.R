@@ -14,6 +14,54 @@
 NULL
 
 
+#' Require Suggested packages, or fail with instructions (internal)
+#'
+#' datagoodr keeps only its core pipeline in `Imports`; packages used by one
+#' stage (graphics, type-guessing, the wrapper's logging) are `Suggests`, so a
+#' user who only builds DGFs does not install a plotting stack. This is the
+#' guard the functions that need them call first.
+#'
+#' @param ... Package names, as strings.
+#' @param fn Calling function name for the message. Defaults to detecting it
+#'   from the call stack.
+#'
+#' @return Invisibly `TRUE`, or throws with an actionable install command.
+#'
+#' @details Reports *all* missing packages at once, so a user installs them in
+#'   one round trip rather than discovering them one failure at a time.
+#' @noRd
+need_pkg <- function( ..., fn = NULL ) {
+
+  pkgs <- c(...)
+  have <- vapply( pkgs, requireNamespace, logical(1), quietly = TRUE )
+  if( all(have) ) return( invisible(TRUE) )
+
+  missing <- pkgs[ !have ]
+
+  if( is.null(fn) ) {
+    caller <- sys.call( -1 )
+    fn <- if( is.null(caller) ) "This function" else
+          paste0( "`", deparse(caller[[1]]), "()`" )
+  } else {
+    fn <- paste0( "`", fn, "()`" )
+  }
+
+  install <- if( length(missing) == 1 )
+             { paste0( 'install.packages("', missing, '")' ) }
+             else
+             { paste0( 'install.packages(c(',
+                       paste0( '"', missing, '"', collapse = ", " ), '))' ) }
+
+  stop( fn, " needs ",
+        if( length(missing) == 1 ) "the " else "these packages, which are not installed: ",
+        if( length(missing) == 1 ) paste0( missing, " package, which is not installed." )
+        else paste( missing, collapse = ", " ),
+        "\n  Install ", if( length(missing) == 1 ) "it" else "them", " with:\n    ",
+        install,
+        call. = FALSE )
+}
+
+
 #' Is a path already anchored? (internal)
 #'
 #' @param path A character path.

@@ -15,41 +15,36 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr,
-    magrittr,
-    knitr,
-    DescTools,
-    crosswalkr,
-    data.table,
-    hablar,
-    htmltools,
     jsonlite,
-    kableExtra,
+    knitr,
+    magrittr,
     openxlsx,
     purrr,
-    psych,
     quarto,
     readr,
     readxl,
     rlang,
+    stringr
+Suggests:
+    DescTools,
+    crosswalkr,
+    fs,
+    ggplot2,
+    ggwordcloud,
+    hablar,
+    htmltools,
+    kableExtra,
+    psych,
     scales,
-    stringr,
     tm,
+    tools,
     treemap,
     wordcloud,
-    ggplot2,
-    ggwordcloud
-Suggests:
-    fs,
-    tools,
-    gt,
-    plotly,
-    pointblank,
-    wordcloud2,
     testthat (>= 3.0.0),
     spelling
 VignetteBuilder: knitr
 RoxygenNote: 7.3.3
 Language: en-US
 Depends:
-    R (>= 2.10)
+    R (>= 4.1)
 Config/testthat/edition: 3
