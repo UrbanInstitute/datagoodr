@@ -5,21 +5,33 @@
 \title{Create a data dictionary project from a DGF}
 \usage{
 create_dd(
-  dgf,
+  dgf = "DGF.xlsx",
+  data = NULL,
   dir = ".",
   file = "data-dictionary.qmd",
+  embed_css = FALSE,
   render = FALSE,
   overwrite = FALSE
 )
 }
 \arguments{
 \item{dgf}{Path to a DGF `.xlsx` file, or a DGF data frame (which is written
-to `DGF.xlsx` in `dir`).}
+to `DGF.xlsx` in `dir`). Defaults to `"DGF.xlsx"`.}
+
+\item{data}{Optional path to the raw dataset. Defaults to `NULL`. The report
+renders from the DGF alone, so this is only needed when a custom chunk or
+`DG.R` wants the underlying values; when supplied it is read into
+`raw.data` in the document.}
 
 \item{dir}{Directory to scaffold into. Defaults to the current directory.}
 
 \item{file}{Name for the report document. Defaults to
 `"data-dictionary.qmd"`.}
+
+\item{embed_css}{Logical; write the stylesheet into the document instead of
+calling [datagoodr_css()] at render. Defaults to `FALSE`. Use it to edit
+the CSS in place, accepting that an embedded copy stops tracking the
+packaged stylesheet.}
 
 \item{render}{Logical; render the document immediately. Defaults to `FALSE`
 (scaffold only, so the user can annotate it first).}
@@ -35,5 +47,5 @@ Scaffolds a data-dictionary Quarto document (descriptors only — no data
 profiles) pointed at a DGF, plus a starter `DG.R`.
 }
 \seealso{
-[create_rg()], [use_datagoodr_template()]
+[create_rg()], [update_rg()], [use_datagoodr_template()]
 }

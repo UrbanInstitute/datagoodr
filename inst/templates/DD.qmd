@@ -11,14 +11,22 @@ execute:
   keep-md: true
 params:
   dgf_file: "DGF.xlsx"
+  data_file: null
 ---
 
 <!-- datagoodr data dictionary template.
      Same layouts as the research guide, but rendered with style = "dd" so only
      the descriptor sections (label, type, scope, length, description, levels,
      location) appear - no data profiles.
-     Customize via DG.R and the <style> block below.
-     Render with:  quarto::quarto_render("data-dictionary.qmd") -->
+
+     Customize without editing the package:
+       - DG.R           custom functions & layout overrides
+       - datagoodr.css  the page grid, fonts, and colors
+     See vignette("customizing", package = "datagoodr").
+
+     Render from the console with:  quarto::quarto_render("data-dictionary.qmd")
+     or re-render against a different DGF without editing this file:
+       datagoodr::update_rg("data-dictionary.qmd", DGF = "DGF-V2.xlsx") -->
 
 <br>
 
@@ -36,9 +44,15 @@ library( datagoodr )
 if( file.exists("DG.R") ) source("DG.R")
 
 
-# Import the DGF (rules file). The path comes from the YAML `dgf_file` param.
-data_file <- params$dgf_file
-dgf <- readxl::read_excel(data_file)
+# The DGF drives the whole report. The path comes from the `dgf_file` param, so
+# this document renders on its own - and update_rg() can point it at a
+# different DGF at render time without editing this file.
+dgf <- readxl::read_excel( params$dgf_file )
+
+# Optional raw dataset; see the research guide template. Not used by the
+# descriptor-only layouts, but available to DG.R and custom chunks.
+raw.data <- if( is.null( params$data_file ) ) NULL else
+            suppressMessages( readr::read_csv( params$data_file ) )
 
 
 # Each variable type needs its own section because each plot type

@@ -24,7 +24,8 @@ Imports:
     readr,
     readxl,
     rlang,
-    stringr
+    stringr,
+    yaml
 Suggests:
     DescTools,
     crosswalkr,

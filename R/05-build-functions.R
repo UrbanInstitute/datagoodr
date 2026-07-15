@@ -100,7 +100,8 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
 #' @seealso [use_datagoodr_template()], which copies the template.
 #' @noRd
-build_report <- function( dgf, dir, file, flavor, render, overwrite ) {
+build_report <- function( dgf, data, dir, file, flavor, embed_css,
+                          render, overwrite ) {
 
   # allow a DGF data frame: write it out next to the report
   if( is.data.frame(dgf) ) {
@@ -109,6 +110,10 @@ build_report <- function( dgf, dir, file, flavor, render, overwrite ) {
     save_to_excel( dgf, filename = dgf.path, open = FALSE )
     dgf <- "DGF.xlsx"
   }
+
+  if( ! is.character(dgf) || length(dgf) != 1 )
+  { stop( "`dgf` must be a DGF data frame or a path to a DGF .xlsx file.",
+          call. = FALSE ) }
 
   dest <- use_datagoodr_template( dir = dir, flavor = flavor,
                                   dg = TRUE, overwrite = overwrite )
@@ -119,17 +124,86 @@ build_report <- function( dgf, dir, file, flavor, render, overwrite ) {
     dest <- new.dest
   }
 
-  # point the template at the supplied DGF path
-  txt <- readLines( dest, warn = FALSE )
-  txt <- sub( '(\\s*dgf_file:\\s*).*', paste0( '\\1"', dgf, '"' ), txt )
-  writeLines( txt, dest )
+  # Bake the paths into the scaffolded document so it renders standalone from
+  # RStudio/Positron. This is the only place the qmd is written: update_rg()
+  # overrides at render time instead, so it can never clobber a user's edits.
+  # set_qmd_param() verifies each edit landed rather than trusting the regex.
+  set_qmd_param( dest, "dgf_file", dgf )
+  if( ! is.null(data) ) set_qmd_param( dest, "data_file", data )
 
-  if( render )
-  { quarto::quarto_render( dest, execute_params = list( dgf_file = dgf ) ) }
+  if( embed_css ) embed_css_block( dest )
+
+  # No execute_params here: the document's own YAML is the single source of
+  # truth for its DGF. Passing it twice is how the two drifted apart before.
+  if( render ) quarto::quarto_render( dest )
 
   message( "Created ", dest,
            if( render ) " (rendered)" else " (edit, then render)" )
   invisible( dest )
+}
+
+
+#' Replace the runtime stylesheet chunk with the stylesheet itself (internal)
+#'
+#' @param path Path to a scaffolded report qmd.
+#'
+#' @return Invisibly, `path`.
+#'
+#' @details By default the template calls [datagoodr_css()] at render, so the
+#'   report tracks the package's stylesheet. Embedding writes the CSS into the
+#'   document as a literal `css` chunk instead, so a power user can edit the
+#'   rules in place. The trade is deliberate: an embedded copy stops tracking
+#'   package updates. Distinct from `embed-resources: true`, which inlines CSS
+#'   into the rendered *HTML*; this makes the *qmd* self-contained.
+#'
+#'   Verifies both ends: errors if the chunk anchor is missing, and again if the
+#'   runtime call survives the rewrite.
+#' @noRd
+embed_css_block <- function( path ) {
+
+  css <- datagoodr_css()
+  if( ! nzchar(css) )
+  { stop( "Cannot embed the stylesheet: datagoodr_css() found no CSS.",
+          call. = FALSE ) }
+
+  txt   <- readLines( path, warn = FALSE )
+  start <- grep( "^```\\{r[ ,].*datagoodr-style", txt )
+
+  if( length(start) != 1 )
+  { stop( "Expected exactly one `datagoodr-style` chunk in ", basename(path),
+          ", found ", length(start), ". The template has changed; embed_css ",
+          "needs updating.", call. = FALSE ) }
+
+  fences <- grep( "^```\\s*$", txt )
+  end    <- fences[ fences > start ][1]
+  if( is.na(end) )
+  { stop( "The `datagoodr-style` chunk in ", basename(path),
+          " is never closed.", call. = FALSE ) }
+
+  # `echo=FALSE` in the chunk header rather than a `#| echo: false` option
+  # line: inside a css chunk the option comment must be CSS (`/*| ... */`), and
+  # quarto rejects the R form outright.
+  block <- c( "```{css echo=FALSE}",
+              "/* Embedded copy of datagoodr.css - edit freely. Because it is",
+              "   embedded, it no longer tracks the packaged stylesheet. */",
+              strsplit( css, "\n", fixed = TRUE )[[1]],
+              "```" )
+
+  txt <- append( txt[ -(start:end) ], block, after = start - 1 )
+  writeLines( txt, path )
+
+  # Verify against the chunk, not the text: datagoodr.css's own header comment
+  # mentions datagoodr_css(), so grepping the whole file for that string finds
+  # the embedded comment and not a live call.
+  check <- readLines( path, warn = FALSE )
+  if( any( grepl( "^```\\{r[ ,].*datagoodr-style", check ) ) )
+  { stop( "Embedded the stylesheet into ", basename(path),
+          " but the runtime `datagoodr-style` chunk survived.", call. = FALSE ) }
+  if( ! any( grepl( "^```\\{css[ }]", check ) ) )
+  { stop( "Rewrote ", basename(path), " but no css chunk was written.",
+          call. = FALSE ) }
+
+  invisible( path )
 }
 
 
@@ -139,21 +213,36 @@ build_report <- function( dgf, dir, file, flavor, render, overwrite ) {
 #' DGF, plus a starter `DG.R`, ready to customize and render.
 #'
 #' @param dgf Path to a DGF `.xlsx` file, or a DGF data frame (which is written
-#'   to `DGF.xlsx` in `dir`).
+#'   to `DGF.xlsx` in `dir`). Defaults to `"DGF.xlsx"`.
+#' @param data Optional path to the raw dataset. Defaults to `NULL`. The report
+#'   renders from the DGF alone, so this is only needed when a custom chunk or
+#'   `DG.R` wants the underlying values; when supplied it is read into
+#'   `raw.data` in the document.
 #' @param dir Directory to scaffold into. Defaults to the current directory.
 #' @param file Name for the report document. Defaults to
 #'   `"research-guide.qmd"`.
+#' @param embed_css Logical; write the stylesheet into the document instead of
+#'   calling [datagoodr_css()] at render. Defaults to `FALSE`. Use it to edit
+#'   the CSS in place, accepting that an embedded copy stops tracking the
+#'   packaged stylesheet.
 #' @param render Logical; render the document immediately. Defaults to `FALSE`
 #'   (scaffold only, so the user can annotate it first).
 #' @param overwrite Logical; overwrite an existing document. Defaults to
 #'   `FALSE`.
 #'
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
-#' @seealso [create_dd()], [use_datagoodr_template()]
+#'
+#' @details The DGF path is baked into the document's YAML, so it renders on its
+#'   own from RStudio/Positron. To re-render against a different DGF later,
+#'   use [update_rg()] rather than re-scaffolding: it overrides at render time
+#'   and leaves your edits to the document intact.
+#'
+#' @seealso [create_dd()], [update_rg()], [use_datagoodr_template()]
 #' @export
-create_rg <- function( dgf, dir = ".", file = "research-guide.qmd",
+create_rg <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
+                       file = "research-guide.qmd", embed_css = FALSE,
                        render = FALSE, overwrite = FALSE ) {
-  build_report( dgf, dir, file, flavor = "rg",
+  build_report( dgf, data, dir, file, flavor = "rg", embed_css = embed_css,
                 render = render, overwrite = overwrite )
 }
 
@@ -168,10 +257,11 @@ create_rg <- function( dgf, dir = ".", file = "research-guide.qmd",
 #'   `"data-dictionary.qmd"`.
 #'
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
-#' @seealso [create_rg()], [use_datagoodr_template()]
+#' @seealso [create_rg()], [update_rg()], [use_datagoodr_template()]
 #' @export
-create_dd <- function( dgf, dir = ".", file = "data-dictionary.qmd",
+create_dd <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
+                       file = "data-dictionary.qmd", embed_css = FALSE,
                        render = FALSE, overwrite = FALSE ) {
-  build_report( dgf, dir, file, flavor = "dd",
+  build_report( dgf, data, dir, file, flavor = "dd", embed_css = embed_css,
                 render = render, overwrite = overwrite )
 }

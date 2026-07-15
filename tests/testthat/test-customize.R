@@ -64,7 +64,9 @@ test_that("create_rg / create_dd scaffold a report pointed at the DGF", {
 
   rg <- suppressMessages(create_rg("myfile.xlsx", dir = d))
   expect_equal(basename(rg), "research-guide.qmd")
-  expect_true(any(grepl('dgf_file:\\s*"myfile.xlsx"', readLines(rg))))
+  # assert the declared value, not the quote style: the scaffolder writes
+  # single-quoted YAML so Windows paths survive without escaping
+  expect_equal(datagoodr:::read_qmd_params(rg)$dgf_file, "myfile.xlsx")
 
   dd <- suppressMessages(create_dd("myfile.xlsx", dir = d))
   expect_equal(basename(dd), "data-dictionary.qmd")

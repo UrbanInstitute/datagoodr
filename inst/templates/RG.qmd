@@ -11,14 +11,19 @@ execute:
   keep-md: true
 params:
   dgf_file: "DGF.xlsx"
+  data_file: null
 ---
 
 <!-- datagoodr research guide template.
 
-     Customize without editing the package by editing:
-       - DG.R          custom formatting/graphic functions & layout overrides
-       - datagoodr.css  the page grid, fonts, and colors 
-     Render with:  quarto::quarto_render("research-guide.qmd") -->
+     Customize without editing the package:
+       - DG.R           custom functions & layout overrides
+       - datagoodr.css  the page grid, fonts, and colors
+     See vignette("customizing", package = "datagoodr").
+
+     Render from the console with:  quarto::quarto_render("research-guide.qmd")
+     or re-render against a different DGF/dataset without editing this file:
+       datagoodr::update_rg("research-guide.qmd", DGF = "DGF-V2.xlsx") -->
 
 <br>
 
@@ -36,19 +41,25 @@ library( datagoodr )
 if( file.exists("DG.R") ) source("DG.R")
 
 
-# Import the DGF (rules file). The path comes from the YAML `dgf_file` param.
-data_file <- params$dgf_file
-dgf <- readxl::read_excel(data_file)
+# The DGF drives the whole report. The path comes from the `dgf_file` param, so
+# this document renders on its own - and update_rg() can point it at a
+# different DGF at render time without editing this file.
+dgf <- readxl::read_excel( params$dgf_file )
+
+# Optional raw dataset. The report renders from the DGF alone - every statistic
+# and graphic is already stored in its rg_* columns - so this stays NULL unless
+# a caller supplies `data_file`. When supplied it is read once here and left
+# available to DG.R and to any custom chunk that needs the underlying values.
+raw.data <- if( is.null( params$data_file ) ) NULL else
+            suppressMessages( readr::read_csv( params$data_file ) )
 
 
-# Each variable type needs its own section because each plot type
-# needs its own fig width and height. 
-# To add a new variable type, 
-# 1. add new vtype_class to the dgf
-# 2. add new layout to R/layouts.R
-# 3. add necessary funciton that the new layout object needs to read
-# 4. add new layout div tags to the end of this file 
-# 5. add new dfg.TYPE data frame and section to this file to run create_all_sections( dgf.TYPE )
+# Each variable type gets its own section because each plot type needs its own
+# fig width and height. To add a new variable type:
+# 1. add the new vtype_class to the DGF
+# 2. add a layout for it (see R/03-01-layouts.R)
+# 3. add the functions that layout needs to read
+# 4. add a dgf.TYPE subset and a section below
 
 dgf.log  <-  dgf[ dgf$vtype_class == "logical",   ]
 dgf.fact <-  dgf[ dgf$vtype_class == "factor",    ]
