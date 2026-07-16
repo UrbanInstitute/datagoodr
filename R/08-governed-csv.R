@@ -328,40 +328,8 @@ read_governed_csv <- function(path) {
 }
 
 
-#' Write a data frame to a stable CSV with embedded provenance
-#'
-#' Writes a CSV that carries its own metadata: named `payloads` (provenance,
-#' package versions, factor levels, ...) are serialized and embedded across the
-#' data rows, replicated and spread so ordinary data-wrangling accidents - a
-#' filter, a `head()`, a date-range subset - don't silently strip them. No
-#' sidecar file: everything travels inside the one CSV.
-#'
-#' @param df Data frame to write.
-#' @param path Output file path.
-#' @param payloads Named list of R objects to embed, e.g.
-#'   `list(provenance = list(...), factor_levels = list(...))`.
-#' @param replication Optional named list of per-payload replication factors;
-#'   payloads not named use 2x.
-#' @param chunk_limit Max characters per embedded chunk (Excel-safe default).
-#'
-#' @return Invisibly, `path`.
-#'
-#' @details Any program can open the file and read the data columns normally;
-#'   the metadata rides in extra columns (`.dgf_meta`, `.dgf_stamp`) that look
-#'   like noise but do not touch the data. Recover the metadata with
-#'   [read_stable_csv()].
-#'
-#'   Resilience targets ordinary accidents, not adversarial tampering or
-#'   wholesale deletion; stripping every metadata cell across all rows is not
-#'   recoverable, and not a solvable problem within plain CSV.
-#'
-#' @seealso [read_stable_csv()]
-#' @export
-write_stable_csv <- function(df, path, payloads, replication = list(),
-                             chunk_limit = DGF_CHUNK_CHAR_LIMIT) {
-  write_governed_csv(df, path, payloads, core_stamp = NULL,
-                     replication = replication, chunk_limit = chunk_limit)
-}
+# write_stable_csv() lives in R/09-stabilize-data.R, where it also gains the
+# DGF-aware `dgf=`/`start_hash=` arguments. It calls write_governed_csv() above.
 
 
 #' Read a stable CSV, recovering data and embedded provenance
