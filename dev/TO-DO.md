@@ -207,5 +207,47 @@ Still to do at the customize stage (see design doc):
   function is exported but never called inside the package or tests, so either
   change is low-risk.
 
+## Two readers disagree about a DGF (found 2026-07-15)
+
+The package loads a DGF two different ways, and they do not produce the same
+object from the same file:
+
+- `load_dgf()` (R/00-utils.R) uses `openxlsx::read.xlsx()` -> a `data.frame`.
+  Used by `inspect_dgf()`, `update_dgf()`, and anything taking a DGF by path.
+- The RG/DD templates use `readxl::read_excel()` -> a `tibble`.
+
+The difference is not just the container. **`readxl` infers an all-empty column
+as logical `NA`; `openxlsx` reads it as character.** Verified on a freshly built
+DGF for all eight columns a user has not filled in yet - `vdesc`, `vname_alias`,
+`vscope`, `vloc`, `vconvert`, `vformat`, `dgf_standardize`, `dgf_validate`.
+Some populated character columns (`rg_stats`, `rg_graphics`, `dd_f_level`,
+`raw_first5`) also differ when compared as strings; coercing everything to
+character does **not** make the two converge, so the discrepancy is in the
+values, not only the types.
+
+Nothing is visibly broken today, but it means `inspect_dgf()` validates a
+subtly different object than the one the report renders from, and any code that
+tests a column's type (`is.character(dgf$vdesc)`) can behave differently
+depending on which path reached it. It also makes `render_record()`'s
+`dgf_hash` reader-dependent - see the note in `hash_dgf()` (R/07-render-record.R)
+and the test pinning that behaviour in tests/testthat/test-render-record.R.
+
+- [ ] Pick one reader and use it everywhere. `load_dgf()` is the natural
+      candidate since it is the package's own documented loader; the templates
+      would call `load_dgf(params$dgf_file)` instead of `readxl::read_excel()`.
+- [ ] Whichever wins, force the DGF's known-character columns to character on
+      load, so an empty `vdesc` is `""` and not `NA` / `logical`. That is what
+      actually removes the class of bug rather than just picking a side.
+- [ ] Careful: switching readers changes column *types*, which is a real
+      behaviour change even when the report looks the same. Verify with the
+      byte-identical render check used in Stage 1 (render working-example
+      DGF-V2 before and after, compare the HTML md5 and every figure hash;
+      see the git history for the method).
+      Checked and *not* a concern: tibble and data.frame handle an `NA` in the
+      `dgf[dgf$vtype_class == "x", ]` logical index the same way, and
+      `vtype_class` carries no `NA` in a generated DGF anyway.
+- [ ] Once the loader is canonical, `render_record()`'s hash could reasonably
+      claim to identify the *file*, and the note in `hash_dgf()` can be relaxed.
+
 
 
