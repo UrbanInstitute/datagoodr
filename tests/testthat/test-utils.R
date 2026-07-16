@@ -36,6 +36,6 @@ test_that("first_n returns up to n unique formatted values", {
   expect_match(out, "a")
 })
 
-test_that("parse_nm splits and de-duplicates a delimited alias string", {
+test_that("parse_nm splits and de-raw_duplicated a delimited alias string", {
   expect_equal(parse_nm("name1 ;; name2 ;; name1"), c("name1", "name2"))
 })

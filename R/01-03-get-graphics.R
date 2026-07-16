@@ -7,7 +7,7 @@
 #'
 #' Generates needed graphics for rg_graphics column of the DGF. Used inside R/01-00-CREATE-DGF.R
 #'
-#' @param VNAME A character string specifying the name of the variable in the data frame. (From vname column of the DGF)
+#' @param VNAME A character string specifying the name of the variable in the data frame. (From var_name column of the DGF)
 #' @param df A data frame containing the variable to be visualized.
 #' @param VCLASS A character string indicating the class of the variable (e.g., "numeric", "factor", "logical", or other).
 #'

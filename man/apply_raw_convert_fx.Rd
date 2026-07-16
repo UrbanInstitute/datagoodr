@@ -9,7 +9,7 @@ apply_raw_convert_fx(df, dgf)
 \arguments{
 \item{df}{A data frame of raw data.}
 
-\item{dgf}{A DGF data frame with `vname` and `raw_convert` columns.}
+\item{dgf}{A DGF data frame with `var_name` and `raw_convert` columns.}
 }
 \value{
 The data frame with conversion functions applied to the relevant

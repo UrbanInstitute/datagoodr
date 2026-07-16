@@ -11,24 +11,24 @@
 \alias{dg_field}
 \title{Render one element of a variable's profile}
 \usage{
-dg_stats(dgf, vname, label = "STATS")
+dg_stats(dgf, var_name, label = "STATS")
 
-dg_properties(dgf, vname, label = "PROPERTIES")
+dg_properties(dgf, var_name, label = "PROPERTIES")
 
-dg_quantiles(dgf, vname, label = "QUANTILES")
+dg_quantiles(dgf, var_name, label = "QUANTILES")
 
-dg_preview(dgf, vname, label = "PREVIEW", size = 80)
+dg_preview(dgf, var_name, label = "PREVIEW", size = 80)
 
-dg_levels(dgf, vname, label = "LEVELS")
+dg_levels(dgf, var_name, label = "LEVELS")
 
-dg_graphic(dgf, vname, label = NULL)
+dg_graphic(dgf, var_name, label = NULL)
 
-dg_field(dgf, vname, field, label = toupper(field))
+dg_field(dgf, var_name, field, label = toupper(field))
 }
 \arguments{
 \item{dgf}{A DGF data frame.}
 
-\item{vname}{The variable name (a value of `dgf$vname`).}
+\item{var_name}{The variable name (a value of `dgf$var_name`).}
 
 \item{label}{Optional section label; defaults to the render function's own
 default (e.g. `"STATS"`).}
@@ -61,8 +61,8 @@ field from the DGF.
 \item \code{dg_graphic()}: The type-appropriate graphic (histogram, treemap,
 bar plot, or word cloud). Set chunk `fig.width`/`fig.height` to size it.
 
-\item \code{dg_field()}: Any text field from the DGF (e.g. `"vdesc"`,
-`"vlabel"`, `"vscope"`). `field` is the DGF column name.
+\item \code{dg_field()}: Any text field from the DGF (e.g. `"dd_vdesc"`,
+`"dd_vlabel"`, `"dd_vdesc"`). `field` is the DGF column name.
 
 }}
 \seealso{

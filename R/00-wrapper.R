@@ -441,7 +441,7 @@ datagoodr <- function(wd = getwd(), folder.name = NULL,
 
   ## Steps 4 (refresh) and 5 (customize) are deliberately not part of this
   ## one-shot wrapper: they are iterative and now have their own entry points -
-  ## update_dgf() re-derives a DGF against new data via the rg_hash column, and
+  ## update_dgf() re-derives a DGF against new data via the prov_current_hash column, and
   ## the R/05-build-functions.R API (create_rg/use_datagoodr_template/DG.R)
   ## covers customization.
 

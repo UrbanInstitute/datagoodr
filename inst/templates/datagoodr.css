@@ -156,7 +156,7 @@ h5 { font-size: 0.9em; }
 /* Emitted as <div class="dg-field"><span class="dg-k">LABEL</span>
    <span class="dg-v">value</span></div>. div3 = short metadata aligned into a
    two-column definition block (dark label + bold mono value); div4 = uppercase
-   label followed by flowing prose (DESCRIPTION, LOCATION CODE). */
+   label followed by flowing prose (e.g. DESCRIPTION). */
 .dg-field .dg-k {
   font-family: var(--dg-sans);
   text-transform: uppercase;

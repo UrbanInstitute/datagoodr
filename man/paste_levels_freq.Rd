@@ -8,7 +8,7 @@ paste_levels_freq(VNAME, LABEL = "FACTOR LEVELS")
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout
-passes `"dd_f_level"`).}
+passes `"dd_f_levels"`).}
 
 \item{LABEL}{A character string for the section title. Defaults to
 `"FACTOR LEVELS"`.}
@@ -18,7 +18,7 @@ No return value; prints the table to the RG.
 }
 \description{
 Joins the factor level frequencies (`rg_stats`) with the editable level
-dictionary (`dd_f_level`) into one table: Label | Frequency | Meaning. The
+dictionary (`dd_f_levels`) into one table: Label | Frequency | Meaning. The
 Meaning column is shown only when the labels have been customised away from
 the raw level codes.
 }

@@ -1,6 +1,6 @@
 # Step 4: refresh a DGF when the underlying data changes.
 #
-# The rg_hash column stores a hash of each variable's (converted + formatted)
+# The prov_current_hash column stores a hash of each variable's (converted + formatted)
 # values. update_dgf() rebuilds the DGF from the new data, then uses the hash
 # to decide, per variable, whether anything actually changed:
 #   - unchanged variables keep their existing (curated) DGF row verbatim, so
@@ -13,10 +13,10 @@
 #' Merge curated factor labels from an old level dictionary into a new one
 #'
 #' For a changed factor/logical variable, keep the user-edited labels from the
-#' old `dd_f_level` for any level codes that still exist in the refreshed
+#' old `dd_f_levels` for any level codes that still exist in the refreshed
 #' dictionary.
 #'
-#' @param old_json,new_json JSON strings from the `dd_f_level` column.
+#' @param old_json,new_json JSON strings from the `dd_f_levels` column.
 #' @return A JSON string: the new dictionary with old labels merged in.
 #' @keywords internal
 #' @noRd
@@ -44,7 +44,7 @@ merge_level_labels <- function( old_json, new_json ) {
 #' Refresh a DGF against updated data (Step 4)
 #'
 #' Compares an existing DGF to a new version of the dataset and produces an
-#' updated DGF. Each variable's `rg_hash` is used to detect change: variables
+#' updated DGF. Each variable's `prov_current_hash` is used to detect change: variables
 #' whose data is unchanged keep their existing (curated) DGF row, while changed
 #' or newly added variables have their data summaries recomputed. Curated
 #' fields (descriptions, aliases, scope, location, conversion/format rules) are
@@ -74,7 +74,7 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
   { df <- suppressMessages( readr::read_csv( df ) ) }
 
   new.names <- names(df)
-  idx <- match( new.names, dgf$vname )       # old row for each new column
+  idx <- match( new.names, dgf$var_name )       # old row for each new column
 
   # Align curated fields from the old DGF to the new columns (blank / NA where
   # the column is new).
@@ -94,20 +94,18 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
   utils::capture.output( suppressMessages( suppressWarnings(
     dgf.new <- create_dgf(
       df,
-      vdesc       = pick_chr("vdesc"),
-      vname_alias = pick_chr("vname_alias"),
-      vscope      = pick_chr("vscope"),
-      vloc        = pick_chr("vloc"),
-      vconvert    = pick_fx("vconvert"),
-      vformat     = pick_fx("vformat"),
+      dd_vdesc       = pick_chr("dd_vdesc"),
+      dd_vname_alias = pick_chr("dd_vname_alias"),
+      raw_data_import_rule    = pick_fx("raw_data_import_rule"),
+      stable_data_format     = pick_fx("stable_data_format"),
       file        = tempfile("dgf-refresh"),
       open        = FALSE )
   ) ) )
 
   # Classify each variable by comparing hashes.
-  old.hash <- dgf$rg_hash[idx]
+  old.hash <- dgf$prov_current_hash[idx]
   status <- ifelse( is.na(idx), "added",
-              ifelse( dgf.new$rg_hash == old.hash, "unchanged", "changed" ) )
+              ifelse( dgf.new$prov_current_hash == old.hash, "unchanged", "changed" ) )
   names(status) <- new.names
 
   shared.cols <- intersect( names(dgf.new), names(dgf) )
@@ -117,14 +115,14 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
       # keep the old (curated) row verbatim
       dgf.new[ i, shared.cols ] <- dgf[ idx[i], shared.cols ]
     } else if( status[i] == "changed" &&
-               dgf.new$vtype_class[i] %in% c("factor","logical") ) {
+               dgf.new$stable_data_type[i] %in% c("categorical","boolean") ) {
       # refreshed data, but keep curated level labels where levels persist
-      dgf.new$dd_f_level[i] <-
-        merge_level_labels( dgf$dd_f_level[ idx[i] ], dgf.new$dd_f_level[i] )
+      dgf.new$dd_f_levels[i] <-
+        merge_level_labels( dgf$dd_f_levels[ idx[i] ], dgf.new$dd_f_levels[i] )
     }
   }
 
-  removed <- setdiff( dgf$vname, new.names )
+  removed <- setdiff( dgf$var_name, new.names )
 
   if( verbose ) {
     n <- function(s) sum( status == s )

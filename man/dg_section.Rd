@@ -4,12 +4,12 @@
 \alias{dg_section}
 \title{Render one variable's full profile section}
 \usage{
-dg_section(dgf, vname, style = "rg", layouts = NULL)
+dg_section(dgf, var_name, style = "rg", layouts = NULL)
 }
 \arguments{
 \item{dgf}{A DGF data frame.}
 
-\item{vname}{The variable name (a value of `dgf$vname`).}
+\item{var_name}{The variable name (a value of `dgf$var_name`).}
 
 \item{style}{`"rg"` (full profile) or `"dd"` (descriptors only). Defaults to
 `"rg"`.}

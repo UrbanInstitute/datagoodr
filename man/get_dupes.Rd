@@ -7,18 +7,18 @@
 get_dupes(df, vhash)
 }
 \arguments{
-\item{df}{A data frame containing the variables to be checked for duplicates.}
+\item{df}{A data frame containing the variables to be checked for raw_duplicated.}
 
 \item{vhash}{A vector of hash values corresponding to each variable in the data frame.
 This is typically computed using a hashing function like `rlang::hash()`.}
 }
 \value{
-A logical vector indicating which variables are duplicates.
+A logical vector indicating which variables are raw_duplicated.
 }
 \description{
 This function checks for duplicate variables in a data frame based on a provided hash vector.
 It prints out the names of duplicate variables and returns a logical vector indicating which
-rows are duplicates.
+rows are raw_duplicated.
 }
 \examples{
 \dontrun{

@@ -8,7 +8,7 @@ paste_levels_horizontal(VNAME, LABEL = "CATEGORY LABELS")
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout
-passes `"dd_f_level"`).}
+passes `"dd_f_levels"`).}
 
 \item{LABEL}{A character string for the section title. Defaults to
 `"CATEGORY LABELS"`.}
@@ -17,7 +17,7 @@ passes `"dd_f_level"`).}
 No return value; prints the table to the RG.
 }
 \description{
-Reads the level dictionary (`dd_f_level`) and lays the categories out
+Reads the level dictionary (`dd_f_levels`) and lays the categories out
 horizontally: one column per level code, with an editable meaning beneath
 each. The meaning row appears only once labels are customised.
 }

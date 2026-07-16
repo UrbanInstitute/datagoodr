@@ -8,7 +8,7 @@ paste_levels(VNAME, LABEL = "CATEGORY MEANING")
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout
-passes `"dd_f_level"`).}
+passes `"dd_f_levels"`).}
 
 \item{LABEL}{A character string for the section title. Defaults to
 `"LEVELS"`.}
@@ -18,7 +18,7 @@ No return value; prints the LEVELS table to the RG. Nothing is
   printed when the variable has no levels.
 }
 \description{
-Reads the `dd_f_level` column of the DGF (a JSON table of level codes and
+Reads the `dd_f_levels` column of the DGF (a JSON table of level codes and
 their editable labels) and prints it as a two-column LEVELS table.
 }
 \details{

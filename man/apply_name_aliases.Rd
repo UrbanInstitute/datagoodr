@@ -9,14 +9,14 @@ apply_name_aliases(df, dgf)
 \arguments{
 \item{df}{A data frame of raw data.}
 
-\item{dgf}{A DGF data frame containing `vname`, `vname_alias`, and `vlabel`
+\item{dgf}{A DGF data frame containing `var_name`, `dd_vname_alias`, and `dd_vlabel`
 columns.}
 }
 \value{
 The data frame with columns renamed and labelled per the DGF.
 }
 \description{
-Uses the `vname`, `vname_alias`, and `vlabel` columns of a DGF to rename
+Uses the `var_name`, `dd_vname_alias`, and `dd_vlabel` columns of a DGF to rename
 the columns of a raw data frame from their alias (raw) names to their
 canonical DGF names, attaching labels. Columns without an alias keep their
 existing name.

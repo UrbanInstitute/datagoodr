@@ -1,9 +1,9 @@
-"vname","vlabel","vdesc","vname_alias","vscope","vloc","duplicates","dd_f_level","raw_first5","raw_type","vconvert","vtype","vtype_class","vlength","vformat","rg_properties","rg_preview","rg_stats","rg_graphics","rg_hash","dgf_standardize","dgf_validate"
-"F9_00_ORG_NAME_L1","F9_00_ORG_NAME_L1","","","","",FALSE,"","INTERNATIONAL UNI... ;; 
+"var_name","dd_vname_alias","dd_vlabel","dd_vdesc","dd_f_levels","raw_data_storage","raw_data_type","raw_data_subtype","raw_data_class","raw_data_unit","raw_data_format","raw_data_import_rule","raw_first5","raw_duplicated","stable_data_storage","stable_data_type","stable_data_subtype","stable_data_class","stable_data_unit","stable_data_format","stable_data_transform","stable_data_import_rule","rg_properties","rg_preview","rg_stats","rg_graphics","rg_max_chr","validate_rules","validate_format","prov_start_hash","prov_current_hash"
+"F9_00_ORG_NAME_L1","","F9_00_ORG_NAME_L1","","","character","string","","","","","","INTERNATIONAL UNI... ;; 
 RETAIL MERCHANTS ... ;; 
 MORRIS COUNTY FAR... ;; 
 NATIONAL ASSOCIAT... ;; 
-AMERICAN MEAD MAK...","character","","character","character",97,"","[ 
+AMERICAN MEAD MAK...",FALSE,"character","string","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""17,455""  ,  ""PER"" :  ""(69.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -117,12 +117,12 @@ AMERICAN MEAD MAK...","character","","character","character",97,"","[
   {  ""ww"" :  ""CALIFORNIA""  ,  ""Freq"" :  318  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  317  }, 
   {  ""ww"" :  ""COMMUNITY""  ,  ""Freq"" :  316  }
-]","c37e83a29aac696516a76c253df473d9","",""
-"F0_00_ORG_CONTACT","F0_00_ORG_CONTACT","","","","",FALSE,"","JACK ARGILA ;; 
+]",97,"","","","c37e83a29aac696516a76c253df473d9"
+"F0_00_ORG_CONTACT","","F0_00_ORG_CONTACT","","","character","string","","","","","","JACK ARGILA ;; 
 KATHY/NANCY ;; 
 DAVE A WARRINGTON ;; 
 BRIAN WING ;; 
-GARY M SIMMONS","character","","character","character",33,"","[ 
+GARY M SIMMONS",FALSE,"character","string","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""10,990""  ,  ""PER"" :  ""(44.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""13,392""  ,  ""PER"" :  ""(53.6%)""  }, 
@@ -236,12 +236,12 @@ GARY M SIMMONS","character","","character","character",33,"","[
   {  ""ww"" :  ""GEORGE""  ,  ""Freq"" :  60  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  56  }, 
   {  ""ww"" :  ""FRANK""  ,  ""Freq"" :  56  }
-]","76eeb54cf49bfd89dd1feb1306dfeb31","",""
-"F9_00_ORG_ADDR_L1","F9_00_ORG_ADDR_L1","","","","",FALSE,"","4 COURT SQUARE ;; 
+]",33,"","","","76eeb54cf49bfd89dd1feb1306dfeb31"
+"F9_00_ORG_ADDR_L1","","F9_00_ORG_ADDR_L1","","","character","string","","","","","","4 COURT SQUARE ;; 
 5101 MONUMENT AVE ;; 
 818 LINDA DR ;; 
 PO BOX 7002 ;; 
-5214 25TH AVE N","character","","character","character",35,"","[ 
+5214 25TH AVE N",FALSE,"character","string","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""18,785""  ,  ""PER"" :  ""(75.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -355,12 +355,12 @@ PO BOX 7002 ;;
   {  ""ww"" :  ""2""  ,  ""Freq"" :  118  }, 
   {  ""ww"" :  ""3RD""  ,  ""Freq"" :  116  }, 
   {  ""ww"" :  ""EAST""  ,  ""Freq"" :  116  }
-]","e9393b1aed63f68b36fe261c33347f0e","",""
-"F9_00_ORG_ADDR_CITY","F9_00_ORG_ADDR_CITY","","","","",FALSE,"","LONG ISLAND CITY ;; 
+]",35,"","","","e9393b1aed63f68b36fe261c33347f0e"
+"F9_00_ORG_ADDR_CITY","","F9_00_ORG_ADDR_CITY","","","character","string","","","","","","LONG ISLAND CITY ;; 
 RICHMOND ;; 
 DAINGERFIELD ;; 
 FREDERICKSBRG ;; 
-ST PETERSBURG","character","","character","character",22,"","[ 
+ST PETERSBURG",FALSE,"character","string","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5,986""  ,  ""PER"" :  ""(23.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -474,12 +474,12 @@ ST PETERSBURG","character","","character","character",22,"","[
   {  ""ww"" :  ""PHOENIX""  ,  ""Freq"" :  71  }, 
   {  ""ww"" :  ""ALBANY""  ,  ""Freq"" :  70  }, 
   {  ""ww"" :  ""DES""  ,  ""Freq"" :  70  }
-]","f5dbd5c29eebf7a4dc24a738a5ee5b5d","",""
-"EIN","EIN","","","","",FALSE,"","113161527 ;; 
+]",22,"","","","f5dbd5c29eebf7a4dc24a738a5ee5b5d"
+"EIN","","EIN","","","numeric","number","","","","","","113161527 ;; 
 540354670 ;; 
 751627109 ;; 
 61636713 ;; 
-542015951","numeric","","numeric","numeric",9,"","[ 
+542015951",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,794""  ,  ""PER"" :  ""(99.2%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""10,100,593""  ,  ""PER"" :  ""(0.0%)""  }, 
@@ -598,8 +598,8 @@ ST PETERSBURG","character","","character","character",22,"","[
     ""max""  :  [ 
 996067555
 ]
-  }","ea94ea5d1fc3c2d7f7ec49efc2e4b6f3","",""
-"SUBSECCD","SUBSECCD","","","","",FALSE,"[ 
+  }",9,"","","","ea94ea5d1fc3c2d7f7ec49efc2e4b6f3"
+"SUBSECCD","","SUBSECCD","","[ 
   {  ""level"" :  ""2""  ,  ""label"" :  ""2""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""4""  }, 
   {  ""level"" :  ""5""  ,  ""label"" :  ""5""  }, 
@@ -623,11 +623,11 @@ ST PETERSBURG","character","","character","character",22,"","[
   {  ""level"" :  ""26""  ,  ""label"" :  ""26""  }, 
   {  ""level"" :  ""27""  ,  ""label"" :  ""27""  }, 
   {  ""level"" :  ""29""  ,  ""label"" :  ""29""  }
-]","5 ;; 
+]","numeric","number","","","","","","5 ;; 
 6 ;; 
 25 ;; 
 4 ;; 
-19","numeric","","factor","factor",2,"","[ 
+19",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""6""  ,  ""PER"" :  ""(25.6%)""  }
@@ -667,12 +667,12 @@ ST PETERSBURG","character","","character","character",22,"","[
   {  ""x"" :  ""13""  ,  ""Freq"" :  561  }, 
   {  ""x"" :  ""2""  ,  ""Freq"" :  545  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  934  }
-]","8545f03c0a4d4efa73af76e780bf57fd","",""
-"BMF_ACTIV1","BMF_ACTIV1","","","","",FALSE,"","263 ;; 
+]",2,"","","","8545f03c0a4d4efa73af76e780bf57fd"
+"BMF_ACTIV1","","BMF_ACTIV1","","","numeric","number","","","","","","263 ;; 
 200 ;; 
 379 ;; 
 0 ;; 
-407","numeric","","numeric","numeric",3,"","[ 
+407",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""230""  ,  ""PER"" :  ""(0.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }, 
@@ -841,8 +841,8 @@ ST PETERSBURG","character","","character","character",22,"","[
     ""max""  :  [ 
 999
 ]
-  }","29e54c4937b4da29973ebbc051d5b635","",""
-"NTMAJ12","NTMAJ12","","","","",FALSE,"[ 
+  }",3,"","","","29e54c4937b4da29973ebbc051d5b635"
+"NTMAJ12","","NTMAJ12","","[ 
   {  ""level"" :  ""AR""  ,  ""label"" :  ""AR""  }, 
   {  ""level"" :  ""BH""  ,  ""label"" :  ""BH""  }, 
   {  ""level"" :  ""ED""  ,  ""label"" :  ""ED""  }, 
@@ -855,11 +855,11 @@ ST PETERSBURG","character","","character","character",22,"","[
   {  ""level"" :  ""PU""  ,  ""label"" :  ""PU""  }, 
   {  ""level"" :  ""RE""  ,  ""label"" :  ""RE""  }, 
   {  ""level"" :  ""UN""  ,  ""label"" :  ""UN""  }
-]","HU ;; 
+]","character","string","","","","","","HU ;; 
 PU ;; 
 UN ;; 
 ED ;; 
-AR","character","","factor","factor",2,"","[ 
+AR",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""PU""  ,  ""PER"" :  ""(36.5%)""  }
@@ -886,8 +886,8 @@ AR","character","","factor","factor",2,"","[
   {  ""x"" :  ""AR""  ,  ""Freq"" :  615  }, 
   {  ""x"" :  ""EN""  ,  ""Freq"" :  508  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  268  }
-]","47e592979b51bef034581a5ac944748c","",""
-"NTEE1","NTEE1","","","","",FALSE,"[ 
+]",2,"","","","47e592979b51bef034581a5ac944748c"
+"NTEE1","","NTEE1","","[ 
   {  ""level"" :  ""A""  ,  ""label"" :  ""A""  }, 
   {  ""level"" :  ""B""  ,  ""label"" :  ""B""  }, 
   {  ""level"" :  ""C""  ,  ""label"" :  ""C""  }, 
@@ -914,11 +914,11 @@ AR","character","","factor","factor",2,"","[
   {  ""level"" :  ""X""  ,  ""label"" :  ""X""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Y""  }, 
   {  ""level"" :  ""Z""  ,  ""label"" :  ""Z""  }
-]","J ;; 
+]","character","string","","","","","","J ;; 
 S ;; 
 K ;; 
 N ;; 
-M","character","","factor","factor",1,"","[ 
+M",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""27""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }, 
@@ -964,12 +964,12 @@ M","character","","factor","factor",1,"","[
   {  ""x"" :  ""E""  ,  ""Freq"" :  574  }, 
   {  ""x"" :  ""I""  ,  ""Freq"" :  557  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1959  }
-]","cc2692a6b5411ae2949be174b9e1198a","",""
-"NTEEFINAL","NTEEFINAL","","","","",FALSE,"","J40 ;; 
+]",1,"","","","cc2692a6b5411ae2949be174b9e1198a"
+"NTEEFINAL","","NTEEFINAL","","","character","string","","","","","","J40 ;; 
 S41 ;; 
 K28 ;; 
 N61 ;; 
-S47","character","","character","character",5,"","[ 
+S47",FALSE,"character","string","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""654""  ,  ""PER"" :  ""(2.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }, 
@@ -1082,8 +1082,8 @@ S47","character","","character","character",5,"","[
   {  ""ww"" :  ""C32""  ,  ""Freq"" :  65  }, 
   {  ""ww"" :  ""E03""  ,  ""Freq"" :  64  }, 
   {  ""ww"" :  ""S81""  ,  ""Freq"" :  64  }
-]","e8e685b8bf5924b0bec8f604b1c0d599","",""
-"NTEESRC","NTEESRC","","","","",FALSE,"[ 
+]",5,"","","","e8e685b8bf5924b0bec8f604b1c0d599"
+"NTEESRC","","NTEESRC","","[ 
   {  ""level"" :  ""ACT1""  ,  ""label"" :  ""ACT1""  }, 
   {  ""level"" :  ""BEST""  ,  ""label"" :  ""BEST""  }, 
   {  ""level"" :  ""END2""  ,  ""label"" :  ""END2""  }, 
@@ -1099,11 +1099,11 @@ S47","character","","character","character",5,"","[
   {  ""level"" :  ""VER""  ,  ""label"" :  ""VER""  }, 
   {  ""level"" :  ""WORD""  ,  ""label"" :  ""WORD""  }, 
   {  ""level"" :  ""ZZ""  ,  ""label"" :  ""ZZ""  }
-]","NEW ;; 
+]","character","string","","","","","","NEW ;; 
 BEST ;; 
 IRS ;; 
 WORD ;; 
-ZZ","character","","factor","factor",4,"","[ 
+ZZ",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""16""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -1131,16 +1131,16 @@ ZZ","character","","factor","factor",4,"","[
   {  ""x"" :  ""IRS""  ,  ""Freq"" :  2540  }, 
   {  ""x"" :  ""SOI""  ,  ""Freq"" :  855  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1196  }
-]","32332a74c73a19d148592c2e9a853b0f","",""
-"DEDUCTCD","DEDUCTCD","","","","",FALSE,"[ 
+]",4,"","","","32332a74c73a19d148592c2e9a853b0f"
+"DEDUCTCD","","DEDUCTCD","","[ 
   {  ""level"" :  ""0""  ,  ""label"" :  ""0""  }, 
   {  ""level"" :  ""1""  ,  ""label"" :  ""1""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""2""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""4""  }
-]","2 ;; 
+]","numeric","number","","","","","","2 ;; 
 1 ;; 
 0 ;; 
-4","numeric","","factor","factor",1,"","[ 
+4",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }, 
@@ -1155,16 +1155,16 @@ ZZ","character","","factor","factor",4,"","[
   {  ""x"" :  ""1""  ,  ""Freq"" :  3932  }, 
   {  ""x"" :  ""0""  ,  ""Freq"" :  685  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  2  }
-]","3090ed2798b253515d5dbda22454f646","",""
-"OUTREAS","OUTREAS","","","","",FALSE,"[ 
+]",1,"","","","3090ed2798b253515d5dbda22454f646"
+"OUTREAS","","OUTREAS","","[ 
   {  ""level"" :  ""F""  ,  ""label"" :  ""F""  }, 
   {  ""level"" :  ""N""  ,  ""label"" :  ""N""  }, 
   {  ""level"" :  ""S""  ,  ""label"" :  ""S""  }, 
   {  ""level"" :  ""T""  ,  ""label"" :  ""T""  }
-]","S ;; 
+]","character","string","","","","","","S ;; 
 F ;; 
 T ;; 
-N","character","","factor","factor",1,"","[ 
+N",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""24,961""  ,  ""PER"" :  ""(99.8%)""  }, 
@@ -1180,12 +1180,12 @@ N","character","","factor","factor",1,"","[
   {  ""x"" :  ""S""  ,  ""Freq"" :  11  }, 
   {  ""x"" :  ""N""  ,  ""Freq"" :  1  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
-]","df8f9376a47dc8108ed65257ca6d78e4","",""
-"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","","","",FALSE,"[ 
+]",1,"","","","df8f9376a47dc8108ed65257ca6d78e4"
+"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","[ 
   {  ""level"" :  ""N""  ,  ""label"" :  ""N""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Y""  }
-]","N ;; 
-Y","character","","factor","logical",1,"","[ 
+]","character","string","","","","","","N ;; 
+Y",FALSE,"factor","boolean","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""N""  ,  ""PER"" :  ""(86.2%)""  }
@@ -1195,12 +1195,12 @@ Y","character","","factor","logical",1,"","[
 ]","[ 
   {  ""f"" :  ""N""  ,  ""Freq"" :  21550  }, 
   {  ""f"" :  ""Y""  ,  ""Freq"" :  3450  }
-]","00dcadf8e089921fed0b41ac50326cf7","",""
-"OUTNCCS","OUTNCCS","","","","",FALSE,"[ 
+]",1,"","","","00dcadf8e089921fed0b41ac50326cf7"
+"OUTNCCS","","OUTNCCS","","[ 
   {  ""level"" :  ""IN""  ,  ""label"" :  ""IN""  }, 
   {  ""level"" :  ""OUT""  ,  ""label"" :  ""OUT""  }
-]","IN ;; 
-OUT","character","","factor","logical",3,"","[ 
+]","character","string","","","","","","IN ;; 
+OUT",FALSE,"factor","boolean","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""3""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,361""  ,  ""PER"" :  ""(9.4%)""  }, 
@@ -1213,12 +1213,12 @@ OUT","character","","factor","logical",3,"","[
   {  ""f"" :  ""IN""  ,  ""Freq"" :  22600  }, 
   {  ""f"" :  ""NA""  ,  ""Freq"" :  2361  }, 
   {  ""f"" :  ""OUT""  ,  ""Freq"" :  39  }
-]","5336c64575243bfeeacea9749cd0e6d8","",""
-"COUNTY_FIPS","COUNTY_FIPS","","","","",FALSE,"","36081 ;; 
+]",3,"","","","5336c64575243bfeeacea9749cd0e6d8"
+"COUNTY_FIPS","","COUNTY_FIPS","","","numeric","number","","","","","","36081 ;; 
 51087 ;; 
 48343 ;; 
 51630 ;; 
-36001","numeric","","numeric","numeric",5,"","[ 
+36001",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2,411""  ,  ""PER"" :  ""(9.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,389""  ,  ""PER"" :  ""(9.6%)""  }, 
@@ -1318,12 +1318,12 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 78030
 ]
-  }","247ce7eedae483be8e1ac6cff555c593","",""
-"CEO_CENSUSTRACT","CEO_CENSUSTRACT","","","","",FALSE,"","36081001900 ;; 
+  }",5,"","","","247ce7eedae483be8e1ac6cff555c593"
+"CEO_CENSUSTRACT","","CEO_CENSUSTRACT","","","numeric","number","","","","","","36081001900 ;; 
 51087200301 ;; 
 48343950300 ;; 
 51630000500 ;; 
-36001000300","numeric","","numeric","numeric",11,"","[ 
+36001000300",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""14,265""  ,  ""PER"" :  ""(57.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""3,110""  ,  ""PER"" :  ""(12.4%)""  }, 
@@ -1479,8 +1479,8 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 56043000200
 ]
-  }","afbc196795d8aeaf02161da0a2f65571","",""
-"F9_00_TAX_PERIOD_END_DATE","F9_00_TAX_PERIOD_END_DATE","","","","",FALSE,"[ 
+  }",11,"","","","afbc196795d8aeaf02161da0a2f65571"
+"F9_00_TAX_PERIOD_END_DATE","","F9_00_TAX_PERIOD_END_DATE","","[ 
   {  ""level"" :  ""201701""  ,  ""label"" :  ""201701""  }, 
   {  ""level"" :  ""201702""  ,  ""label"" :  ""201702""  }, 
   {  ""level"" :  ""201703""  ,  ""label"" :  ""201703""  }, 
@@ -1528,11 +1528,11 @@ OUT","character","","factor","logical",3,"","[
   {  ""level"" :  ""202009""  ,  ""label"" :  ""202009""  }, 
   {  ""level"" :  ""202010""  ,  ""label"" :  ""202010""  }, 
   {  ""level"" :  ""202011""  ,  ""label"" :  ""202011""  }
-]","201912 ;; 
+]","numeric","number","","","","","","201912 ;; 
 201812 ;; 
 201712 ;; 
 201906 ;; 
-201905","numeric","","factor","factor",6,"","[ 
+201905",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""201912""  ,  ""PER"" :  ""(39.5%)""  }
@@ -1593,8 +1593,8 @@ OUT","character","","factor","logical",3,"","[
   {  ""x"" :  ""201806""  ,  ""Freq"" :  840  }, 
   {  ""x"" :  ""201909""  ,  ""Freq"" :  812  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  4985  }
-]","526e383609b33f5bc631532a410fa5de","",""
-"F9_00_TAX_PERIOD_END_DATE_PY","F9_00_TAX_PERIOD_END_DATE_PY","","","","",FALSE,"[ 
+]",6,"","","","526e383609b33f5bc631532a410fa5de"
+"F9_00_TAX_PERIOD_END_DATE_PY","","F9_00_TAX_PERIOD_END_DATE_PY","","[ 
   {  ""level"" :  ""201601""  ,  ""label"" :  ""201601""  }, 
   {  ""level"" :  ""201602""  ,  ""label"" :  ""201602""  }, 
   {  ""level"" :  ""201603""  ,  ""label"" :  ""201603""  }, 
@@ -1641,11 +1641,11 @@ OUT","character","","factor","logical",3,"","[
   {  ""level"" :  ""201908""  ,  ""label"" :  ""201908""  }, 
   {  ""level"" :  ""201909""  ,  ""label"" :  ""201909""  }, 
   {  ""level"" :  ""201910""  ,  ""label"" :  ""201910""  }
-]","201812 ;; 
+]","numeric","number","","","","","","201812 ;; 
 201712 ;; 
 201806 ;; 
 201805 ;; 
-201809","numeric","","factor","factor",6,"","[ 
+201809",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }, 
@@ -1706,8 +1706,8 @@ OUT","character","","factor","logical",3,"","[
   {  ""x"" :  ""201706""  ,  ""Freq"" :  539  }, 
   {  ""x"" :  ""201612""  ,  ""Freq"" :  478  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  3768  }
-]","71492f447d0e1a8bd2bf530dbafaf3da","",""
-"F9_00_TAX_PERIOD_BEGIN_DATE","F9_00_TAX_PERIOD_BEGIN_DATE","","","","",FALSE,"[ 
+]",6,"","","","71492f447d0e1a8bd2bf530dbafaf3da"
+"F9_00_TAX_PERIOD_BEGIN_DATE","","F9_00_TAX_PERIOD_BEGIN_DATE","","[ 
   {  ""level"" :  ""20169""  ,  ""label"" :  ""20169""  }, 
   {  ""level"" :  ""20170""  ,  ""label"" :  ""20170""  }, 
   {  ""level"" :  ""20171""  ,  ""label"" :  ""20171""  }, 
@@ -1720,11 +1720,11 @@ OUT","character","","factor","logical",3,"","[
   {  ""level"" :  ""20199""  ,  ""label"" :  ""20199""  }, 
   {  ""level"" :  ""20200""  ,  ""label"" :  ""20200""  }, 
   {  ""level"" :  ""20201""  ,  ""label"" :  ""20201""  }
-]","20190 ;; 
+]","numeric","number","","","","","","20190 ;; 
 20180 ;; 
 20170 ;; 
 20189 ;; 
-20199","numeric","","factor","factor",5,"","[ 
+20199",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""20190""  ,  ""PER"" :  ""(40.8%)""  }
@@ -1750,8 +1750,8 @@ OUT","character","","factor","logical",3,"","[
   {  ""x"" :  ""20170""  ,  ""Freq"" :  1680  }, 
   {  ""x"" :  ""20169""  ,  ""Freq"" :  728  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  274  }
-]","a905739d1b1e108281fd6442ba2a7442","",""
-"F9_00_TAX_ACCPER","F9_00_TAX_ACCPER","","","","",FALSE,"[ 
+]",5,"","","","a905739d1b1e108281fd6442ba2a7442"
+"F9_00_TAX_ACCPER","","F9_00_TAX_ACCPER","","[ 
   {  ""level"" :  ""1""  ,  ""label"" :  ""1""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""2""  }, 
   {  ""level"" :  ""3""  ,  ""label"" :  ""3""  }, 
@@ -1764,11 +1764,11 @@ OUT","character","","factor","logical",3,"","[
   {  ""level"" :  ""10""  ,  ""label"" :  ""10""  }, 
   {  ""level"" :  ""11""  ,  ""label"" :  ""11""  }, 
   {  ""level"" :  ""12""  ,  ""label"" :  ""12""  }
-]","12 ;; 
+]","numeric","number","","","","","","12 ;; 
 6 ;; 
 5 ;; 
 9 ;; 
-11","numeric","","factor","factor",2,"","[ 
+11",FALSE,"factor","categorical","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(59.9%)""  }
@@ -1794,12 +1794,12 @@ OUT","character","","factor","logical",3,"","[
   {  ""x"" :  ""8""  ,  ""Freq"" :  688  }, 
   {  ""x"" :  ""4""  ,  ""Freq"" :  609  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1242  }
-]","8d3fa250e9b2dae208ec26600e0c53a4","",""
-"F9_08_REV_TOT_TOT","F9_08_REV_TOT_TOT","","","","",FALSE,"","11139366 ;; 
+]",2,"","","","8d3fa250e9b2dae208ec26600e0c53a4"
+"F9_08_REV_TOT_TOT","","F9_08_REV_TOT_TOT","","","numeric","number","","","","","","11139366 ;; 
 894312 ;; 
 110663 ;; 
 272444 ;; 
-6093701","numeric","","numeric","numeric",10,"","[ 
+6093701",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,817""  ,  ""PER"" :  ""(95.3%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""413""  ,  ""PER"" :  ""(1.7%)""  }, 
@@ -1963,12 +1963,12 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 4178522311
 ]
-  }","d2e4429d44416d4fd723ee541e73d2a3","",""
-"F9_10_ASSET_TOT_BOY","F9_10_ASSET_TOT_BOY","","","","",FALSE,"","34227234 ;; 
+  }",10,"","","","d2e4429d44416d4fd723ee541e73d2a3"
+"F9_10_ASSET_TOT_BOY","","F9_10_ASSET_TOT_BOY","","","numeric","number","","","","","","34227234 ;; 
 17491720 ;; 
 101131 ;; 
 0 ;; 
-3011522","numeric","","numeric","numeric",11,"","[ 
+3011522",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,195""  ,  ""PER"" :  ""(80.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -2085,12 +2085,12 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 11226543829
 ]
-  }","e70794cebd95ead0ac4363dfeb80cf83","",""
-"F9_10_ASSET_TOT_EOY","F9_10_ASSET_TOT_EOY","","","","",FALSE,"","40131275 ;; 
+  }",11,"","","","e70794cebd95ead0ac4363dfeb80cf83"
+"F9_10_ASSET_TOT_EOY","","F9_10_ASSET_TOT_EOY","","","numeric","number","","","","","","40131275 ;; 
 20157050 ;; 
 92924 ;; 
 19430176 ;; 
-2856785","numeric","","numeric","numeric",11,"","[ 
+2856785",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,122""  ,  ""PER"" :  ""(96.5%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""110""  ,  ""PER"" :  ""(0.4%)""  }, 
@@ -2250,12 +2250,12 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 38468314242
 ]
-  }","4334f11236e70cf8809e059a71d77d72","",""
-"F9_10_NAFB_TOT_BOY","F9_10_NAFB_TOT_BOY","","","","",FALSE,"","32671349 ;; 
+  }",11,"","","","4334f11236e70cf8809e059a71d77d72"
+"F9_10_NAFB_TOT_BOY","","F9_10_NAFB_TOT_BOY","","","numeric","number","","","","","","32671349 ;; 
 17460787 ;; 
 100443 ;; 
 1788316 ;; 
-589818","numeric","","numeric","numeric",10,"","[ 
+589818",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,145""  ,  ""PER"" :  ""(80.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }, 
@@ -2408,12 +2408,12 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 6323689488
 ]
-  }","212ad23bd9c04244582a6ccdce4e11bc","",""
-"F9_09_EXP_TOT_TOT","F9_09_EXP_TOT_TOT","","","","",FALSE,"","6743081 ;; 
+  }",10,"","","","212ad23bd9c04244582a6ccdce4e11bc"
+"F9_09_EXP_TOT_TOT","","F9_09_EXP_TOT_TOT","","","numeric","number","","","","","","6743081 ;; 
 1196713 ;; 
 119018 ;; 
 1067754 ;; 
-6231030","numeric","","numeric","numeric",10,"","[ 
+6231030",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,740""  ,  ""PER"" :  ""(95.0%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""489""  ,  ""PER"" :  ""(2.0%)""  }, 
@@ -2537,12 +2537,12 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 4256605589
 ]
-  }","a79675365db63a755cffad928a8a02cd","",""
-"F9_01_EXP_TOT_PY","F9_01_EXP_TOT_PY","","","","",FALSE,"","6901865 ;; 
+  }",10,"","","","a79675365db63a755cffad928a8a02cd"
+"F9_01_EXP_TOT_PY","","F9_01_EXP_TOT_PY","","","numeric","number","","","","","","6901865 ;; 
 1166814 ;; 
 112215 ;; 
 0 ;; 
-7111943","numeric","","numeric","numeric",10,"","[ 
+7111943",FALSE,"numeric","number","","","","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""19,931""  ,  ""PER"" :  ""(79.7%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -2679,4 +2679,4 @@ OUT","character","","factor","logical",3,"","[
     ""max""  :  [ 
 4624922368
 ]
-  }","d5008897331c88803798ab5c9be108be","",""
+  }",10,"","","","d5008897331c88803798ab5c9be108be"

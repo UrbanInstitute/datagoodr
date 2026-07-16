@@ -1,9 +1,9 @@
-"vname","vlabel","vdesc","vname_alias","vscope","vloc","duplicates","dd_f_level","raw_first5","raw_type","vconvert","vtype","vtype_class","vlength","vformat","rg_properties","rg_preview","rg_stats","rg_graphics","rg_hash","dgf_standardize","dgf_validate"
-"F9_00_ORG_NAME_L1","F9_00_ORG_NAME_L1","Organization name line 1","","","",FALSE,"","INTERNATIONAL UNI... ;; 
+"var_name","dd_vname_alias","dd_vlabel","dd_vdesc","dd_f_levels","raw_data_storage","raw_data_type","raw_data_subtype","raw_data_class","raw_data_unit","raw_data_format","raw_data_import_rule","raw_first5","raw_duplicated","stable_data_storage","stable_data_type","stable_data_subtype","stable_data_class","stable_data_unit","stable_data_format","stable_data_transform","stable_data_import_rule","rg_properties","rg_preview","rg_stats","rg_graphics","rg_max_chr","validate_rules","validate_format","prov_start_hash","prov_current_hash"
+"F9_00_ORG_NAME_L1","","F9_00_ORG_NAME_L1","Organization name line 1","","character","string","","","","",,"INTERNATIONAL UNI... ;; 
 RETAIL MERCHANTS ... ;; 
 MORRIS COUNTY FAR... ;; 
 NATIONAL ASSOCIAT... ;; 
-AMERICAN MEAD MAK...","character",NA,"character","character",97,NA,"[ 
+AMERICAN MEAD MAK...",FALSE,"character","string","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""17,455""  ,  ""PER"" :  ""(69.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -117,12 +117,12 @@ AMERICAN MEAD MAK...","character",NA,"character","character",97,NA,"[
   {  ""ww"" :  ""CALIFORNIA""  ,  ""Freq"" :  318  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  317  }, 
   {  ""ww"" :  ""COMMUNITY""  ,  ""Freq"" :  316  }
-]","c37e83a29aac696516a76c253df473d9","",""
-"F0_00_ORG_CONTACT","F0_00_ORG_CONTACT","Contact person (from IRS files)","","","",FALSE,"","JACK ARGILA ;; 
+]",97,"","","","c37e83a29aac696516a76c253df473d9"
+"F0_00_ORG_CONTACT","","F0_00_ORG_CONTACT","Contact person (from IRS files)","","character","string","","","","",,"JACK ARGILA ;; 
 KATHY/NANCY ;; 
 DAVE A WARRINGTON ;; 
 BRIAN WING ;; 
-GARY M SIMMONS","character",NA,"character","character",33,NA,"[ 
+GARY M SIMMONS",FALSE,"character","string","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""10,990""  ,  ""PER"" :  ""(44.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""13,392""  ,  ""PER"" :  ""(53.6%)""  }, 
@@ -236,12 +236,12 @@ GARY M SIMMONS","character",NA,"character","character",33,NA,"[
   {  ""ww"" :  ""GEORGE""  ,  ""Freq"" :  60  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  56  }, 
   {  ""ww"" :  ""FRANK""  ,  ""Freq"" :  56  }
-]","76eeb54cf49bfd89dd1feb1306dfeb31","",""
-"F9_00_ORG_ADDR_L1","F9_00_ORG_ADDR_L1","Organization street address line 1","","","",FALSE,"","4 COURT SQUARE ;; 
+]",33,"","","","76eeb54cf49bfd89dd1feb1306dfeb31"
+"F9_00_ORG_ADDR_L1","","F9_00_ORG_ADDR_L1","Organization street address line 1","","character","string","","","","",,"4 COURT SQUARE ;; 
 5101 MONUMENT AVE ;; 
 818 LINDA DR ;; 
 PO BOX 7002 ;; 
-5214 25TH AVE N","character",NA,"character","character",35,NA,"[ 
+5214 25TH AVE N",FALSE,"character","string","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""18,785""  ,  ""PER"" :  ""(75.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -355,12 +355,12 @@ PO BOX 7002 ;;
   {  ""ww"" :  ""2""  ,  ""Freq"" :  118  }, 
   {  ""ww"" :  ""3RD""  ,  ""Freq"" :  116  }, 
   {  ""ww"" :  ""EAST""  ,  ""Freq"" :  116  }
-]","e9393b1aed63f68b36fe261c33347f0e","",""
-"F9_00_ORG_ADDR_CITY","F9_00_ORG_ADDR_CITY","Organization city","","","",FALSE,"","LONG ISLAND CITY ;; 
+]",35,"","","","e9393b1aed63f68b36fe261c33347f0e"
+"F9_00_ORG_ADDR_CITY","","F9_00_ORG_ADDR_CITY","Organization city","","character","string","","","","",,"LONG ISLAND CITY ;; 
 RICHMOND ;; 
 DAINGERFIELD ;; 
 FREDERICKSBRG ;; 
-ST PETERSBURG","character",NA,"character","character",22,NA,"[ 
+ST PETERSBURG",FALSE,"character","string","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5,986""  ,  ""PER"" :  ""(23.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -474,12 +474,12 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""ww"" :  ""PHOENIX""  ,  ""Freq"" :  71  }, 
   {  ""ww"" :  ""ALBANY""  ,  ""Freq"" :  70  }, 
   {  ""ww"" :  ""DES""  ,  ""Freq"" :  70  }
-]","f5dbd5c29eebf7a4dc24a738a5ee5b5d","",""
-"EIN","EIN","EIN","","","",FALSE,"","113161527 ;; 
+]",22,"","","","f5dbd5c29eebf7a4dc24a738a5ee5b5d"
+"EIN","","EIN","EIN","","numeric","number","","","","","as.character","113161527 ;; 
 540354670 ;; 
 751627109 ;; 
 061636713 ;; 
-542015951","numeric","as.character","character","character",9,"as_EIN","[ 
+542015951",FALSE,"character","string","","","","as_EIN","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,794""  ,  ""PER"" :  ""(99.2%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""010100593""  ,  ""PER"" :  ""(0.0%)""  }
@@ -590,8 +590,8 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""ww"" :  ""030123326""  ,  ""Freq"" :  2  }, 
   {  ""ww"" :  ""030135990""  ,  ""Freq"" :  2  }, 
   {  ""ww"" :  ""030144952""  ,  ""Freq"" :  2  }
-]","a28e478f06e485ee20d4aa6a9bd10432","",""
-"SUBSECCD","SUBSECCD","IRS subsection code","","","",FALSE,"[ 
+]",9,"","","","a28e478f06e485ee20d4aa6a9bd10432"
+"SUBSECCD","","SUBSECCD","IRS subsection code","[ 
   {  ""level"" :  ""2""  ,  ""label"" :  ""2""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""4""  }, 
   {  ""level"" :  ""5""  ,  ""label"" :  ""5""  }, 
@@ -615,11 +615,11 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""level"" :  ""26""  ,  ""label"" :  ""26""  }, 
   {  ""level"" :  ""27""  ,  ""label"" :  ""27""  }, 
   {  ""level"" :  ""29""  ,  ""label"" :  ""29""  }
-]","5 ;; 
+]","numeric","number","","","","",,"5 ;; 
 6 ;; 
 25 ;; 
 4 ;; 
-19","numeric",NA,"factor","factor",2,NA,"[ 
+19",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""6""  ,  ""PER"" :  ""(25.6%)""  }
@@ -659,8 +659,8 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""x"" :  ""13""  ,  ""Freq"" :  561  }, 
   {  ""x"" :  ""2""  ,  ""Freq"" :  545  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  934  }
-]","8545f03c0a4d4efa73af76e780bf57fd","",""
-"BMF_ACTIV1","BMF_ACTIV1","IRS Activity Code 1","","","",FALSE,"[ 
+]",2,"","","","8545f03c0a4d4efa73af76e780bf57fd"
+"BMF_ACTIV1","","BMF_ACTIV1","IRS Activity Code 1","[ 
   {  ""level"" :  ""263""  ,  ""label"" :  ""263""  }, 
   {  ""level"" :  ""200""  ,  ""label"" :  ""200""  }, 
   {  ""level"" :  ""379""  ,  ""label"" :  ""379""  }, 
@@ -890,11 +890,11 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""level"" :  ""155""  ,  ""label"" :  ""155""  }, 
   {  ""level"" :  ""181""  ,  ""label"" :  ""181""  }, 
   {  ""level"" :  ""72""  ,  ""label"" :  ""72""  }
-]","263 ;; 
+]","numeric","number","","","","","as.factor","263 ;; 
 200 ;; 
 379 ;; 
 0 ;; 
-407","numeric","as.factor","factor","factor",3,NA,"[ 
+407",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""230""  ,  ""PER"" :  ""(0.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }, 
@@ -962,8 +962,8 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""x"" :  ""318""  ,  ""Freq"" :  467  }, 
   {  ""x"" :  ""59""  ,  ""Freq"" :  467  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  8182  }
-]","303b9d7406915fc40ffde1ad546ec639","",""
-"NTMAJ12","NTMAJ12","NTEE major group (12)","","","",FALSE,"[ 
+]",3,"","","","303b9d7406915fc40ffde1ad546ec639"
+"NTMAJ12","","NTMAJ12","NTEE major group (12)","[ 
   {  ""level"" :  ""AR""  ,  ""label"" :  ""AR""  }, 
   {  ""level"" :  ""BH""  ,  ""label"" :  ""BH""  }, 
   {  ""level"" :  ""ED""  ,  ""label"" :  ""ED""  }, 
@@ -976,11 +976,11 @@ ST PETERSBURG","character",NA,"character","character",22,NA,"[
   {  ""level"" :  ""PU""  ,  ""label"" :  ""PU""  }, 
   {  ""level"" :  ""RE""  ,  ""label"" :  ""RE""  }, 
   {  ""level"" :  ""UN""  ,  ""label"" :  ""UN""  }
-]","HU ;; 
+]","character","string","","","","",,"HU ;; 
 PU ;; 
 UN ;; 
 ED ;; 
-AR","character",NA,"factor","factor",2,NA,"[ 
+AR",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""PU""  ,  ""PER"" :  ""(36.5%)""  }
@@ -1007,8 +1007,8 @@ AR","character",NA,"factor","factor",2,NA,"[
   {  ""x"" :  ""AR""  ,  ""Freq"" :  615  }, 
   {  ""x"" :  ""EN""  ,  ""Freq"" :  508  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  268  }
-]","47e592979b51bef034581a5ac944748c","",""
-"NTEE1","NTEE1","NTEE major group","","","",FALSE,"[ 
+]",2,"","","","47e592979b51bef034581a5ac944748c"
+"NTEE1","","NTEE1","NTEE major group","[ 
   {  ""level"" :  ""A""  ,  ""label"" :  ""A""  }, 
   {  ""level"" :  ""B""  ,  ""label"" :  ""B""  }, 
   {  ""level"" :  ""C""  ,  ""label"" :  ""C""  }, 
@@ -1035,11 +1035,11 @@ AR","character",NA,"factor","factor",2,NA,"[
   {  ""level"" :  ""X""  ,  ""label"" :  ""X""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Y""  }, 
   {  ""level"" :  ""Z""  ,  ""label"" :  ""Z""  }
-]","J ;; 
+]","character","string","","","","",,"J ;; 
 S ;; 
 K ;; 
 N ;; 
-M","character",NA,"factor","factor",1,NA,"[ 
+M",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""27""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }, 
@@ -1085,8 +1085,8 @@ M","character",NA,"factor","factor",1,NA,"[
   {  ""x"" :  ""E""  ,  ""Freq"" :  574  }, 
   {  ""x"" :  ""I""  ,  ""Freq"" :  557  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1959  }
-]","cc2692a6b5411ae2949be174b9e1198a","",""
-"NTEEFINAL","NTEEFINAL",NA,"","","",FALSE,"[ 
+]",1,"","","","cc2692a6b5411ae2949be174b9e1198a"
+"NTEEFINAL","","NTEEFINAL",,"[ 
   {  ""level"" :  ""J40""  ,  ""label"" :  ""J40""  }, 
   {  ""level"" :  ""S41""  ,  ""label"" :  ""S41""  }, 
   {  ""level"" :  ""K28""  ,  ""label"" :  ""K28""  }, 
@@ -1740,11 +1740,11 @@ M","character",NA,"factor","factor",1,NA,"[
   {  ""level"" :  ""C0130""  ,  ""label"" :  ""C0130""  }, 
   {  ""level"" :  ""Y12""  ,  ""label"" :  ""Y12""  }, 
   {  ""level"" :  ""B1220""  ,  ""label"" :  ""B1220""  }
-]","J40 ;; 
+]","character","string","","","","","as.factor","J40 ;; 
 S41 ;; 
 K28 ;; 
 N61 ;; 
-S47","character","as.factor","factor","factor",5,NA,"[ 
+S47",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""654""  ,  ""PER"" :  ""(2.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }, 
@@ -1813,8 +1813,8 @@ S47","character","as.factor","factor","factor",5,NA,"[
   {  ""x"" :  ""Y42""  ,  ""Freq"" :  514  }, 
   {  ""x"" :  ""Y50""  ,  ""Freq"" :  484  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  11696  }
-]","b2384dea5cf76a616f69c0c470850d63","",""
-"NTEESRC","NTEESRC",NA,"","","",FALSE,"[ 
+]",5,"","","","b2384dea5cf76a616f69c0c470850d63"
+"NTEESRC","","NTEESRC",,"[ 
   {  ""level"" :  ""ACT1""  ,  ""label"" :  ""ACT1""  }, 
   {  ""level"" :  ""BEST""  ,  ""label"" :  ""BEST""  }, 
   {  ""level"" :  ""END2""  ,  ""label"" :  ""END2""  }, 
@@ -1830,11 +1830,11 @@ S47","character","as.factor","factor","factor",5,NA,"[
   {  ""level"" :  ""VER""  ,  ""label"" :  ""VER""  }, 
   {  ""level"" :  ""WORD""  ,  ""label"" :  ""WORD""  }, 
   {  ""level"" :  ""ZZ""  ,  ""label"" :  ""ZZ""  }
-]","NEW ;; 
+]","character","string","","","","",,"NEW ;; 
 BEST ;; 
 IRS ;; 
 WORD ;; 
-ZZ","character",NA,"factor","factor",4,NA,"[ 
+ZZ",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""16""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -1862,16 +1862,16 @@ ZZ","character",NA,"factor","factor",4,NA,"[
   {  ""x"" :  ""IRS""  ,  ""Freq"" :  2540  }, 
   {  ""x"" :  ""SOI""  ,  ""Freq"" :  855  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1196  }
-]","32332a74c73a19d148592c2e9a853b0f","",""
-"DEDUCTCD","DEDUCTCD","IRS Deductibility code","","","",FALSE,"[ 
+]",4,"","","","32332a74c73a19d148592c2e9a853b0f"
+"DEDUCTCD","","DEDUCTCD","IRS Deductibility code","[ 
   {  ""level"" :  ""0""  ,  ""label"" :  ""0""  }, 
   {  ""level"" :  ""1""  ,  ""label"" :  ""1""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""2""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""4""  }
-]","2 ;; 
+]","numeric","number","","","","",,"2 ;; 
 1 ;; 
 0 ;; 
-4","numeric",NA,"factor","factor",1,NA,"[ 
+4",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }, 
@@ -1886,16 +1886,16 @@ ZZ","character",NA,"factor","factor",4,NA,"[
   {  ""x"" :  ""1""  ,  ""Freq"" :  3932  }, 
   {  ""x"" :  ""0""  ,  ""Freq"" :  685  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  2  }
-]","3090ed2798b253515d5dbda22454f646","",""
-"OUTREAS","OUTREAS","Reason why out of scope","","","",FALSE,"[ 
+]",1,"","","","3090ed2798b253515d5dbda22454f646"
+"OUTREAS","","OUTREAS","Reason why out of scope","[ 
   {  ""level"" :  ""F""  ,  ""label"" :  ""F""  }, 
   {  ""level"" :  ""N""  ,  ""label"" :  ""N""  }, 
   {  ""level"" :  ""S""  ,  ""label"" :  ""S""  }, 
   {  ""level"" :  ""T""  ,  ""label"" :  ""T""  }
-]","S ;; 
+]","character","string","","","","","as.factor","S ;; 
 F ;; 
 T ;; 
-N","character","as.factor","factor","factor",1,NA,"[ 
+N",FALSE,"factor","categorical","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""24,961""  ,  ""PER"" :  ""(99.8%)""  }, 
@@ -1911,12 +1911,12 @@ N","character","as.factor","factor","factor",1,NA,"[
   {  ""x"" :  ""S""  ,  ""Freq"" :  11  }, 
   {  ""x"" :  ""N""  ,  ""Freq"" :  1  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
-]","df8f9376a47dc8108ed65257ca6d78e4","",""
-"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","F9_05_UBIZ_IMCOME_OVER_LIMIT_X","Had unrelated business gross income of $1,000 or more [x]","","","",FALSE,"[ 
+]",1,"","","","df8f9376a47dc8108ed65257ca6d78e4"
+"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","F9_05_UBIZ_IMCOME_OVER_LIMIT_X","Had unrelated business gross income of $1,000 or more [x]","[ 
   {  ""level"" :  ""N""  ,  ""label"" :  ""N""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Y""  }
-]","N ;; 
-Y","character","as.factor","factor","logical",1,NA,"[ 
+]","character","string","","","","","as.factor","N ;; 
+Y",FALSE,"factor","boolean","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""N""  ,  ""PER"" :  ""(86.2%)""  }
@@ -1926,12 +1926,12 @@ Y","character","as.factor","factor","logical",1,NA,"[
 ]","[ 
   {  ""f"" :  ""N""  ,  ""Freq"" :  21550  }, 
   {  ""f"" :  ""Y""  ,  ""Freq"" :  3450  }
-]","00dcadf8e089921fed0b41ac50326cf7","",""
-"OUTNCCS","OUTNCCS","Out of Scope flag","","","",FALSE,"[ 
+]",1,"","","","00dcadf8e089921fed0b41ac50326cf7"
+"OUTNCCS","","OUTNCCS","Out of Scope flag","[ 
   {  ""level"" :  ""IN""  ,  ""label"" :  ""IN""  }, 
   {  ""level"" :  ""OUT""  ,  ""label"" :  ""OUT""  }
-]","IN ;; 
-OUT","character","as.factor","factor","logical",3,NA,"[ 
+]","character","string","","","","","as.factor","IN ;; 
+OUT",FALSE,"factor","boolean","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""3""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,361""  ,  ""PER"" :  ""(9.4%)""  }, 
@@ -1944,12 +1944,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""f"" :  ""IN""  ,  ""Freq"" :  22600  }, 
   {  ""f"" :  ""NA""  ,  ""Freq"" :  2361  }, 
   {  ""f"" :  ""OUT""  ,  ""Freq"" :  39  }
-]","5336c64575243bfeeacea9749cd0e6d8","",""
-"COUNTY_FIPS","COUNTY_FIPS","State + County FIPS code","","","",FALSE,"","36081 ;; 
+]",3,"","","","5336c64575243bfeeacea9749cd0e6d8"
+"COUNTY_FIPS","","COUNTY_FIPS","State + County FIPS code","","numeric","number","","","","",,"36081 ;; 
 51087 ;; 
 48343 ;; 
 51630 ;; 
-36001","numeric",NA,"numeric","numeric",5,NA,"[ 
+36001",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2,411""  ,  ""PER"" :  ""(9.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,389""  ,  ""PER"" :  ""(9.6%)""  }, 
@@ -2049,12 +2049,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 78030
 ]
-  }","247ce7eedae483be8e1ac6cff555c593","",""
-"CEO_CENSUSTRACT","CEO_CENSUSTRACT","Census tract","","","",FALSE,"","36081001900 ;; 
+  }",5,"","","","247ce7eedae483be8e1ac6cff555c593"
+"CEO_CENSUSTRACT","","CEO_CENSUSTRACT","Census tract","","numeric","number","","","","",,"36081001900 ;; 
 51087200301 ;; 
 48343950300 ;; 
 51630000500 ;; 
-36001000300","numeric",NA,"numeric","numeric",11,NA,"[ 
+36001000300",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""14,265""  ,  ""PER"" :  ""(57.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""3,110""  ,  ""PER"" :  ""(12.4%)""  }, 
@@ -2210,8 +2210,8 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 56043000200
 ]
-  }","afbc196795d8aeaf02161da0a2f65571","",""
-"F9_00_TAX_PERIOD_END_DATE","F9_00_TAX_PERIOD_END_DATE","Tax period end date","","","",FALSE,"[ 
+  }",11,"","","","afbc196795d8aeaf02161da0a2f65571"
+"F9_00_TAX_PERIOD_END_DATE","","F9_00_TAX_PERIOD_END_DATE","Tax period end date","[ 
   {  ""level"" :  ""201701""  ,  ""label"" :  ""201701""  }, 
   {  ""level"" :  ""201702""  ,  ""label"" :  ""201702""  }, 
   {  ""level"" :  ""201703""  ,  ""label"" :  ""201703""  }, 
@@ -2259,11 +2259,11 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""level"" :  ""202009""  ,  ""label"" :  ""202009""  }, 
   {  ""level"" :  ""202010""  ,  ""label"" :  ""202010""  }, 
   {  ""level"" :  ""202011""  ,  ""label"" :  ""202011""  }
-]","2019-12 ;; 
+]","numeric","number","","","","",,"2019-12 ;; 
 2018-12 ;; 
 2017-12 ;; 
 2019-06 ;; 
-2019-05","numeric",NA,"character","factor",7,"as_yyyymm","[ 
+2019-05",FALSE,"character","categorical","","","","as_yyyymm","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""2019-12""  ,  ""PER"" :  ""(39.5%)""  }
@@ -2324,8 +2324,8 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""x"" :  ""2018-06""  ,  ""Freq"" :  840  }, 
   {  ""x"" :  ""2019-09""  ,  ""Freq"" :  812  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  4985  }
-]","4483e307a89986c686973fba9f0c839f","",""
-"F9_00_TAX_PERIOD_END_DATE_PY","F9_00_TAX_PERIOD_END_DATE_PY","Tax period end date - prior year","","","",FALSE,"[ 
+]",7,"","","","4483e307a89986c686973fba9f0c839f"
+"F9_00_TAX_PERIOD_END_DATE_PY","","F9_00_TAX_PERIOD_END_DATE_PY","Tax period end date - prior year","[ 
   {  ""level"" :  ""201601""  ,  ""label"" :  ""201601""  }, 
   {  ""level"" :  ""201602""  ,  ""label"" :  ""201602""  }, 
   {  ""level"" :  ""201603""  ,  ""label"" :  ""201603""  }, 
@@ -2372,11 +2372,11 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""level"" :  ""201908""  ,  ""label"" :  ""201908""  }, 
   {  ""level"" :  ""201909""  ,  ""label"" :  ""201909""  }, 
   {  ""level"" :  ""201910""  ,  ""label"" :  ""201910""  }
-]","2018-12 ;; 
+]","numeric","number","","","","",,"2018-12 ;; 
 2017-12 ;; 
 2018-06 ;; 
 2018-05 ;; 
-2018-09","numeric",NA,"character","factor",7,"as_yyyymm","[ 
+2018-09",FALSE,"character","categorical","","","","as_yyyymm","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }, 
@@ -2437,12 +2437,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""x"" :  ""2017-06""  ,  ""Freq"" :  539  }, 
   {  ""x"" :  ""2016-12""  ,  ""Freq"" :  478  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  3768  }
-]","095bfbb72e3dffdedd36a3f34940f253","",""
-"F9_00_TAX_PERIOD_BEGIN_DATE","F9_00_TAX_PERIOD_BEGIN_DATE","Tax period begin date","","","",FALSE,"","2019-0 ;; 
+]",7,"","","","095bfbb72e3dffdedd36a3f34940f253"
+"F9_00_TAX_PERIOD_BEGIN_DATE","","F9_00_TAX_PERIOD_BEGIN_DATE","Tax period begin date","","numeric","number","","","","","as.character","2019-0 ;; 
 2018-0 ;; 
 2017-0 ;; 
 2018-9 ;; 
-2019-9","numeric","as.character","character","character",6,"as_yyyymm","[ 
+2019-9",FALSE,"character","string","","","","as_yyyymm","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""2019-0""  ,  ""PER"" :  ""(40.8%)""  }
@@ -2515,8 +2515,8 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""ww"" :  ""20181""  ,  ""Freq"" :  46  }, 
   {  ""ww"" :  ""20171""  ,  ""Freq"" :  25  }, 
   {  ""ww"" :  ""20201""  ,  ""Freq"" :  1  }
-]","5d4d1f619a54b42669084c74b2c29990","",""
-"F9_00_TAX_ACCPER","F9_00_TAX_ACCPER","Tax period end date","","","",FALSE,"[ 
+]",6,"","","","5d4d1f619a54b42669084c74b2c29990"
+"F9_00_TAX_ACCPER","","F9_00_TAX_ACCPER","Tax period end date","[ 
   {  ""level"" :  ""1""  ,  ""label"" :  ""1""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""2""  }, 
   {  ""level"" :  ""3""  ,  ""label"" :  ""3""  }, 
@@ -2529,11 +2529,11 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""level"" :  ""10""  ,  ""label"" :  ""10""  }, 
   {  ""level"" :  ""11""  ,  ""label"" :  ""11""  }, 
   {  ""level"" :  ""12""  ,  ""label"" :  ""12""  }
-]","12 ;; 
+]","numeric","number","","","","",,"12 ;; 
 06 ;; 
 05 ;; 
 09 ;; 
-11","numeric",NA,"character","factor",2,"as_mm","[ 
+11",FALSE,"character","categorical","","","","as_mm","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Most Common""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(59.9%)""  }
@@ -2559,12 +2559,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
   {  ""x"" :  ""08""  ,  ""Freq"" :  688  }, 
   {  ""x"" :  ""04""  ,  ""Freq"" :  609  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1242  }
-]","eeedda9dadbfe761aa1faa7379b34db0","",""
-"F9_08_REV_TOT_TOT","F9_08_REV_TOT_TOT","Total revenue - total","","","",FALSE,"","11139366 ;; 
+]",2,"","","","eeedda9dadbfe761aa1faa7379b34db0"
+"F9_08_REV_TOT_TOT","","F9_08_REV_TOT_TOT","Total revenue - total","","numeric","number","","","","",,"11139366 ;; 
 894312 ;; 
 110663 ;; 
 272444 ;; 
-6093701","numeric",NA,"numeric","numeric",10,NA,"[ 
+6093701",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,817""  ,  ""PER"" :  ""(95.3%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""413""  ,  ""PER"" :  ""(1.7%)""  }, 
@@ -2728,12 +2728,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 4178522311
 ]
-  }","d2e4429d44416d4fd723ee541e73d2a3","",""
-"F9_10_ASSET_TOT_BOY","F9_10_ASSET_TOT_BOY","Total assets - beginning of year","","","",FALSE,"","34227234 ;; 
+  }",10,"","","","d2e4429d44416d4fd723ee541e73d2a3"
+"F9_10_ASSET_TOT_BOY","","F9_10_ASSET_TOT_BOY","Total assets - beginning of year","","numeric","number","","","","",,"34227234 ;; 
 17491720 ;; 
 101131 ;; 
 0 ;; 
-3011522","numeric",NA,"numeric","numeric",11,NA,"[ 
+3011522",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,195""  ,  ""PER"" :  ""(80.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -2850,12 +2850,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 11226543829
 ]
-  }","e70794cebd95ead0ac4363dfeb80cf83","",""
-"F9_10_ASSET_TOT_EOY","F9_10_ASSET_TOT_EOY","Total assets - end of year","","","",FALSE,"","40131275 ;; 
+  }",11,"","","","e70794cebd95ead0ac4363dfeb80cf83"
+"F9_10_ASSET_TOT_EOY","","F9_10_ASSET_TOT_EOY","Total assets - end of year","","numeric","number","","","","",,"40131275 ;; 
 20157050 ;; 
 92924 ;; 
 19430176 ;; 
-2856785","numeric",NA,"numeric","numeric",11,NA,"[ 
+2856785",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,122""  ,  ""PER"" :  ""(96.5%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""110""  ,  ""PER"" :  ""(0.4%)""  }, 
@@ -3015,12 +3015,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 38468314242
 ]
-  }","4334f11236e70cf8809e059a71d77d72","",""
-"F9_10_NAFB_TOT_BOY","F9_10_NAFB_TOT_BOY","Net assets or fund balances - beginning of year","","","",FALSE,"","32671349 ;; 
+  }",11,"","","","4334f11236e70cf8809e059a71d77d72"
+"F9_10_NAFB_TOT_BOY","","F9_10_NAFB_TOT_BOY","Net assets or fund balances - beginning of year","","numeric","number","","","","",,"32671349 ;; 
 17460787 ;; 
 100443 ;; 
 1788316 ;; 
-589818","numeric",NA,"numeric","numeric",10,NA,"[ 
+589818",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,145""  ,  ""PER"" :  ""(80.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }, 
@@ -3173,12 +3173,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 6323689488
 ]
-  }","212ad23bd9c04244582a6ccdce4e11bc","",""
-"F9_09_EXP_TOT_TOT","F9_09_EXP_TOT_TOT","Total functional expenses - total expenses","","","",FALSE,"","6743081 ;; 
+  }",10,"","","","212ad23bd9c04244582a6ccdce4e11bc"
+"F9_09_EXP_TOT_TOT","","F9_09_EXP_TOT_TOT","Total functional expenses - total expenses","","numeric","number","","","","",,"6743081 ;; 
 1196713 ;; 
 119018 ;; 
 1067754 ;; 
-6231030","numeric",NA,"numeric","numeric",10,NA,"[ 
+6231030",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,740""  ,  ""PER"" :  ""(95.0%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""489""  ,  ""PER"" :  ""(2.0%)""  }, 
@@ -3302,12 +3302,12 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 4256605589
 ]
-  }","a79675365db63a755cffad928a8a02cd","",""
-"F9_01_EXP_TOT_PY","F9_01_EXP_TOT_PY","Total expenses - prior year","","","",FALSE,"","6901865 ;; 
+  }",10,"","","","a79675365db63a755cffad928a8a02cd"
+"F9_01_EXP_TOT_PY","","F9_01_EXP_TOT_PY","Total expenses - prior year","","numeric","number","","","","",,"6901865 ;; 
 1166814 ;; 
 112215 ;; 
 0 ;; 
-7111943","numeric",NA,"numeric","numeric",10,NA,"[ 
+7111943",FALSE,"numeric","number","","","",,"","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""19,931""  ,  ""PER"" :  ""(79.7%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -3444,4 +3444,4 @@ OUT","character","as.factor","factor","logical",3,NA,"[
     ""max""  :  [ 
 4624922368
 ]
-  }","d5008897331c88803798ab5c9be108be","",""
+  }",10,"","","","d5008897331c88803798ab5c9be108be"

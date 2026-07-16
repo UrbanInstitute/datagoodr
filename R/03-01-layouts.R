@@ -19,12 +19,10 @@
 #   div7 PROPERTIES (1/3)    + div8 graphic (2/3)
 #   div9 full-width extra table (3/3): STATS / levels / most-common
 layout.numeric <-
-  c( "div2 ;; vlabel         ;;               ;; v_to_txt",
-     "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
-     "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
-     "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
-     "div4 ;; vdesc          ;; DESCRIPTION   ;; v_to_txt",
-     "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
+  c( "div2 ;; dd_vlabel         ;;               ;; v_to_txt",
+     "div3 ;; stable_data_type    ;; DATA TYPE     ;; v_to_txt",
+     "div3 ;; rg_max_chr        ;; LENGTH        ;; v_to_txt",
+     "div4 ;; dd_vdesc          ;; DESCRIPTION   ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
      "div6 ;; rg_preview     ;;               ;; paste_preview_num",
      "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
@@ -44,12 +42,10 @@ layout.numeric <-
 #' @keywords internal
 #' @noRd
 layout.character <-
-  c( "div2 ;; vlabel         ;;                    ;; v_to_txt",
-     "div3 ;; vtype_class    ;; DATA TYPE          ;; v_to_txt",
-     "div3 ;; vscope         ;; SCOPE              ;; v_to_txt",
-     "div3 ;; vlength        ;; LENGTH             ;; v_to_txt",
-     "div4 ;; vdesc          ;; DESCRIPTION        ;; v_to_txt",
-     "div4 ;; vloc           ;; LOCATION CODE      ;; v_to_txt",
+  c( "div2 ;; dd_vlabel         ;;                    ;; v_to_txt",
+     "div3 ;; stable_data_type    ;; DATA TYPE          ;; v_to_txt",
+     "div3 ;; rg_max_chr        ;; LENGTH             ;; v_to_txt",
+     "div4 ;; dd_vdesc          ;; DESCRIPTION        ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
      "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
      "div7 ;; rg_properties  ;; PROPERTIES         ;; paste_properties",
@@ -70,17 +66,15 @@ layout.character <-
 #' @keywords internal
 #' @noRd
 layout.factor <-
-  c( "div2 ;; vlabel         ;;               ;; v_to_txt",
-     "div3 ;; vtype_class    ;; DATA TYPE     ;; v_to_txt",
-     "div3 ;; vscope         ;; SCOPE         ;; v_to_txt",
-     "div3 ;; vlength        ;; LENGTH        ;; v_to_txt",
-     "div4 ;; vdesc          ;; DESCRIPTION   ;; v_to_txt",
-     "div4 ;; vloc           ;; LOCATION CODE ;; v_to_txt",
+  c( "div2 ;; dd_vlabel         ;;               ;; v_to_txt",
+     "div3 ;; stable_data_type    ;; DATA TYPE     ;; v_to_txt",
+     "div3 ;; rg_max_chr        ;; LENGTH        ;; v_to_txt",
+     "div4 ;; dd_vdesc          ;; DESCRIPTION   ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
      "div6 ;; rg_preview     ;;               ;; paste_preview_chr",
      "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
      "div8 ;; rg_graphics    ;;               ;; paste_treemap",
-     "div9 ;; dd_f_level     ;; FACTOR LEVELS ;; paste_levels_freq"  )
+     "div9 ;; dd_f_levels     ;; FACTOR LEVELS ;; paste_levels_freq"  )
 
 
 #' Logical/Boolean variable layout definitions
@@ -96,17 +90,15 @@ layout.factor <-
 #' @keywords internal
 #' @noRd
 layout.logical <-
-  c("div2 ;; vlabel         ;;                 ;; v_to_txt",
-    "div3 ;; vtype_class    ;; DATA TYPE       ;; v_to_txt",
-    "div3 ;; vscope         ;; SCOPE           ;; v_to_txt",
-    "div3 ;; vlength        ;; LENGTH          ;; v_to_txt",
-    "div4 ;; vdesc          ;; DESCRIPTION     ;; v_to_txt",
-    "div4 ;; vloc           ;; LOCATION CODE   ;; v_to_txt",
+  c("div2 ;; dd_vlabel         ;;                 ;; v_to_txt",
+    "div3 ;; stable_data_type    ;; DATA TYPE       ;; v_to_txt",
+    "div3 ;; rg_max_chr        ;; LENGTH          ;; v_to_txt",
+    "div4 ;; dd_vdesc          ;; DESCRIPTION     ;; v_to_txt",
     "div5 ;; rg_preview     ;; PREVIEW         ;; paste_label",
     "div6 ;; rg_preview     ;;                 ;; paste_preview_chr",
     "div7 ;; rg_properties  ;; PROPERTIES      ;; paste_properties",
     "div8 ;; rg_graphics    ;;                 ;; paste_booleplot",
-    "div9 ;; dd_f_level     ;; CATEGORY LABELS ;; paste_levels_horizontal"  )
+    "div9 ;; dd_f_levels     ;; CATEGORY LABELS ;; paste_levels_horizontal"  )
 
 
 ### The default layouts ship as internal package data (R/sysdata.rda). After

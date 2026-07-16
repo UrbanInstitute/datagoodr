@@ -197,6 +197,18 @@ Still to do at the customize stage (see design doc):
 
 - dgf standardization and validation is not yet integrated. 
 
+- [ ] `.xlsx` cell 32767-char limit (found 2026-07-16): `save_to_excel()` (and
+  the v1->v2 migration) write the DGF via `openxlsx::writeData`, which silently
+  truncates any cell over 32767 characters - Excel's hard limit. A variable
+  with a very large `rg_graphics`/`rg_stats` JSON blob (e.g. a factor with
+  hundreds of levels) loses the tail. The `.csv` mirror has no such limit, so
+  the two sidecars can disagree. Not introduced by the schema rename - it
+  affects any DGF with a big JSON cell - but worth a real fix: either chunk the
+  cell (as the governed-CSV writer already does) or treat the `.csv` as the
+  authoritative store for the `rg_*` payloads. The render is unaffected today
+  because the truncated cells were not on any rendered variable, but that is
+  luck, not design.
+
 - [ ] `get_dupes()` cleanup (found 2026-07-15): the `df` argument is vestigial -
   it is never read. The body is `hh <- vhash  # sapply( df, rlang::hash )`, i.e.
   the hashing moved out to the caller and `vhash` is now passed in ready-made,

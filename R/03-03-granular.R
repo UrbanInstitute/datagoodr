@@ -15,21 +15,21 @@
 #' element without a prior [create_all_sections()] sweep.
 #'
 #' @param dgf A DGF data frame.
-#' @param vname The variable name (a value of `dgf$vname`).
+#' @param var_name The variable name (a value of `dgf$var_name`).
 #'
-#' @return The variable's `vtype_class`, used by the callers to pick a
-#'   type-appropriate render function. Errors if `vname` is not in the DGF.
+#' @return The variable's `stable_data_type`, used by the callers to pick a
+#'   type-appropriate render function. Errors if `var_name` is not in the DGF.
 #' @seealso [set_xx()], [get_xx()]
 #' @noRd
-set_dg_context <- function( dgf, vname ) {
-  i <- match( vname, dgf$vname )
+set_dg_context <- function( dgf, var_name ) {
+  i <- match( var_name, dgf$var_name )
   if( is.na(i) )
-  { stop( "Variable not found in DGF: ", vname, call. = FALSE ) }
+  { stop( "Variable not found in DGF: ", var_name, call. = FALSE ) }
   xx <- as.list( dgf[ i, , drop = FALSE ] )
   xx <- lapply( xx, function(v) v[[1]] )   # scalars, not length-1 vectors
-  xx[["VNAME"]] <- vname
+  xx[["VNAME"]] <- var_name
   set_xx( xx )
-  as.character( xx[["vtype_class"]] )
+  as.character( xx[["stable_data_type"]] )
 }
 
 
@@ -40,7 +40,7 @@ set_dg_context <- function( dgf, vname ) {
 #' inline in a narrative document.
 #'
 #' @param dgf A DGF data frame.
-#' @param vname The variable name (a value of `dgf$vname`).
+#' @param var_name The variable name (a value of `dgf$var_name`).
 #' @param style `"rg"` (full profile) or `"dd"` (descriptors only). Defaults to
 #'   `"rg"`.
 #' @param layouts Optional layout override passed to [get_design()].
@@ -49,9 +49,9 @@ set_dg_context <- function( dgf, vname ) {
 #'   `results = "asis"` chunk.
 #' @seealso [dg_stats()], [dg_properties()], [dg_levels()], [dg_field()]
 #' @export
-dg_section <- function( dgf, vname, style = "rg", layouts = NULL ) {
+dg_section <- function( dgf, var_name, style = "rg", layouts = NULL ) {
   L <- dgf_to_list( dgf )
-  create_section( vname, get_design( style = style, layouts = layouts ), L )
+  create_section( var_name, get_design( style = style, layouts = layouts ), L )
   invisible( NULL )
 }
 
@@ -63,7 +63,7 @@ dg_section <- function( dgf, vname, style = "rg", layouts = NULL ) {
 #' field from the DGF.
 #'
 #' @param dgf A DGF data frame.
-#' @param vname The variable name (a value of `dgf$vname`).
+#' @param var_name The variable name (a value of `dgf$var_name`).
 #' @param label Optional section label; defaults to the render function's own
 #'   default (e.g. `"STATS"`).
 #'
@@ -75,13 +75,13 @@ NULL
 
 #' @describeIn dg_element Summary statistics (type-appropriate).
 #' @export
-dg_stats <- function( dgf, vname, label = "STATS" ) {
-  type <- set_dg_context( dgf, vname )
+dg_stats <- function( dgf, var_name, label = "STATS" ) {
+  type <- set_dg_context( dgf, var_name )
   f <- switch( type,
-    numeric   = paste_stats_num,
-    character = paste_stats_chr,
-    factor    = paste_stats_fact,
-    logical   = paste_stats_log,
+    number      = paste_stats_num,
+    string      = paste_stats_chr,
+    categorical = paste_stats_fact,
+    boolean     = paste_stats_log,
     stop( "No stats renderer for type '", type, "'.", call. = FALSE ) )
   f( "rg_stats", label )
   invisible( NULL )
@@ -89,17 +89,17 @@ dg_stats <- function( dgf, vname, label = "STATS" ) {
 
 #' @describeIn dg_element Data-quality properties (rows, distinct, missing, ...).
 #' @export
-dg_properties <- function( dgf, vname, label = "PROPERTIES" ) {
-  set_dg_context( dgf, vname )
+dg_properties <- function( dgf, var_name, label = "PROPERTIES" ) {
+  set_dg_context( dgf, var_name )
   paste_properties( "rg_properties", label )
   invisible( NULL )
 }
 
 #' @describeIn dg_element Quantile table (numeric variables).
 #' @export
-dg_quantiles <- function( dgf, vname, label = "QUANTILES" ) {
-  type <- set_dg_context( dgf, vname )
-  if( type != "numeric" )
+dg_quantiles <- function( dgf, var_name, label = "QUANTILES" ) {
+  type <- set_dg_context( dgf, var_name )
+  if( type != "number" )
   { stop( "Quantiles are only available for numeric variables (got '",
           type, "').", call. = FALSE ) }
   paste_quantiles( "rg_stats", label )
@@ -109,11 +109,11 @@ dg_quantiles <- function( dgf, vname, label = "QUANTILES" ) {
 #' @describeIn dg_element Preview of example values (numeric or character).
 #' @param size Maximum line width for `dg_preview`, in characters (default 80).
 #' @export
-dg_preview <- function( dgf, vname, label = "PREVIEW", size = 80 ) {
-  type <- set_dg_context( dgf, vname )
+dg_preview <- function( dgf, var_name, label = "PREVIEW", size = 80 ) {
+  type <- set_dg_context( dgf, var_name )
   f <- switch( type,
-    numeric   = paste_preview_num,
-    character = paste_preview_chr,
+    number = paste_preview_num,
+    string = paste_preview_chr,
     stop( "Previews are only available for numeric and character variables ",
           "(got '", type, "').", call. = FALSE ) )
   f( "rg_preview", label, size = size )
@@ -122,33 +122,33 @@ dg_preview <- function( dgf, vname, label = "PREVIEW", size = 80 ) {
 
 #' @describeIn dg_element Factor/logical level dictionary.
 #' @export
-dg_levels <- function( dgf, vname, label = "LEVELS" ) {
-  set_dg_context( dgf, vname )
-  paste_levels( "dd_f_level", label )
+dg_levels <- function( dgf, var_name, label = "LEVELS" ) {
+  set_dg_context( dgf, var_name )
+  paste_levels( "dd_f_levels", label )
   invisible( NULL )
 }
 
 #' @describeIn dg_element The type-appropriate graphic (histogram, treemap,
 #'   bar plot, or word cloud). Set chunk `fig.width`/`fig.height` to size it.
 #' @export
-dg_graphic <- function( dgf, vname, label = NULL ) {
-  type <- set_dg_context( dgf, vname )
+dg_graphic <- function( dgf, var_name, label = NULL ) {
+  type <- set_dg_context( dgf, var_name )
   f <- switch( type,
-    numeric   = paste_histogram,
-    factor    = paste_treemap,
-    logical   = paste_booleplot,
-    character = v_to_wordcloud,
+    number      = paste_histogram,
+    categorical = paste_treemap,
+    boolean     = paste_booleplot,
+    string      = v_to_wordcloud,
     stop( "No graphic for type '", type, "'.", call. = FALSE ) )
   if( is.null(label) ) f( "rg_graphics" ) else f( "rg_graphics", label )
   invisible( NULL )
 }
 
-#' @describeIn dg_element Any text field from the DGF (e.g. `"vdesc"`,
-#'   `"vlabel"`, `"vscope"`). `field` is the DGF column name.
+#' @describeIn dg_element Any text field from the DGF (e.g. `"dd_vdesc"`,
+#'   `"dd_vlabel"`, `"dd_vdesc"`). `field` is the DGF column name.
 #' @param field DGF column name to print (for `dg_field`).
 #' @export
-dg_field <- function( dgf, vname, field, label = toupper(field) ) {
-  set_dg_context( dgf, vname )
+dg_field <- function( dgf, var_name, field, label = toupper(field) ) {
+  set_dg_context( dgf, var_name )
   v_to_txt( field, label )
   invisible( NULL )
 }

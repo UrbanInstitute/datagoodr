@@ -5,9 +5,9 @@ test_that("inspect_dgf accepts a freshly built DGF", {
   expect_length(out$problems, 0)
 })
 
-test_that("inspect_dgf flags an unrenderable vtype_class", {
+test_that("inspect_dgf flags an unrenderable stable_data_type", {
   dgf <- build_demo_dgf()
-  dgf$vtype_class[1] <- "mystery"
+  dgf$stable_data_type[1] <- "mystery"
   out <- inspect_dgf(dgf, verbose = FALSE)
   expect_false(out$valid)
   expect_true("invalid_vtype_class" %in% names(out$problems))
@@ -23,7 +23,7 @@ test_that("inspect_dgf flags invalid JSON cells", {
 
 test_that("inspect_dgf flags undefined convert/format functions", {
   dgf <- build_demo_dgf()
-  dgf$vformat[1] <- "definitely_not_a_function"
+  dgf$stable_data_format[1] <- "definitely_not_a_function"
   out <- inspect_dgf(dgf, verbose = FALSE)
   expect_false(out$valid)
   expect_true("missing_functions" %in% names(out$problems))
@@ -31,7 +31,7 @@ test_that("inspect_dgf flags undefined convert/format functions", {
 
 test_that("inspect_dgf flags missing required columns", {
   dgf <- build_demo_dgf()
-  dgf$rg_hash <- NULL
+  dgf$prov_current_hash <- NULL
   out <- inspect_dgf(dgf, verbose = FALSE)
   expect_false(out$valid)
   expect_true("missing_columns" %in% names(out$problems))

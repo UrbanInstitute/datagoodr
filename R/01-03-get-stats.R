@@ -6,7 +6,7 @@
 #'
 #' Generates needed properties for rg_properties column of the DGF. Used inside R/01-00-CREATE-DGF.R
 #'
-#' @param VNAME A character string specifying the name of the variable in the data frame. (From vname column of the DGF)
+#' @param VNAME A character string specifying the name of the variable in the data frame. (From var_name column of the DGF)
 #' @param df A data frame containing the variable to be visualized.
 #'
 #' @return Data table as JSON text string needed to store in the DGF to later generate the properties table when rendering the RG.
@@ -93,7 +93,7 @@ most_common_val <- function(x) {
 #'
 #' Generates needed graphics for rg_stats column of the DGF. Used inside R/01-00-CREATE-DGF.R
 #'
-#' @param VNAME A character string specifying the name of the variable in the data frame. (From vname column of the DGF)
+#' @param VNAME A character string specifying the name of the variable in the data frame. (From var_name column of the DGF)
 #' @param df A data frame containing the variable to be visualized.
 #' @param VCLASS A character string indicating the class of the variable (e.g., "numeric", "factor", "logical", or other).
 #'
@@ -239,7 +239,7 @@ get_stats_log <-  function(VNAME, df){
 #'
 #' @return A JSON string: a Value/Frequency table, stored in the DGF's
 #'   `rg_stats` column. The render pairs it with the editable labels in
-#'   `dd_f_level` to build the level | frequency | meaning table.
+#'   `dd_f_levels` to build the level | frequency | meaning table.
 #' @noRd
 get_stats_fact <-  function(VNAME, df){
 

@@ -39,13 +39,13 @@ ingest_raw <- function( df, path=NULL ) {
 
 #' Rename raw columns to their DGF variable names
 #'
-#' Uses the `vname`, `vname_alias`, and `vlabel` columns of a DGF to rename
+#' Uses the `var_name`, `dd_vname_alias`, and `dd_vlabel` columns of a DGF to rename
 #' the columns of a raw data frame from their alias (raw) names to their
 #' canonical DGF names, attaching labels. Columns without an alias keep their
 #' existing name.
 #'
 #' @param df A data frame of raw data.
-#' @param dgf A DGF data frame containing `vname`, `vname_alias`, and `vlabel`
+#' @param dgf A DGF data frame containing `var_name`, `dd_vname_alias`, and `dd_vlabel`
 #'   columns.
 #'
 #' @return The data frame with columns renamed and labelled per the DGF.
@@ -58,18 +58,18 @@ apply_name_aliases <- function( df, dgf ) {
 
   cw <-
     dgf %>%
-    dplyr::select( vname, vname_alias, vlabel )
+    dplyr::select( var_name, dd_vname_alias, dd_vlabel )
 
-  no.alias <- is.na( cw$vname_alias )
-  cw$vname_alias[ no.alias ] <- cw$vname[ no.alias ]
+  no.alias <- is.na( cw$dd_vname_alias )
+  cw$dd_vname_alias[ no.alias ] <- cw$var_name[ no.alias ]
 
   df <-
     crosswalkr::renamefrom(
       df,
       cw_file=cw,
-      raw=vname_alias,
-      clean=vname,
-      label=vlabel )
+      raw=dd_vname_alias,
+      clean=var_name,
+      label=dd_vlabel )
 
   return( df )
 
@@ -120,7 +120,7 @@ parse_functions <- function( raw_convert ){
 #' its intended types.
 #'
 #' @param df A data frame of raw data.
-#' @param dgf A DGF data frame with `vname` and `raw_convert` columns.
+#' @param dgf A DGF data frame with `var_name` and `raw_convert` columns.
 #'
 #' @return The data frame with conversion functions applied to the relevant
 #'   columns.
@@ -135,7 +135,7 @@ apply_raw_convert_fx <- function( df, dgf ) {
 
   for( i in fx.list )
   {
-    cols <- df$vname[ df$raw_convert == i ]
+    cols <- df$var_name[ df$raw_convert == i ]
     df <-
       df %>%
       dplyr::mutate_at( cols, i )

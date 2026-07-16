@@ -28,7 +28,7 @@ Invisibly, the updated DGF data frame. It carries a `"status"`
 }
 \description{
 Compares an existing DGF to a new version of the dataset and produces an
-updated DGF. Each variable's `rg_hash` is used to detect change: variables
+updated DGF. Each variable's `prov_current_hash` is used to detect change: variables
 whose data is unchanged keep their existing (curated) DGF row, while changed
 or newly added variables have their data summaries recomputed. Curated
 fields (descriptions, aliases, scope, location, conversion/format rules) are

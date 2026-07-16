@@ -140,11 +140,15 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
       else
       { get( nm, envir = asNamespace("datagoodr") ) }
     }
+    # List keys are the ontology data_type that create_div matches against
+    # stable_data_type. The layout.* objects keep their R-flavoured names (they
+    # are just how a user overrides one), but the dispatch key is the ontology
+    # term: number/string/categorical/boolean.
     layouts <- list(
-      numeric   = resolve("layout.numeric"),
-      character = resolve("layout.character"),
-      factor    = resolve("layout.factor"),
-      logical   = resolve("layout.logical") )
+      number      = resolve("layout.numeric"),
+      string      = resolve("layout.character"),
+      categorical = resolve("layout.factor"),
+      boolean     = resolve("layout.logical") )
   }
 
   design.df <-
@@ -167,22 +171,22 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
 #
 #  |TYPE      |DIV   |VNAME    |LABEL       |FUNCTION         |
 #  |:---------|:-----|:--------|:-----------|:----------------|
-#  |character |div2  |vlabel   |LABEL       |v_to_txt         |
-#  |character |div3  |vtype    |DATA TYPE   |v_to_txt         |
+#  |character |div2  |dd_vlabel   |LABEL       |v_to_txt         |
+#  |character |div3  |stable_data_storage    |DATA TYPE   |v_to_txt         |
 #  |character |div4  |desc     |DESCRIPTION |v_to_txt         |
 #  |character |div8  |v        |PROPERTIES  |get_properties   |
 #  |character |div9  |v        |PREVIEW     |get_examples_chr |
 #  |character |div10 |v        |STATS       |get_stats_chr    |
 #  |character |div11 |v        |''          |get_wordcloud    |
-#  |factor    |div2  |vlabel   |LABEL       |v_to_txt         |
-#  |factor    |div3  |vtype    |DATA TYPE   |v_to_txt         |
+#  |factor    |div2  |dd_vlabel   |LABEL       |v_to_txt         |
+#  |factor    |div3  |stable_data_storage    |DATA TYPE   |v_to_txt         |
 #  |factor    |div4  |desc     |DESCRIPTION |v_to_txt         |
 #  |factor    |div4  |f_levels |LEVELS      |f_to_tbl         |
 #  |factor    |div12 |v        |PROPERTIES  |get_properties   |
 #  |factor    |div13 |v        |STATS       |get_stats_fact   |
 #  |factor    |div14 |v        |''          |get_treemap      |
-#  |numeric   |div2  |vlabel   |LABEL       |v_to_txt         |
-#  |numeric   |div3  |vtype    |DATA TYPE   |v_to_txt         |
+#  |numeric   |div2  |dd_vlabel   |LABEL       |v_to_txt         |
+#  |numeric   |div3  |stable_data_storage    |DATA TYPE   |v_to_txt         |
 #  |numeric   |div4  |desc     |DESCRIPTION |v_to_txt         |
 #  |numeric   |div5  |v        |PROPERTIES  |get_properties   |
 #  |numeric   |div6  |v        |QUANTILES   |get_quantiles    |
@@ -207,12 +211,12 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
 #' variable name for all variable types.
 #'
 #' @param x Character string, the label or variable name to include
-#'   in the header. Defaults to `"vname"`.
+#'   in the header. Defaults to `"var_name"`.
 #'
 #' @return No return value, called for side effects (writes markdown text).
 #'
 #' @export
-create_div1 <- function( x="vname" )
+create_div1 <- function( x="var_name" )
 {
   cat( "::: {.div1} \n\n" )
   cat( paste0( "#### ", x, "\n\n" ) )
@@ -243,7 +247,7 @@ create_div <- function( div.num="div2", all.layouts ) {
   if( grepl("^blank", div.num) )
   { cat( paste0( "::: {.", div.num, "} \n\n::: \n\n" ) ); return( invisible(NULL) ) }
 
-  DATA_TYPE <- get_xx()[["vtype_class"]]
+  DATA_TYPE <- get_xx()[["stable_data_type"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
 
   # skip div if not included in design
@@ -295,7 +299,7 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   xx[["VNAME"]] <- VNAME
   set_xx( xx )                         # publish to the render context
 
-  DATA_TYPE <- xx[["vtype_class"]]
+  DATA_TYPE <- xx[["stable_data_type"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]

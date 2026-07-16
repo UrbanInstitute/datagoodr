@@ -11,15 +11,13 @@ create_dgf(
   guess.factors = TRUE,
   guess.dates = FALSE,
   dd = NULL,
-  vname = NULL,
-  vlabel = NULL,
-  vdesc = NULL,
-  vtype = NULL,
-  vconvert = NULL,
-  vformat = NULL,
-  vname_alias = NULL,
-  vscope = NULL,
-  vloc = NULL,
+  var_name = NULL,
+  dd_vlabel = NULL,
+  dd_vdesc = NULL,
+  stable_data_storage = NULL,
+  raw_data_import_rule = NULL,
+  stable_data_format = NULL,
+  dd_vname_alias = NULL,
   keep.dd.cols = NULL,
   preview_dd = F,
   preview_dp = F,
@@ -43,18 +41,18 @@ instead of re-reading the data with `readr` to re-infer them. Defaults to
 \item{guess.factors}{Logical; treat low-cardinality columns as factors.
 Defaults to `TRUE`.}
 
-\item{vname, vlabel, vdesc, vtype}{Optional character vectors of per-variable
+\item{var_name, dd_vlabel, dd_vdesc, stable_data_storage}{Optional character vectors of per-variable
 metadata (name, short label, long description, type), each the same length
 and order as the columns of `df`. Default to blank.}
 
-\item{vconvert}{Optional character vector of type-conversion function names
+\item{raw_data_import_rule}{Optional character vector of type-conversion function names
 (e.g. `"as_yyyy"`), one per column, applied to the data before profiling.}
 
-\item{vformat}{Optional character vector of display-formatting function names
+\item{stable_data_format}{Optional character vector of display-formatting function names
 (e.g. `"dollarize"`), one per column, applied to previews and graphics.}
 
-\item{vname_alias, vscope, vloc}{Optional character vectors of per-variable
-alias, scope, and location-code metadata. Default to blank.}
+\item{dd_vname_alias}{Optional character vector of per-variable alternate
+names. Defaults to blank.}
 
 \item{dir}{Directory to write the DGF into. Created if it does not exist.
 Defaults to `"."`. Ignored when `file` is an absolute path.}

@@ -4,22 +4,24 @@ test_that("create_dgf returns one row per variable with the expected columns", {
 
   expect_s3_class(dgf, "data.frame")
   expect_equal(nrow(dgf), ncol(df))
-  expect_true(all(c("vname", "vtype_class", "rg_properties",
-                    "rg_stats", "rg_graphics", "rg_hash") %in% names(dgf)))
+  expect_true(all(c("var_name", "stable_data_type", "rg_properties",
+                    "rg_stats", "rg_graphics", "prov_current_hash") %in% names(dgf)))
 })
 
 test_that("create_dgf includes the metadata/schema columns", {
   dgf <- build_demo_dgf()
-  expect_true(all(c("vscope", "vloc", "vlength") %in% names(dgf)))
-  # vscope/vloc default to blank, vlength is the max character width
-  expect_true(all(dgf$vscope == ""))
-  expect_true(is.numeric(dgf$vlength) || all(grepl("^[0-9]+$", dgf$vlength)))
+  # the six prefix families are all present
+  expect_true(all(c("dd_vlabel", "raw_data_storage", "stable_data_type",
+                    "rg_max_chr", "validate_rules", "prov_current_hash")
+                  %in% names(dgf)))
+  # rg_max_chr is the max character width
+  expect_true(is.numeric(dgf$rg_max_chr) || all(grepl("^[0-9]+$", dgf$rg_max_chr)))
 })
 
-test_that("dd_f_level captures a two-column level/label dictionary", {
+test_that("dd_f_levels captures a two-column level/label dictionary", {
   dgf <- build_demo_dgf()
   # 'cat' is a factor with levels A, B, C
-  lv <- dgf$dd_f_level[dgf$vname == "cat"]
+  lv <- dgf$dd_f_levels[dgf$var_name == "cat"]
   expect_true(validate_json(lv))
   tab <- jsonlite::fromJSON(lv)
   expect_setequal(names(tab), c("level", "label"))
@@ -29,12 +31,13 @@ test_that("dd_f_level captures a two-column level/label dictionary", {
 
 test_that("create_dgf classifies each variable type correctly", {
   dgf <- build_demo_dgf()
-  types <- setNames(dgf$vtype_class, dgf$vname)
+  types <- setNames(dgf$stable_data_type, dgf$var_name)
 
-  expect_equal(unname(types["num"]),   "numeric")
-  expect_equal(unname(types["cat"]),   "factor")
-  expect_equal(unname(types["flag"]),  "logical")   # 2-level category -> logical
-  expect_equal(unname(types["notes"]), "character")
+  # stable_data_type is the ontology vocabulary
+  expect_equal(unname(types["num"]),   "number")
+  expect_equal(unname(types["cat"]),   "categorical")
+  expect_equal(unname(types["flag"]),  "boolean")   # 2-level category -> boolean
+  expect_equal(unname(types["notes"]), "string")
 })
 
 test_that("create_dgf writes both .csv and .xlsx outputs", {
@@ -52,7 +55,7 @@ test_that("create_dgf stores valid JSON in the rg_ columns", {
   expect_true(all(validate_json(dgf$rg_properties)))
 })
 
-test_that("a type-changing vformat on a numeric column does not break stats", {
+test_that("a type-changing stable_data_format on a numeric column does not break stats", {
   # dollarize() turns numbers into "$1,234" strings. The preview should show
   # the formatted values, but numeric stats/graphics must still be computed on
   # the underlying numbers (regression test for the get_stats_num crash).
@@ -60,11 +63,11 @@ test_that("a type-changing vformat on a numeric column does not break stats", {
   f  <- tempfile("dgf-fmt")
   expect_error(
     suppressMessages(suppressWarnings(
-      capture.output(dgf <- create_dgf(df, vformat = "dollarize", file = f))
+      capture.output(dgf <- create_dgf(df, stable_data_format = "dollarize", file = f))
     )),
     NA
   )
-  expect_equal(dgf$vtype_class, "numeric")
+  expect_equal(dgf$stable_data_type, "number")
   expect_match(dgf$rg_preview, "\\$")             # preview is formatted
   expect_true(validate_json(dgf$rg_stats))        # numeric stats produced
 })

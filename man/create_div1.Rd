@@ -4,11 +4,11 @@
 \alias{create_div1}
 \title{Create a level-1 div section in markdown}
 \usage{
-create_div1(x = "vname")
+create_div1(x = "var_name")
 }
 \arguments{
 \item{x}{Character string, the label or variable name to include
-in the header. Defaults to `"vname"`.}
+in the header. Defaults to `"var_name"`.}
 }
 \value{
 No return value, called for side effects (writes markdown text).

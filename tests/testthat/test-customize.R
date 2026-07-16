@@ -21,30 +21,31 @@ test_that("get_design style controls which sections appear", {
 
 test_that("get_design honors an explicit layouts override", {
   custom <- list(
-    numeric   = c("div2 ;; vlabel ;; LABEL ;; v_to_txt"),
-    character = c("div2 ;; vlabel ;; LABEL ;; v_to_txt"),
-    factor    = c("div2 ;; vlabel ;; LABEL ;; v_to_txt"),
-    logical   = c("div2 ;; vlabel ;; LABEL ;; v_to_txt"))
+    numeric   = c("div2 ;; dd_vlabel ;; LABEL ;; v_to_txt"),
+    character = c("div2 ;; dd_vlabel ;; LABEL ;; v_to_txt"),
+    factor    = c("div2 ;; dd_vlabel ;; LABEL ;; v_to_txt"),
+    logical   = c("div2 ;; dd_vlabel ;; LABEL ;; v_to_txt"))
   d <- get_design("rg", layouts = custom)
   expect_equal(nrow(d), 4)
 })
 
 test_that("get_design picks up a layout override from the global environment", {
-  default.n <- sum(get_design("rg")$TYPE == "numeric")
+  # layout.numeric is still the override object name (it is how a user names an
+  # override); it maps onto the "number" dispatch key.
   assign("layout.numeric",
-         c("div2 ;; vlabel ;; LABEL ;; v_to_txt",
-           "div3 ;; vtype_class ;; DATA TYPE ;; v_to_txt"),
+         c("div2 ;; dd_vlabel ;; LABEL ;; v_to_txt",
+           "div3 ;; stable_data_type ;; DATA TYPE ;; v_to_txt"),
          envir = globalenv())
   on.exit(rm("layout.numeric", envir = globalenv()), add = TRUE)
-  expect_equal(sum(get_design("rg")$TYPE == "numeric"), 2)
+  expect_equal(sum(get_design("rg")$TYPE == "number"), 2)
   # unrelated types still use the package default
-  expect_true(sum(get_design("rg")$TYPE == "factor") > 2)
+  expect_true(sum(get_design("rg")$TYPE == "categorical") > 2)
 })
 
 test_that("create_all_sections with style='dd' omits data profiles", {
   dgf <- build_demo_dgf()
   out <- suppressMessages(suppressWarnings(
-    capture.output(create_all_sections(dgf[dgf$vtype_class == "factor", ],
+    capture.output(create_all_sections(dgf[dgf$stable_data_type == "categorical", ],
                                        style = "dd"))))
   expect_true(any(grepl("LEVELS", out)))
   expect_false(any(grepl("PROPERTIES", out)))

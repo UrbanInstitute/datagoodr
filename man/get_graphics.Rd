@@ -7,7 +7,7 @@
 get_graphics(VNAME, df, VCLASS)
 }
 \arguments{
-\item{VNAME}{A character string specifying the name of the variable in the data frame. (From vname column of the DGF)}
+\item{VNAME}{A character string specifying the name of the variable in the data frame. (From var_name column of the DGF)}
 
 \item{df}{A data frame containing the variable to be visualized.}
 

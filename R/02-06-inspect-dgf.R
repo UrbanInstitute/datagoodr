@@ -2,20 +2,20 @@
 # After a user edits DGF fields by hand (Step 1 -> Step 2), inspect_dgf()
 # checks that the file is still in a shape that Step 3 can render.
 
-# Columns every DGF produced by create_dgf() must contain.
-.dgf_required_cols <- c(
-  "vname", "vlabel", "vdesc", "vname_alias", "vscope", "vloc", "duplicates",
-  "dd_f_level", "raw_first5", "raw_type", "vconvert", "vtype", "vtype_class",
-  "vlength", "vformat", "rg_properties", "rg_preview", "rg_stats",
-  "rg_graphics", "rg_hash", "dgf_standardize", "dgf_validate")
+# Columns every DGF produced by create_dgf() must contain. The full v2 schema
+# is defined once in dgf_schema_cols() (R/01-01-dgf-schema.R); inspect_dgf()
+# validates against it so the two cannot drift.
+.dgf_required_cols <- dgf_schema_cols()
 
 # Columns whose non-empty cells must contain valid JSON. Note that rg_preview
 # is intentionally excluded: it holds a " ;; "-delimited plain-text list of
 # example values, not JSON.
-.dgf_json_cols <- c("dd_f_level", "rg_properties", "rg_stats", "rg_graphics")
+.dgf_json_cols <- c("dd_f_levels", "rg_properties", "rg_stats", "rg_graphics")
 
-# Variable classes Step 3 knows how to render (see R/03-01-layouts.R).
-.dgf_valid_classes <- c("numeric", "character", "factor", "logical")
+# stable_data_type values Step 3 has a renderer + layout for (see
+# R/03-01-layouts.R and the ontology). identifier/temporal are specified but
+# not yet renderable.
+.dgf_valid_classes <- c("number", "string", "categorical", "boolean")
 
 
 #' Validate a DGF before rendering (Step 2)
@@ -26,19 +26,19 @@
 #'
 #' \itemize{
 #'   \item all required DGF columns are present;
-#'   \item every `vtype_class` value is one Step 3 can render
-#'     (numeric, character, factor, logical);
-#'   \item all non-empty cells in the JSON columns (`dd_f_level`,
+#'   \item every `stable_data_type` value is one Step 3 can render
+#'     (number, string, categorical, boolean);
+#'   \item all non-empty cells in the JSON columns (`dd_f_levels`,
 #'     `rg_properties`, `rg_stats`, `rg_graphics`) contain valid JSON;
-#'   \item every function named in the `vconvert` and `vformat` columns is
+#'   \item every function named in the `raw_data_import_rule` and `stable_data_format` columns is
 #'     defined and callable;
-#'   \item every variable has a non-empty `rg_hash`.
+#'   \item every variable has a non-empty `prov_current_hash`.
 #' }
 #'
 #' @param dgf A DGF data frame, or a path to a DGF `.xlsx` file (read with
 #'   [load_dgf()]).
 #' @param convert_env Environment in which to look for the functions named in
-#'   the `vconvert`/`vformat` columns. Defaults to the caller's environment,
+#'   the `raw_data_import_rule`/`stable_data_format` columns. Defaults to the caller's environment,
 #'   so functions you have sourced (e.g. from a project `dgf.R`) are found.
 #' @param verbose Logical; if `TRUE` (default) a human-readable report is
 #'   printed to the console.
@@ -69,17 +69,17 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
   }
 
   ## 2. variable classes -----------------------------------------------------
-  if( "vtype_class" %in% names(dgf) )
+  if( "stable_data_type" %in% names(dgf) )
   {
-    bad.class <- ! dgf$vtype_class %in% .dgf_valid_classes
+    bad.class <- ! dgf$stable_data_type %in% .dgf_valid_classes
     if( any(bad.class) )
     {
       problems$invalid_vtype_class <-
-        stats::setNames( dgf$vtype_class[bad.class], dgf$vname[bad.class] )
-      say( "[FAIL] unrenderable vtype_class for: ",
-           paste(dgf$vname[bad.class], collapse=", "), "\n" )
+        stats::setNames( dgf$stable_data_type[bad.class], dgf$var_name[bad.class] )
+      say( "[FAIL] unrenderable stable_data_type for: ",
+           paste(dgf$var_name[bad.class], collapse=", "), "\n" )
     } else {
-      say( "[ ok ] all vtype_class values are renderable\n" )
+      say( "[ ok ] all stable_data_type values are renderable\n" )
     }
   }
 
@@ -94,7 +94,7 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
     ok <- validate_json( vals[filled] )
     if( ! all(ok) )
     {
-      bad.vars <- dgf$vname[filled][ ! ok ]
+      bad.vars <- dgf$var_name[filled][ ! ok ]
       bad.json[[col]] <- bad.vars
       say( "[FAIL] invalid JSON in ", col, " for: ",
            paste(bad.vars, collapse=", "), "\n" )
@@ -104,7 +104,7 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
   else { say( "[ ok ] all JSON cells are valid\n" ) }
 
   ## 4. referenced convert / format functions --------------------------------
-  fx.cols <- intersect( c("vconvert", "vformat"), names(dgf) )
+  fx.cols <- intersect( c("raw_data_import_rule", "stable_data_format"), names(dgf) )
   fx.named <- unique( unlist( lapply( dgf[fx.cols], as.character ) ) )
   fx.named <- fx.named[ ! ( is.na(fx.named) | trimws(fx.named) == "" ) ]
   fx.named <- gsub( "\\(\\)", "", fx.named )
@@ -121,16 +121,16 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
   }
 
   ## 5. hash column ----------------------------------------------------------
-  if( "rg_hash" %in% names(dgf) )
+  if( "prov_current_hash" %in% names(dgf) )
   {
-    no.hash <- is.na(dgf$rg_hash) | trimws(as.character(dgf$rg_hash)) == ""
+    no.hash <- is.na(dgf$prov_current_hash) | trimws(as.character(dgf$prov_current_hash)) == ""
     if( any(no.hash) )
     {
-      problems$missing_hash <- dgf$vname[no.hash]
-      say( "[FAIL] missing rg_hash for: ",
-           paste(dgf$vname[no.hash], collapse=", "), "\n" )
+      problems$missing_hash <- dgf$var_name[no.hash]
+      say( "[FAIL] missing prov_current_hash for: ",
+           paste(dgf$var_name[no.hash], collapse=", "), "\n" )
     } else {
-      say( "[ ok ] all variables have an rg_hash\n" )
+      say( "[ ok ] all variables have an prov_current_hash\n" )
     }
   }
 

@@ -156,11 +156,11 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 
 #' Print the level dictionary of a factor/logical variable into the RG
 #'
-#' Reads the `dd_f_level` column of the DGF (a JSON table of level codes and
+#' Reads the `dd_f_levels` column of the DGF (a JSON table of level codes and
 #' their editable labels) and prints it as a two-column LEVELS table.
 #'
 #' @param VNAME A character string naming the DGF column to read (the layout
-#'   passes `"dd_f_level"`).
+#'   passes `"dd_f_levels"`).
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"LEVELS"`.
 #'
@@ -229,12 +229,12 @@ levels_customized <- function( level, label ) {
 #' Print the combined FACTOR LEVELS table into the RG
 #'
 #' Joins the factor level frequencies (`rg_stats`) with the editable level
-#' dictionary (`dd_f_level`) into one table: Label | Frequency | Meaning. The
+#' dictionary (`dd_f_levels`) into one table: Label | Frequency | Meaning. The
 #' Meaning column is shown only when the labels have been customised away from
 #' the raw level codes.
 #'
 #' @param VNAME A character string naming the DGF column to read (the layout
-#'   passes `"dd_f_level"`).
+#'   passes `"dd_f_levels"`).
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"FACTOR LEVELS"`.
 #'
@@ -244,7 +244,7 @@ levels_customized <- function( level, label ) {
 paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
 
   freq <- get_xx()[["rg_stats"]]
-  dict <- get_xx()[["dd_f_level"]]
+  dict <- get_xx()[["dd_f_levels"]]
   if( is.null(freq) || is.na(freq) || trimws(freq) == "" )
   { return( invisible(NULL) ) }
 
@@ -289,12 +289,12 @@ paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
 ### Logical category labels laid out horizontally --------------------------
 #' Print the logical CATEGORY LABELS transposed across a full-width row
 #'
-#' Reads the level dictionary (`dd_f_level`) and lays the categories out
+#' Reads the level dictionary (`dd_f_levels`) and lays the categories out
 #' horizontally: one column per level code, with an editable meaning beneath
 #' each. The meaning row appears only once labels are customised.
 #'
 #' @param VNAME A character string naming the DGF column to read (the layout
-#'   passes `"dd_f_level"`).
+#'   passes `"dd_f_levels"`).
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"CATEGORY LABELS"`.
 #'

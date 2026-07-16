@@ -27,13 +27,13 @@ test_that("wrap_preview accepts a single ';;'-delimited string", {
 test_that("an empty field label prints the value with no prefix", {
   dgf <- build_demo_dgf()
   out <- suppressMessages(suppressWarnings(
-    utils::capture.output(dg_field(dgf, "num", "vlabel", label = ""))))
+    utils::capture.output(dg_field(dgf, "num", "dd_vlabel", label = ""))))
   txt <- paste(out, collapse = "")
   expect_false(grepl("\\*\\*", txt))       # no bold "**LABEL**:" prefix
   expect_false(grepl("dg-field", txt))     # empty label: bare value, no field cell
   # a non-empty label emits the label/value cell markup (styled by datagoodr.css)
   out2 <- suppressMessages(suppressWarnings(
-    utils::capture.output(dg_field(dgf, "num", "vlabel", label = "LABEL"))))
+    utils::capture.output(dg_field(dgf, "num", "dd_vlabel", label = "LABEL"))))
   txt2 <- paste(out2, collapse = "")
   expect_true(grepl("class=\"dg-k\">LABEL</span>", txt2))
   expect_true(grepl("class=\"dg-v\">", txt2))

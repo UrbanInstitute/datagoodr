@@ -13,7 +13,7 @@ test_that("dg_ element helpers render the right piece per type", {
   expect_true(emits(dg_preview(dgf, "num")))
   expect_true(emits(dg_preview(dgf, "notes")))     # character
   expect_true(emits(dg_levels(dgf, "cat")))        # factor
-  expect_true(emits(dg_field(dgf, "num", "vlabel")))
+  expect_true(emits(dg_field(dgf, "num", "dd_vlabel")))
 })
 
 test_that("dg_section renders a full section for one variable", {

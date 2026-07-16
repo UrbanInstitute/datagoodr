@@ -9,7 +9,7 @@ test_that("create_dgf produces identical hashes for identical data", {
   df <- make_demo_df()
   a <- build_demo_dgf(df)
   b <- build_demo_dgf(df)
-  expect_equal(a$rg_hash, b$rg_hash)
+  expect_equal(a$prov_current_hash, b$prov_current_hash)
 })
 
 test_that("update_dgf marks every variable unchanged when data is identical", {
@@ -42,24 +42,24 @@ test_that("update_dgf reports added and removed variables", {
 test_that("update_dgf preserves curated fields for unchanged variables", {
   df  <- make_demo_df()
   dgf <- build_demo_dgf(df)
-  dgf$vdesc[dgf$vname == "cat"] <- "hand written description"
+  dgf$dd_vdesc[dgf$var_name == "cat"] <- "hand written description"
   out <- quiet_update(dgf, df, file = tempfile(), verbose = FALSE)
-  expect_equal(out$vdesc[out$vname == "cat"], "hand written description")
+  expect_equal(out$dd_vdesc[out$var_name == "cat"], "hand written description")
 })
 
 test_that("update_dgf carries curated factor labels across a data change", {
   df  <- make_demo_df()
   dgf <- build_demo_dgf(df)
   # hand-edit a level label on the factor, then change that column's data
-  lv  <- jsonlite::fromJSON(dgf$dd_f_level[dgf$vname == "cat"])
+  lv  <- jsonlite::fromJSON(dgf$dd_f_levels[dgf$var_name == "cat"])
   lv$label[lv$level == "A"] <- "Apple"
-  dgf$dd_f_level[dgf$vname == "cat"] <-
+  dgf$dd_f_levels[dgf$var_name == "cat"] <-
     datagoodr:::jsonify_df(lv)
 
   df2 <- df; df2$cat <- rep(c("A", "B", "C", "A"), length.out = nrow(df))
   out <- quiet_update(dgf, df2, file = tempfile(), verbose = FALSE)
   expect_equal(unname(attr(out, "status")["cat"]), "changed")
-  merged <- jsonlite::fromJSON(out$dd_f_level[out$vname == "cat"])
+  merged <- jsonlite::fromJSON(out$dd_f_levels[out$var_name == "cat"])
   expect_equal(merged$label[merged$level == "A"], "Apple")
 })
 

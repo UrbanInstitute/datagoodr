@@ -50,7 +50,7 @@ save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
     headerStyle, rows=1, cols=1:ncol )
 
 
-  vname <-
+  var_name <-
     openxlsx::createStyle(
       fontName = 'Segoe UI Black',
       fontSize = 12,
@@ -59,16 +59,16 @@ save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
       halign = "left",
       valign = "center" )
 
-  openxlsx::addStyle( wb, sheet=1, vname, rows=2:nrow, cols=1 )
+  openxlsx::addStyle( wb, sheet=1, var_name, rows=2:nrow, cols=1 )
 
-  vname.blue <- openxlsx::createStyle(
+  var_name.blue <- openxlsx::createStyle(
     fgFill = "#44546A" )
-  openxlsx::addStyle( wb, sheet=1, vname.blue,
+  openxlsx::addStyle( wb, sheet=1, var_name.blue,
     rows=1, cols=c(g1,g3), stack=T )
 
-  vname.brown <- openxlsx::createStyle(
+  var_name.brown <- openxlsx::createStyle(
     fgFill = "#833C0C" )
-  openxlsx::addStyle( wb, sheet=1, vname.brown,
+  openxlsx::addStyle( wb, sheet=1, var_name.brown,
     rows=1, cols=c(g2,g4), stack=T )
 
   blues <- openxlsx::createStyle(
@@ -153,8 +153,8 @@ save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
 #  13 dgf_f_levels,
 #  14 dgf_f_order,
 #  --- G4  # BLUES
-#  15 dgf_standardize,
-#  16 dgf_validate
+#  15 stable_data_transform,
+#  16 validate_rules
 
 # darkblue  headers: #44546A  cells: #E3E7ED
 # darkbrown headers: #833C0C  cells: #FEF2EC

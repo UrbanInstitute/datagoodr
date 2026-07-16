@@ -18,15 +18,15 @@
 #'   `FALSE`.
 #' @param guess.factors Logical; treat low-cardinality columns as factors.
 #'   Defaults to `TRUE`.
-#' @param vname,vlabel,vdesc,vtype Optional character vectors of per-variable
+#' @param var_name,dd_vlabel,dd_vdesc,stable_data_storage Optional character vectors of per-variable
 #'   metadata (name, short label, long description, type), each the same length
 #'   and order as the columns of `df`. Default to blank.
-#' @param vconvert Optional character vector of type-conversion function names
+#' @param raw_data_import_rule Optional character vector of type-conversion function names
 #'   (e.g. `"as_yyyy"`), one per column, applied to the data before profiling.
-#' @param vformat Optional character vector of display-formatting function names
+#' @param stable_data_format Optional character vector of display-formatting function names
 #'   (e.g. `"dollarize"`), one per column, applied to previews and graphics.
-#' @param vname_alias,vscope,vloc Optional character vectors of per-variable
-#'   alias, scope, and location-code metadata. Default to blank.
+#' @param dd_vname_alias Optional character vector of per-variable alternate
+#'   names. Defaults to blank.
 #' @param dir Directory to write the DGF into. Created if it does not exist.
 #'   Defaults to `"."`. Ignored when `file` is an absolute path.
 #' @param file Output path stem (without extension) for the written `.csv` and
@@ -50,15 +50,13 @@ create_dgf <- function(         # ----------------
          guess.factors=TRUE,
          guess.dates=FALSE,
          dd=NULL,
-         vname=NULL,
-         vlabel=NULL,
-         vdesc=NULL,
-         vtype=NULL,
-         vconvert = NULL,
-         vformat = NULL,
-         vname_alias = NULL,
-         vscope = NULL,
-         vloc = NULL,
+         var_name=NULL,
+         dd_vlabel=NULL,
+         dd_vdesc=NULL,
+         stable_data_storage=NULL,
+         raw_data_import_rule = NULL,
+         stable_data_format = NULL,
+         dd_vname_alias = NULL,
          keep.dd.cols=NULL,
          preview_dd=F,
          preview_dp= F,
@@ -103,13 +101,11 @@ create_dgf <- function(         # ----------------
 
   ## VAR NAMES AND LABELS
 
-  vname        <- names(df)
-  vlabel       <- names(df)
-  if(is.null(vdesc)){vdesc <- rep("", N_col)}
-  if(is.null(vname_alias)){vname_alias<-rep("", N_col)}
-  if(is.null(vscope)){vscope <- rep("", N_col)}
-  if(is.null(vloc)){vloc <- rep("", N_col)}
-  raw_type      <- sapply( df, class ) %>% as.character()
+  var_name        <- names(df)
+  dd_vlabel       <- names(df)
+  if(is.null(dd_vdesc)){dd_vdesc <- rep("", N_col)}
+  if(is.null(dd_vname_alias)){dd_vname_alias<-rep("", N_col)}
+  raw_data_storage      <- sapply( df, class ) %>% as.character()
 
 
   ## TRY TO GUESS FACTORS
@@ -117,15 +113,15 @@ create_dgf <- function(         # ----------------
   { df <- recast_factors( df ) }
   guess_type <- sapply( df, class ) %>% as.character()
 
-  correct.guess <- substr(vconvert, 4,nchar(vconvert)) == guess_type
+  correct.guess <- substr(raw_data_import_rule, 4,nchar(raw_data_import_rule)) == guess_type
 
   ## Set up data classes
-  if(!is.null(vconvert)){
-    df_converted <- sapply(seq_along(vconvert), function(i) {
-      if (is.na(vconvert[i]) | correct.guess[i]) {
-        return(dplyr::pull(df[, i], 1))  # Keep the original column if vconvert[i] is NA
+  if(!is.null(raw_data_import_rule)){
+    df_converted <- sapply(seq_along(raw_data_import_rule), function(i) {
+      if (is.na(raw_data_import_rule[i]) | correct.guess[i]) {
+        return(dplyr::pull(df[, i], 1))  # Keep the original column if raw_data_import_rule[i] is NA
       } else {
-        func_name <- vconvert[i]
+        func_name <- raw_data_import_rule[i]
         if (exists(func_name, mode = "function")) {
             return(try(sapply(dplyr::pull(df[,i],1), get(func_name)), silent=TRUE))
         } else {
@@ -137,21 +133,21 @@ create_dgf <- function(         # ----------------
 
     # Convert back to a data frame
     df <- as.data.frame(df_converted)
-    names(df ) <- vname
+    names(df ) <- var_name
   }
   data_type_converted <- sapply( df, class )
 
 
 
-  dd_f_level <- mapply(function(vname, type, df){
+  dd_f_levels <- mapply(function(var_name, type, df){
     if(type %in% c("factor", "logical")){
       # Store a two-column dictionary: the level code and an editable label.
       # The label is seeded to the code so users can add human-readable
       # descriptions (e.g. "AR" -> "Arts") in Excel during Step 2.
       # Use [[ ]] so a single column is returned as a vector even when df is a
-      # tibble (df[, vname] on a tibble returns a 1-column tibble, whose
+      # tibble (df[, var_name] on a tibble returns a 1-column tibble, whose
       # levels() is NULL).
-      lv <- levels(df[[vname]])
+      lv <- levels(df[[var_name]])
       tab <- data.frame(level = lv, label = lv)
       tab <- jsonify_df(tab)
       return(tab)
@@ -159,12 +155,12 @@ create_dgf <- function(         # ----------------
         return("")
       }
     },
-    vname = vname,type=data_type_converted, MoreArgs = list(df = df) )
+    var_name = var_name,type=data_type_converted, MoreArgs = list(df = df) )
 
 
   ## Need to guess factor it is logical, to make class
   vclass <- data_type_converted
-  is.logical <- 2 == sapply(vname[vclass == "factor"], function(x){length(table(df[,x]))})
+  is.logical <- 2 == sapply(var_name[vclass == "factor"], function(x){length(table(df[,x]))})
   vclass[names(is.logical[is.logical])] <- "logical"
 
   # Print types of classes
@@ -174,18 +170,18 @@ create_dgf <- function(         # ----------------
 
   ## Do the format
   #
-  # vformat applies a *display* transformation to each column (e.g. zero-pad
+  # stable_data_format applies a *display* transformation to each column (e.g. zero-pad
   # EINs, style dates). It only shapes how values are previewed, so the
   # formatted frame (df_fmt) is kept separate from the underlying converted
   # data (df). Statistics and graphics for numeric/logical variables must be
   # computed on the real values, not their formatted strings (df_stats below).
 
-  if(!is.null(vformat)){
-    df_converted <- sapply(seq_along(vformat), function(i) {
-      if (is.na(vformat[i])) {
-        return(c(df[, i]))  # Keep the original column if vformat[i] is NA
+  if(!is.null(stable_data_format)){
+    df_converted <- sapply(seq_along(stable_data_format), function(i) {
+      if (is.na(stable_data_format[i])) {
+        return(c(df[, i]))  # Keep the original column if stable_data_format[i] is NA
       } else {
-        func_name <- vformat[i]
+        func_name <- stable_data_format[i]
         if (exists(func_name, mode = "function")) {
           return(try(sapply(c(df[,i]), get(func_name)), silent=TRUE))
         } else {
@@ -197,9 +193,9 @@ create_dgf <- function(         # ----------------
 
     # Convert back to a data frame
     df_fmt <- as.data.frame(df_converted)
-    names(df_fmt) <- vname
+    names(df_fmt) <- var_name
   }else{
-    vformat <- rep("", N_col)
+    stable_data_format <- rep("", N_col)
     df_fmt <- df
   }
 
@@ -214,71 +210,96 @@ create_dgf <- function(         # ----------------
 
   ## HASH VALUES OF COLUMNS
 
-  rg_hash <- sapply( df_fmt, rlang::hash )
-  duplicates  <- get_dupes( df_fmt, rg_hash )
-  names(rg_hash) <- NULL
+  prov_current_hash <- sapply( df_fmt, rlang::hash )
+  raw_duplicated  <- get_dupes( df_fmt, prov_current_hash )
+  names(prov_current_hash) <- NULL
 
   ## VARIABLE TYPES
 
   raw_first5    <- sapply( df_fmt, first_n ) %>% as.character()
-  if(is.null(vconvert)){vconvert<- rep( "", N_col )}
-  if(is.null(format)){vformat<- rep( "", N_col )}
-  vtype         <- sapply( df_fmt, class ) %>% as.character()
-  vtype_class   <- vclass
-  vformat_out   <- rep( "", N_col )
+  if(is.null(raw_data_import_rule)){raw_data_import_rule<- rep( "", N_col )}
+  if(is.null(format)){stable_data_format<- rep( "", N_col )}
+  stable_data_storage <- sapply( df_fmt, class ) %>% as.character()
+
+  # Ontology data_type is what the render engine dispatches on. dg_type_of()
+  # maps the R storage class onto it: raw_ from the class as read, stable_ from
+  # the class after any type conversion. vclass (numeric/factor/logical/
+  # character) is the internal build-time guess; stable_data_type is its
+  # ontology name (number/categorical/boolean/string), so a variable that
+  # guessed "factor" carries stable_data_type "categorical".
+  raw_data_type    <- dg_type_of( raw_data_storage )
+  stable_data_type <- dg_type_of( vclass )
 
   ## FIELD LENGTH (max character width of the underlying values)
-  vlength <- sapply( df_stats, function(x){
+  rg_max_chr <- sapply( df_stats, function(x){
     x <- x[ ! is.na(x) ]
     if( length(x) == 0 ) return( 0L )
     max( nchar( as.character(x) ) )
   })
-  names(vlength) <- NULL
+  names(rg_max_chr) <- NULL
 
   ## get_properties/stats/graphics
   ## Preview and properties use the formatted values (df_fmt); stats and
   ## graphics use df_stats, which keeps numeric/logical columns unformatted.
 
-  rg_preview <- sapply(vname, get_examples, df = df_fmt)
-  rg_properties <- mapply(get_properties, VNAME = vname, MoreArgs = list(df = df_fmt))
-  rg_stats <- mapply(get_stats, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df_stats) )
-  rg_graphics <- mapply(get_graphics, VNAME = vname,VCLASS=vclass, MoreArgs = list(df = df_stats) )
+  rg_preview <- sapply(var_name, get_examples, df = df_fmt)
+  rg_properties <- mapply(get_properties, VNAME = var_name, MoreArgs = list(df = df_fmt))
+  rg_stats <- mapply(get_stats, VNAME = var_name,VCLASS=vclass, MoreArgs = list(df = df_stats) )
+  rg_graphics <- mapply(get_graphics, VNAME = var_name,VCLASS=vclass, MoreArgs = list(df = df_stats) )
 
-  ## ADD BLANK RULE COLUMNS
-
-  dgf_standardize  <- rep( "", N_col )
-  dgf_validate     <- rep( "", N_col )
+  ## BLANK COLUMNS
+  # Declared now, populated by later work (subtype/class/unit descriptors, the
+  # standardization pipeline, validation, lineage chaining). See dev/TO-DO.md.
+  blank <- rep( "", N_col )
+  stable_data_transform <- blank
+  validate_rules        <- blank
 
 
   ## CREATE FILE
+  # Assembled in dgf_schema_cols() order (R/01-01-dgf-schema.R). The render
+  # engine reads columns by name, so order is for the human reading the .xlsx.
 
   dgf <-
     data.frame(
-      #first group - about the variable
-      vname,             #variable name
-      vlabel,            # variable label
-      vdesc,             #variable description
-      vname_alias,       #variable alias
-      vscope,            #variable scope (user-supplied metadata)
-      vloc,              #location code (user-supplied metadata)
-      duplicates,        #duplicated variable?
-      dd_f_level,        #levels/labels if a factor/logical variable
-      # dd_f_order,        #order to variables if applicable
-      #2nd group
-      raw_first5,        #first 5 raw values
-      raw_type,          #raw input data type
-      vconvert,          #covert data function
-      vtype,             #final variable type
-      vtype_class,       #final variable class (our internal purposes)
-      vlength,           #field length (max character width)
-      vformat,           #final variable output stylings
-      rg_properties,     #data properties
-      rg_preview,        #data preview
-      rg_stats,          #summary stats
-      rg_graphics,       #data for graphics
-      rg_hash,           #hash function
-      dgf_standardize,   #standardization function
-      dgf_validate       #validation functions
+      # variable key
+      var_name,
+
+      # dd_: data dictionary
+      dd_vname_alias, dd_vlabel, dd_vdesc, dd_f_levels,
+
+      # raw_: import contract (as received)
+      raw_data_storage,
+      raw_data_type,
+      raw_data_subtype = blank,
+      raw_data_class   = blank,
+      raw_data_unit    = blank,
+      raw_data_format  = blank,
+      raw_data_import_rule,
+      raw_first5,
+      raw_duplicated,
+
+      # stable_: standardized contract
+      stable_data_storage,
+      stable_data_type,
+      stable_data_subtype   = blank,
+      stable_data_class     = blank,
+      stable_data_unit      = blank,
+      stable_data_format,
+      stable_data_transform,
+      stable_data_import_rule = blank,
+
+      # rg_: research guide artifacts (JSON strings)
+      rg_properties, rg_preview, rg_stats, rg_graphics, rg_max_chr,
+
+      # validate_: validation rules
+      validate_rules,
+      validate_format = blank,
+
+      # prov_: provenance hashes
+      prov_start_hash = blank,
+      prov_current_hash,
+
+      stringsAsFactors = FALSE
       )
 
 
@@ -293,7 +314,7 @@ create_dgf <- function(         # ----------------
   write.csv( dgf, paste0(stem, ".csv"), row.names=F )
   save_to_excel( dgf, filename = path, open = open )
 
-  vt <- data.frame( VNAME=vname, TYPE=vclass )
+  vt <- data.frame( VNAME=var_name, TYPE=vclass )
   cat( "\nAssigned variable types:" )
   print( knitr::kable( vt ) )
 

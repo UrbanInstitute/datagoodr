@@ -257,13 +257,13 @@ get_levels <- function(f)
 #'
 #' This function checks for duplicate variables in a data frame based on a provided hash vector.
 #' It prints out the names of duplicate variables and returns a logical vector indicating which
-#' rows are duplicates.
+#' rows are raw_duplicated.
 #'
-#' @param df A data frame containing the variables to be checked for duplicates.
+#' @param df A data frame containing the variables to be checked for raw_duplicated.
 #' @param vhash A vector of hash values corresponding to each variable in the data frame.
 #'        This is typically computed using a hashing function like `rlang::hash()`.
 #'
-#' @return A logical vector indicating which variables are duplicates.
+#' @return A logical vector indicating which variables are raw_duplicated.
 #'
 #' @examples
 #' \dontrun{
@@ -279,7 +279,7 @@ get_dupes <- function( df, vhash ) {
   hh.dupes <- sort(hh[dupes])
 
   cat( "\nThe following variables" )
-  cat( "\nare duplicates:\n\n" )
+  cat( "\nare raw_duplicated:\n\n" )
   for( i in unique(hh.dupes) )
   {
     nmz <- (names( hh.dupes ))[ hh.dupes == i ]

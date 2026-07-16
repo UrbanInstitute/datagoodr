@@ -64,7 +64,7 @@ test_that("hash is stable across two saves of identical DGF content", {
 test_that("hash changes when the DGF's content changes", {
   dgf <- build_demo_dgf()
   other <- dgf
-  other$vdesc[1] <- "an edited description"
+  other$dd_vdesc[1] <- "an edited description"
   expect_false(identical(render_record(dgf)$dgf_hash,
                          render_record(other)$dgf_hash))
 })
