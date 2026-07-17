@@ -15,7 +15,8 @@
 # stable_data_type values Step 3 has a renderer + layout for (see
 # R/03-01-layouts.R and the ontology). identifier/temporal are specified but
 # not yet renderable.
-.dgf_valid_classes <- c("number", "string", "categorical", "boolean")
+.dgf_valid_classes <- c("number", "string", "categorical", "boolean",
+                        "identifier", "temporal")
 
 
 #' Validate a DGF before rendering (Step 2)

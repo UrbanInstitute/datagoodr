@@ -77,11 +77,14 @@ NULL
 #' @export
 dg_stats <- function( dgf, var_name, label = "STATS" ) {
   type <- set_dg_context( dgf, var_name )
+  # temporal has no stats table (yet)
+  if( type == "temporal" ) return( invisible(NULL) )
   f <- switch( type,
     number      = paste_stats_num,
     string      = paste_stats_chr,
     categorical = paste_stats_fact,
     boolean     = paste_stats_log,
+    identifier  = paste_stats_chr_common,
     stop( "No stats renderer for type '", type, "'.", call. = FALSE ) )
   f( "rg_stats", label )
   invisible( NULL )
@@ -133,11 +136,14 @@ dg_levels <- function( dgf, var_name, label = "LEVELS" ) {
 #' @export
 dg_graphic <- function( dgf, var_name, label = NULL ) {
   type <- set_dg_context( dgf, var_name )
+  # identifiers have no visualization
+  if( type == "identifier" ) return( invisible(NULL) )
   f <- switch( type,
     number      = paste_histogram,
     categorical = paste_treemap,
     boolean     = paste_booleplot,
     string      = v_to_wordcloud,
+    temporal    = paste_temporal_graphic,
     stop( "No graphic for type '", type, "'.", call. = FALSE ) )
   if( is.null(label) ) f( "rg_graphics" ) else f( "rg_graphics", label )
   invisible( NULL )

@@ -1,9 +1,10 @@
-test_that("get_design compiles layouts for all four variable types", {
+test_that("get_design compiles layouts for every renderable type", {
   d <- get_design()
   expect_s3_class(d, "data.frame")
-  # TYPE is now the ontology vocabulary (see dg_type_of / the schema)
+  # TYPE is the ontology vocabulary (see dg_type_of / the schema)
   expect_setequal(unique(d$TYPE),
-                  c("number", "string", "categorical", "boolean"))
+                  c("number", "string", "categorical", "boolean",
+                    "identifier", "temporal"))
   expect_true(nrow(d) > 0)
 })
 

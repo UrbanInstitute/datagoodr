@@ -65,6 +65,8 @@ dgf.log  <-  dgf[ dgf$stable_data_type == "boolean",     ]
 dgf.fact <-  dgf[ dgf$stable_data_type == "categorical", ]
 dgf.chr  <-  dgf[ dgf$stable_data_type == "string",      ]
 dgf.num  <-  dgf[ dgf$stable_data_type == "number",      ]
+dgf.id   <-  dgf[ dgf$stable_data_type == "identifier",  ]
+dgf.time <-  dgf[ dgf$stable_data_type == "temporal",    ]
 
 
 ```
@@ -93,6 +95,18 @@ create_all_sections( dgf.num )
 
 ```{r character, results="asis", fig.width=8, fig.height=6, echo=FALSE}
 create_all_sections( dgf.chr )
+```
+
+## Identifier
+
+```{r identifier, results="asis", echo=FALSE}
+create_all_sections( dgf.id )
+```
+
+## Temporal
+
+```{r temporal, results="asis", fig.width=8, fig.height=4, echo=FALSE}
+create_all_sections( dgf.time )
 ```
 
 

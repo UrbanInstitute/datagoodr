@@ -163,6 +163,21 @@ create_dgf <- function(         # ----------------
   is.logical <- 2 == sapply(var_name[vclass == "factor"], function(x){length(table(df[,x]))})
   vclass[names(is.logical[is.logical])] <- "logical"
 
+  ## Temporal + identifier detection - override the guessed class. Both are
+  ## rough first passes the user corrects in the DGF before rendering (Step 2):
+  ## R's date guessing is limited and id recognition is heuristic. Temporal is
+  ## checked first, so a date column (which would otherwise look like a unique
+  ## code) is not mistaken for an identifier.
+  is.temporal <- as.logical( sapply( df, detect_temporal ) )
+  is.id       <- mapply( detect_identifier, df, var_name ) & ! is.temporal
+  vclass[ is.temporal ] <- "temporal"
+  vclass[ is.id ]       <- "identifier"
+
+  # A detected date column defaults to the calendar-heatmap unit; the user can
+  # retype the unit (year/month/dow/hour/week) in the DGF and re-render.
+  stable_data_unit <- rep( "", N_col )
+  stable_data_unit[ is.temporal ] <- "date"
+
   # Print types of classes
   vt <- table( vclass )
   cat( "Data type summary:\n" )
@@ -283,7 +298,7 @@ create_dgf <- function(         # ----------------
       stable_data_type,
       stable_data_subtype   = blank,
       stable_data_class     = blank,
-      stable_data_unit      = blank,
+      stable_data_unit,
       stable_data_format,
       stable_data_transform,
       stable_data_import_rule = blank,

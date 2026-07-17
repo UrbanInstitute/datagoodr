@@ -101,6 +101,58 @@ layout.logical <-
     "div9 ;; dd_f_levels     ;; CATEGORY LABELS ;; paste_levels_horizontal"  )
 
 
+#' Identifier variable layout definitions
+#'
+#' Internal layout specification for identifier variables (row keys, entity ids,
+#' geographic codes). Each element is a string describing a div, variable,
+#' label, and function to use.
+#'
+#' @format A character vector.
+#'
+#' @details Called in \link{get_design}. Identifiers have no visualization: the
+#'   layout is the descriptor block + preview, then PROPERTIES (1/3, where
+#'   Distinct% is the uniqueness diagnostic) beside MOST COMMON VALUES (2/3),
+#'   the latter read from `rg_stats` by the same renderer the character type
+#'   uses.
+#'
+#' @keywords internal
+#' @noRd
+layout.identifier <-
+  c( "div2 ;; dd_vlabel      ;;                    ;; v_to_txt",
+     "div3 ;; stable_data_type ;; DATA TYPE        ;; v_to_txt",
+     "div3 ;; rg_max_chr     ;; LENGTH             ;; v_to_txt",
+     "div4 ;; dd_vdesc       ;; DESCRIPTION        ;; v_to_txt",
+     "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
+     "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
+     "div7 ;; rg_properties  ;; PROPERTIES         ;; paste_properties",
+     "div8 ;; rg_stats       ;; MOST COMMON VALUES ;; paste_stats_chr_common"  )
+
+
+#' Temporal variable layout definitions
+#'
+#' Internal layout specification for temporal variables (dates, times, periods).
+#' Each element is a string describing a div, variable, label, and function.
+#'
+#' @format A character vector.
+#'
+#' @details Called in \link{get_design}. The layout is the descriptor block +
+#'   preview, then PROPERTIES (1/3) beside the unit-driven graphic (2/3) - a
+#'   calendar heatmap, scatterplot, barchart, or histogram chosen at render from
+#'   `stable_data_unit` by \link{paste_temporal_graphic}. No stats table yet.
+#'
+#' @keywords internal
+#' @noRd
+layout.temporal <-
+  c( "div2 ;; dd_vlabel      ;;              ;; v_to_txt",
+     "div3 ;; stable_data_type ;; DATA TYPE  ;; v_to_txt",
+     "div3 ;; stable_data_unit ;; UNIT       ;; v_to_txt",
+     "div4 ;; dd_vdesc       ;; DESCRIPTION  ;; v_to_txt",
+     "div5 ;; rg_preview     ;; PREVIEW      ;; paste_label",
+     "div6 ;; rg_preview     ;;              ;; paste_preview_chr",
+     "div7 ;; rg_properties  ;; PROPERTIES   ;; paste_properties",
+     "div8 ;; rg_graphics    ;;              ;; paste_temporal_graphic"  )
+
+
 ### The default layouts ship as internal package data (R/sysdata.rda). After
 ### editing any layout.* above, regenerate it by running:
 # usethis::use_data(
@@ -108,6 +160,8 @@ layout.logical <-
 #   layout.character,
 #   layout.factor,
 #   layout.logical,
+#   layout.identifier,
+#   layout.temporal,
 #   internal = TRUE,
 #   overwrite = TRUE
 # )

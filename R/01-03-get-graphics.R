@@ -30,9 +30,41 @@ get_graphics <- function(VNAME, df, VCLASS){
     return(get_graphics_fact(VNAME,df))
   }else if(VCLASS == "logical"){
     return(get_graphics_log(VNAME,df))
+  }else if(VCLASS == "identifier"){
+    return("")                          # identifiers have no visualization
+  }else if(VCLASS == "temporal"){
+    return(get_graphics_temporal(VNAME,df))
   }else(
     return(get_graphics_chr(VNAME,df))
   )
+}
+
+
+### Temporal ------------------------------------
+
+#' Frequency data for a temporal variable (internal)
+#'
+#' Stores a value -> count table of the raw temporal values. This is
+#' deliberately unit-independent: which chart to draw (calendar heatmap,
+#' scatterplot, barchart, histogram) is decided at render time from
+#' `stable_data_unit`, so a user can change the unit in the DGF and re-render
+#' without rebuilding the DGF. See [paste_temporal_graphic()].
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string: a two-column Value/Count table, stored in the DGF's
+#'   `rg_graphics` column.
+#' @noRd
+get_graphics_temporal <- function(VNAME, df){
+  x <- as.character( unlist( df[[VNAME]] ) )
+  x <- x[ !is.na(x) & trimws(x) != "" & x != "." ]
+  if( length(x) == 0 ) return("")
+  tt  <- table( x )
+  tab <- data.frame( Value = names(tt),
+                     Count = as.integer(tt),
+                     stringsAsFactors = FALSE )
+  jsonify_df( tab )
 }
 
 

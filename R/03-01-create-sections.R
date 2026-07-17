@@ -148,7 +148,9 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
       number      = resolve("layout.numeric"),
       string      = resolve("layout.character"),
       categorical = resolve("layout.factor"),
-      boolean     = resolve("layout.logical") )
+      boolean     = resolve("layout.logical"),
+      identifier  = resolve("layout.identifier"),
+      temporal    = resolve("layout.temporal") )
   }
 
   design.df <-

@@ -44,13 +44,17 @@ dg_type_of <- function( storage ) {
   storage <- as.character( storage )
   vapply( storage, function( s ) {
     switch( s,
-      numeric   = "number",
-      double    = "number",
-      integer   = "number",
-      factor    = "categorical",
-      ordered   = "categorical",
-      logical   = "boolean",
-      character = "string",
+      numeric    = "number",
+      double     = "number",
+      integer    = "number",
+      factor     = "categorical",
+      ordered    = "categorical",
+      logical    = "boolean",
+      character  = "string",
+      # already-ontology values pass through, so a column that detection has
+      # marked identifier/temporal keeps that type rather than falling to string.
+      identifier = "identifier",
+      temporal   = "temporal",
       "unknown" )
   }, character(1), USE.NAMES = FALSE )
 }

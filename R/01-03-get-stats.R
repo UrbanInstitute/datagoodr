@@ -116,6 +116,10 @@ get_stats <- function(VNAME, df, VCLASS){
     return(get_stats_fact(VNAME,df))
   }else if(VCLASS == "logical"){
     return(get_stats_log(VNAME,df))
+  }else if(VCLASS == "identifier"){
+    return(get_stats_id(VNAME,df))
+  }else if(VCLASS == "temporal"){
+    return("")                          # temporal has no stats table (yet)
   }else(
     return(get_stats_chr(VNAME,df))
   )
@@ -302,6 +306,126 @@ get_stats_num <- function( VNAME, df ){
 
 }
 
+
+
+### Identifier ------------------------
+
+#' Rough guess: is this column an identifier? (internal)
+#'
+#' Identifiers (row keys, entity ids, geographic codes) are stored as strings,
+#' factors, or numbers, but reported differently. Recognising them from data
+#' alone is heuristic - R's type guessing is rough and users are expected to
+#' correct it in the DGF before rendering. This is deliberately conservative.
+#'
+#' @param x A raw column.
+#' @param name The column name.
+#'
+#' @return `TRUE` if `x` looks like an identifier.
+#'
+#' @details A column qualifies when it has no internal whitespace (ids are
+#'   structured codes; free text is not) and is not a decimal measurement, AND
+#'   either its name matches an id pattern (`..._id`, `ein`, `fips`, ...) or it
+#'   is near-unique (a surrogate key). Duplicated ids (a county code repeated
+#'   across rows) are caught by the name signal, since uniqueness alone would
+#'   miss them - the point the design discussion made about uniqueness being a
+#'   diagnostic, not a definition.
+#' @noRd
+detect_identifier <- function( x, name ) {
+  cx <- as.character( x )
+  cx <- cx[ !is.na(cx) & trimws(cx) != "" ]
+  if( length(cx) < 1 ) return( FALSE )
+
+  # free text (internal whitespace) is not an identifier
+  if( mean( grepl( "[[:space:]]", cx ) ) > 0.1 ) return( FALSE )
+
+  name_hit <- grepl( "(^|[ ._-])(id|ein|key|code|fips|ssn|zip|guid|uuid|isbn)s?$",
+                     tolower( trimws(name) ) )
+
+  # A numeric column is an identifier only when its NAME says so. Uniqueness
+  # alone would flag any all-distinct measurement (revenue, a precise weight, a
+  # row index) as an id, which is the classic false positive. Text/factor codes
+  # can still qualify on near-uniqueness, since a unique text column with no
+  # spaces really is id-shaped.
+  if( is.numeric(x) ) return( name_hit )
+
+  distinct_ratio <- length( unique(cx) ) / length(cx)
+  name_hit || distinct_ratio >= 0.95
+}
+
+
+#' Rough guess: is this column temporal? (internal)
+#'
+#' Recognising dates in a CSV is genuinely unreliable - R's parsers are limited
+#' and formats are ambiguous. This catches the clear cases (already a Date/time
+#' class, or values that parse as dates) and leaves the rest to the user, who
+#' sets `stable_data_type`/`stable_data_unit` in the DGF. Bare year/month/hour
+#' numbers are NOT auto-detected (they look like plain numbers); declare those
+#' by hand.
+#'
+#' @param x A raw column.
+#'
+#' @return `TRUE` if `x` looks temporal.
+#' @noRd
+detect_temporal <- function( x ) {
+  if( inherits( x, c("Date", "POSIXct", "POSIXt") ) ) return( TRUE )
+  cx <- as.character( x )
+  cx <- cx[ !is.na(cx) & trimws(cx) != "" ]
+  if( length(cx) < 1 ) return( FALSE )
+  samp <- cx[ seq_len( min(50, length(cx)) ) ]
+
+  # Parse per single format in a loop. as.Date(x, format=) returns NA for a
+  # non-match; only the plural tryFormats= errors when nothing matches all
+  # values, which would blow up on a plain-number column.
+  formats <- c( "%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y", "%d-%m-%Y", "%m-%d-%Y" )
+  parsed  <- rep( as.Date(NA), length(samp) )
+  for( fmt in formats ) {
+    need <- is.na( parsed )
+    if( ! any(need) ) break
+    got <- suppressWarnings( as.Date( samp[need], format = fmt ) )
+    parsed[ which(need)[ !is.na(got) ] ] <- got[ !is.na(got) ]
+  }
+  mean( !is.na(parsed) ) >= 0.8
+}
+
+
+#' Summary statistics for an identifier variable (internal)
+#'
+#' An identifier (row key, entity id, geographic code) has no meaningful
+#' distribution - what matters is its values and how often each recurs. This
+#' tabulates the most common values, exactly like a character variable; the
+#' uniqueness diagnostic (Distinct %) comes from the generic PROPERTIES table.
+#'
+#' @param VNAME Character; the variable name (a column of `df`).
+#' @param df The dataset being profiled.
+#'
+#' @return A JSON string with the most-common table at position 3, so it renders
+#'   through [paste_stats_chr_common()] like the character MOST COMMON VALUES.
+#'   Stored in the DGF's `rg_stats` column.
+#' @noRd
+get_stats_id <- function( VNAME, df ){
+
+  x <- as.character( unlist( df[[VNAME]] ) )
+  x <- x[ !is.na(x) & trimws(x) != "" & x != "." ]
+
+  # top-6 values by frequency (same shape as the character COMMON table)
+  tt <- sort( table(x), decreasing = TRUE )
+  k  <- seq_len( min(6, length(tt)) )
+  common <- data.frame( Value     = names(tt)[k],
+                        Frequency = as.integer(tt)[k],
+                        stringsAsFactors = FALSE )
+
+  # a small id summary: is this a unique key, or does it repeat?
+  n_dup  <- sum( duplicated(x) )
+  id_tab <- data.frame(
+    STAT = c( "Distinct", "Duplicated" ),
+    VAL  = c( length(unique(x)), n_dup ),
+    stringsAsFactors = FALSE )
+
+  # STATS/HIST/COMMON positions mirror get_stats_chr so COMMON lands at [[3]],
+  # where paste_stats_chr_common() reads it.
+  data_list <- list( STATS = id_tab, HIST = list(), COMMON = common )
+  jsonlite::toJSON( data_list, pretty = TRUE, auto_unbox = TRUE )
+}
 
 
 ############################
