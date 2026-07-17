@@ -33,7 +33,9 @@ test_that("create_rg(data =) bakes data_file too", {
   suppressMessages(suppressWarnings(utils::capture.output(
     create_rg(dgf = dgf, data = csv, dir = d, file = "rg.qmd", overwrite = TRUE)
   )))
-  expect_equal(datagoodr:::read_qmd_params(file.path(d, "rg.qmd"))$data_file, csv)
+  # baked relative to the qmd's dir (the data sits next to it), so the document
+  # renders standalone from that directory
+  expect_equal(datagoodr:::read_qmd_params(file.path(d, "rg.qmd"))$data_file, "raw.csv")
 })
 
 test_that("the patch is verified, not hoped for", {

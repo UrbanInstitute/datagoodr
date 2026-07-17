@@ -40,9 +40,10 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
 
   # --- date: calendar heatmap (falls back to a bar if values aren't dates) ---
   if( unit == "date" ) {
-    d <- suppressWarnings( as.Date( val ) )
+    d <- parse_dates( val )
     if( mean( !is.na(d) ) >= 0.8 ) {
-      calendar_heat( d[!is.na(d)], cnt[!is.na(d)], varname = "" )
+      ok <- !is.na(d)
+      calendar_heat( d[ok], cnt[ok], varname = "" )
       return( invisible(NULL) )
     }
     # not real dates -> fall through to the default bar
@@ -50,17 +51,21 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   }
 
   # --- hour / week: connected scatterplot -----------------------------------
+  # The stored table is raw value -> count; aggregate to the hour/week bucket so
+  # the scatter is count-by-hour (0-23) or count-by-week (1-52).
   if( unit %in% c("hour", "week") ) {
-    xn <- suppressWarnings( as.numeric(val) )
-    if( any( !is.na(xn) ) ) {   # values really are numeric hours/weeks
-      keep <- !is.na(xn)
-      o <- order( xn[keep] )
+    bucket <- if( unit == "hour" ) parse_hour(val) else parse_week(val)
+    if( any( !is.na(bucket) ) ) {
+      keep <- !is.na(bucket)
+      agg  <- tapply( cnt[keep], bucket[keep], sum )
+      xn   <- as.numeric( names(agg) )
+      o    <- order( xn )
       xlab <- if( unit == "hour" ) "Hour of the Day" else "Week"
-      plot( xn[keep][o], cnt[keep][o], pch = 19, type = "b", cex = 2, bty = "n",
+      plot( xn[o], as.numeric(agg)[o], pch = 19, type = "b", cex = 2, bty = "n",
             xlab = xlab, ylab = "Count" )
       return( invisible(NULL) )
     }
-    unit <- ""   # not numeric -> fall through to the default bar
+    unit <- ""   # couldn't parse -> fall through to the default bar
   }
 
   # --- day-of-week / month: barchart, ordered ------------------------------
@@ -87,6 +92,63 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   o <- order( suppressWarnings(as.numeric(val)), val )
   graphics::barplot( cnt[o], names.arg = val[o], las = 2, border = NA )
   invisible( NULL )
+}
+
+
+#' Extract the hour-of-day (0-23) from clock-ish values (internal)
+#'
+#' @param val Character times: `"8:13am"`, `"2:54pm"`, `"14:30"`, `"08:13:00"`,
+#'   or a bare hour `"14"`.
+#' @return Integer hours 0-23, `NA` where unparseable.
+#' @noRd
+parse_hour <- function( val ) {
+  v <- tolower( trimws( as.character(val) ) )
+  h <- suppressWarnings( as.integer( sub( "^\\s*(\\d{1,2}).*$", "\\1", v ) ) )
+  pm <- grepl( "pm", v ); am <- grepl( "am", v )
+  h[ pm & h < 12 ] <- h[ pm & h < 12 ] + 12   # 1pm -> 13
+  h[ am & h == 12 ] <- 0                        # 12am -> 0
+  h[ h < 0 | h > 23 ] <- NA
+  h
+}
+
+
+#' Extract the week-of-year (1-53) from values (internal)
+#'
+#' @param val Character weeks (`"1".."52"`) or dates.
+#' @return Numeric weeks, `NA` where unparseable.
+#' @noRd
+parse_week <- function( val ) {
+  w <- suppressWarnings( as.numeric( as.character(val) ) )
+  if( any( !is.na(w) & w >= 1 & w <= 53 ) ) return( ifelse( w >= 1 & w <= 53, w, NA ) )
+  d <- parse_dates( val )                       # dates -> week of year
+  suppressWarnings( as.numeric( format( d, "%U" ) ) + 1 )
+}
+
+
+#' Parse a character vector of dates, trying several formats (internal)
+#'
+#' @param val Character dates.
+#' @return A `Date` vector; unparseable elements are `NA`. Handles ISO,
+#'   `m-d-Y`/`d-m-Y`, and the 2-digit-year variants a messy extract carries.
+#' @noRd
+parse_dates <- function( val ) {
+  val <- as.character( val )
+  formats <- c( "%Y-%m-%d", "%Y/%m/%d",
+                "%m-%d-%Y", "%d-%m-%Y", "%m/%d/%Y", "%d/%m/%Y",
+                "%m-%d-%y", "%d-%m-%y", "%m/%d/%y", "%d/%m/%y" )
+  out <- rep( as.Date(NA), length(val) )
+  for( fmt in formats ) {
+    need <- is.na( out )
+    if( ! any(need) ) break
+    got <- suppressWarnings( as.Date( val[need], format = fmt ) )
+    # Reject implausible years so a wrong format is not mistaken for a match:
+    # "14-07-16" under "%Y-%m-%d" parses as the year 14, which would blow up the
+    # calendar's date sequence. Keep the loop trying later formats instead.
+    yr  <- as.numeric( format( got, "%Y" ) )
+    got[ !is.na(yr) & (yr < 1900 | yr > 2100) ] <- NA
+    out[ which(need)[ !is.na(got) ] ] <- got[ !is.na(got) ]
+  }
+  out
 }
 
 

@@ -105,13 +105,18 @@ create_dgf <- function(         # ----------------
   dd_vlabel       <- names(df)
   if(is.null(dd_vdesc)){dd_vdesc <- rep("", N_col)}
   if(is.null(dd_vname_alias)){dd_vname_alias<-rep("", N_col)}
-  raw_data_storage      <- sapply( df, class ) %>% as.character()
+  # class(x)[1]: a column can be multi-class (an ordered factor, or a POSIXct
+  # datetime readr guessed). Taking the primary class keeps these as clean
+  # length-1 storage names and stops sapply() from collapsing to a list.
+  primary_class <- function( d ) vapply( d, function(x) class(x)[1], character(1) )
+
+  raw_data_storage      <- primary_class( df )
 
 
   ## TRY TO GUESS FACTORS
   if( guess.factors )
   { df <- recast_factors( df ) }
-  guess_type <- sapply( df, class ) %>% as.character()
+  guess_type <- primary_class( df )
 
   correct.guess <- substr(raw_data_import_rule, 4,nchar(raw_data_import_rule)) == guess_type
 
@@ -135,12 +140,16 @@ create_dgf <- function(         # ----------------
     df <- as.data.frame(df_converted)
     names(df ) <- var_name
   }
-  data_type_converted <- sapply( df, class )
+  data_type_converted <- primary_class( df )
 
 
 
   dd_f_levels <- mapply(function(var_name, type, df){
-    if(type %in% c("factor", "logical")){
+    # any(): a column can carry a multi-class class() - an ordered factor is
+    # c("ordered","factor"), and readr's type guess can hand back a POSIXct
+    # datetime as c("POSIXct","POSIXt"). A scalar `type %in% ...` errors on
+    # those ("condition has length > 1").
+    if(any(type %in% c("factor", "logical"))){
       # Store a two-column dictionary: the level code and an editable label.
       # The label is seeded to the code so users can add human-readable
       # descriptions (e.g. "AR" -> "Arts") in Excel during Step 2.
@@ -160,6 +169,10 @@ create_dgf <- function(         # ----------------
 
   ## Need to guess factor it is logical, to make class
   vclass <- data_type_converted
+  # The build-time stat/graphic dispatch keys on "numeric"; collapse the R
+  # storage variants (integer, double) onto it so an all-integer column (a
+  # count, a year) is profiled as a number, not sent down the character path.
+  vclass[ vclass %in% c("integer", "double") ] <- "numeric"
   is.logical <- 2 == sapply(var_name[vclass == "factor"], function(x){length(table(df[,x]))})
   vclass[names(is.logical[is.logical])] <- "logical"
 
@@ -173,10 +186,15 @@ create_dgf <- function(         # ----------------
   vclass[ is.temporal ] <- "temporal"
   vclass[ is.id ]       <- "identifier"
 
-  # A detected date column defaults to the calendar-heatmap unit; the user can
-  # retype the unit (year/month/dow/hour/week) in the DGF and re-render.
+  # Default unit for a detected temporal: a time-of-day class gets "hour", a
+  # date/datetime gets "date" (the calendar heatmap). The user retypes the unit
+  # (year/month/dow/week) in the DGF and re-renders - the graphic is chosen at
+  # render, so no rebuild is needed.
   stable_data_unit <- rep( "", N_col )
+  is.time <- vapply( df, function(x) inherits(x, c("hms","difftime","times")),
+                     logical(1) )
   stable_data_unit[ is.temporal ] <- "date"
+  stable_data_unit[ is.temporal & is.time ] <- "hour"
 
   # Print types of classes
   vt <- table( vclass )

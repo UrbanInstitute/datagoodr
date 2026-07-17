@@ -172,6 +172,9 @@ simplify_char <- function(v) {
   # also reached from get_graphics_chr() at DGF-build time, not just at render
   need_pkg( "tm" )
 
+  # coerce first: a column that lands on the character path may not be character
+  # (readr can hand back an hms time or a Date), and strsplit() errors on those.
+  v <- as.character( v )
   ww <- strsplit( v, " " ) |> unlist()
   stop.words <- tm::stopwords("english")
   stop.words <- c( stop.words, toupper(stop.words) )

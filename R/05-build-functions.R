@@ -100,6 +100,19 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
 #' @seealso [use_datagoodr_template()], which copies the template.
 #' @noRd
+# Reduce a path to be relative to `dir` for baking into a qmd that lives there.
+# A file directly inside `dir` becomes its basename; anything else is left as
+# given (the caller's responsibility to make it resolvable from the qmd).
+rel_to_dir <- function( path, dir ) {
+  if( is.null(path) ) return( path )
+  same_dir <- tryCatch(
+    normalizePath( dirname(path), mustWork = FALSE ) ==
+      normalizePath( dir, mustWork = FALSE ),
+    error = function(e) FALSE )
+  if( isTRUE(same_dir) ) basename(path) else path
+}
+
+
 build_report <- function( dgf, data, dir, file, flavor, embed_css,
                           render, overwrite ) {
 
@@ -128,8 +141,13 @@ build_report <- function( dgf, data, dir, file, flavor, embed_css,
   # RStudio/Positron. This is the only place the qmd is written: update_rg()
   # overrides at render time instead, so it can never clobber a user's edits.
   # set_qmd_param() verifies each edit landed rather than trusting the regex.
-  set_qmd_param( dest, "dgf_file", dgf )
-  if( ! is.null(data) ) set_qmd_param( dest, "data_file", data )
+  #
+  # The path is baked RELATIVE TO the qmd's own directory, since quarto renders
+  # from there: a DGF sitting next to the qmd (the common case, e.g.
+  # create_rg(dgf = "dir/DGF.xlsx", dir = "dir")) is baked as just its basename
+  # so the standalone render finds it.
+  set_qmd_param( dest, "dgf_file",  rel_to_dir(dgf,  dir) )
+  if( ! is.null(data) ) set_qmd_param( dest, "data_file", rel_to_dir(data, dir) )
 
   if( embed_css ) embed_css_block( dest )
 

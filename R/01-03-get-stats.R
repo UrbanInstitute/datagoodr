@@ -367,7 +367,8 @@ detect_identifier <- function( x, name ) {
 #' @return `TRUE` if `x` looks temporal.
 #' @noRd
 detect_temporal <- function( x ) {
-  if( inherits( x, c("Date", "POSIXct", "POSIXt") ) ) return( TRUE )
+  if( inherits( x, c("Date", "POSIXct", "POSIXt", "hms", "difftime", "times") ) )
+    return( TRUE )
   cx <- as.character( x )
   cx <- cx[ !is.na(cx) & trimws(cx) != "" ]
   if( length(cx) < 1 ) return( FALSE )
