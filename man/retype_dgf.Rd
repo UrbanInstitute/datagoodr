@@ -13,8 +13,8 @@ retype_dgf(dgf, data, types = NULL, units = NULL, env = parent.frame())
 to a `.csv`). Needed to recompute the profile.}
 
 \item{types}{A named character vector mapping variable name to the corrected
-`stable_data_type` (`"temporal"`, `"identifier"`, `"number"`,
-`"categorical"`, `"boolean"`, `"string"`).}
+`desired_data_type` (`"temporal"`, `"identifier"`, `"number"`,
+`"categorical"`, `"boolean"`, `"text"`).}
 
 \item{units}{A named character vector mapping variable name to
 `stable_data_unit` (e.g. `c(founded = "year")`). Temporal only; may name

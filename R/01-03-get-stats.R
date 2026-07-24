@@ -358,7 +358,7 @@ detect_identifier <- function( x, name ) {
 #' Recognising dates in a CSV is genuinely unreliable - R's parsers are limited
 #' and formats are ambiguous. This catches the clear cases (already a Date/time
 #' class, or values that parse as dates) and leaves the rest to the user, who
-#' sets `stable_data_type`/`stable_data_unit` in the DGF. Bare year/month/hour
+#' sets `desired_data_type`/`stable_data_unit` in the DGF. Bare year/month/hour
 #' numbers are NOT auto-detected (they look like plain numbers); declare those
 #' by hand.
 #'

@@ -23,8 +23,10 @@ to [interactive()] — on at the console, off in scripts, tests, and CI.}
 \value{
 Invisibly, the updated DGF data frame. It carries a `"status"`
   attribute: a named character vector labelling each variable as
-  `"unchanged"`, `"changed"`, or `"added"`, plus a `"removed"` attribute
-  listing variables no longer present in the data.
+  `"unchanged"`, `"changed"`, or `"added"`; a `"removed"` attribute listing
+  variables no longer present in the data; and a `"stale_rules"` attribute
+  (from [check_dgf_rules()]) listing curated `as_*` rules that no longer fit
+  the new data.
 }
 \description{
 Compares an existing DGF to a new version of the dataset and produces an
@@ -36,5 +38,5 @@ preserved, and hand-edited factor level labels are carried over for levels
 that still exist.
 }
 \seealso{
-[create_dgf()], [inspect_dgf()]
+[create_dgf()], [inspect_dgf()], [check_dgf_rules()]
 }

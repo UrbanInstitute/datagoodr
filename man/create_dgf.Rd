@@ -10,12 +10,13 @@ create_dgf(
   use.df.types = FALSE,
   guess.factors = TRUE,
   guess.dates = FALSE,
+  max_factor_levels = 50,
   dd = NULL,
   var_name = NULL,
   dd_vlabel = NULL,
   dd_vdesc = NULL,
   stable_data_storage = NULL,
-  raw_data_import_rule = NULL,
+  desired_data_import_rule = NULL,
   stable_data_format = NULL,
   dd_vname_alias = NULL,
   keep.dd.cols = NULL,
@@ -41,11 +42,17 @@ instead of re-reading the data with `readr` to re-infer them. Defaults to
 \item{guess.factors}{Logical; treat low-cardinality columns as factors.
 Defaults to `TRUE`.}
 
+\item{max_factor_levels}{Integer; the maximum number of factor/logical levels
+stored in the `dd_f_levels` dictionary. High-cardinality factors are capped
+to the most frequent `max_factor_levels` levels, matching the
+frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
+cell under Excel's 32,767-character limit). Defaults to `50`.}
+
 \item{var_name, dd_vlabel, dd_vdesc, stable_data_storage}{Optional character vectors of per-variable
 metadata (name, short label, long description, type), each the same length
 and order as the columns of `df`. Default to blank.}
 
-\item{raw_data_import_rule}{Optional character vector of type-conversion function names
+\item{desired_data_import_rule}{Optional character vector of type-conversion function names
 (e.g. `"as_yyyy"`), one per column, applied to the data before profiling.}
 
 \item{stable_data_format}{Optional character vector of display-formatting function names

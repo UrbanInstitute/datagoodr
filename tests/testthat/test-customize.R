@@ -34,7 +34,7 @@ test_that("get_design picks up a layout override from the global environment", {
   # override); it maps onto the "number" dispatch key.
   assign("layout.numeric",
          c("div2 ;; dd_vlabel ;; LABEL ;; v_to_txt",
-           "div3 ;; stable_data_type ;; DATA TYPE ;; v_to_txt"),
+           "div3 ;; desired_data_type ;; DATA TYPE ;; v_to_txt"),
          envir = globalenv())
   on.exit(rm("layout.numeric", envir = globalenv()), add = TRUE)
   expect_equal(sum(get_design("rg")$TYPE == "number"), 2)
@@ -45,7 +45,7 @@ test_that("get_design picks up a layout override from the global environment", {
 test_that("create_all_sections with style='dd' omits data profiles", {
   dgf <- build_demo_dgf()
   out <- suppressMessages(suppressWarnings(
-    capture.output(create_all_sections(dgf[dgf$stable_data_type == "categorical", ],
+    capture.output(create_all_sections(dgf[dgf$desired_data_type == "categorical", ],
                                        style = "dd"))))
   expect_true(any(grepl("LEVELS", out)))
   expect_false(any(grepl("PROPERTIES", out)))

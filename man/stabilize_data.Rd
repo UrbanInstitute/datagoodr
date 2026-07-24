@@ -22,8 +22,8 @@ A data frame: the columns the DGF describes, in DGF order, with each
 }
 \description{
 Applies a DGF's per-variable rules to a raw dataset: first the
-`raw_data_import_rule` (read the column correctly), then the
-`stable_data_transform` (standardize it). The result is the "stable" version
+`desired_data_import_rule` (read the column correctly), then the
+`raw_to_stable_transform` (standardize it). The result is the "stable" version
 of the data - what a downstream program should consume.
 }
 \details{

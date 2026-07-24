@@ -11,7 +11,7 @@ inspect_dgf(dgf, convert_env = parent.frame(), verbose = TRUE)
 [load_dgf()]).}
 
 \item{convert_env}{Environment in which to look for the functions named in
-the `raw_data_import_rule`/`stable_data_format` columns. Defaults to the caller's environment,
+the `desired_data_import_rule`/`stable_data_format` columns. Defaults to the caller's environment,
 so functions you have sourced (e.g. from a project `dgf.R`) are found.}
 
 \item{verbose}{Logical; if `TRUE` (default) a human-readable report is
@@ -29,11 +29,11 @@ following checks are run:
 \details{
 \itemize{
   \item all required DGF columns are present;
-  \item every `stable_data_type` value is one Step 3 can render
+  \item every `desired_data_type` value is one Step 3 can render
     (number, string, categorical, boolean);
   \item all non-empty cells in the JSON columns (`dd_f_levels`,
     `rg_properties`, `rg_stats`, `rg_graphics`) contain valid JSON;
-  \item every function named in the `raw_data_import_rule` and `stable_data_format` columns is
+  \item every function named in the `desired_data_import_rule` and `stable_data_format` columns is
     defined and callable;
   \item every variable has a non-empty `prov_current_hash`.
 }

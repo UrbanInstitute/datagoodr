@@ -31,7 +31,6 @@ abbrev_num <- function( x, sig = 3 ) {
   vapply( x, one, character(1) )
 }
 
-
 ### Paste Histogram (Numeric) -------------------
 #' Print the histogram of a numeric variable into the RG
 #'
@@ -99,7 +98,7 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
     frac <- ( pos - usr[1] ) / ( usr[2] - usr[1] )
     if( frac > 0.85 ) return( 1 )                 # near right: extend left
     if( frac < 0.15 ) return( 0 )                 # near left:  extend right
-    if( side == "median" ) 1.05 else -0.05        # middle: split them
+    if( side == "median" ) 1.10 else -0.10        # middle: split them
   }
   mtext( "median", side = 3, at = med.pos,  line = -0.3, cex = 1,
          font = 2, col = "steelblue", adj = lab_adj(med.pos,  "median") )

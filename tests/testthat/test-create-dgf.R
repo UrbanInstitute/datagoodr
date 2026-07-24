@@ -4,14 +4,14 @@ test_that("create_dgf returns one row per variable with the expected columns", {
 
   expect_s3_class(dgf, "data.frame")
   expect_equal(nrow(dgf), ncol(df))
-  expect_true(all(c("var_name", "stable_data_type", "rg_properties",
+  expect_true(all(c("var_name", "desired_data_type", "rg_properties",
                     "rg_stats", "rg_graphics", "prov_current_hash") %in% names(dgf)))
 })
 
 test_that("create_dgf includes the metadata/schema columns", {
   dgf <- build_demo_dgf()
   # the six prefix families are all present
-  expect_true(all(c("dd_vlabel", "raw_data_storage", "stable_data_type",
+  expect_true(all(c("dd_vlabel", "raw_data_storage", "desired_data_type",
                     "rg_max_chr", "validate_rules", "prov_current_hash")
                   %in% names(dgf)))
   # rg_max_chr is the max character width
@@ -31,13 +31,13 @@ test_that("dd_f_levels captures a two-column level/label dictionary", {
 
 test_that("create_dgf classifies each variable type correctly", {
   dgf <- build_demo_dgf()
-  types <- setNames(dgf$stable_data_type, dgf$var_name)
+  types <- setNames(dgf$desired_data_type, dgf$var_name)
 
-  # stable_data_type is the ontology vocabulary
+  # desired_data_type is the ontology vocabulary
   expect_equal(unname(types["num"]),   "number")
   expect_equal(unname(types["cat"]),   "categorical")
   expect_equal(unname(types["flag"]),  "boolean")   # 2-level category -> boolean
-  expect_equal(unname(types["notes"]), "string")
+  expect_equal(unname(types["notes"]), "text")
 })
 
 test_that("create_dgf writes both .csv and .xlsx outputs", {
@@ -67,7 +67,7 @@ test_that("a type-changing stable_data_format on a numeric column does not break
     )),
     NA
   )
-  expect_equal(dgf$stable_data_type, "number")
+  expect_equal(dgf$desired_data_type, "number")
   expect_match(dgf$rg_preview, "\\$")             # preview is formatted
   expect_true(validate_json(dgf$rg_stats))        # numeric stats produced
 })

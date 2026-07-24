@@ -153,7 +153,7 @@ save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
 #  13 dgf_f_levels,
 #  14 dgf_f_order,
 #  --- G4  # BLUES
-#  15 stable_data_transform,
+#  15 raw_to_stable_transform,
 #  16 validate_rules
 
 # darkblue  headers: #44546A  cells: #E3E7ED

@@ -58,18 +58,18 @@ raw.data <- if( is.null( params$data_file ) ) NULL else
 # Each variable type needs its own section because each plot type
 # needs its own fig width and height. 
 # To add a new variable type, 
-# 1. add new stable_data_type to the dgf
+# 1. add new desired_data_type to the dgf
 # 2. add new layout to R/layouts.R
 # 3. add necessary funciton that the new layout object needs to read
 # 4. add new layout div tags to the end of this file 
 # 5. add new dfg.TYPE data frame and section to this file to run create_all_sections( dgf.TYPE )
 
-dgf.log  <-  dgf[dgf$stable_data_type == "boolean",     ]
-dgf.fact <-  dgf[dgf$stable_data_type == "categorical", ]
-dgf.chr  <-  dgf[dgf$stable_data_type == "string",      ]
-dgf.num  <-  dgf[dgf$stable_data_type == "number",      ]
-dgf.id   <-  dgf[dgf$stable_data_type == "identifier",  ]
-dgf.time <-  dgf[dgf$stable_data_type == "temporal",    ]
+dgf.log  <-  dgf[dgf$desired_data_type == "boolean",     ]
+dgf.fact <-  dgf[dgf$desired_data_type == "categorical", ]
+dgf.chr  <-  dgf[dgf$desired_data_type %in% c("text","string"), ]
+dgf.num  <-  dgf[dgf$desired_data_type == "number",      ]
+dgf.id   <-  dgf[dgf$desired_data_type == "identifier",  ]
+dgf.time <-  dgf[dgf$desired_data_type == "temporal",    ]
 
 
 ```

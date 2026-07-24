@@ -149,6 +149,17 @@ get_graphics_fact <- function(VNAME, df ){
     tab$x <- as.character(tab$x)
     tab[nrow(tab)+1, 1] <- "other"
     tab[nrow(tab), 2] <- sum(tab1$Freq[!tab1$is.g2])
+  } else {
+    # No single level reaches 2% (a flat, high-cardinality factor): keep the top
+    # 20 levels by frequency and roll the long tail into "other". Without this
+    # branch `tab` would be undefined and jsonify_df() below would error.
+    n.keep <- min(nrow(tab1), 20)
+    tab <- tab1[seq_len(n.keep), 1:2]
+    tab$x <- as.character(tab$x)
+    if(nrow(tab1) > n.keep){
+      tab[nrow(tab)+1, 1] <- "other"
+      tab[nrow(tab), 2] <- sum(tab1$Freq[(n.keep+1):nrow(tab1)])
+    }
   }
 
   ret <- jsonify_df(tab)

@@ -17,7 +17,7 @@
 #' @param dgf A DGF data frame.
 #' @param var_name The variable name (a value of `dgf$var_name`).
 #'
-#' @return The variable's `stable_data_type`, used by the callers to pick a
+#' @return The variable's `desired_data_type`, used by the callers to pick a
 #'   type-appropriate render function. Errors if `var_name` is not in the DGF.
 #' @seealso [set_xx()], [get_xx()]
 #' @noRd
@@ -29,7 +29,7 @@ set_dg_context <- function( dgf, var_name ) {
   xx <- lapply( xx, function(v) v[[1]] )   # scalars, not length-1 vectors
   xx[["VNAME"]] <- var_name
   set_xx( xx )
-  as.character( xx[["stable_data_type"]] )
+  as.character( xx[["desired_data_type"]] )
 }
 
 
@@ -81,6 +81,7 @@ dg_stats <- function( dgf, var_name, label = "STATS" ) {
   if( type == "temporal" ) return( invisible(NULL) )
   f <- switch( type,
     number      = paste_stats_num,
+    text        = ,
     string      = paste_stats_chr,
     categorical = paste_stats_fact,
     boolean     = paste_stats_log,
@@ -116,6 +117,7 @@ dg_preview <- function( dgf, var_name, label = "PREVIEW", size = 80 ) {
   type <- set_dg_context( dgf, var_name )
   f <- switch( type,
     number = paste_preview_num,
+    text   = ,
     string = paste_preview_chr,
     stop( "Previews are only available for numeric and character variables ",
           "(got '", type, "').", call. = FALSE ) )
@@ -142,6 +144,7 @@ dg_graphic <- function( dgf, var_name, label = NULL ) {
     number      = paste_histogram,
     categorical = paste_treemap,
     boolean     = paste_booleplot,
+    text        = ,
     string      = v_to_wordcloud,
     temporal    = paste_temporal_graphic,
     stop( "No graphic for type '", type, "'.", call. = FALSE ) )

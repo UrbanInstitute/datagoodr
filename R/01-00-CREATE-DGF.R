@@ -18,10 +18,15 @@
 #'   `FALSE`.
 #' @param guess.factors Logical; treat low-cardinality columns as factors.
 #'   Defaults to `TRUE`.
+#' @param max_factor_levels Integer; the maximum number of factor/logical levels
+#'   stored in the `dd_f_levels` dictionary. High-cardinality factors are capped
+#'   to the most frequent `max_factor_levels` levels, matching the
+#'   frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
+#'   cell under Excel's 32,767-character limit). Defaults to `50`.
 #' @param var_name,dd_vlabel,dd_vdesc,stable_data_storage Optional character vectors of per-variable
 #'   metadata (name, short label, long description, type), each the same length
 #'   and order as the columns of `df`. Default to blank.
-#' @param raw_data_import_rule Optional character vector of type-conversion function names
+#' @param desired_data_import_rule Optional character vector of type-conversion function names
 #'   (e.g. `"as_yyyy"`), one per column, applied to the data before profiling.
 #' @param stable_data_format Optional character vector of display-formatting function names
 #'   (e.g. `"dollarize"`), one per column, applied to previews and graphics.
@@ -49,12 +54,13 @@ create_dgf <- function(         # ----------------
          use.df.types=FALSE,
          guess.factors=TRUE,
          guess.dates=FALSE,
+         max_factor_levels=50,
          dd=NULL,
          var_name=NULL,
          dd_vlabel=NULL,
          dd_vdesc=NULL,
          stable_data_storage=NULL,
-         raw_data_import_rule = NULL,
+         desired_data_import_rule = NULL,
          stable_data_format = NULL,
          dd_vname_alias = NULL,
          keep.dd.cols=NULL,
@@ -118,15 +124,15 @@ create_dgf <- function(         # ----------------
   { df <- recast_factors( df ) }
   guess_type <- primary_class( df )
 
-  correct.guess <- substr(raw_data_import_rule, 4,nchar(raw_data_import_rule)) == guess_type
+  correct.guess <- substr(desired_data_import_rule, 4,nchar(desired_data_import_rule)) == guess_type
 
   ## Set up data classes
-  if(!is.null(raw_data_import_rule)){
-    df_converted <- sapply(seq_along(raw_data_import_rule), function(i) {
-      if (is.na(raw_data_import_rule[i]) | correct.guess[i]) {
-        return(dplyr::pull(df[, i], 1))  # Keep the original column if raw_data_import_rule[i] is NA
+  if(!is.null(desired_data_import_rule)){
+    df_converted <- sapply(seq_along(desired_data_import_rule), function(i) {
+      if (is.na(desired_data_import_rule[i]) | correct.guess[i]) {
+        return(dplyr::pull(df[, i], 1))  # Keep the original column if desired_data_import_rule[i] is NA
       } else {
-        func_name <- raw_data_import_rule[i]
+        func_name <- desired_data_import_rule[i]
         if (exists(func_name, mode = "function")) {
             return(try(sapply(dplyr::pull(df[,i],1), get(func_name)), silent=TRUE))
         } else {
@@ -144,7 +150,7 @@ create_dgf <- function(         # ----------------
 
 
 
-  dd_f_levels <- mapply(function(var_name, type, df){
+  dd_f_levels <- mapply(function(var_name, type, df, max_factor_levels){
     # any(): a column can carry a multi-class class() - an ordered factor is
     # c("ordered","factor"), and readr's type guess can hand back a POSIXct
     # datetime as c("POSIXct","POSIXt"). A scalar `type %in% ...` errors on
@@ -157,6 +163,13 @@ create_dgf <- function(         # ----------------
       # tibble (df[, var_name] on a tibble returns a 1-column tibble, whose
       # levels() is NULL).
       lv <- levels(df[[var_name]])
+      # Cap high-cardinality factors at the most frequent max_factor_levels
+      # levels. This matches the frequency-ranked FACTOR LEVELS table (see
+      # get_stats_fact) and keeps the cell under Excel's 32,767-char limit.
+      if( length(lv) > max_factor_levels ){
+        counts <- sort( table( df[[var_name]] ), decreasing = TRUE )
+        lv <- names(counts)[ seq_len(max_factor_levels) ]
+      }
       tab <- data.frame(level = lv, label = lv)
       tab <- jsonify_df(tab)
       return(tab)
@@ -164,7 +177,8 @@ create_dgf <- function(         # ----------------
         return("")
       }
     },
-    var_name = var_name,type=data_type_converted, MoreArgs = list(df = df) )
+    var_name = var_name, type=data_type_converted,
+    MoreArgs = list(df = df, max_factor_levels = max_factor_levels) )
 
 
   ## Need to guess factor it is logical, to make class
@@ -185,16 +199,6 @@ create_dgf <- function(         # ----------------
   is.id       <- mapply( detect_identifier, df, var_name ) & ! is.temporal
   vclass[ is.temporal ] <- "temporal"
   vclass[ is.id ]       <- "identifier"
-
-  # Default unit for a detected temporal: a time-of-day class gets "hour", a
-  # date/datetime gets "date" (the calendar heatmap). The user retypes the unit
-  # (year/month/dow/week) in the DGF and re-renders - the graphic is chosen at
-  # render, so no rebuild is needed.
-  stable_data_unit <- rep( "", N_col )
-  is.time <- vapply( df, function(x) inherits(x, c("hms","difftime","times")),
-                     logical(1) )
-  stable_data_unit[ is.temporal ] <- "date"
-  stable_data_unit[ is.temporal & is.time ] <- "hour"
 
   # Print types of classes
   vt <- table( vclass )
@@ -250,18 +254,43 @@ create_dgf <- function(         # ----------------
   ## VARIABLE TYPES
 
   raw_first5    <- sapply( df_fmt, first_n ) %>% as.character()
-  if(is.null(raw_data_import_rule)){raw_data_import_rule<- rep( "", N_col )}
+  if(is.null(desired_data_import_rule)){desired_data_import_rule<- rep( "", N_col )}
   if(is.null(format)){stable_data_format<- rep( "", N_col )}
   stable_data_storage <- sapply( df_fmt, class ) %>% as.character()
 
-  # Ontology data_type is what the render engine dispatches on. dg_type_of()
-  # maps the R storage class onto it: raw_ from the class as read, stable_ from
-  # the class after any type conversion. vclass (numeric/factor/logical/
-  # character) is the internal build-time guess; stable_data_type is its
-  # ontology name (number/categorical/boolean/string), so a variable that
-  # guessed "factor" carries stable_data_type "categorical".
-  raw_data_type    <- dg_type_of( raw_data_storage )
-  stable_data_type <- dg_type_of( vclass )
+  # desired_data_type is what the render engine dispatches on. dg_type_of()
+  # maps the internal build-time vclass (numeric/factor/logical/character) onto
+  # the ontology name (number/categorical/boolean/string), so a variable that
+  # guessed "factor" carries desired_data_type "categorical".
+  desired_data_type <- dg_type_of( vclass )
+
+  ## Refine the coarse R-storage typing with the detector library: fill in
+  ## desired_data_subtype/class, sharpen desired_data_type for semantic columns
+  ## (a ZIP -> geography, an ORCID -> identifier, a date string -> temporal),
+  ## and flag near-unique keys. Columns with no confident match are untouched.
+  .enriched <- guess_dgf_types( df, desired_data_type )
+  desired_data_type    <- .enriched$desired_data_type
+  desired_data_subtype <- .enriched$desired_data_subtype
+  desired_data_class   <- .enriched$desired_data_class
+  dd_is_join_key      <- .enriched$dd_is_join_key
+
+  ## Reconcile the build-time profile class (vclass, which drives rg_stats/
+  ## rg_graphics below) and the unit with the enriched type. The detector
+  ## library is the single source of truth: a column it promoted to temporal or
+  ## identifier - e.g. a text-month date detect_temporal's numeric formats miss -
+  ## must be profiled and united as that type, not left on the character path.
+  vclass[ desired_data_type == "temporal"   & vclass != "temporal"   ] <- "temporal"
+  vclass[ desired_data_type == "identifier" & vclass != "identifier" ] <- "identifier"
+
+  # Unit: the guess sets it from the temporal class (the grain the user retypes
+  # in the DGF and re-renders - the graphic is chosen at render, no rebuild).
+  # Any temporal the guess left unmapped falls back to a storage-class default:
+  # a time-of-day column gets "hour", a date/datetime gets "date".
+  stable_data_unit <- .enriched$stable_data_unit
+  is.time <- vapply( df, function(x) inherits(x, c("hms","difftime","times")),
+                     logical(1) )
+  need_unit <- desired_data_type == "temporal" & ! nzchar( stable_data_unit )
+  stable_data_unit[ need_unit ] <- ifelse( is.time[ need_unit ], "hour", "date" )
 
   ## FIELD LENGTH (max character width of the underlying values)
   rg_max_chr <- sapply( df_stats, function(x){
@@ -284,7 +313,7 @@ create_dgf <- function(         # ----------------
   # Declared now, populated by later work (subtype/class/unit descriptors, the
   # standardization pipeline, validation, lineage chaining). See dev/TO-DO.md.
   blank <- rep( "", N_col )
-  stable_data_transform <- blank
+  raw_to_stable_transform <- blank
   validate_rules        <- blank
 
 
@@ -299,27 +328,29 @@ create_dgf <- function(         # ----------------
 
       # dd_: data dictionary
       dd_vname_alias, dd_vlabel, dd_vdesc, dd_f_levels,
+      dd_is_join_key,
 
-      # raw_: import contract (as received)
+      # raw_: the raw CSV (storage + profiling)
       raw_data_storage,
-      raw_data_type,
-      raw_data_subtype = blank,
-      raw_data_class   = blank,
-      raw_data_unit    = blank,
       raw_data_format  = blank,
-      raw_data_import_rule,
       raw_first5,
       raw_duplicated,
 
-      # stable_: standardized contract
+      # raw -> stable bridge
+      raw_to_stable_transform,
+
+      # stable_: the governed CSV, current state
       stable_data_storage,
-      stable_data_type,
-      stable_data_subtype   = blank,
-      stable_data_class     = blank,
       stable_data_unit,
       stable_data_format,
-      stable_data_transform,
-      stable_data_import_rule = blank,
+
+      # stable -> desired bridge
+      desired_data_import_rule,
+
+      # desired_: the intended interpretation
+      desired_data_type,
+      desired_data_subtype,
+      desired_data_class,
 
       # rg_: research guide artifacts (JSON strings)
       rg_properties, rg_preview, rg_stats, rg_graphics, rg_max_chr,

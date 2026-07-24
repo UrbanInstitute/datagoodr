@@ -22,9 +22,28 @@ test_that("create_dgf detects a date column as temporal with unit=date", {
   dgf <- suppressMessages(suppressWarnings(
     { utils::capture.output(d <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); d }))
   i <- dgf$var_name == "event_date"
-  expect_equal(dgf$stable_data_type[i], "temporal")
+  expect_equal(dgf$desired_data_type[i], "temporal")
   expect_equal(dgf$stable_data_unit[i], "date")           # default unit
   # graphic payload is a value/count table
+  tab <- datagoodr:::json_to_df(dgf$rg_graphics[i])
+  expect_true(all(c("Value", "Count") %in% names(tab)))
+})
+
+test_that("a date the detector library catches but detect_temporal misses is reconciled", {
+  # "1-Jul-14" is a valid date, but detect_temporal()'s numeric formats miss it;
+  # is_abbr_month_date() catches it. The enrichment must promote it to temporal
+  # AND reconcile the profile + unit, so it is NOT left with a character-path
+  # wordcloud graphic and a blank unit (the pre-reconciliation bug).
+  expect_false(datagoodr:::detect_temporal(c("1-Jul-14", "15-Mar-16", "3-Jan-15")))
+  d   <- c("1-Jul-14","15-Mar-16","3-Jan-15","21-Nov-12","9-Feb-13",
+           "30-Jun-16","2-Aug-15","5-Sep-11","19-Oct-10","7-Dec-17")
+  raw <- data.frame(evt = rep(d, 5), n = seq_len(50), stringsAsFactors = FALSE)
+  dgf <- suppressMessages(suppressWarnings(
+    { utils::capture.output(x <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); x }))
+  i <- dgf$var_name == "evt"
+  expect_equal(dgf$desired_data_type[i], "temporal")
+  expect_equal(dgf$stable_data_unit[i], "date")            # reconciled unit
+  # profile reconciled to the temporal path: a value/count table, not a wordcloud
   tab <- datagoodr:::json_to_df(dgf$rg_graphics[i])
   expect_true(all(c("Value", "Count") %in% names(tab)))
 })

@@ -27,7 +27,7 @@ test_that("retype_dgf changes the type and unit of a variable", {
                     types = c(founded_year = "temporal"),
                     units = c(founded_year = "year"))
   i <- out$var_name == "founded_year"
-  expect_equal(out$stable_data_type[i], "temporal")
+  expect_equal(out$desired_data_type[i], "temporal")
   expect_equal(out$stable_data_unit[i], "year")
 })
 

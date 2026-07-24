@@ -38,7 +38,8 @@
   grid-auto-rows: auto;
   grid-column-gap: var(--dg-gap-col);
   grid-row-gap: var(--dg-gap-row);
-  margin-bottom: 1.2em;
+  /* breathing room after each variable block, before the next section title */
+  margin-bottom: 2.2em;
 }
 
 /* keep every rendered graphic inside its cell - never overflow the column */
@@ -108,7 +109,8 @@ h4 {
   color: var(--dg-ink);
   border-bottom: 3px solid var(--dg-accent);
   width: 100%;
-  margin: 0.1em 0 0.2em 0;
+  /* extra top margin sets each variable's title apart from the block above */
+  margin: 0.8em 0 0.2em 0;
   padding-bottom: 2px;
 }
 
@@ -221,13 +223,15 @@ pre.dg-preview {
   color: var(--dg-label);
 }
 
-/* mono cells in the properties (div7) and full-width (div9) tables */
-.div7 td, .div9 td {
+/* mono cells in the properties (div7), graphic-cell table (div8, the identifier
+   MOST COMMON VALUES table), and full-width (div9) tables. div8 is a graphic for
+   every other type, so these table rules only bite for the identifier. */
+.div7 td, .div8 td, .div9 td {
   font-family: var(--dg-mono);
   font-size: 0.85em;
 }
 
-.div7 table, .div9 table { margin-left: 2px; }
+.div7 table, .div8 table, .div9 table { margin-left: 2px; }
 
 /* strip default table chrome; use tight cells + hairline row rules */
 .table { width: auto; }
@@ -240,15 +244,16 @@ tbody, tfoot, tr, td, th {
   border-width: 0;
 }
 
-.div7 tr, .div9 tr {
+.div7 tr, .div8 tr, .div9 tr {
   border-bottom: 1px solid var(--dg-rule);
 }
 /* hide the header on the self-evident STAT/VAL/PER properties table ... */
 .div7 th { display: none; }
-/* ... but keep it on the full-width extra table, where the columns aren't
-   self-evident (STATS names, factor LABEL/FREQUENCY/MEANING, most-common
-   VALUE/FREQUENCY, logical category codes). */
-.div9 th {
+/* ... but keep it on the div8 identifier table and the full-width extra table,
+   where the columns aren't self-evident (STATS names, factor
+   LABEL/FREQUENCY/MEANING, most-common VALUE/FREQUENCY, logical category
+   codes). */
+.div8 th, .div9 th {
   font-family: var(--dg-sans);
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -257,6 +262,11 @@ tbody, tfoot, tr, td, th {
   color: var(--dg-label);
   text-align: left;
 }
+
+/* the DISTRIBUTION SHAPE table (numeric div9, under STATS) is self-evident, so
+   its header (stat / num / interpretation) is hidden - same treatment as the
+   PROPERTIES table. */
+.dg-shape thead, .dg-shape th { display: none; }
 
 /* graphic anchored to the bottom-right of its cell */
 .div8 img, .div8 svg { align-self: end; justify-self: end; }

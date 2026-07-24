@@ -14,7 +14,7 @@ demo_dgf <- function(raw = demo_raw()) {
   suppressMessages(suppressWarnings(utils::capture.output(
     dgf <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)
   )))
-  dgf$raw_data_import_rule[dgf$var_name == "ein"] <- "as_EIN"
+  dgf$desired_data_import_rule[dgf$var_name == "ein"] <- "as_EIN"
   dgf
 }
 
@@ -38,18 +38,18 @@ test_that("stabilize_data returns the DGF's variables in DGF order", {
   expect_equal(names(stabilize_data(raw, dgf)), dgf$var_name)
 })
 
-test_that("a stable_data_transform runs after the import rule", {
+test_that("a raw_to_stable_transform runs after the import rule", {
   raw <- demo_raw(); dgf <- demo_dgf(raw)
   # standardize state to upper-case via a user function in scope
   to_upper <- function(x) toupper(x)
-  dgf$stable_data_transform[dgf$var_name == "state"] <- "to_upper"
+  dgf$raw_to_stable_transform[dgf$var_name == "state"] <- "to_upper"
   stable <- stabilize_data(raw, dgf)
   expect_equal(stable$state, c("MD", "VA", "DC"))
 })
 
 test_that("a missing rule function warns and leaves the column unchanged", {
   raw <- demo_raw(); dgf <- demo_dgf(raw)
-  dgf$stable_data_transform[dgf$var_name == "score"] <- "no_such_fn_123"
+  dgf$raw_to_stable_transform[dgf$var_name == "score"] <- "no_such_fn_123"
   expect_warning(stable <- stabilize_data(raw, dgf), "not found")
   expect_equal(as.character(stable$score), as.character(raw$score))
 })
@@ -78,7 +78,7 @@ test_that("the portable DGF round-trips and rg_ is never embedded", {
   rec <- dgf_from_stable(back)
   expect_false(any(grepl("^rg_", names(rec))))                 # the whitelist
   expect_equal(rec$var_name, dgf$var_name)
-  expect_equal(rec$raw_data_import_rule[rec$var_name == "ein"], "as_EIN")
+  expect_equal(rec$desired_data_import_rule[rec$var_name == "ein"], "as_EIN")
 })
 
 test_that("dgf_from_stable accepts a path and returns NULL without a DGF payload", {

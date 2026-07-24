@@ -15,10 +15,11 @@
     number      = "numeric",
     categorical = "factor",
     boolean     = "logical",
-    string      = "character",
+    text        = "character",
+    string      = "character",   # back-compat alias for pre-rename DGFs
     identifier  = "identifier",
     temporal    = "temporal",
-    stop( "Unknown stable_data_type: '", type, "'.", call. = FALSE ) )
+    stop( "Unknown desired_data_type: '", type, "'.", call. = FALSE ) )
 }
 
 
@@ -33,8 +34,8 @@
 #' @param data The raw dataset the DGF was built from (a data frame, or a path
 #'   to a `.csv`). Needed to recompute the profile.
 #' @param types A named character vector mapping variable name to the corrected
-#'   `stable_data_type` (`"temporal"`, `"identifier"`, `"number"`,
-#'   `"categorical"`, `"boolean"`, `"string"`).
+#'   `desired_data_type` (`"temporal"`, `"identifier"`, `"number"`,
+#'   `"categorical"`, `"boolean"`, `"text"`).
 #' @param units A named character vector mapping variable name to
 #'   `stable_data_unit` (e.g. `c(founded = "year")`). Temporal only; may name
 #'   variables already the right type but needing a unit.
@@ -75,7 +76,7 @@ retype_dgf <- function( dgf, data, types = NULL, units = NULL,
 
     ty <- types[[v]]
     vc <- .dgf_vclass_of( ty )
-    dgf$stable_data_type[i] <- ty
+    dgf$desired_data_type[i] <- ty
 
     # recompute the profile from the raw column for the corrected type
     dgf$rg_properties[i] <- get_properties( v, data )

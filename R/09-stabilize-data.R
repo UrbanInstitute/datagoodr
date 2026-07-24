@@ -6,8 +6,8 @@
 # lineage travelling inside the CSV (no sidecar).
 #
 # Two rule columns drive the transform, applied in order:
-#   raw_data_import_rule    how to read the raw column correctly (as_mdy, as_EIN)
-#   stable_data_transform   how to standardize it (dollarize, zero_pad, ...)
+#   desired_data_import_rule    how to read the raw column correctly (as_mdy, as_EIN)
+#   raw_to_stable_transform   how to standardize it (dollarize, zero_pad, ...)
 # Both name a function reachable in the session; a blank rule leaves the column
 # as-is. This reuses the create_dgf() dispatch (exists()/get()).
 
@@ -21,10 +21,10 @@
 #' @return The transformed column, or `col` unchanged when `rule` is blank or
 #'   the function is not found (with a warning in the latter case).
 #'
-#' @details Mirrors how [create_dgf()] applies `raw_data_import_rule`/
+#' @details Mirrors how [create_dgf()] applies `desired_data_import_rule`/
 #'   `stable_data_format`: element-wise via `get(rule)`, NA-safe.
 #' @noRd
-apply_rule_col <- function( col, rule, env = parent.frame() ) {
+apply_rule_col <- function( col, rule, env = parent.frame(), var = NULL ) {
   if( is.null(rule) || is.na(rule) || ! nzchar( trimws(rule) ) ) return( col )
   fn <- trimws( rule )
   if( ! exists( fn, mode = "function", envir = env ) ) {
@@ -39,6 +39,19 @@ apply_rule_col <- function( col, rule, env = parent.frame() ) {
     warning( "Rule ", fn, "() failed - column left unchanged.", call. = FALSE )
     return( col )
   }
+  # GUARD: an as_* rule that turns many *present* values into NA does not fit
+  # the data -- the same signal its is_* detector would give. Warn (keeping the
+  # partly-NA result) so a misapplied rule is caught, not silent.
+  present <- !is.na(col) & nzchar( trimws( as.character(col) ) )
+  if( any(present) ) {
+    miss <- mean( is.na( out[present] ) )
+    if( miss > 0.2 ) {
+      where <- if( is.null(var) ) "" else paste0( " on '", var, "'" )
+      warning( sprintf(
+        "Rule %s()%s did not fit %.0f%% of values (guard) - check the rule matches the data.",
+        fn, where, 100 * miss ), call. = FALSE )
+    }
+  }
   out
 }
 
@@ -46,8 +59,8 @@ apply_rule_col <- function( col, rule, env = parent.frame() ) {
 #' Standardize a raw dataset with a DGF's rules
 #'
 #' Applies a DGF's per-variable rules to a raw dataset: first the
-#' `raw_data_import_rule` (read the column correctly), then the
-#' `stable_data_transform` (standardize it). The result is the "stable" version
+#' `desired_data_import_rule` (read the column correctly), then the
+#' `raw_to_stable_transform` (standardize it). The result is the "stable" version
 #' of the data - what a downstream program should consume.
 #'
 #' @param raw A data frame, or a path to a raw `.csv`.
@@ -84,8 +97,8 @@ stabilize_data <- function( raw, dgf, env = parent.frame() ) {
       next
     }
     col <- raw[[v]]
-    col <- apply_rule_col( col, dgf$raw_data_import_rule[i], env )
-    col <- apply_rule_col( col, dgf$stable_data_transform[i], env )
+    col <- apply_rule_col( col, dgf$desired_data_import_rule[i], env, var = dgf$var_name[i] )
+    col <- apply_rule_col( col, dgf$raw_to_stable_transform[i], env, var = dgf$var_name[i] )
     out[[v]] <- col
   }
 
@@ -105,7 +118,7 @@ stabilize_data <- function( raw, dgf, env = parent.frame() ) {
 #'   to a non-R program reading the governed CSV.
 #' @noRd
 dgf_portable <- function( dgf ) {
-  keep <- grepl( "^(var_name$|dd_|raw_|stable_|validate_|prov_)", names(dgf) )
+  keep <- grepl( "^(var_name$|dd_|raw_|stable_|desired_|validate_|prov_)", names(dgf) )
   dgf[ , keep, drop = FALSE ]
 }
 

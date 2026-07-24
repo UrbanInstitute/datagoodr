@@ -62,9 +62,11 @@ merge_level_labels <- function( old_json, new_json ) {
 #'
 #' @return Invisibly, the updated DGF data frame. It carries a `"status"`
 #'   attribute: a named character vector labelling each variable as
-#'   `"unchanged"`, `"changed"`, or `"added"`, plus a `"removed"` attribute
-#'   listing variables no longer present in the data.
-#' @seealso [create_dgf()], [inspect_dgf()]
+#'   `"unchanged"`, `"changed"`, or `"added"`; a `"removed"` attribute listing
+#'   variables no longer present in the data; and a `"stale_rules"` attribute
+#'   (from [check_dgf_rules()]) listing curated `as_*` rules that no longer fit
+#'   the new data.
+#' @seealso [create_dgf()], [inspect_dgf()], [check_dgf_rules()]
 #' @export
 update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
                         open = interactive() ) {
@@ -96,7 +98,7 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
       df,
       dd_vdesc       = pick_chr("dd_vdesc"),
       dd_vname_alias = pick_chr("dd_vname_alias"),
-      raw_data_import_rule    = pick_fx("raw_data_import_rule"),
+      desired_data_import_rule    = pick_fx("desired_data_import_rule"),
       stable_data_format     = pick_fx("stable_data_format"),
       file        = tempfile("dgf-refresh"),
       open        = FALSE )
@@ -115,7 +117,7 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
       # keep the old (curated) row verbatim
       dgf.new[ i, shared.cols ] <- dgf[ idx[i], shared.cols ]
     } else if( status[i] == "changed" &&
-               dgf.new$stable_data_type[i] %in% c("categorical","boolean") ) {
+               dgf.new$desired_data_type[i] %in% c("categorical","boolean") ) {
       # refreshed data, but keep curated level labels where levels persist
       dgf.new$dd_f_levels[i] <-
         merge_level_labels( dgf$dd_f_levels[ idx[i] ], dgf.new$dd_f_levels[i] )
@@ -138,11 +140,28 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
     cat( "----------------------------------------\n\n" )
   }
 
+  # Re-check the rule guards against the new data. A curated as_* rule may no
+  # longer fit after the data was cleaned or replaced (e.g. dates that were
+  # mm/dd/yyyy are now ISO), so reconciliation means flagging stale rules, not
+  # just recomputing summaries. See check_dgf_rules().
+  rule_check <- tryCatch( check_dgf_rules( dgf, df ), error = function(e) NULL )
+  stale <- if( is.null(rule_check) || ! nrow(rule_check) ) rule_check
+           else rule_check[ ! rule_check$fits, , drop = FALSE ]
+  if( verbose && ! is.null(stale) && nrow(stale) ) {
+    cat( "  stale rules (no longer fit the data):\n" )
+    for( k in seq_len( nrow(stale) ) )
+      cat( "    ", stale$var_name[k], " [", stale$stage[k], "] ",
+           stale$rule[k], " -> ", round( 100 * stale$miss_rate[k] ), "% miss\n",
+           sep = "" )
+    cat( "----------------------------------------\n\n" )
+  }
+
   # write output
   write.csv( dgf.new, paste0(file, ".csv"), row.names = FALSE )
   save_to_excel( dgf.new, filename = paste0(file, ".xlsx"), open = open )
 
-  attr( dgf.new, "status" )  <- status
-  attr( dgf.new, "removed" ) <- removed
+  attr( dgf.new, "status" )      <- status
+  attr( dgf.new, "removed" )     <- removed
+  attr( dgf.new, "stale_rules" ) <- stale
   return( invisible( dgf.new ) )
 }

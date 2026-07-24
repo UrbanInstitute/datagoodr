@@ -56,6 +56,7 @@ paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
           index="x",
           vSize="Freq",
           type="index",
+          title = "",          # suppress the default "Freq" title
           draw = TRUE)
   cat( "\n\n" )
 

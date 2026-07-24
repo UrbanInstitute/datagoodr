@@ -271,15 +271,23 @@ paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
   if( nrow(ftab) > 50 ) { ftab <- ftab[ 1:50, ]; meaning <- meaning[ 1:50 ] }
   freq.fmt <- formatC( ftab$Frequency, big.mark = ",", format = "d" )
 
+  # each level's share of all records; fall back to the frequency total when the
+  # row count can't be read from the PROPERTIES table.
+  n <- suppressWarnings( total_rows_from_properties() )
+  if( is.na(n) || n <= 0 ) n <- sum( ftab$Frequency, na.rm = TRUE )
+  pct <- paste0( "(", formatC( ftab$Frequency / n * 100, format = "f", digits = 1 ), "%)" )
+
+  # Column order: FREQUENCY, (%), LABEL, then MEANING (only once customised).
   if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
   if( customized ) {
-    out <- data.frame( Label = ftab$Value, Frequency = freq.fmt, Meaning = meaning,
-                       stringsAsFactors = FALSE )
-    k <- knitr::kable( out, align = c("l","r","l") )
+    out <- data.frame( Frequency = freq.fmt, `(%)` = pct, Label = ftab$Value,
+                       Meaning = meaning,
+                       stringsAsFactors = FALSE, check.names = FALSE )
+    k <- knitr::kable( out, align = c("r","r","l","l") )
   } else {
-    out <- data.frame( Label = ftab$Value, Frequency = freq.fmt,
-                       stringsAsFactors = FALSE )
-    k <- knitr::kable( out, align = c("l","r") )
+    out <- data.frame( Frequency = freq.fmt, `(%)` = pct, Label = ftab$Value,
+                       stringsAsFactors = FALSE, check.names = FALSE )
+    k <- knitr::kable( out, align = c("r","r","l") )
   }
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
@@ -486,7 +494,7 @@ paste_stats_horizontal <- function( VNAME, LABEL = "STATS" ){
   tab$STAT <- trimws( as.character( tab$STAT ) )
 
   # source stat name -> short display label, in display order. Skew and Kurtosis
-  # are shown here (as actual values) rather than in the PROPERTIES table.
+  # are NOT shown here - they are drawn above the histogram by paste_histogram().
   relabel <- c( "Minimum"  = "MIN",
                 "Maximum"  = "MAX",
                 "Mean"     = "MEAN",
@@ -494,9 +502,7 @@ paste_stats_horizontal <- function( VNAME, LABEL = "STATS" ){
                 "Q - 25"   = "Q25",
                 "Median"   = "Q50",
                 "Q - 75"   = "Q75",
-                "Q - 95"   = "Q95",
-                "Skew"     = "SKEW",
-                "Kurtosis" = "KURTOSIS" )
+                "Q - 95"   = "Q95" )
   idx  <- match( names(relabel), tab$STAT )
   keep <- ! is.na(idx)
 
@@ -510,6 +516,95 @@ paste_stats_horizontal <- function( VNAME, LABEL = "STATS" ){
   cat( paste0( k, " \n" ) )
   cat( "\n\n" )
 }
+
+
+### Distribution shape (skew / kurtosis) -----------------------------------
+#' Classify a shape statistic as LOW / MED / HIGH (internal)
+#'
+#' Buckets the magnitude of a skew/kurtosis value into a plain-language level,
+#' so the reader does not have to interpret a raw coefficient.
+#'
+#' @param v Numeric value (skew or excess kurtosis).
+#' @param lo,hi Magnitude thresholds: `|v| < lo` -> LOW, `< hi` -> MED, else HIGH.
+#'
+#' @return `"LOW"`, `"MED"`, `"HIGH"`, or `NA` when `v` is `NA`.
+#' @noRd
+shape_level <- function( v, lo, hi ) {
+  if( is.na(v) ) return( NA_character_ )
+  a <- abs(v)
+  if( a < lo ) "LOW" else if( a < hi ) "MED" else "HIGH"
+}
+
+
+#' Read one shape statistic from the current variable's stats cell (internal)
+#'
+#' Pulls Skew or Kurtosis out of the `rg_stats` table for the variable in the
+#' render context and returns both its display string and a LOW/MED/HIGH level.
+#' Missing or pre-existing DGFs (no such row) return `NA`s, which the caller
+#' omits.
+#'
+#' @param name Either `"Skew"` or `"Kurtosis"`.
+#'
+#' @return A list with `val` (numeric), `disp` (display string) and `level`.
+#' @noRd
+get_shape_stat <- function( name ) {
+  out  <- list( val = NA_real_, disp = NA_character_, level = NA_character_ )
+  info <- tryCatch( get_xx()[["rg_stats"]], error = function(e) NULL )
+  if( is.null(info) || length(info) == 0 || is.na(info) || trimws(info) == "" )
+  { return( out ) }
+  tab <- tryCatch( json_to_df(info), error = function(e) NULL )
+  if( is.null(tab) || ! all( c("STAT","VAL") %in% names(tab) ) ) return( out )
+  disp <- tab$VAL[ trimws(as.character(tab$STAT)) == name ]
+  if( length(disp) == 0 ) return( out )
+  out$disp  <- as.character( disp[1] )
+  out$val   <- suppressWarnings( as.numeric( gsub(",", "", out$disp) ) )
+  # skew is unbounded but small near symmetry; excess kurtosis rides a wider
+  # scale, so it gets larger thresholds.
+  out$level <- if( name == "Skew" ) shape_level( out$val, 0.5, 1 )
+               else                 shape_level( out$val, 1,   3 )
+  out
+}
+
+
+#' Print the DISTRIBUTION SHAPE table (skew / kurtosis) into the RG
+#'
+#' Reads the numeric `rg_stats` cell and prints a small three-column table -
+#' Skew and Kurtosis with their raw value and a LOW/MED/HIGH interpretation.
+#' Shown in the numeric STATS block, directly beneath the STATS table.
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_stats"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"DISTRIBUTION SHAPE"`.
+#'
+#' @return No return value; prints the table (or nothing when the shape stats
+#'   are unavailable).
+#' @import knitr
+#' @export
+paste_distribution_shape <- function( VNAME, LABEL = "DISTRIBUTION SHAPE" ){
+
+  rows <- list()
+  for( nm in c("Skew", "Kurtosis") ) {
+    s <- get_shape_stat( nm )
+    if( is.na(s$val) ) next
+    rows[[nm]] <- c( nm, s$disp, s$level )
+  }
+  if( ! length(rows) ) return( invisible(NULL) )
+
+  out <- as.data.frame( do.call( rbind, rows ), stringsAsFactors = FALSE )
+  names(out) <- c( "stat", "num", "interpretation" )
+  rownames(out) <- NULL
+
+  # The rows are self-evident (Skew / Kurtosis, value, level), so the header is
+  # hidden via the .dg-shape wrapper (see datagoodr.css) - the column names still
+  # travel in the markup for accessibility / the unstyled PDF.
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+  cat( "::: {.dg-shape}\n\n" )
+  k <- knitr::kable( out, align = c("l", "r", "l") )
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n::: \n\n" )
+}
+
 
 ### Character --------
 #' Print Statistic of a Character Variable into RG

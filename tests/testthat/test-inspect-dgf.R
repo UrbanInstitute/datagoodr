@@ -5,9 +5,9 @@ test_that("inspect_dgf accepts a freshly built DGF", {
   expect_length(out$problems, 0)
 })
 
-test_that("inspect_dgf flags an unrenderable stable_data_type", {
+test_that("inspect_dgf flags an unrenderable desired_data_type", {
   dgf <- build_demo_dgf()
-  dgf$stable_data_type[1] <- "mystery"
+  dgf$desired_data_type[1] <- "mystery"
   out <- inspect_dgf(dgf, verbose = FALSE)
   expect_false(out$valid)
   expect_true("invalid_vtype_class" %in% names(out$problems))

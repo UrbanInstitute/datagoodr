@@ -3,7 +3,7 @@ test_that("get_design compiles layouts for every renderable type", {
   expect_s3_class(d, "data.frame")
   # TYPE is the ontology vocabulary (see dg_type_of / the schema)
   expect_setequal(unique(d$TYPE),
-                  c("number", "string", "categorical", "boolean",
+                  c("number", "text", "categorical", "boolean",
                     "identifier", "temporal"))
   expect_true(nrow(d) > 0)
 })
@@ -11,8 +11,8 @@ test_that("get_design compiles layouts for every renderable type", {
 test_that("create_all_sections renders markdown for each variable type", {
   dgf <- build_demo_dgf()
 
-  for (ty in c("boolean", "categorical", "number", "string")) {
-    sub <- dgf[dgf$stable_data_type == ty, ]
+  for (ty in c("boolean", "categorical", "number", "text")) {
+    sub <- dgf[dgf$desired_data_type == ty, ]
     skip_if(nrow(sub) == 0)
     out <- suppressMessages(suppressWarnings(
       capture.output(create_all_sections(sub))
@@ -23,9 +23,9 @@ test_that("create_all_sections renders markdown for each variable type", {
     expect_true(any(grepl("pagebreak", out)),
                 info = paste("no pagebreak for type", ty))
     # every type shows the retained descriptor fields (SCOPE / LOCATION CODE
-    # were dropped from the layouts in the v2 schema)
+    # were dropped from the layouts in the v2 schema; rg_max_chr is "MAX NCHAR")
     expect_true(any(grepl("DATA TYPE", out)))
-    expect_true(any(grepl("LENGTH", out)))
+    expect_true(any(grepl("MAX NCHAR", out)))
     expect_true(any(grepl("DESCRIPTION", out)))
   }
 })
@@ -34,14 +34,14 @@ test_that("factor sections render a LEVELS table and numeric sections STATS + qu
   dgf <- build_demo_dgf()
 
   fac <- suppressMessages(suppressWarnings(
-    capture.output(create_all_sections(dgf[dgf$stable_data_type == "categorical", ]))))
+    capture.output(create_all_sections(dgf[dgf$desired_data_type == "categorical", ]))))
   expect_true(any(grepl("LEVELS", fac)))
 
   num <- suppressMessages(suppressWarnings(
-    capture.output(create_all_sections(dgf[dgf$stable_data_type == "number", ]))))
-  # STATS carries the quantile columns with short labels (MIN/Q05/Q50/.../MAX)
-  # plus SKEW/KURTOSIS (moved out of the PROPERTIES table)
+    capture.output(create_all_sections(dgf[dgf$desired_data_type == "number", ]))))
+  # STATS carries the quantile columns with short labels (MIN/Q05/Q50/.../MAX);
+  # Skew/Kurtosis render beneath it in the DISTRIBUTION SHAPE table
   expect_true(any(grepl("STATS", num)))
   expect_true(any(grepl("Q50", num)))
-  expect_true(any(grepl("SKEW", num)))
+  expect_true(any(grepl("DISTRIBUTION SHAPE", num)))
 })

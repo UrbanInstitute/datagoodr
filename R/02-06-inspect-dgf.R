@@ -12,10 +12,10 @@
 # example values, not JSON.
 .dgf_json_cols <- c("dd_f_levels", "rg_properties", "rg_stats", "rg_graphics")
 
-# stable_data_type values Step 3 has a renderer + layout for (see
+# desired_data_type values Step 3 has a renderer + layout for (see
 # R/03-01-layouts.R and the ontology). identifier/temporal are specified but
 # not yet renderable.
-.dgf_valid_classes <- c("number", "string", "categorical", "boolean",
+.dgf_valid_classes <- c("number", "text", "string", "categorical", "boolean",
                         "identifier", "temporal")
 
 
@@ -27,11 +27,11 @@
 #'
 #' \itemize{
 #'   \item all required DGF columns are present;
-#'   \item every `stable_data_type` value is one Step 3 can render
+#'   \item every `desired_data_type` value is one Step 3 can render
 #'     (number, string, categorical, boolean);
 #'   \item all non-empty cells in the JSON columns (`dd_f_levels`,
 #'     `rg_properties`, `rg_stats`, `rg_graphics`) contain valid JSON;
-#'   \item every function named in the `raw_data_import_rule` and `stable_data_format` columns is
+#'   \item every function named in the `desired_data_import_rule` and `stable_data_format` columns is
 #'     defined and callable;
 #'   \item every variable has a non-empty `prov_current_hash`.
 #' }
@@ -39,7 +39,7 @@
 #' @param dgf A DGF data frame, or a path to a DGF `.xlsx` file (read with
 #'   [load_dgf()]).
 #' @param convert_env Environment in which to look for the functions named in
-#'   the `raw_data_import_rule`/`stable_data_format` columns. Defaults to the caller's environment,
+#'   the `desired_data_import_rule`/`stable_data_format` columns. Defaults to the caller's environment,
 #'   so functions you have sourced (e.g. from a project `dgf.R`) are found.
 #' @param verbose Logical; if `TRUE` (default) a human-readable report is
 #'   printed to the console.
@@ -70,17 +70,17 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
   }
 
   ## 2. variable classes -----------------------------------------------------
-  if( "stable_data_type" %in% names(dgf) )
+  if( "desired_data_type" %in% names(dgf) )
   {
-    bad.class <- ! dgf$stable_data_type %in% .dgf_valid_classes
+    bad.class <- ! dgf$desired_data_type %in% .dgf_valid_classes
     if( any(bad.class) )
     {
       problems$invalid_vtype_class <-
-        stats::setNames( dgf$stable_data_type[bad.class], dgf$var_name[bad.class] )
-      say( "[FAIL] unrenderable stable_data_type for: ",
+        stats::setNames( dgf$desired_data_type[bad.class], dgf$var_name[bad.class] )
+      say( "[FAIL] unrenderable desired_data_type for: ",
            paste(dgf$var_name[bad.class], collapse=", "), "\n" )
     } else {
-      say( "[ ok ] all stable_data_type values are renderable\n" )
+      say( "[ ok ] all desired_data_type values are renderable\n" )
     }
   }
 
@@ -105,7 +105,7 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
   else { say( "[ ok ] all JSON cells are valid\n" ) }
 
   ## 4. referenced convert / format functions --------------------------------
-  fx.cols <- intersect( c("raw_data_import_rule", "stable_data_format"), names(dgf) )
+  fx.cols <- intersect( c("desired_data_import_rule", "stable_data_format"), names(dgf) )
   fx.named <- unique( unlist( lapply( dgf[fx.cols], as.character ) ) )
   fx.named <- fx.named[ ! ( is.na(fx.named) | trimws(fx.named) == "" ) ]
   fx.named <- gsub( "\\(\\)", "", fx.named )

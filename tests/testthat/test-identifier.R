@@ -26,7 +26,7 @@ test_that("create_dgf classifies identifiers and leaves others alone", {
     stringsAsFactors = FALSE)
   dgf <- suppressMessages(suppressWarnings(
     { utils::capture.output(d <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); d }))
-  ty <- setNames(dgf$stable_data_type, dgf$var_name)
+  ty <- setNames(dgf$desired_data_type, dgf$var_name)
   expect_equal(unname(ty["ein"]),  "identifier")
   expect_equal(unname(ty["fips"]), "identifier")
   expect_equal(unname(ty["amount"]), "number")
@@ -38,7 +38,7 @@ test_that("an identifier gets a MOST COMMON table in rg_stats and no graphic", {
                     stringsAsFactors = FALSE)
   dgf <- suppressMessages(suppressWarnings(
     { utils::capture.output(d <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); d }))
-  expect_equal(dgf$stable_data_type, "identifier")
+  expect_equal(dgf$desired_data_type, "identifier")
   # rg_stats parses, with the common table at position 3 (what
   # paste_stats_chr_common reads)
   lst <- datagoodr:::json_to_list(dgf$rg_stats)

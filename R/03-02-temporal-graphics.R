@@ -43,7 +43,15 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
     d <- parse_dates( val )
     if( mean( !is.na(d) ) >= 0.8 ) {
       ok <- !is.na(d)
-      calendar_heat( d[ok], cnt[ok], varname = "" )
+      dd <- d[ok]; cc <- cnt[ok]
+      # Keep only the two calendar years holding the most observations so the
+      # heatmap fills its space instead of stretching across many sparse years.
+      yr    <- as.integer( format( dd, "%Y" ) )
+      by.yr <- tapply( cc, yr, sum )
+      top2  <- as.integer( names( sort( by.yr, decreasing = TRUE ) ) )
+      top2  <- top2[ seq_len( min(2, length(top2)) ) ]
+      keep2 <- yr %in% top2
+      calendar_heat( dd[keep2], cc[keep2], varname = "" )
       return( invisible(NULL) )
     }
     # not real dates -> fall through to the default bar
@@ -62,16 +70,18 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
       o    <- order( xn )
       xlab <- if( unit == "hour" ) "Hour of the Day" else "Week"
       plot( xn[o], as.numeric(agg)[o], pch = 19, type = "b", cex = 2, bty = "n",
-            xlab = xlab, ylab = "Count" )
+            xlab = xlab, ylab = "", yaxt = "n" )
       return( invisible(NULL) )
     }
     unit <- ""   # couldn't parse -> fall through to the default bar
   }
 
   # --- day-of-week / month: barchart, ordered ------------------------------
+  # (axes = FALSE drops the count/frequency y-axis ticks and labels)
   if( unit %in% c("dow", "dayofweek", "weekday", "month") ) {
     ord <- temporal_order( val, unit )
-    graphics::barplot( cnt[ord], names.arg = val[ord], las = 2, border = NA )
+    graphics::barplot( cnt[ord], names.arg = val[ord], las = 2, border = NA,
+                       axes = FALSE, ylab = "" )
     return( invisible(NULL) )
   }
 
@@ -80,17 +90,19 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
     yn <- suppressWarnings( as.numeric(val) )
     if( length(yn) > 1 && diff(range(yn, na.rm = TRUE)) > 25 ) {
       graphics::hist( rep(yn, cnt), breaks = 30, main = "", xlab = "Year",
-                      col = "grey80", border = "white" )
+                      col = "grey80", border = "white", ylab = "", yaxt = "n" )
     } else {
       o <- order(yn)
-      graphics::barplot( cnt[o], names.arg = val[o], las = 2, border = NA )
+      graphics::barplot( cnt[o], names.arg = val[o], las = 2, border = NA,
+                         axes = FALSE, ylab = "" )
     }
     return( invisible(NULL) )
   }
 
   # --- default: barchart of value -> count ----------------------------------
   o <- order( suppressWarnings(as.numeric(val)), val )
-  graphics::barplot( cnt[o], names.arg = val[o], las = 2, border = NA )
+  graphics::barplot( cnt[o], names.arg = val[o], las = 2, border = NA,
+                     axes = FALSE, ylab = "" )
   invisible( NULL )
 }
 

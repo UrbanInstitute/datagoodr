@@ -1,4 +1,4 @@
-# Value-formatting helpers referenced from a DGF's `raw_data_import_rule` / `stable_data_format`
+# Value-formatting helpers referenced from a DGF's `desired_data_import_rule` / `stable_data_format`
 # columns. Each is applied element-wise to a single value, so they accept and
 # return length-1 inputs and pass NA through unchanged. These are the built-in
 # counterparts to user-supplied "polishing" functions such as dollarize().

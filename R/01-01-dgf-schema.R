@@ -2,11 +2,18 @@
 # families that map to the workflow stages:
 #
 #   dd_        data dictionary        user-authored, portable
-#   raw_       import contract        as the raw CSV was received
-#   stable_    standardized contract  what the data becomes after the rules run
+#   raw_       the raw CSV            storage + profiling, as received
+#   raw_to_stable_transform          the lossless reformat rule (raw -> canonical)
+#   stable_    the governed CSV       current state (storage / unit / format)
+#   desired_data_import_rule         the coercion rule (governed -> desired type)
+#   desired_   the interpretation     stage-invariant type / subtype / class
 #   rg_        research guide         program-generated, JSON strings (see below)
 #   validate_  validation rules       portable, declarative
 #   prov_      provenance hashes      mirror the governed CSV's embedded payload
+#
+# The two bridges (raw_to_stable_transform, desired_data_import_rule) hold as_*
+# rule names; the is_* detectors are their guards. Unit and format describe the
+# CURRENT (stable) data; the desired_ fields describe the intended type only.
 #
 # Two decisions worth stating at the top:
 #
@@ -16,7 +23,7 @@
 # as JSON (json_to_df / json_to_list), so JSON text is both what works and what
 # is expected.
 #
-# stable_data_type carries the ONTOLOGY vocabulary (number / categorical /
+# desired_data_type carries the ONTOLOGY vocabulary (number / categorical /
 # string / boolean / identifier / temporal), not R storage classes. It is what
 # the render engine dispatches on. dg_type_of() maps an R class onto it.
 
@@ -50,7 +57,7 @@ dg_type_of <- function( storage ) {
       factor     = "categorical",
       ordered    = "categorical",
       logical    = "boolean",
-      character  = "string",
+      character  = "text",
       # already-ontology values pass through, so a column that detection has
       # marked identifier/temporal keeps that type rather than falling to string.
       identifier = "identifier",
@@ -73,17 +80,22 @@ dgf_schema_cols <- function() {
     "var_name",
 
     # dd_: data dictionary (user-authored, portable)
-    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_f_levels",
+    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_f_levels", "dd_is_join_key",
 
-    # raw_: import contract (raw CSV as received)
-    "raw_data_storage", "raw_data_type", "raw_data_subtype", "raw_data_class",
-    "raw_data_unit", "raw_data_format", "raw_data_import_rule",
-    "raw_first5", "raw_duplicated",
+    # raw_: the raw CSV as received (storage + profiling, no semantic type)
+    "raw_data_storage", "raw_data_format", "raw_first5", "raw_duplicated",
 
-    # stable_: standardized/export contract
-    "stable_data_storage", "stable_data_type", "stable_data_subtype",
-    "stable_data_class", "stable_data_unit", "stable_data_format",
-    "stable_data_transform", "stable_data_import_rule",
+    # raw -> stable bridge: the lossless reformat rule (as_* transform)
+    "raw_to_stable_transform",
+
+    # stable_: the governed/canonical CSV, current state
+    "stable_data_storage", "stable_data_unit", "stable_data_format",
+
+    # stable -> desired bridge: the coercion-into-type rule (as_* import)
+    "desired_data_import_rule",
+
+    # desired_: the intended interpretation (stage-invariant)
+    "desired_data_type", "desired_data_subtype", "desired_data_class",
 
     # rg_: research guide artifacts (JSON strings)
     "rg_properties", "rg_preview", "rg_stats", "rg_graphics", "rg_max_chr",

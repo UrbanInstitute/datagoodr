@@ -20,14 +20,15 @@
 #   div9 full-width extra table (3/3): STATS / levels / most-common
 layout.numeric <-
   c( "div2 ;; dd_vlabel         ;;               ;; v_to_txt",
-     "div3 ;; stable_data_type    ;; DATA TYPE     ;; v_to_txt",
-     "div3 ;; rg_max_chr        ;; LENGTH        ;; v_to_txt",
+     "div3 ;; desired_data_type    ;; DATA TYPE     ;; v_to_txt",
+     "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
      "div4 ;; dd_vdesc          ;; DESCRIPTION   ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
      "div6 ;; rg_preview     ;;               ;; paste_preview_num",
      "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
      "div8 ;; rg_graphics    ;;               ;; paste_histogram",
-     "div9 ;; rg_stats       ;; STATS         ;; paste_stats_horizontal"   )
+     "div9 ;; rg_stats       ;; STATS         ;; paste_stats_horizontal",
+     "div9 ;; rg_stats       ;; DISTRIBUTION SHAPE ;; paste_distribution_shape"   )
 
 #' Character variable layout definitions
 #'
@@ -43,8 +44,8 @@ layout.numeric <-
 #' @noRd
 layout.character <-
   c( "div2 ;; dd_vlabel         ;;                    ;; v_to_txt",
-     "div3 ;; stable_data_type    ;; DATA TYPE          ;; v_to_txt",
-     "div3 ;; rg_max_chr        ;; LENGTH             ;; v_to_txt",
+     "div3 ;; desired_data_type    ;; DATA TYPE          ;; v_to_txt",
+     "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
      "div4 ;; dd_vdesc          ;; DESCRIPTION        ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
      "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
@@ -67,8 +68,8 @@ layout.character <-
 #' @noRd
 layout.factor <-
   c( "div2 ;; dd_vlabel         ;;               ;; v_to_txt",
-     "div3 ;; stable_data_type    ;; DATA TYPE     ;; v_to_txt",
-     "div3 ;; rg_max_chr        ;; LENGTH        ;; v_to_txt",
+     "div3 ;; desired_data_type    ;; DATA TYPE     ;; v_to_txt",
+     "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
      "div4 ;; dd_vdesc          ;; DESCRIPTION   ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
      "div6 ;; rg_preview     ;;               ;; paste_preview_chr",
@@ -91,8 +92,8 @@ layout.factor <-
 #' @noRd
 layout.logical <-
   c("div2 ;; dd_vlabel         ;;                 ;; v_to_txt",
-    "div3 ;; stable_data_type    ;; DATA TYPE       ;; v_to_txt",
-    "div3 ;; rg_max_chr        ;; LENGTH          ;; v_to_txt",
+    "div3 ;; desired_data_type    ;; DATA TYPE       ;; v_to_txt",
+    "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
     "div4 ;; dd_vdesc          ;; DESCRIPTION     ;; v_to_txt",
     "div5 ;; rg_preview     ;; PREVIEW         ;; paste_label",
     "div6 ;; rg_preview     ;;                 ;; paste_preview_chr",
@@ -119,8 +120,8 @@ layout.logical <-
 #' @noRd
 layout.identifier <-
   c( "div2 ;; dd_vlabel      ;;                    ;; v_to_txt",
-     "div3 ;; stable_data_type ;; DATA TYPE        ;; v_to_txt",
-     "div3 ;; rg_max_chr     ;; LENGTH             ;; v_to_txt",
+     "div3 ;; desired_data_type ;; DATA TYPE        ;; v_to_txt",
+     "div3 ;; rg_max_chr     ;; MAX NCHAR ;; v_to_txt",
      "div4 ;; dd_vdesc       ;; DESCRIPTION        ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
      "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
@@ -144,7 +145,7 @@ layout.identifier <-
 #' @noRd
 layout.temporal <-
   c( "div2 ;; dd_vlabel      ;;              ;; v_to_txt",
-     "div3 ;; stable_data_type ;; DATA TYPE  ;; v_to_txt",
+     "div3 ;; desired_data_type ;; DATA TYPE  ;; v_to_txt",
      "div3 ;; stable_data_unit ;; UNIT       ;; v_to_txt",
      "div4 ;; dd_vdesc       ;; DESCRIPTION  ;; v_to_txt",
      "div5 ;; rg_preview     ;; PREVIEW      ;; paste_label",

@@ -119,7 +119,7 @@ calendar_heat <-
     layout   = c( 1, nyr %% 7 ),
     between  = list( x = 0, y = c(1, 1) ),
     strip    = TRUE,
-    main = paste( "Calendar Heat Map of ", varname, sep = "" ),
+    main = NULL,
     scales = list(
       x = list(
         at = c( seq( 2.9, 52, by = 4.42 ) ),
@@ -140,7 +140,7 @@ calendar_heat <-
     col.regions = ( calendar.pal(ncolors) ),
     xlab = "",
     ylab = "",
-    colorkey = list( col = calendar.pal(ncolors), width = 0.6, height = 0.5 ),
+    colorkey = FALSE,
     subscripts = TRUE
   ) )
   panel.locs <- lattice::trellis.currentLayout()

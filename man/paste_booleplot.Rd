@@ -17,11 +17,11 @@ passes `"rg_graphics"`).}
 No return value; draws the bar plot into the RG.
 }
 \description{
-Reads the `rg_graphics` column of the DGF and draws a horizontal bar plot of
-the value counts. Instead of an axis, each bar is labelled to its right with
-its count and share (`22.6K (90%)`), using [abbrev_num()] so large counts
-stay compact and never crop. Since a logical has only a few categories, this
-carries the count table inside the plot.
+Reads the `rg_graphics` column of the DGF and draws the logical value counts
+with [booleplot()]: a fixed-geometry horizontal bar plot with the category
+names in the left margin and each bar's count and share (`22.6K  (90.4%)`) to
+its right. Categories are sorted largest-to-smallest with the missing (`NA`)
+category last, drawn as a light bar with a steel-blue outline.
 }
 \details{
 Internal to `create_div` in R/03-01-create-sections.R.

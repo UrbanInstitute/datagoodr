@@ -141,12 +141,12 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
       { get( nm, envir = asNamespace("datagoodr") ) }
     }
     # List keys are the ontology data_type that create_div matches against
-    # stable_data_type. The layout.* objects keep their R-flavoured names (they
+    # desired_data_type. The layout.* objects keep their R-flavoured names (they
     # are just how a user overrides one), but the dispatch key is the ontology
-    # term: number/string/categorical/boolean.
+    # term: number/text/categorical/boolean.
     layouts <- list(
       number      = resolve("layout.numeric"),
-      string      = resolve("layout.character"),
+      text        = resolve("layout.character"),
       categorical = resolve("layout.factor"),
       boolean     = resolve("layout.logical"),
       identifier  = resolve("layout.identifier"),
@@ -249,7 +249,7 @@ create_div <- function( div.num="div2", all.layouts ) {
   if( grepl("^blank", div.num) )
   { cat( paste0( "::: {.", div.num, "} \n\n::: \n\n" ) ); return( invisible(NULL) ) }
 
-  DATA_TYPE <- get_xx()[["stable_data_type"]]
+  DATA_TYPE <- get_xx()[["desired_data_type"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
 
   # skip div if not included in design
@@ -301,7 +301,7 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   xx[["VNAME"]] <- VNAME
   set_xx( xx )                         # publish to the render context
 
-  DATA_TYPE <- xx[["stable_data_type"]]
+  DATA_TYPE <- xx[["desired_data_type"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]
