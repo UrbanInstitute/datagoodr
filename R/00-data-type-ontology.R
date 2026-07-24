@@ -3,10 +3,11 @@
 ###############################
 ## Maps each registered detector type to its ontology coordinates
 ##   c(data_type, data_subtype, data_class, data_format)
-## per data-types/research_data_type_ontology_v2.csv. This is what lets
-## guess_data_type() return an ontology-anchored answer instead of a bare
-## detector name. Keyed by the same type names as .data_type_registry; add one
-## line here when you add a detector.
+## per data-types/research_data_type_ontology.csv --- every (type, subtype,
+## class) triple here is a row in that catalog marked implemented = yes. This is
+## what lets guess_data_type() return an ontology-anchored answer instead of a
+## bare detector name. Keyed by the same type names as .data_type_registry; add
+## one line here (and mark the catalog row implemented) when you add a detector.
 ##
 ## `.loose_detectors` marks types whose patterns fire broadly (phone, msisdn,
 ## bare numeric codes); guess_data_type() uses it to break pass-rate ties in
@@ -47,7 +48,7 @@
   # codes / lookups
   roman          = c("categorical", "ordinal", "ordered_category", "roman"),
   http_status    = c("categorical", "nominal", "category",         "code"),
-  unix_time      = c("temporal",    "point",   "datetime",         "epoch"),
+  unix_time      = c("temporal",    "point",   "timestamp",        "epoch"),
   zip_code       = c("categorical", "nominal", "geography",        "code"),
   uk_postcode    = c("categorical", "nominal", "geography",        "code"),
   ca_postal_code = c("categorical", "nominal", "geography",        "code"),

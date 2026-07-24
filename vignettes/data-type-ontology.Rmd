@@ -206,5 +206,8 @@ corrupting the column.
   coordinates and guard the rules.
 * The **Guessing a Column's Type** vignette --- how `guess_data_type()` chooses a
   type and returns its ontology coordinates.
-* `data-types/research_data_type_ontology.csv` --- the fuller *design* space
-  (more classes than the runtime maps today), with suggested validations.
+* `data-types/research_data_type_ontology.csv` --- the full catalog of
+  coordinates and suggested validations. Its `implemented` column marks the
+  rows a detector currently emits (`yes`) versus the aspirational design space
+  (`no`); every runtime coordinate is an `implemented = yes` row, so the catalog
+  is the single source of truth for the vocabulary.
