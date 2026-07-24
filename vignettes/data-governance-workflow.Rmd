@@ -136,5 +136,7 @@ dgf <- update_dgf(dgf, raw_data)   # re-runs guards, recomputes rg_* for changed
 * **No hidden magic.** Every transformation is a named rule you can read, and
   every rule has a guard that refuses to run on data it does not fit.
 
-See also the companion *Data-Type Detector Guide* vignette for the `is_*`
-detectors that power both `guess_data_type()` and the rule guards.
+See also *The Data-Type Ontology* vignette for a field-by-field catalog of the
+`type` / `subtype` / `class` / `format` / `unit` coordinates, and the *Data-Type
+Detector Guide* for the `is_*` detectors that power both `guess_data_type()` and
+the rule guards.

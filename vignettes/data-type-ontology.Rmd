@@ -1,0 +1,210 @@
+---
+title: "The Data-Type Ontology"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Data-Type Ontology}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, collapse = TRUE, comment = "#>")
+library(datagoodr)
+```
+
+## Why a variable needs five coordinates
+
+A CSV cell like `47401` is just text. Is it a ZIP code, a county FIPS, a count
+of something? A single "type" label can't capture that: `47401` and `06037` are
+both five-digit geographic codes (same *type*), but one is a ZIP and one is a
+county (different *meaning*), and neither should be summed like a number
+(different *treatment*). The DGF pulls these apart into **five fields**, so each
+distinction lives on its own axis:
+
+| field (DGF column) | question it answers | example values |
+|---|---|---|
+| **`desired_data_type`** | How should the guide *treat* it? | `number`, `text`, `boolean`, `temporal`, `categorical`, `identifier` |
+| **`desired_data_subtype`** | What *structure* does it have? | `nominal`, `ordinal`, `point`, `period`, `interval`, `numeric_id`, `token` |
+| **`desired_data_class`** | What does it *mean* (domain)? | `geography`, `currency`, `email`, `calendar_date`, `administrative_id` |
+| **`data_format`** | How is it *written* on the page? | `yyyymmdd`, `mmddyyyy`, `code`, `hex`, `epoch`, `plain` |
+| **`stable_data_unit`** | At what *grain* is it measured? | `date`, `month`, `year`, `hour`, `dow`, `week` |
+
+`type` / `subtype` / `class` say what a column **is** (its intended meaning,
+stable across file versions); `format` and `unit` describe how the current file
+happens to **write and measure** it. That split is the whole reason the ontology
+has five fields instead of one.
+
+## `data_type` --- the treatment
+
+The top-level type decides how a variable is rendered and summarized. There are
+six, and they divide into two groups that matter for governance:
+
+**Base types** --- a plain CSV reader can produce these from the bytes alone:
+
+* **`number`** --- a quantity you can do arithmetic on (revenue, a count, a rate).
+* **`text`** --- free or tokenized strings (a name, an email, an address).
+* **`boolean`** --- a two-state flag (`Y`/`N`, `TRUE`/`FALSE`, `IN`/`OUT`).
+* **`temporal`** --- a point or span in time (a date, a timestamp, a clock time).
+
+**Semantic types** --- meaning a CSV *cannot* carry; only the DGF can assert them:
+
+* **`categorical`** --- a value from a fixed set of groups (a state, an NTEE code,
+  a survey response). Stored as text or a number, but *treated* as a category.
+* **`identifier`** --- a key that labels a row or entity (an EIN, an ORCID, a
+  census tract). Never summarized as a quantity, even when it looks numeric.
+
+This base-vs-semantic split is not academic --- it decides **which bridge** closes
+the gap between how a column is stored and how you want it read (see below).
+
+## `data_subtype` --- the structure
+
+Within a type, the subtype records shape. It is deliberately short and
+structural, not domain-specific:
+
+| type | subtypes | distinguishes |
+|---|---|---|
+| `number` | `continuous`, `discrete` | measured vs counted |
+| `text` | `token`, `line` | a single token (email, code) vs a free line (address) |
+| `categorical` | `nominal`, `ordinal` | unordered groups vs ranked levels |
+| `identifier` | `numeric_id`, `text_id`, `hash_id` | the storage hazard class of the key |
+| `temporal` | `point`, `period`, `interval` | an instant, a recurring bucket, or a span |
+
+The identifier subtypes are about *data-management hazards*, not meaning: a
+`numeric_id` (an all-digits EIN) silently loses leading zeros and overflows if
+read as a number; a `hash_id` (an MD5) is case- and whitespace-fragile. Flagging
+the subtype tells downstream tools how to handle the key safely.
+
+## `data_class` --- the meaning
+
+The class is the semantic domain --- what the values are *about*. This is the
+richest axis; a selection of the classes in use:
+
+| class | belongs to type | examples |
+|---|---|---|
+| `geography` | categorical | ZIP, county FIPS, US state, CBSA |
+| `currency` | number | a dollar amount, a styled `$1,234` |
+| `email`, `url`, `network_address` | text | an email, a URL, an IP/MAC |
+| `address` | text | a street line, a PO box |
+| `calendar_date`, `timestamp`, `time_of_day` | temporal | a date, a datetime, a clock time |
+| `administrative_id` | identifier | EIN, SSN, ORCID, DOI, NPI |
+| `record_id`, `entity_id` | identifier | a UUID/hash row key, a gene/protein ID |
+| `classification_code` | categorical | NAICS, ICD-9/10 |
+| `category` | categorical | a currency code, an HTTP status, a generic code list |
+
+Two columns can share a `type` and `subtype` but differ in `class` --- a ZIP and
+an NTEE code are both `categorical`/`nominal`, but one is `geography` and one is
+`classification_code`, and that is what a reader (or an archival standard like
+DDI) needs to know.
+
+## `data_format` --- the representation
+
+The format is the surface form the *current file* uses. For most classes it is
+just `plain` (or a name like `code`, `hex`, `label`). It earns its keep on
+**temporals**, where it is a compact, delimiter-agnostic vocabulary that maps to
+`strptime`:
+
+| format | reads | matches |
+|---|---|---|
+| `yyyymmdd` | ISO date | `2019-12-31`, `2019/12/31` |
+| `mmddyyyy` | US date | `12/31/2019`, `12-31-2019` |
+| `dMyyyy` | day-abbrev month-year | `31-Dec-2019` |
+| `Myyyy` | month-year (text month) | `Dec 2019` |
+| `hhii` | clock time | `14:30` |
+| `epoch` | Unix time | `1577750400` |
+
+The letters are a small alphabet (`y` year, `m` numeric month, `M` text month,
+`d` day, `H` 24-hour, `h` 12-hour, `i` minute, `A` am/pm, ...); one token like
+`mmddyyyy` covers every delimiter, so `12/31/2019` and `12-31-2019` share a
+format. These are exactly the tokens the `as_*` reformat rules consume.
+
+## `stable_data_unit` --- the grain
+
+The unit is the measurement grain, and for temporals it does real work: it
+**selects the render graphic** without a rebuild. The same build-time
+value/count table is charted as a calendar heatmap, a month-bar, a day-of-week
+plot, or a year histogram depending only on the unit:
+
+| unit | temporal grain | graphic |
+|---|---|---|
+| `date` | a calendar date/datetime | calendar heatmap |
+| `month` | a month bucket | month bars (Jan..Dec) |
+| `year` | a year | year histogram |
+| `hour` | a time of day | hour-of-day bars |
+| `dow` | day of week | Mon..Sun bars |
+| `week` | week of year | week bars |
+
+Change `stable_data_unit` in the DGF and re-render --- the chart changes, no
+re-profiling needed, because the frequency table is unit-independent.
+
+## A column reads as five coordinates
+
+Putting it together, here is how a handful of columns land on all five axes ---
+each row is exactly what `guess_data_type()` returns for a column of such values:
+
+| column looks like | type | subtype | class | format | unit |
+|---|---|---|---|---|---|
+| `$1234` | number | continuous | currency | currency | |
+| `jlecy@asu.edu` | text | token | email | plain | |
+| `06037` (a county) | categorical | nominal | geography | code | |
+| `E11.9` (an ICD-10 code) | categorical | nominal | classification_code | code | |
+| `0000-0002-0488-8591` | identifier | numeric_id | administrative_id | plain | |
+| `2019-12-31` | temporal | point | calendar_date | yyyymmdd | date |
+| `Dec 2019` | temporal | period | month | Myyyy | month |
+| `14:30` | temporal | point | time_of_day | hhii | hour |
+
+## The two bridges: `stable` and `desired`
+
+A variable travels from the raw file to how you want to analyze it in **three
+stages**, joined by **two rule bridges**:
+
+```
+RAW CSV ──raw_to_stable_transform──▶ GOVERNED CSV ──desired_data_import_rule──▶ ANALYSIS
+   │            (reformat: lossless)        │           (coerce into type)          │
+ raw_*                              stable_*                               desired_*
+ how R reads the file               the canonical current state           what it should BE
+```
+
+* **`raw_`** --- the file as received (`raw_data_storage`, `raw_data_format`).
+* **`stable_`** --- the **governed CSV** after cleanup (`stable_data_storage`,
+  `stable_data_unit`, `stable_data_format`) --- the data *as it now is*.
+* **`desired_`** --- the intended meaning, unchanging across file versions
+  (`desired_data_type`, `desired_data_subtype`, `desired_data_class`).
+
+Each bridge holds the **name of an `as_*` rule**:
+
+**`raw_to_stable_transform` --- the reformat bridge (→ the stable stage).** A
+*lossless* rewrite into a canonical form every tool reads: standardize a weird
+date to ISO (`as_mmddyyyy`), strip thousands separators, zero-pad an ID
+(`as_id`). No information is lost; the values are just written in a form a plain
+reader hits correctly. Its output is the governed CSV.
+
+**`desired_data_import_rule` --- the import bridge (→ the desired stage).** The
+coercion that reads the governed column into the intended R type (`as_date`,
+`as_id`, ...). This is where a `stable` string becomes the `desired` typed value.
+
+### Which bridge? A mechanical rule
+
+The base-vs-semantic split of `data_type` tells you which bridge closes the gap:
+
+| the desired type is... | example | close the gap with |
+|---|---|---|
+| **base** (reader-achievable) | a date stored as text | **reformat** --- make a plain reader hit it (`raw_to_stable_transform`) |
+| **semantic** (not expressible in a CSV) | a ZIP that is `categorical`, an EIN that is an `identifier` | **import rule** --- only metadata can assert it (`desired_data_import_rule`) |
+
+Push as much as possible into the *reformat* --- it is lossless and every
+downstream tool benefits --- and reserve import rules for the genuinely
+schema-dependent distinctions a CSV can never carry on its own. Every `as_*`
+rule has a matching `is_*` **guard** (the detector library) that refuses to run
+on data it does not fit, so a mistyped rule errors instead of silently
+corrupting the column.
+
+## See also
+
+* The **Rule-Based Data Governance** vignette --- the three-stage workflow in
+  depth, and how `create_dgf()` / `stabilize_data()` / `update_dgf()` use it.
+* The **Data-Type Detector Guide** --- the `is_*` predicates that populate these
+  coordinates and guard the rules.
+* The **Guessing a Column's Type** vignette --- how `guess_data_type()` chooses a
+  type and returns its ontology coordinates.
+* `data-types/research_data_type_ontology.csv` --- the fuller *design* space
+  (more classes than the runtime maps today), with suggested validations.
