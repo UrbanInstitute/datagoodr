@@ -10,7 +10,7 @@ format:
 execute:
   keep-md: true
 params:
-  dgf_file: 'DGF-V2.xlsx'
+  dgf_file: 'DGF.xlsx'
   data_file: null
 ---
 
@@ -61,6 +61,18 @@ F9_05_UBIZ_IMCOME_OVER_LIMIT_X
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">1</span></div>
 
 
@@ -71,7 +83,7 @@ F9_05_UBIZ_IMCOME_OVER_LIMIT_X
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Had unrelated business gross income of $1,000 or more [x]</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -169,6 +181,18 @@ OUTNCCS
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">3</span></div>
 
 
@@ -179,7 +203,7 @@ OUTNCCS
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Out of Scope flag</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -276,6 +300,18 @@ SUBSECCD
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">2</span></div>
 
 
@@ -286,7 +322,7 @@ SUBSECCD
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">IRS subsection code</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -385,167 +421,6 @@ SUBSECCD
 
 ::: {.div1} 
 
-#### BMF_ACTIV1
-
-::: 
-
-::::: {.parent} 
-
-::: {.div2} 
-
-BMF_ACTIV1 
-
-
-
-
-::: 
-
-::: {.div3} 
-
-
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">3</span></div>
-
-
-
-
-::: 
-
-::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">IRS Activity Code 1</span></div>
-
-
-
-
-::: 
-
-::: {.div5} 
-
-**PREVIEW**:
-
-
-
-
-::: 
-
-::: {.div6} 
-
-<pre class="dg-preview">
-0 · 263 · 200 · 907 · 36 · 279 · 205 · 319 · 318 · 59 · 407 · 520
-900 · 265 · 264 · 280 · 260 · 250 · 999 · 920 · 30 · 912 · 261 · 230
-65 · 998 · 229 · 317 · 403 · 201 · 908 · 288 · 911 · 399 · 286 · 161
-922 · 281 · 350 · 123 · 287 · 382 · 401 · 921 · 34 · 119 · 408 · 602
-
-</pre>
-
-
-
-
-::: 
-
-::: {.div7} 
-
-**PROPERTIES**: 
-
-|STAT       |    VAL|    PER| 
- |:----------|------:|------:| 
- |Rows       | 25,000|       | 
- |Distinct   |    230| (0.9%)| 
- |Missing/NA |  1,887| (7.5%)| 
-
-
-
-
-
-::: 
-
-::: {.div8} 
-
-![](research-guide_files/figure-html/factor-2.png){width=672}
-
-
-
-
-::: 
-
-::: {.div9} 
-
-**FACTOR LEVELS**:
-
-| Frequency|     (%)|Label | 
- |---------:|-------:|:-----| 
- |     5,807| (23.2%)|0     | 
- |     1,782|  (7.1%)|263   | 
- |     1,648|  (6.6%)|200   | 
- |     1,212|  (4.8%)|907   | 
- |     1,054|  (4.2%)|36    | 
- |       998|  (4.0%)|279   | 
- |       949|  (3.8%)|205   | 
- |       547|  (2.2%)|319   | 
- |       467|  (1.9%)|318   | 
- |       467|  (1.9%)|59    | 
- |       401|  (1.6%)|407   | 
- |       401|  (1.6%)|520   | 
- |       323|  (1.3%)|900   | 
- |       322|  (1.3%)|265   | 
- |       301|  (1.2%)|264   | 
- |       293|  (1.2%)|280   | 
- |       276|  (1.1%)|260   | 
- |       203|  (0.8%)|250   | 
- |       200|  (0.8%)|999   | 
- |       187|  (0.7%)|920   | 
- |       179|  (0.7%)|30    | 
- |       163|  (0.7%)|912   | 
- |       162|  (0.6%)|261   | 
- |       145|  (0.6%)|230   | 
- |       143|  (0.6%)|65    | 
- |       140|  (0.6%)|998   | 
- |       137|  (0.5%)|229   | 
- |       137|  (0.5%)|317   | 
- |       136|  (0.5%)|403   | 
- |       136|  (0.5%)|201   | 
- |       125|  (0.5%)|908   | 
- |       121|  (0.5%)|288   | 
- |       120|  (0.5%)|911   | 
- |       117|  (0.5%)|399   | 
- |       115|  (0.5%)|286   | 
- |       112|  (0.4%)|161   | 
- |        97|  (0.4%)|922   | 
- |        93|  (0.4%)|281   | 
- |        91|  (0.4%)|350   | 
- |        85|  (0.3%)|123   | 
- |        78|  (0.3%)|287   | 
- |        73|  (0.3%)|382   | 
- |        69|  (0.3%)|401   | 
- |        67|  (0.3%)|921   | 
- |        60|  (0.2%)|34    | 
- |        59|  (0.2%)|119   | 
- |        58|  (0.2%)|408   | 
- |        57|  (0.2%)|602   | 
- |        56|  (0.2%)|251   | 
- |        55|  (0.2%)|262   | 
-
-
-
-
-
-::: 
-
-:::::  
-
-
-
-
-
-{{< pagebreak >}} 
-
-::: {.div1} 
-
 #### NTMAJ12
 
 ::: 
@@ -568,6 +443,18 @@ NTMAJ12
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">2</span></div>
 
 
@@ -578,7 +465,7 @@ NTMAJ12
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">NTEE major group (12)</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -623,7 +510,7 @@ PU · HU · MU · ED · UN · HE · AR · EN · IN · EH · RE · BH
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-3.png){width=672}
+![](research-guide_files/figure-html/factor-2.png){width=672}
 
 
 
@@ -687,6 +574,18 @@ NTEE1
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">1</span></div>
 
 
@@ -697,7 +596,7 @@ NTEE1
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">NTEE major group</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -744,7 +643,7 @@ R · T · F · Q · O · X · Z · H · V
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-4.png){width=672}
+![](research-guide_files/figure-html/factor-3.png){width=672}
 
 
 
@@ -800,167 +699,6 @@ R · T · F · Q · O · X · Z · H · V
 
 ::: {.div1} 
 
-#### NTEEFINAL
-
-::: 
-
-::::: {.parent} 
-
-::: {.div2} 
-
-NTEEFINAL 
-
-
-
-
-::: 
-
-::: {.div3} 
-
-
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">5</span></div>
-
-
-
-
-::: 
-
-::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
-
-
-
-
-::: 
-
-::: {.div5} 
-
-**PREVIEW**:
-
-
-
-
-::: 
-
-::: {.div6} 
-
-<pre class="dg-preview">
-S41 · J40 · W30 · S80 · N50 · M24 · B83 · W80 · N60 · Y42 · Y50
-Y41 · K28 · S20 · Y43 · S47 · B03 · L50 · W61 · N61 · Y40 · S03
-Y20 · S30 · S01 · S40 · G90 · I03 · I0360 · N52 · S99 · A23 · S22
-N67 · N6A · E11 · N68 · K20 · N69 · L99 · S46 · N32 · U42 · S21
-
-</pre>
-
-
-
-
-::: 
-
-::: {.div7} 
-
-**PROPERTIES**: 
-
-|STAT       |    VAL|    PER| 
- |:----------|------:|------:| 
- |Rows       | 25,000|       | 
- |Distinct   |    654| (2.6%)| 
- |Missing/NA |  1,497| (6.0%)| 
-
-
-
-
-
-::: 
-
-::: {.div8} 
-
-![](research-guide_files/figure-html/factor-5.png){width=672}
-
-
-
-
-::: 
-
-::: {.div9} 
-
-**FACTOR LEVELS**:
-
-| Frequency|    (%)|Label | 
- |---------:|------:|:-----| 
- |     1,947| (7.8%)|S41   | 
- |     1,815| (7.3%)|J40   | 
- |     1,582| (6.3%)|W30   | 
- |     1,515| (6.1%)|S80   | 
- |     1,088| (4.4%)|N50   | 
- |       810| (3.2%)|M24   | 
- |       771| (3.1%)|B83   | 
- |       681| (2.7%)|W80   | 
- |       600| (2.4%)|N60   | 
- |       514| (2.1%)|Y42   | 
- |       484| (1.9%)|Y50   | 
- |       453| (1.8%)|Y41   | 
- |       374| (1.5%)|K28   | 
- |       371| (1.5%)|S20   | 
- |       355| (1.4%)|Y43   | 
- |       347| (1.4%)|S47   | 
- |       346| (1.4%)|B03   | 
- |       328| (1.3%)|L50   | 
- |       270| (1.1%)|W61   | 
- |       269| (1.1%)|N61   | 
- |       265| (1.1%)|Y40   | 
- |       236| (0.9%)|S03   | 
- |       236| (0.9%)|Y20   | 
- |       214| (0.9%)|S30   | 
- |       201| (0.8%)|S01   | 
- |       185| (0.7%)|S40   | 
- |       173| (0.7%)|G90   | 
- |       172| (0.7%)|I03   | 
- |       166| (0.7%)|I0360 | 
- |       146| (0.6%)|N52   | 
- |       142| (0.6%)|S99   | 
- |       138| (0.6%)|A23   | 
- |       133| (0.5%)|S22   | 
- |       129| (0.5%)|N67   | 
- |       124| (0.5%)|N6A   | 
- |       100| (0.4%)|E11   | 
- |        98| (0.4%)|N68   | 
- |        93| (0.4%)|K20   | 
- |        92| (0.4%)|N69   | 
- |        89| (0.4%)|L99   | 
- |        89| (0.4%)|S46   | 
- |        78| (0.3%)|N32   | 
- |        77| (0.3%)|U42   | 
- |        74| (0.3%)|S21   | 
- |        72| (0.3%)|W20   | 
- |        70| (0.3%)|T20   | 
- |        68| (0.3%)|J22   | 
- |        65| (0.3%)|C32   | 
- |        64| (0.3%)|S81   | 
- |        64| (0.3%)|E03   | 
-
-
-
-
-
-::: 
-
-:::::  
-
-
-
-
-
-{{< pagebreak >}} 
-
-::: {.div1} 
-
 #### NTEESRC
 
 ::: 
@@ -980,6 +718,18 @@ NTEESRC
 
 
 <div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -1040,7 +790,7 @@ ntCO · HIED · END2 · thp
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-6.png){width=672}
+![](research-guide_files/figure-html/factor-4.png){width=672}
 
 
 
@@ -1107,6 +857,18 @@ DEDUCTCD
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">1</span></div>
 
 
@@ -1117,7 +879,7 @@ DEDUCTCD
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">IRS Deductibility code</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1163,7 +925,7 @@ DEDUCTCD
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-7.png){width=672}
+![](research-guide_files/figure-html/factor-5.png){width=672}
 
 
 
@@ -1219,6 +981,18 @@ OUTREAS
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">1</span></div>
 
 
@@ -1229,7 +1003,7 @@ OUTREAS
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Reason why out of scope</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1275,7 +1049,7 @@ T · F · S · N
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-8.png){width=672}
+![](research-guide_files/figure-html/factor-6.png){width=672}
 
 
 
@@ -1331,7 +1105,19 @@ F9_00_TAX_PERIOD_END_DATE
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">7</span></div>
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">6</span></div>
 
 
 
@@ -1341,7 +1127,7 @@ F9_00_TAX_PERIOD_END_DATE
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Tax period end date</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1360,10 +1146,10 @@ F9_00_TAX_PERIOD_END_DATE
 ::: {.div6} 
 
 <pre class="dg-preview">
-2019-12 · 2018-12 · 2019-06 · 2017-12 · 2020-06 · 2018-06 · 2019-09
-2019-08 · 2017-06 · 2019-03 · 2020-03 · 2019-05 · 2019-04 · 2019-10
-2020-05 · 2018-09 · 2020-04 · 2019-07 · 2018-05 · 2018-08 · 2019-11
-2017-09 · 2018-03 · 2018-04 · 2018-10 · 2020-07 · 2020-08 · 2020-09
+201912 · 201812 · 201906 · 201712 · 202006 · 201806 · 201909
+201908 · 201706 · 201903 · 202003 · 201905 · 201904 · 201910
+202005 · 201809 · 202004 · 201907 · 201805 · 201808 · 201911
+201709 · 201803 · 201804 · 201810 · 202007 · 202008 · 202009
 
 </pre>
 
@@ -1389,7 +1175,7 @@ F9_00_TAX_PERIOD_END_DATE
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-9.png){width=672}
+![](research-guide_files/figure-html/factor-7.png){width=672}
 
 
 
@@ -1400,55 +1186,55 @@ F9_00_TAX_PERIOD_END_DATE
 
 **FACTOR LEVELS**:
 
-| Frequency|     (%)|Label   | 
- |---------:|-------:|:-------| 
- |     9,884| (39.5%)|2019-12 | 
- |     3,477| (13.9%)|2018-12 | 
- |     2,064|  (8.3%)|2019-06 | 
- |     1,626|  (6.5%)|2017-12 | 
- |     1,312|  (5.2%)|2020-06 | 
- |       840|  (3.4%)|2018-06 | 
- |       812|  (3.2%)|2019-09 | 
- |       406|  (1.6%)|2019-08 | 
- |       362|  (1.4%)|2017-06 | 
- |       356|  (1.4%)|2019-03 | 
- |       352|  (1.4%)|2020-03 | 
- |       326|  (1.3%)|2019-05 | 
- |       278|  (1.1%)|2019-04 | 
- |       272|  (1.1%)|2019-10 | 
- |       252|  (1.0%)|2020-05 | 
- |       244|  (1.0%)|2018-09 | 
- |       183|  (0.7%)|2020-04 | 
- |       161|  (0.6%)|2019-07 | 
- |       154|  (0.6%)|2018-05 | 
- |       139|  (0.6%)|2018-08 | 
- |       123|  (0.5%)|2019-11 | 
- |       121|  (0.5%)|2017-09 | 
- |       110|  (0.4%)|2018-03 | 
- |       102|  (0.4%)|2018-04 | 
- |        94|  (0.4%)|2018-10 | 
- |        91|  (0.4%)|2020-07 | 
- |        79|  (0.3%)|2020-08 | 
- |        74|  (0.3%)|2020-09 | 
- |        66|  (0.3%)|2020-01 | 
- |        65|  (0.3%)|2018-07 | 
- |        64|  (0.3%)|2017-05 | 
- |        64|  (0.3%)|2017-08 | 
- |        59|  (0.2%)|2020-02 | 
- |        57|  (0.2%)|2019-02 | 
- |        46|  (0.2%)|2017-04 | 
- |        46|  (0.2%)|2017-10 | 
- |        46|  (0.2%)|2018-11 | 
- |        34|  (0.1%)|2019-01 | 
- |        32|  (0.1%)|2017-07 | 
- |        32|  (0.1%)|2018-02 | 
- |        31|  (0.1%)|2017-03 | 
- |        25|  (0.1%)|2017-11 | 
- |        13|  (0.1%)|2020-10 | 
- |         9|  (0.0%)|2018-01 | 
- |         8|  (0.0%)|2017-01 | 
- |         8|  (0.0%)|2017-02 | 
- |         1|  (0.0%)|2020-11 | 
+| Frequency|     (%)|Label  | 
+ |---------:|-------:|:------| 
+ |     9,884| (39.5%)|201912 | 
+ |     3,477| (13.9%)|201812 | 
+ |     2,064|  (8.3%)|201906 | 
+ |     1,626|  (6.5%)|201712 | 
+ |     1,312|  (5.2%)|202006 | 
+ |       840|  (3.4%)|201806 | 
+ |       812|  (3.2%)|201909 | 
+ |       406|  (1.6%)|201908 | 
+ |       362|  (1.4%)|201706 | 
+ |       356|  (1.4%)|201903 | 
+ |       352|  (1.4%)|202003 | 
+ |       326|  (1.3%)|201905 | 
+ |       278|  (1.1%)|201904 | 
+ |       272|  (1.1%)|201910 | 
+ |       252|  (1.0%)|202005 | 
+ |       244|  (1.0%)|201809 | 
+ |       183|  (0.7%)|202004 | 
+ |       161|  (0.6%)|201907 | 
+ |       154|  (0.6%)|201805 | 
+ |       139|  (0.6%)|201808 | 
+ |       123|  (0.5%)|201911 | 
+ |       121|  (0.5%)|201709 | 
+ |       110|  (0.4%)|201803 | 
+ |       102|  (0.4%)|201804 | 
+ |        94|  (0.4%)|201810 | 
+ |        91|  (0.4%)|202007 | 
+ |        79|  (0.3%)|202008 | 
+ |        74|  (0.3%)|202009 | 
+ |        66|  (0.3%)|202001 | 
+ |        65|  (0.3%)|201807 | 
+ |        64|  (0.3%)|201705 | 
+ |        64|  (0.3%)|201708 | 
+ |        59|  (0.2%)|202002 | 
+ |        57|  (0.2%)|201902 | 
+ |        46|  (0.2%)|201704 | 
+ |        46|  (0.2%)|201710 | 
+ |        46|  (0.2%)|201811 | 
+ |        34|  (0.1%)|201901 | 
+ |        32|  (0.1%)|201707 | 
+ |        32|  (0.1%)|201802 | 
+ |        31|  (0.1%)|201703 | 
+ |        25|  (0.1%)|201711 | 
+ |        13|  (0.1%)|202010 | 
+ |         9|  (0.0%)|201801 | 
+ |         8|  (0.0%)|201701 | 
+ |         8|  (0.0%)|201702 | 
+ |         1|  (0.0%)|202011 | 
 
 
 
@@ -1488,7 +1274,19 @@ F9_00_TAX_PERIOD_END_DATE_PY
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">7</span></div>
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">6</span></div>
 
 
 
@@ -1498,7 +1296,7 @@ F9_00_TAX_PERIOD_END_DATE_PY
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Tax period end date - prior year</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1517,10 +1315,10 @@ F9_00_TAX_PERIOD_END_DATE_PY
 ::: {.div6} 
 
 <pre class="dg-preview">
-2018-12 · 2017-12 · 2018-06 · 2019-06 · 2018-09 · 2017-06 · 2016-12
-2018-08 · 2018-03 · 2019-03 · 2018-05 · 2018-10 · 2018-04 · 2019-05
-2017-09 · 2016-06 · 2019-04 · 2018-07 · 2018-11 · 2017-08 · 2017-05
-2017-10 · 2017-04 · 2019-01 · 2019-07 · 2017-03 · 2019-02 · 2018-02
+201812 · 201712 · 201806 · 201906 · 201809 · 201706 · 201612
+201808 · 201803 · 201903 · 201805 · 201810 · 201804 · 201905
+201709 · 201606 · 201904 · 201807 · 201811 · 201708 · 201705
+201710 · 201704 · 201901 · 201907 · 201703 · 201902 · 201802
 
 </pre>
 
@@ -1547,7 +1345,7 @@ F9_00_TAX_PERIOD_END_DATE_PY
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-10.png){width=672}
+![](research-guide_files/figure-html/factor-8.png){width=672}
 
 
 
@@ -1558,54 +1356,186 @@ F9_00_TAX_PERIOD_END_DATE_PY
 
 **FACTOR LEVELS**:
 
-| Frequency|     (%)|Label   | 
- |---------:|-------:|:-------| 
- |     9,298| (37.2%)|2018-12 | 
- |     3,002| (12.0%)|2017-12 | 
- |     1,767|  (7.1%)|2018-06 | 
- |     1,060|  (4.2%)|2019-06 | 
- |       744|  (3.0%)|2018-09 | 
- |       539|  (2.2%)|2017-06 | 
- |       478|  (1.9%)|2016-12 | 
- |       370|  (1.5%)|2018-08 | 
- |       321|  (1.3%)|2018-03 | 
- |       319|  (1.3%)|2019-03 | 
- |       265|  (1.1%)|2018-05 | 
- |       255|  (1.0%)|2018-10 | 
- |       246|  (1.0%)|2018-04 | 
- |       206|  (0.8%)|2019-05 | 
- |       195|  (0.8%)|2017-09 | 
- |       164|  (0.7%)|2016-06 | 
- |       162|  (0.6%)|2019-04 | 
- |       123|  (0.5%)|2018-07 | 
- |       122|  (0.5%)|2018-11 | 
- |       101|  (0.4%)|2017-08 | 
- |        90|  (0.4%)|2017-05 | 
- |        88|  (0.4%)|2017-10 | 
- |        64|  (0.3%)|2017-04 | 
- |        61|  (0.2%)|2019-01 | 
- |        58|  (0.2%)|2019-07 | 
- |        51|  (0.2%)|2017-03 | 
- |        49|  (0.2%)|2019-02 | 
- |        46|  (0.2%)|2018-02 | 
- |        44|  (0.2%)|2019-08 | 
- |        42|  (0.2%)|2019-09 | 
- |        41|  (0.2%)|2017-11 | 
- |        39|  (0.2%)|2017-07 | 
- |        36|  (0.1%)|2016-05 | 
- |        34|  (0.1%)|2016-09 | 
- |        29|  (0.1%)|2018-01 | 
- |        27|  (0.1%)|2016-04 | 
- |        23|  (0.1%)|2016-08 | 
- |        22|  (0.1%)|2017-02 | 
- |        18|  (0.1%)|2016-03 | 
- |        16|  (0.1%)|2016-07 | 
- |        13|  (0.1%)|2016-10 | 
- |         9|  (0.0%)|2016-11 | 
- |         7|  (0.0%)|2019-10 | 
- |         5|  (0.0%)|2016-01 | 
- |         4|  (0.0%)|2016-02 | 
- |         3|  (0.0%)|2017-01 | 
+| Frequency|     (%)|Label  | 
+ |---------:|-------:|:------| 
+ |     9,298| (37.2%)|201812 | 
+ |     3,002| (12.0%)|201712 | 
+ |     1,767|  (7.1%)|201806 | 
+ |     1,060|  (4.2%)|201906 | 
+ |       744|  (3.0%)|201809 | 
+ |       539|  (2.2%)|201706 | 
+ |       478|  (1.9%)|201612 | 
+ |       370|  (1.5%)|201808 | 
+ |       321|  (1.3%)|201803 | 
+ |       319|  (1.3%)|201903 | 
+ |       265|  (1.1%)|201805 | 
+ |       255|  (1.0%)|201810 | 
+ |       246|  (1.0%)|201804 | 
+ |       206|  (0.8%)|201905 | 
+ |       195|  (0.8%)|201709 | 
+ |       164|  (0.7%)|201606 | 
+ |       162|  (0.6%)|201904 | 
+ |       123|  (0.5%)|201807 | 
+ |       122|  (0.5%)|201811 | 
+ |       101|  (0.4%)|201708 | 
+ |        90|  (0.4%)|201705 | 
+ |        88|  (0.4%)|201710 | 
+ |        64|  (0.3%)|201704 | 
+ |        61|  (0.2%)|201901 | 
+ |        58|  (0.2%)|201907 | 
+ |        51|  (0.2%)|201703 | 
+ |        49|  (0.2%)|201902 | 
+ |        46|  (0.2%)|201802 | 
+ |        44|  (0.2%)|201908 | 
+ |        42|  (0.2%)|201909 | 
+ |        41|  (0.2%)|201711 | 
+ |        39|  (0.2%)|201707 | 
+ |        36|  (0.1%)|201605 | 
+ |        34|  (0.1%)|201609 | 
+ |        29|  (0.1%)|201801 | 
+ |        27|  (0.1%)|201604 | 
+ |        23|  (0.1%)|201608 | 
+ |        22|  (0.1%)|201702 | 
+ |        18|  (0.1%)|201603 | 
+ |        16|  (0.1%)|201607 | 
+ |        13|  (0.1%)|201610 | 
+ |         9|  (0.0%)|201611 | 
+ |         7|  (0.0%)|201910 | 
+ |         5|  (0.0%)|201601 | 
+ |         4|  (0.0%)|201602 | 
+ |         3|  (0.0%)|201701 | 
+
+
+
+
+
+::: 
+
+:::::  
+
+
+
+
+
+{{< pagebreak >}} 
+
+::: {.div1} 
+
+#### F9_00_TAX_PERIOD_BEGIN_DATE
+
+::: 
+
+::::: {.parent} 
+
+::: {.div2} 
+
+F9_00_TAX_PERIOD_BEGIN_DATE 
+
+
+
+
+::: 
+
+::: {.div3} 
+
+
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">nominal</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">geography</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">code</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">5</span></div>
+
+
+
+
+::: 
+
+::: {.div4} 
+
+
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
+
+
+
+
+::: 
+
+::: {.div5} 
+
+**PREVIEW**:
+
+
+
+
+::: 
+
+::: {.div6} 
+
+<pre class="dg-preview">
+20190 · 20189 · 20180 · 20199 · 20179 · 20170 · 20169 · 20191
+20200 · 20181 · 20171 · 20201
+
+</pre>
+
+
+
+
+::: 
+
+::: {.div7} 
+
+**PROPERTIES**: 
+
+|STAT     |    VAL|    PER| 
+ |:--------|------:|------:| 
+ |Rows     | 25,000|       | 
+ |Distinct |     12| (0.0%)| 
+
+
+
+
+
+::: 
+
+::: {.div8} 
+
+![](research-guide_files/figure-html/factor-9.png){width=672}
+
+
+
+
+::: 
+
+::: {.div9} 
+
+**FACTOR LEVELS**:
+
+| Frequency|     (%)|Label | 
+ |---------:|-------:|:-----| 
+ |    10,190| (40.8%)|20190 | 
+ |     4,460| (17.8%)|20189 | 
+ |     3,580| (14.3%)|20180 | 
+ |     2,402|  (9.6%)|20199 | 
+ |     1,686|  (6.7%)|20179 | 
+ |     1,680|  (6.7%)|20170 | 
+ |       728|  (2.9%)|20169 | 
+ |       123|  (0.5%)|20191 | 
+ |        79|  (0.3%)|20200 | 
+ |        46|  (0.2%)|20181 | 
+ |        25|  (0.1%)|20171 | 
+ |         1|  (0.0%)|20201 | 
 
 
 
@@ -1645,6 +1575,18 @@ F9_00_TAX_ACCPER
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">2</span></div>
 
 
@@ -1655,7 +1597,7 @@ F9_00_TAX_ACCPER
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Tax period end date</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1674,7 +1616,7 @@ F9_00_TAX_ACCPER
 ::: {.div6} 
 
 <pre class="dg-preview">
-12 · 06 · 09 · 03 · 05 · 08 · 04 · 10 · 07 · 11 · 02 · 01
+12 · 6 · 9 · 3 · 5 · 8 · 4 · 10 · 7 · 11 · 2 · 1
 
 </pre>
 
@@ -1700,7 +1642,7 @@ F9_00_TAX_ACCPER
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/factor-11.png){width=672}
+![](research-guide_files/figure-html/factor-10.png){width=672}
 
 
 
@@ -1714,17 +1656,17 @@ F9_00_TAX_ACCPER
 | Frequency|     (%)|Label | 
  |---------:|-------:|:-----| 
  |    14,987| (59.9%)|12    | 
- |     4,578| (18.3%)|06    | 
- |     1,251|  (5.0%)|09    | 
- |       849|  (3.4%)|03    | 
- |       796|  (3.2%)|05    | 
- |       688|  (2.8%)|08    | 
- |       609|  (2.4%)|04    | 
+ |     4,578| (18.3%)|6     | 
+ |     1,251|  (5.0%)|9     | 
+ |       849|  (3.4%)|3     | 
+ |       796|  (3.2%)|5     | 
+ |       688|  (2.8%)|8     | 
+ |       609|  (2.4%)|4     | 
  |       425|  (1.7%)|10    | 
- |       349|  (1.4%)|07    | 
+ |       349|  (1.4%)|7     | 
  |       195|  (0.8%)|11    | 
- |       156|  (0.6%)|02    | 
- |       117|  (0.5%)|01    | 
+ |       156|  (0.6%)|2     | 
+ |       117|  (0.5%)|1     | 
 
 
 
@@ -1740,7 +1682,7 @@ F9_00_TAX_ACCPER
 
 ::: {.div1} 
 
-#### COUNTY_FIPS
+#### BMF_ACTIV1
 
 ::: 
 
@@ -1748,7 +1690,7 @@ F9_00_TAX_ACCPER
 
 ::: {.div2} 
 
-COUNTY_FIPS 
+BMF_ACTIV1 
 
 
 
@@ -1762,7 +1704,19 @@ COUNTY_FIPS
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 5</span></div>
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 3</span></div>
 
 
 
@@ -1772,7 +1726,7 @@ COUNTY_FIPS
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">State + County FIPS code</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1791,10 +1745,10 @@ COUNTY_FIPS
 ::: {.div6} 
 
 <pre class="dg-preview">
-6037 · 17031 · 11001 · 36061 · 48201 · 53033 · 6067 · 42003 · 39049
-6073 · 6059 · 25017 · 4013 · 27053 · 48113 · 36103 · 18097 · 48453
-39035 · 36059 · 6085 · 6001 · 25025 · 51059 · 9003 · 36119 · 13121
-26163 · 19153 · 26125 · 6075 · 9001 · 48439 · 42101 · 9009 · 17043
+0 · 263 · 200 · 907 · 36 · 279 · 205 · 319 · 59 · 318 · 407 · 520
+900 · 265 · 264 · 280 · 260 · 250 · 999 · 920 · 30 · 912 · 261 · 230
+65 · 998 · 229 · 317 · 201 · 403 · 908 · 288 · 911 · 399 · 286 · 161
+922 · 281 · 350 · 123 · 287 · 382 · 401 · 921 · 34 · 119 · 408 · 602
 
 </pre>
 
@@ -1807,11 +1761,12 @@ COUNTY_FIPS
 
 **PROPERTIES**: 
 
-|STAT       |    VAL|    PER| 
- |:----------|------:|------:| 
- |Rows       | 25,000|       | 
- |Distinct   |  2,411| (9.6%)| 
- |Missing/NA |  2,389| (9.6%)| 
+|STAT       |    VAL|     PER| 
+ |:----------|------:|-------:| 
+ |Rows       | 25,000|        | 
+ |Distinct   |    230|  (0.9%)| 
+ |Missing/NA |  1,887|  (7.5%)| 
+ |Zero       |  5,807| (23.2%)| 
 
 
 
@@ -1832,9 +1787,9 @@ COUNTY_FIPS
 
 **STATS**:
 
-|   MIN|    MAX|      MEAN|   Q05|    Q25|    Q50|    Q75|    Q95| 
- |-----:|------:|---------:|-----:|------:|------:|------:|------:| 
- | 1,001| 78,030| 28,405.45| 6,019| 17,027| 27,163| 41,051| 53,033| 
+| MIN| MAX|   MEAN| Q05| Q25| Q50| Q75| Q95| 
+ |---:|---:|------:|---:|---:|---:|---:|---:| 
+ |   0| 999| 266.51|   0|   0| 229| 318| 908| 
 
 
 
@@ -1842,10 +1797,10 @@ COUNTY_FIPS
 
 ::: {.dg-shape}
 
-|stat     |   num|interpretation | 
- |:--------|-----:|:--------------| 
- |Skew     | -0.01|LOW            | 
- |Kurtosis | -1.15|MED            | 
+|stat     |  num|interpretation | 
+ |:--------|----:|:--------------| 
+ |Skew     | 1.32|HIGH           | 
+ |Kurtosis | 0.86|LOW            | 
 
 
 ::: 
@@ -1887,6 +1842,18 @@ CEO_CENSUSTRACT
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">11</span></div>
 
 
@@ -1897,7 +1864,7 @@ CEO_CENSUSTRACT
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Census tract</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2012,6 +1979,18 @@ F9_08_REV_TOT_TOT
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">10</span></div>
 
 
@@ -2022,7 +2001,7 @@ F9_08_REV_TOT_TOT
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Total revenue - total</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2137,6 +2116,18 @@ F9_10_ASSET_TOT_BOY
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">11</span></div>
 
 
@@ -2147,7 +2138,7 @@ F9_10_ASSET_TOT_BOY
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Total assets - beginning of year</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2263,6 +2254,18 @@ F9_10_ASSET_TOT_EOY
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">11</span></div>
 
 
@@ -2273,7 +2276,7 @@ F9_10_ASSET_TOT_EOY
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Total assets - end of year</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2388,6 +2391,18 @@ F9_10_NAFB_TOT_BOY
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">10</span></div>
 
 
@@ -2398,7 +2413,7 @@ F9_10_NAFB_TOT_BOY
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Net assets or fund balances - beginning of year</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2514,6 +2529,18 @@ F9_09_EXP_TOT_TOT
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">10</span></div>
 
 
@@ -2524,7 +2551,7 @@ F9_09_EXP_TOT_TOT
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Total functional expenses - total expenses</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2639,6 +2666,18 @@ F9_01_EXP_TOT_PY
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">10</span></div>
 
 
@@ -2649,7 +2688,7 @@ F9_01_EXP_TOT_PY
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Total expenses - prior year</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2759,7 +2798,19 @@ F9_00_ORG_NAME_L1
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">text</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -2773,7 +2824,7 @@ F9_00_ORG_NAME_L1
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Organization name line 1</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2876,7 +2927,19 @@ F0_00_ORG_CONTACT
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">text</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -2890,7 +2953,7 @@ F0_00_ORG_CONTACT
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Contact person (from IRS files)</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -2993,7 +3056,19 @@ F9_00_ORG_ADDR_L1
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">text</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -3007,7 +3082,7 @@ F9_00_ORG_ADDR_L1
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Organization street address line 1</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -3110,7 +3185,19 @@ F9_00_ORG_ADDR_CITY
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">text</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -3124,7 +3211,7 @@ F9_00_ORG_ADDR_CITY
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Organization city</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -3209,7 +3296,7 @@ COLUMBIA · ALEXANDRIA · PHILADELPHIA · DENVER · SAINT LOUIS
 
 ::: {.div1} 
 
-#### EIN
+#### NTEEFINAL
 
 ::: 
 
@@ -3217,7 +3304,7 @@ COLUMBIA · ALEXANDRIA · PHILADELPHIA · DENVER · SAINT LOUIS
 
 ::: {.div2} 
 
-EIN 
+NTEEFINAL 
 
 
 
@@ -3227,11 +3314,23 @@ EIN
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">text</span></div>
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 9</span></div>
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 5</span></div>
 
 
 
@@ -3241,7 +3340,7 @@ EIN
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">EIN</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -3260,10 +3359,137 @@ EIN
 ::: {.div6} 
 
 <pre class="dg-preview">
-010100593 · 010218055 · 010220588 · 010266289 · 010273431
-010286963 · 010440702 · 010468398 · 010523313 · 010524078
-010573723 · 010715375 · 010744517 · 010815981 · 010852125
-010874048 · 010961458 · 016011483 · 016012302 · 016019950
+S41 · J40 · W30 · S80 · N50 · M24 · B83 · W80 · N60 · Y42 · Y50
+Y41 · K28 · S20 · Y43 · S47 · B03 · L50 · W61 · N61 · Y40 · S03
+Y20 · S30 · S01 · S40 · G90 · I03 · I0360 · N52 · S99 · A23 · S22
+N67 · N6A · E11 · N68 · K20 · N69 · L99 · S46 · N32 · U42 · S21
+
+</pre>
+
+
+
+
+::: 
+
+::: {.div7} 
+
+**PROPERTIES**: 
+
+|STAT       |    VAL|    PER| 
+ |:----------|------:|------:| 
+ |Rows       | 25,000|       | 
+ |Distinct   |    654| (2.6%)| 
+ |Missing/NA |  1,497| (6.0%)| 
+
+
+
+
+
+::: 
+
+::: {.div8} 
+
+![](research-guide_files/figure-html/character-5.png){width=768}
+
+
+
+
+::: 
+
+::: {.div9} 
+
+**MOST COMMON VALUES**: 
+
+|Value | Frequency|    (%)| 
+ |:-----|---------:|------:| 
+ |S41   |      1947| (7.8%)| 
+ |J40   |      1815| (7.3%)| 
+ |W30   |      1582| (6.3%)| 
+ |S80   |      1515| (6.1%)| 
+ |N50   |      1088| (4.4%)| 
+ |M24   |       810| (3.2%)| 
+
+
+
+
+
+::: 
+
+:::::  
+
+## Identifier
+
+{{< pagebreak >}} 
+
+::: {.div1} 
+
+#### EIN
+
+::: 
+
+::::: {.parent} 
+
+::: {.div2} 
+
+EIN 
+
+
+
+
+::: 
+
+::: {.div3} 
+
+
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">identifier</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">9</span></div>
+
+
+
+
+::: 
+
+::: {.div4} 
+
+
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
+
+
+
+
+::: 
+
+::: {.div5} 
+
+**PREVIEW**:
+
+
+
+
+::: 
+
+::: {.div6} 
+
+<pre class="dg-preview">
+10100593 · 10218055 · 10220588 · 10266289 · 10273431 · 10286963
+10440702 · 10468398 · 10523313 · 10524078 · 10573723 · 10715375
+10744517 · 10815981 · 10852125 · 10874048 · 10961458 · 16011483
+16012302 · 16019950 · 16022337 · 16123853 · 20172119 · 20187390
 
 </pre>
 
@@ -3289,25 +3515,16 @@ EIN
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/character-5.png){width=768}
-
-
-
-
-::: 
-
-::: {.div9} 
-
 **MOST COMMON VALUES**: 
 
-|Value     | Frequency|    (%)| 
- |:---------|---------:|------:| 
- |010100593 |         2| (0.0%)| 
- |010218055 |         2| (0.0%)| 
- |010220588 |         2| (0.0%)| 
- |010266289 |         2| (0.0%)| 
- |010273431 |         2| (0.0%)| 
- |010286963 |         2| (0.0%)| 
+|Value    | Frequency|    (%)| 
+ |:--------|---------:|------:| 
+ |10100593 |         2| (0.0%)| 
+ |10218055 |         2| (0.0%)| 
+ |10220588 |         2| (0.0%)| 
+ |10266289 |         2| (0.0%)| 
+ |10273431 |         2| (0.0%)| 
+ |10286963 |         2| (0.0%)| 
 
 
 
@@ -3325,7 +3542,7 @@ EIN
 
 ::: {.div1} 
 
-#### F9_00_TAX_PERIOD_BEGIN_DATE
+#### COUNTY_FIPS
 
 ::: 
 
@@ -3333,7 +3550,7 @@ EIN
 
 ::: {.div2} 
 
-F9_00_TAX_PERIOD_BEGIN_DATE 
+COUNTY_FIPS 
 
 
 
@@ -3343,11 +3560,23 @@ F9_00_TAX_PERIOD_BEGIN_DATE
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">identifier</span></div>
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 6</span></div>
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">5</span></div>
 
 
 
@@ -3357,7 +3586,7 @@ F9_00_TAX_PERIOD_BEGIN_DATE
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Tax period begin date</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -3376,8 +3605,10 @@ F9_00_TAX_PERIOD_BEGIN_DATE
 ::: {.div6} 
 
 <pre class="dg-preview">
-2019-0 · 2018-9 · 2018-0 · 2019-9 · 2017-9 · 2017-0 · 2016-9
-2019-1 · 2020-0 · 2018-1 · 2017-1 · 2020-1
+6037 · 17031 · 11001 · 36061 · 48201 · 53033 · 6067 · 42003 · 39049
+6073 · 6059 · 25017 · 4013 · 27053 · 48113 · 36103 · 18097 · 48453
+39035 · 36059 · 6085 · 6001 · 25025 · 51059 · 9003 · 36119 · 13121
+26163 · 19153 · 26125 · 6075 · 9001 · 48439 · 42101 · 9009 · 17043
 
 </pre>
 
@@ -3390,10 +3621,11 @@ F9_00_TAX_PERIOD_BEGIN_DATE
 
 **PROPERTIES**: 
 
-|STAT     |    VAL|    PER| 
- |:--------|------:|------:| 
- |Rows     | 25,000|       | 
- |Distinct |     12| (0.0%)| 
+|STAT       |    VAL|    PER| 
+ |:----------|------:|------:| 
+ |Rows       | 25,000|       | 
+ |Distinct   |  2,411| (9.6%)| 
+ |Missing/NA |  2,389| (9.6%)| 
 
 
 
@@ -3403,25 +3635,16 @@ F9_00_TAX_PERIOD_BEGIN_DATE
 
 ::: {.div8} 
 
-![](research-guide_files/figure-html/character-6.png){width=768}
-
-
-
-
-::: 
-
-::: {.div9} 
-
 **MOST COMMON VALUES**: 
 
-|Value  | Frequency|     (%)| 
- |:------|---------:|-------:| 
- |2019-0 |     10190| (40.8%)| 
- |2018-9 |      4460| (17.8%)| 
- |2018-0 |      3580| (14.3%)| 
- |2019-9 |      2402|  (9.6%)| 
- |2017-9 |      1686|  (6.7%)| 
- |2017-0 |      1680|  (6.7%)| 
+|Value | Frequency|    (%)| 
+ |:-----|---------:|------:| 
+ |6037  |       402| (1.6%)| 
+ |17031 |       339| (1.4%)| 
+ |11001 |       294| (1.2%)| 
+ |36061 |       243| (1.0%)| 
+ |48201 |       213| (0.9%)| 
+ |53033 |       186| (0.7%)| 
 
 
 
@@ -3430,10 +3653,6 @@ F9_00_TAX_PERIOD_BEGIN_DATE
 ::: 
 
 :::::  
-
-## Identifier
-
-
 
 ## Temporal
 
@@ -3727,4 +3946,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-18T22:12:21Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-V2.xlsx","dgf_hash":"859b65e5fe1572d39c338f1590199ab7","dgf_variables":27} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-24T21:25:30Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"68ab223df467da62ef2cdefd8bee9056","dgf_variables":27} -->

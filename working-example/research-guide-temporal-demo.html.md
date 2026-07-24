@@ -61,6 +61,18 @@ is_501c3
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">5</span></div>
 
 
@@ -157,6 +169,18 @@ ntee_program
 
 
 <div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -269,6 +293,18 @@ num_programs
 
 
 <div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -390,7 +426,19 @@ org_name
 ::: {.div3} 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">string</span></div>
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">text</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -508,6 +556,18 @@ ein
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">9</span></div>
 
 
@@ -613,7 +673,23 @@ day_of_week
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">dow</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 3</span></div>
 
 
 
@@ -705,7 +781,23 @@ date_mdy
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">date</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">10</span></div>
 
 
 
@@ -800,7 +892,23 @@ date_dmy
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">date</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 8</span></div>
 
 
 
@@ -895,7 +1003,23 @@ month_abbr
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">month</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 3</span></div>
 
 
 
@@ -988,7 +1112,23 @@ month_ym
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">month</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 7</span></div>
 
 
 
@@ -1083,7 +1223,23 @@ hour_ampm
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">point</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">time_of_day</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">hhii</span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">hour</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 8</span></div>
 
 
 
@@ -1178,7 +1334,23 @@ event_ts
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">week</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">23</span></div>
 
 
 
@@ -1273,7 +1445,23 @@ rule_year
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">year</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 4</span></div>
 
 
 
@@ -1368,7 +1556,23 @@ age_years
 
 
 
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+
+
+
 <div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">year</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 2</span></div>
 
 
 
@@ -1721,4 +1925,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-18T20:31:36Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-temporal-demo.xlsx","dgf_hash":"30d2510094ca584b30615d9180331906","dgf_variables":14} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-24T21:25:45Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-temporal-demo.xlsx","dgf_hash":"500226bef81500e7e075d5ca8a6a7720","dgf_variables":14} -->
