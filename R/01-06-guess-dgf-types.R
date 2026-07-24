@@ -101,6 +101,17 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
       fmt   <- "plain"
     }
 
+    ## a column already typed identifier (by detect_identifier) that the
+    ## detectors recognize as a geography is a geographic KEY: keep the
+    ## identifier type but stamp the geographic_id class instead of dropping it
+    ## as an inconsistent geography-vs-identifier guess.
+    if (base_type[i] == "identifier" && otype == "categorical" && cls == "geography") {
+      gtype <- "identifier"
+      sub   <- if (all(grepl("^[0-9]+$", unique(nn)))) "numeric_id" else "text_id"
+      cls   <- "geographic_id"
+      fmt   <- "plain"
+    }
+
     ## only OVERRIDE the base type when it is coarse ("text") or the guess is
     ## a strong semantic signal (temporal/identifier) from a NON-loose detector
     loose <- g$guess %in% .loose_detectors

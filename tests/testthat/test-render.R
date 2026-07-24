@@ -22,14 +22,13 @@ test_that("create_all_sections renders markdown for each variable type", {
                 info = paste("no parent div for type", ty))
     expect_true(any(grepl("pagebreak", out)),
                 info = paste("no pagebreak for type", ty))
-    # the attribute block lists the ontology coordinates (type/subtype/class/
-    # format) plus the field width (rg_max_chr -> "MAX NCHAR") and DESCRIPTION
+    # DATA TYPE and MAX NCHAR are always populated. The ontology coordinate
+    # rows (SUBTYPE/CLASS/FORMAT) render only when non-blank, so the generic
+    # demo columns (no subtype/class/format) show just these two and omit the
+    # empty attribute rows.
     expect_true(any(grepl("DATA TYPE", out)))
-    expect_true(any(grepl("SUBTYPE", out)))
-    expect_true(any(grepl("CLASS", out)))
-    expect_true(any(grepl("FORMAT", out)))
     expect_true(any(grepl("MAX NCHAR", out)))
-    expect_true(any(grepl("DESCRIPTION", out)))
+    expect_false(any(grepl("SUBTYPE", out)))   # blank -> conditionally hidden
   }
 })
 
@@ -47,4 +46,26 @@ test_that("factor sections render a LEVELS table and numeric sections STATS + qu
   expect_true(any(grepl("STATS", num)))
   expect_true(any(grepl("Q50", num)))
   expect_true(any(grepl("DISTRIBUTION SHAPE", num)))
+})
+
+test_that("ontology attribute rows render only when populated", {
+  dgf <- build_demo_dgf()
+
+  # a plain column carries no subtype/class/format -> those rows are omitted
+  plain <- suppressMessages(suppressWarnings(
+    capture.output(create_all_sections(dgf[dgf$var_name == "num", ]))))
+  expect_true(any(grepl("DATA TYPE", plain)))
+  expect_false(any(grepl("SUBTYPE", plain)))
+  expect_false(any(grepl("FORMAT", plain)))
+
+  # stamp the coordinates on a column and they appear
+  i <- dgf$var_name == "cat"
+  dgf$desired_data_subtype[i] <- "nominal"
+  dgf$desired_data_class[i]   <- "geography"
+  dgf$desired_data_format[i]  <- "code"
+  filled <- suppressMessages(suppressWarnings(
+    capture.output(create_all_sections(dgf[i, ]))))
+  expect_true(any(grepl("SUBTYPE", filled)))
+  expect_true(any(grepl("geography", filled)))
+  expect_true(any(grepl("FORMAT", filled)))
 })

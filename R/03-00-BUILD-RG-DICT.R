@@ -90,6 +90,14 @@ v_to_txt <- function( VNAME, LABEL = "" )
   # errors on a missing name. Missing or empty -> blank (never a literal "NA").
   value <- if( VNAME %in% names(xx) ) xx[[VNAME]] else ""
   if( is.null(value) || length(value) == 0 || is.na(value) ) value <- ""
+  # A LABELLED metadata field with no value renders nothing -- the same way the
+  # PROPERTIES table omits an empty row. This keeps the attribute block tight:
+  # a plain number shows DATA TYPE + MAX NCHAR, not empty SUBTYPE/CLASS/FORMAT
+  # rows. (A field with an empty LABEL is the prominent variable label and always
+  # prints its value.)
+  labelled <- ! ( is.null(LABEL) || trimws(LABEL) == "" )
+  if( labelled && ! nzchar( trimws( as.character(value) ) ) )
+  { return( invisible(NULL) ) }
   # An empty LABEL prints the value on its own (used for the prominent
   # plain-language variable label). Otherwise emit the label and value as two
   # separate cells so the stylesheet can align short metadata values into a

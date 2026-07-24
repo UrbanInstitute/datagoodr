@@ -59,3 +59,16 @@ test_that("create_dgf populates ontology columns and dd_is_join_key", {
   expect_equal(unname(jk["home_state"]),    "")
   expect_equal(unname(ty["amount"]),        "number")        # untouched
 })
+
+test_that("an identifier-typed geography column is stamped geographic_id", {
+  # detect_identifier types a column as identifier; when the detectors also
+  # recognize it as a geography (a county FIPS key), the class must be
+  # geographic_id, not dropped as a geography-vs-identifier disagreement -- even
+  # when the column is low-cardinality (so the near-unique promotion never fires).
+  df <- data.frame(county = rep(c("06037", "36061", "48201"), 4),
+                   stringsAsFactors = FALSE)
+  r <- datagoodr:::guess_dgf_types(df, base_type = "identifier")
+  expect_equal(r$desired_data_type[1],    "identifier")
+  expect_equal(r$desired_data_subtype[1], "numeric_id")
+  expect_equal(r$desired_data_class[1],   "geographic_id")
+})
