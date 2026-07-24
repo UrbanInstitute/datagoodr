@@ -8,7 +8,8 @@ use_datagoodr_template(
   dir = ".",
   flavor = c("rg", "dd"),
   dg = TRUE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  file = NULL
 )
 }
 \arguments{
@@ -23,6 +24,11 @@ Defaults to `TRUE`.}
 
 \item{overwrite}{Logical; overwrite an existing `.qmd` of the same name.
 Defaults to `FALSE`.}
+
+\item{file}{Optional name for the copied document. Defaults to the flavor's
+standard name (`research-guide.qmd` / `data-dictionary.qmd`). The template
+is written straight to this name, so the overwrite guard applies to the
+file you actually asked for --- naming one report never touches another.}
 }
 \value{
 Invisibly, the path to the copied template.

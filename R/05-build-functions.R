@@ -43,16 +43,23 @@ datagoodr_css <- function() {
 #'   Defaults to `TRUE`.
 #' @param overwrite Logical; overwrite an existing `.qmd` of the same name.
 #'   Defaults to `FALSE`.
+#' @param file Optional name for the copied document. Defaults to the flavor's
+#'   standard name (`research-guide.qmd` / `data-dictionary.qmd`). The template
+#'   is written straight to this name, so the overwrite guard applies to the
+#'   file you actually asked for --- naming one report never touches another.
 #'
 #' @return Invisibly, the path to the copied template.
 #' @seealso [create_rg()], [create_dd()]
 #' @export
 use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
-                                    dg = TRUE, overwrite = FALSE ) {
+                                    dg = TRUE, overwrite = FALSE,
+                                    file = NULL ) {
 
   flavor   <- match.arg( flavor )
   template <- if( flavor == "rg" ) "RG.qmd" else "DD.qmd"
-  out.name <- if( flavor == "rg" ) "research-guide.qmd" else "data-dictionary.qmd"
+  out.name <- if( ! is.null(file) && nzchar(file) ) file
+              else if( flavor == "rg" ) "research-guide.qmd"
+              else "data-dictionary.qmd"
 
   src <- system.file( "templates", template, package = "datagoodr" )
   if( src == "" )
@@ -128,14 +135,12 @@ build_report <- function( dgf, data, dir, file, flavor, embed_css,
   { stop( "`dgf` must be a DGF data frame or a path to a DGF .xlsx file.",
           call. = FALSE ) }
 
+  # Write the template straight to the requested filename. Copying to the
+  # flavor's default name and renaming would clobber (then move away) an
+  # unrelated report of that default name -- e.g. scaffolding
+  # research-guide-temporal-demo.qmd must never touch research-guide.qmd.
   dest <- use_datagoodr_template( dir = dir, flavor = flavor,
-                                  dg = TRUE, overwrite = overwrite )
-  # the copier names the file; rename if the caller asked for something else
-  if( basename(dest) != file ) {
-    new.dest <- file.path( dir, file )
-    file.rename( dest, new.dest )
-    dest <- new.dest
-  }
+                                  dg = TRUE, overwrite = overwrite, file = file )
 
   # Bake the paths into the scaffolded document so it renders standalone from
   # RStudio/Positron. This is the only place the qmd is written: update_rg()
