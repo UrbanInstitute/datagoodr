@@ -29,11 +29,13 @@ test_that("guess_dgf_types refines coarse types and flags keys", {
   expect_equal(r$desired_data_type[3], "identifier")   # ORCID
   expect_equal(r$desired_data_type[4], "temporal")     # date string
   expect_equal(r$stable_data_unit[4], "date")          # calendar_date -> date
+  expect_equal(r$desired_data_format[4], "yyyymmdd")   # ISO date representation
 
   # a generic number with no confident match is left untouched
   expect_equal(r$desired_data_type[5], "number")
   expect_equal(r$desired_data_class[5], "")
   expect_equal(r$stable_data_unit[5], "")              # non-temporal: no unit
+  expect_equal(r$desired_data_format[5], "")           # no detector: blank format
 })
 
 test_that("create_dgf populates ontology columns and dd_is_join_key", {

@@ -84,9 +84,11 @@ json_to_df <- function(json_text) {
 #' @noRd
 v_to_txt <- function( VNAME, LABEL = "" )
 {
-  value  <- get_xx()[[VNAME]]
-  # Show blank (not "NA") for empty/unfilled metadata fields such as SCOPE
-  # or LOCATION CODE.
+  xx <- get_xx()
+  # Read the field defensively: a layout may reference a column an older DGF
+  # does not carry (the schema evolves), and `[[` on a named atomic vector
+  # errors on a missing name. Missing or empty -> blank (never a literal "NA").
+  value <- if( VNAME %in% names(xx) ) xx[[VNAME]] else ""
   if( is.null(value) || length(value) == 0 || is.na(value) ) value <- ""
   # An empty LABEL prints the value on its own (used for the prominent
   # plain-language variable label). Otherwise emit the label and value as two

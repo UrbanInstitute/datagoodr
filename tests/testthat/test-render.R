@@ -22,9 +22,12 @@ test_that("create_all_sections renders markdown for each variable type", {
                 info = paste("no parent div for type", ty))
     expect_true(any(grepl("pagebreak", out)),
                 info = paste("no pagebreak for type", ty))
-    # every type shows the retained descriptor fields (SCOPE / LOCATION CODE
-    # were dropped from the layouts in the v2 schema; rg_max_chr is "MAX NCHAR")
+    # the attribute block lists the ontology coordinates (type/subtype/class/
+    # format) plus the field width (rg_max_chr -> "MAX NCHAR") and DESCRIPTION
     expect_true(any(grepl("DATA TYPE", out)))
+    expect_true(any(grepl("SUBTYPE", out)))
+    expect_true(any(grepl("CLASS", out)))
+    expect_true(any(grepl("FORMAT", out)))
     expect_true(any(grepl("MAX NCHAR", out)))
     expect_true(any(grepl("DESCRIPTION", out)))
   }

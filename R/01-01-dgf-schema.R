@@ -94,8 +94,10 @@ dgf_schema_cols <- function() {
     # stable -> desired bridge: the coercion-into-type rule (as_* import)
     "desired_data_import_rule",
 
-    # desired_: the intended interpretation (stage-invariant)
+    # desired_: the intended interpretation (stage-invariant) - the four
+    # ontology coordinates (type / subtype / class / representation format)
     "desired_data_type", "desired_data_subtype", "desired_data_class",
+    "desired_data_format",
 
     # rg_: research guide artifacts (JSON strings)
     "rg_properties", "rg_preview", "rg_stats", "rg_graphics", "rg_max_chr",

@@ -272,6 +272,7 @@ create_dgf <- function(         # ----------------
   desired_data_type    <- .enriched$desired_data_type
   desired_data_subtype <- .enriched$desired_data_subtype
   desired_data_class   <- .enriched$desired_data_class
+  desired_data_format  <- .enriched$desired_data_format
   dd_is_join_key      <- .enriched$dd_is_join_key
 
   ## Reconcile the build-time profile class (vclass, which drives rg_stats/
@@ -351,6 +352,7 @@ create_dgf <- function(         # ----------------
       desired_data_type,
       desired_data_subtype,
       desired_data_class,
+      desired_data_format,
 
       # rg_: research guide artifacts (JSON strings)
       rg_properties, rg_preview, rg_stats, rg_graphics, rg_max_chr,

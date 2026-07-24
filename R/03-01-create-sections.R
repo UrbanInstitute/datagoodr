@@ -132,25 +132,28 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
   #  ---------------------------------------------
 
   if( is.null(layouts) ) {
-    # Prefer a user override defined in the global environment (e.g. in a
-    # project DG.R or the QMD itself); otherwise use the package default.
-    resolve <- function( nm ) {
+    # Single source of truth: the package defaults come from default_layouts()
+    # (R/03-01-layouts.R). A user can still shadow any one by defining
+    # layout.numeric / layout.character / ... in the global environment (e.g. a
+    # project DG.R or the QMD itself).
+    defaults <- default_layouts()
+    resolve <- function( key ) {
+      nm <- paste0( "layout.", key )
       if( exists( nm, envir = globalenv(), inherits = FALSE ) )
-      { get( nm, envir = globalenv() ) }
+        get( nm, envir = globalenv() )
       else
-      { get( nm, envir = asNamespace("datagoodr") ) }
+        defaults[[ key ]]
     }
     # List keys are the ontology data_type that create_div matches against
-    # desired_data_type. The layout.* objects keep their R-flavoured names (they
-    # are just how a user overrides one), but the dispatch key is the ontology
-    # term: number/text/categorical/boolean.
+    # desired_data_type; the resolve() keys are the R-flavoured layout names
+    # (numeric/character/factor/logical) users override by.
     layouts <- list(
-      number      = resolve("layout.numeric"),
-      text        = resolve("layout.character"),
-      categorical = resolve("layout.factor"),
-      boolean     = resolve("layout.logical"),
-      identifier  = resolve("layout.identifier"),
-      temporal    = resolve("layout.temporal") )
+      number      = resolve("numeric"),
+      text        = resolve("character"),
+      categorical = resolve("factor"),
+      boolean     = resolve("logical"),
+      identifier  = resolve("identifier"),
+      temporal    = resolve("temporal") )
   }
 
   design.df <-

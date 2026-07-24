@@ -72,6 +72,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
     desired_data_type    = base_type,
     desired_data_subtype = rep("", length(vars)),
     desired_data_class   = rep("", length(vars)),
+    desired_data_format  = rep("", length(vars)),
     stable_data_unit     = rep("", length(vars)),
     dd_is_join_key      = rep("", length(vars)),
     stringsAsFactors = FALSE
@@ -87,6 +88,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
     gtype <- .ontology_to_dgf_type(otype)
     sub   <- o[["data_subtype"]]
     cls   <- o[["data_class"]]
+    fmt   <- o[["data_format"]]
 
     nn  <- vals[!is.na(vals) & nzchar(trimws(vals))]
     pct <- if (length(nn)) length(unique(nn)) / length(nn) else 0
@@ -96,6 +98,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
       gtype <- "identifier"
       sub   <- if (all(grepl("^[0-9]+$", unique(nn)))) "numeric_id" else "text_id"
       cls   <- "geographic_id"
+      fmt   <- "plain"
     }
 
     ## only OVERRIDE the base type when it is coarse ("text") or the guess is
@@ -112,6 +115,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
     }
     out$desired_data_subtype[i] <- sub
     out$desired_data_class[i]   <- cls
+    out$desired_data_format[i]  <- fmt
     ## the detector library owns the temporal unit (its class knows the grain)
     if (out$desired_data_type[i] == "temporal")
       out$stable_data_unit[i] <- .temporal_unit(cls)

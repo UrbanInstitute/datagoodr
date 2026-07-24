@@ -10,7 +10,7 @@ format:
 execute:
   keep-md: true
 params:
-  dgf_file: 'DGF-V2.xlsx'
+  dgf_file: 'DGF.xlsx'
   data_file: null
 ---
 

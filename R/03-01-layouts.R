@@ -1,168 +1,102 @@
-# LAYOUTS WILL BE SAVED AS DATA OBJECTS
-
-#' Numeric variable layout definitions
-#'
-#' Internal layout specification for numeric variables. Each element
-#' is a string describing a div, variable, label, and function to use.
-#'
-#' @format A character vector.
-#'
-#' @details
-#' Called in \link{get_design} to define layout options.
-#'
-#' @keywords internal
-#' @noRd
-# Standard section template (shared div scheme across all four types so users
-# never have to reorient):
-#   div3 attributes (1/3) + div4 description (2/3)
+# Default section layouts, keyed by the ontology data_type. Each layout is a
+# character vector; every element is "div ;; DGF column ;; LABEL ;; function".
+#
+# SINGLE SOURCE OF TRUTH: these live only here, returned by default_layouts().
+# get_design() reads them from this function (a user can still shadow any layout
+# by defining `layout.numeric`/`layout.character`/... in the global environment,
+# e.g. from a project DG.R). They are NOT duplicated in R/sysdata.rda anymore --
+# that duplication let the two copies drift.
+#
+# Shared div scheme across every type so a reader never has to reorient:
+#   div3 attributes (1/3)  + div4 description (2/3)
 #   div5 PREVIEW label (1/3) + div6 preview data (2/3)
 #   div7 PROPERTIES (1/3)    + div8 graphic (2/3)
 #   div9 full-width extra table (3/3): STATS / levels / most-common
-layout.numeric <-
-  c( "div2 ;; dd_vlabel         ;;               ;; v_to_txt",
-     "div3 ;; desired_data_type    ;; DATA TYPE     ;; v_to_txt",
-     "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
-     "div4 ;; dd_vdesc          ;; DESCRIPTION   ;; v_to_txt",
-     "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
-     "div6 ;; rg_preview     ;;               ;; paste_preview_num",
-     "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
-     "div8 ;; rg_graphics    ;;               ;; paste_histogram",
-     "div9 ;; rg_stats       ;; STATS         ;; paste_stats_horizontal",
-     "div9 ;; rg_stats       ;; DISTRIBUTION SHAPE ;; paste_distribution_shape"   )
 
-#' Character variable layout definitions
+#' Default section layouts
 #'
-#' Internal layout specification for character string variables. Each element
-#' is a string describing a div, variable, label, and function to use.
+#' Returns the built-in layout for each ontology `data_type`, used by
+#' \link{get_design}. The `div3` block lists a variable's ontology coordinates
+#' --- DATA TYPE / SUBTYPE / CLASS / FORMAT (and UNIT for temporals) --- plus its
+#' field width (MAX NCHAR). `v_to_txt` renders a blank for any coordinate a
+#' variable does not carry, so a plain number simply shows fewer rows.
 #'
-#' @format A character vector.
-#'
-#' @details
-#' Called in \link{get_design} to define layout options.
-#'
+#' @return A named list of character-vector layouts, keyed
+#'   `numeric`/`character`/`factor`/`logical`/`identifier`/`temporal`.
 #' @keywords internal
 #' @noRd
-layout.character <-
-  c( "div2 ;; dd_vlabel         ;;                    ;; v_to_txt",
-     "div3 ;; desired_data_type    ;; DATA TYPE          ;; v_to_txt",
-     "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
-     "div4 ;; dd_vdesc          ;; DESCRIPTION        ;; v_to_txt",
-     "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
-     "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
-     "div7 ;; rg_properties  ;; PROPERTIES         ;; paste_properties",
-     "div8 ;; rg_graphics    ;;                    ;; v_to_wordcloud",
-     "div9 ;; rg_stats       ;; MOST COMMON VALUES ;; paste_stats_chr_common"  )
+default_layouts <- function() {
 
+  # the shared descriptor "attributes" column (top-left, 1/3): the ontology
+  # coordinates followed by the field width. `unit = TRUE` adds the temporal
+  # UNIT (stable_data_unit), which drives the temporal graphic.
+  attrs <- function( unit = FALSE ) c(
+    "div3 ;; desired_data_type    ;; DATA TYPE ;; v_to_txt",
+    "div3 ;; desired_data_subtype ;; SUBTYPE   ;; v_to_txt",
+    "div3 ;; desired_data_class   ;; CLASS     ;; v_to_txt",
+    "div3 ;; desired_data_format  ;; FORMAT    ;; v_to_txt",
+    if( unit ) "div3 ;; stable_data_unit ;; UNIT ;; v_to_txt" else NULL,
+    "div3 ;; rg_max_chr           ;; MAX NCHAR ;; v_to_txt" )
 
-#' Factor variable layout definitions
-#'
-#' Internal layout specification for factor variables. Each element
-#' is a string describing a div, variable, label, and function to use.
-#'
-#' @format A character vector.
-#'
-#' @details
-#' Called in \link{get_design} to define layout options.
-#'
-#' @keywords internal
-#' @noRd
-layout.factor <-
-  c( "div2 ;; dd_vlabel         ;;               ;; v_to_txt",
-     "div3 ;; desired_data_type    ;; DATA TYPE     ;; v_to_txt",
-     "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
-     "div4 ;; dd_vdesc          ;; DESCRIPTION   ;; v_to_txt",
-     "div5 ;; rg_preview     ;; PREVIEW       ;; paste_label",
-     "div6 ;; rg_preview     ;;               ;; paste_preview_chr",
-     "div7 ;; rg_properties  ;; PROPERTIES    ;; paste_properties",
-     "div8 ;; rg_graphics    ;;               ;; paste_treemap",
-     "div9 ;; dd_f_levels     ;; FACTOR LEVELS ;; paste_levels_freq"  )
+  list(
 
+    numeric = c(
+      "div2 ;; dd_vlabel      ;;             ;; v_to_txt",
+      attrs(),
+      "div4 ;; dd_vdesc       ;; DESCRIPTION ;; v_to_txt",
+      "div5 ;; rg_preview     ;; PREVIEW     ;; paste_label",
+      "div6 ;; rg_preview     ;;             ;; paste_preview_num",
+      "div7 ;; rg_properties  ;; PROPERTIES  ;; paste_properties",
+      "div8 ;; rg_graphics    ;;             ;; paste_histogram",
+      "div9 ;; rg_stats       ;; STATS       ;; paste_stats_horizontal",
+      "div9 ;; rg_stats       ;; DISTRIBUTION SHAPE ;; paste_distribution_shape" ),
 
-#' Logical/Boolean variable layout definitions
-#'
-#' Internal layout specification for logical/Boolean variables. Each element
-#' is a string describing a div, variable, label, and function to use.
-#'
-#' @format A character vector.
-#'
-#' @details
-#' Called in \link{get_design} to define layout options.
-#'
-#' @keywords internal
-#' @noRd
-layout.logical <-
-  c("div2 ;; dd_vlabel         ;;                 ;; v_to_txt",
-    "div3 ;; desired_data_type    ;; DATA TYPE       ;; v_to_txt",
-    "div3 ;; rg_max_chr        ;; MAX NCHAR ;; v_to_txt",
-    "div4 ;; dd_vdesc          ;; DESCRIPTION     ;; v_to_txt",
-    "div5 ;; rg_preview     ;; PREVIEW         ;; paste_label",
-    "div6 ;; rg_preview     ;;                 ;; paste_preview_chr",
-    "div7 ;; rg_properties  ;; PROPERTIES      ;; paste_properties",
-    "div8 ;; rg_graphics    ;;                 ;; paste_booleplot",
-    "div9 ;; dd_f_levels     ;; CATEGORY LABELS ;; paste_levels_horizontal"  )
+    character = c(
+      "div2 ;; dd_vlabel      ;;             ;; v_to_txt",
+      attrs(),
+      "div4 ;; dd_vdesc       ;; DESCRIPTION ;; v_to_txt",
+      "div5 ;; rg_preview     ;; PREVIEW     ;; paste_label",
+      "div6 ;; rg_preview     ;;             ;; paste_preview_chr",
+      "div7 ;; rg_properties  ;; PROPERTIES  ;; paste_properties",
+      "div8 ;; rg_graphics    ;;             ;; v_to_wordcloud",
+      "div9 ;; rg_stats       ;; MOST COMMON VALUES ;; paste_stats_chr_common" ),
 
+    factor = c(
+      "div2 ;; dd_vlabel      ;;             ;; v_to_txt",
+      attrs(),
+      "div4 ;; dd_vdesc       ;; DESCRIPTION ;; v_to_txt",
+      "div5 ;; rg_preview     ;; PREVIEW     ;; paste_label",
+      "div6 ;; rg_preview     ;;             ;; paste_preview_chr",
+      "div7 ;; rg_properties  ;; PROPERTIES  ;; paste_properties",
+      "div8 ;; rg_graphics    ;;             ;; paste_treemap",
+      "div9 ;; dd_f_levels    ;; FACTOR LEVELS ;; paste_levels_freq" ),
 
-#' Identifier variable layout definitions
-#'
-#' Internal layout specification for identifier variables (row keys, entity ids,
-#' geographic codes). Each element is a string describing a div, variable,
-#' label, and function to use.
-#'
-#' @format A character vector.
-#'
-#' @details Called in \link{get_design}. Identifiers have no visualization: the
-#'   layout is the descriptor block + preview, then PROPERTIES (1/3, where
-#'   Distinct% is the uniqueness diagnostic) beside MOST COMMON VALUES (2/3),
-#'   the latter read from `rg_stats` by the same renderer the character type
-#'   uses.
-#'
-#' @keywords internal
-#' @noRd
-layout.identifier <-
-  c( "div2 ;; dd_vlabel      ;;                    ;; v_to_txt",
-     "div3 ;; desired_data_type ;; DATA TYPE        ;; v_to_txt",
-     "div3 ;; rg_max_chr     ;; MAX NCHAR ;; v_to_txt",
-     "div4 ;; dd_vdesc       ;; DESCRIPTION        ;; v_to_txt",
-     "div5 ;; rg_preview     ;; PREVIEW            ;; paste_label",
-     "div6 ;; rg_preview     ;;                    ;; paste_preview_chr",
-     "div7 ;; rg_properties  ;; PROPERTIES         ;; paste_properties",
-     "div8 ;; rg_stats       ;; MOST COMMON VALUES ;; paste_stats_chr_common"  )
+    logical = c(
+      "div2 ;; dd_vlabel      ;;             ;; v_to_txt",
+      attrs(),
+      "div4 ;; dd_vdesc       ;; DESCRIPTION ;; v_to_txt",
+      "div5 ;; rg_preview     ;; PREVIEW     ;; paste_label",
+      "div6 ;; rg_preview     ;;             ;; paste_preview_chr",
+      "div7 ;; rg_properties  ;; PROPERTIES  ;; paste_properties",
+      "div8 ;; rg_graphics    ;;             ;; paste_booleplot",
+      "div9 ;; dd_f_levels    ;; CATEGORY LABELS ;; paste_levels_horizontal" ),
 
+    identifier = c(
+      "div2 ;; dd_vlabel      ;;             ;; v_to_txt",
+      attrs(),
+      "div4 ;; dd_vdesc       ;; DESCRIPTION ;; v_to_txt",
+      "div5 ;; rg_preview     ;; PREVIEW     ;; paste_label",
+      "div6 ;; rg_preview     ;;             ;; paste_preview_chr",
+      "div7 ;; rg_properties  ;; PROPERTIES  ;; paste_properties",
+      "div8 ;; rg_stats       ;; MOST COMMON VALUES ;; paste_stats_chr_common" ),
 
-#' Temporal variable layout definitions
-#'
-#' Internal layout specification for temporal variables (dates, times, periods).
-#' Each element is a string describing a div, variable, label, and function.
-#'
-#' @format A character vector.
-#'
-#' @details Called in \link{get_design}. The layout is the descriptor block +
-#'   preview, then PROPERTIES (1/3) beside the unit-driven graphic (2/3) - a
-#'   calendar heatmap, scatterplot, barchart, or histogram chosen at render from
-#'   `stable_data_unit` by \link{paste_temporal_graphic}. No stats table yet.
-#'
-#' @keywords internal
-#' @noRd
-layout.temporal <-
-  c( "div2 ;; dd_vlabel      ;;              ;; v_to_txt",
-     "div3 ;; desired_data_type ;; DATA TYPE  ;; v_to_txt",
-     "div3 ;; stable_data_unit ;; UNIT       ;; v_to_txt",
-     "div4 ;; dd_vdesc       ;; DESCRIPTION  ;; v_to_txt",
-     "div5 ;; rg_preview     ;; PREVIEW      ;; paste_label",
-     "div6 ;; rg_preview     ;;              ;; paste_preview_chr",
-     "div7 ;; rg_properties  ;; PROPERTIES   ;; paste_properties",
-     "div8 ;; rg_graphics    ;;              ;; paste_temporal_graphic"  )
-
-
-### The default layouts ship as internal package data (R/sysdata.rda). After
-### editing any layout.* above, regenerate it by running:
-# usethis::use_data(
-#   layout.numeric,
-#   layout.character,
-#   layout.factor,
-#   layout.logical,
-#   layout.identifier,
-#   layout.temporal,
-#   internal = TRUE,
-#   overwrite = TRUE
-# )
+    temporal = c(
+      "div2 ;; dd_vlabel      ;;             ;; v_to_txt",
+      attrs( unit = TRUE ),
+      "div4 ;; dd_vdesc       ;; DESCRIPTION ;; v_to_txt",
+      "div5 ;; rg_preview     ;; PREVIEW     ;; paste_label",
+      "div6 ;; rg_preview     ;;             ;; paste_preview_chr",
+      "div7 ;; rg_properties  ;; PROPERTIES  ;; paste_properties",
+      "div8 ;; rg_graphics    ;;             ;; paste_temporal_graphic" )
+  )
+}
