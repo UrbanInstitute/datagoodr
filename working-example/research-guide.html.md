@@ -3822,7 +3822,7 @@ h5 { font-size: 0.9em; }
 /* Emitted as <div class="dg-field"><span class="dg-k">LABEL</span>
    <span class="dg-v">value</span></div>. div3 = short metadata aligned into a
    two-column definition block (dark label + bold mono value); div4 = uppercase
-   label followed by flowing prose (DESCRIPTION, LOCATION CODE). */
+   label followed by flowing prose (e.g. DESCRIPTION). */
 .dg-field .dg-k {
   font-family: var(--dg-sans);
   text-transform: uppercase;
@@ -3935,6 +3935,30 @@ tbody, tfoot, tr, td, th {
 /* graphic anchored to the bottom-right of its cell */
 .div8 img, .div8 svg { align-self: end; justify-self: end; }
 
+/* ==========================================================================
+   Responsive: the three-column grid needs real width. Below ~640px (phones,
+   split-screen or narrow windows) collapse it to a single column so every
+   block stacks full-width, in source order. Without this a 1/3-width div3 is
+   too thin to hold its 6.2em field label plus value, and the value bleeds
+   across into the neighbouring cell.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .parent {
+    grid-template-columns: 1fr;
+    padding-left: 0;                /* reclaim the flush-left title indent */
+  }
+  /* span every cell across the single column (grid-column: span N would create
+     phantom implicit columns); this keeps one full-width block per row. */
+  .div1, .div2, .div3, .div4, .div5, .div6, .div7, .div8, .div9,
+  .blank1, .blank2 { grid-column: 1 / -1; }
+}
+
+/* very narrow (small phones / long values): stack each field's label above its
+   value so a long value can never overrun the fixed label column. */
+@media (max-width: 400px) {
+  .div3 .dg-field { grid-template-columns: 1fr; column-gap: 0; row-gap: 0.05em; }
+}
+
 @media print {
   body {
     display: table;
@@ -3946,4 +3970,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-24T21:25:30Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"68ab223df467da62ef2cdefd8bee9056","dgf_variables":27} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-24T22:39:56Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"68ab223df467da62ef2cdefd8bee9056","dgf_variables":27} -->
