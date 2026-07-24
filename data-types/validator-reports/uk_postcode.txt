@@ -1,0 +1,15 @@
+################  ERROR REPORT: UK postcode ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (61 / 236, 25.8%):
+   XP43 1LU | BJ4N 2BU | SA4I 2BN 
+
+S2 false positives -- negatives wrongly ACCEPTED (26 / 238, 10.9%):
+   SW46 2BU | UM1V 1AU | MO12 2DU 
+
+S3 false positives -- negatives wrongly ACCEPTED (11 / 240, 4.6%):
+   PO1i 2DU | uT4 8US | DT1s8UT 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 55, 0.0%):
+

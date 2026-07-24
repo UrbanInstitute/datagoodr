@@ -1,0 +1,13 @@
+################  ERROR REPORT: SAM.gov UEI ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   ZQ4MHUH74DW7 | ZQGWHJF7Y2W7 | Z8GJN9UD1PWP 
+
+S2 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   ZQ4MHUH74DW7 | ZQGWHJF7Y2W7 | Z8GJN9UD1PWP 
+
+S3 false positives -- negatives wrongly ACCEPTED (1 / 200, 0.5%):
+   WX8YQ7UM6W5S 
+

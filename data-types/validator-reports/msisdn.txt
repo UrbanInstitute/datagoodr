@@ -1,0 +1,12 @@
+################  ERROR REPORT: MSISDN subscriber number ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   911761345678 | 119901335828 | 415944586258 
+
+S2 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   911761345678 | 119901335828 | 415944586258 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+

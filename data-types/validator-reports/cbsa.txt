@@ -1,0 +1,13 @@
+################  ERROR REPORT: CBSA code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (42 / 298, 14.1%):
+   15100 | 10420 | 11940 
+
+S2 false positives -- negatives wrongly ACCEPTED (42 / 298, 14.1%):
+   15100 | 10420 | 11940 
+
+S3 false positives -- negatives wrongly ACCEPTED (4 / 309, 1.3%):
+   10900 | 15100 | 37900 
+

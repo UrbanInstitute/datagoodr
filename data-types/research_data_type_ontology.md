@@ -1,0 +1,112 @@
+# Research Data Type Ontology
+
+This ontology separates the broad value family (`data_type`), its primary structural subtype (`data_subtype`), the semantic role of the variable (`data_class`), its observed representation (`data_format`), unit or scale (`data_unit`), recommended R storage (`data_storage`), and candidate validation rules (`suggested_validation`). Multiple examples or alternatives within a cell are separated by `;;`.
+
+| data_type | data_subtype | data_class | data_format | data_unit | data_storage | suggested_validation |
+| --- | --- | --- | --- | --- | --- | --- |
+| string | token | label | short text ;; title case ;; uppercase |  | character | non-missing if required ;; maximum length ;; trim whitespace ;; normalize case |
+| string | token | code | ABC123 ;; A01.1 ;; alphanumeric code |  | character | allowed character pattern ;; fixed or bounded length ;; preserve leading zeros ;; code-list lookup |
+| string | token | abbreviation | AZ ;; Inc. ;; PhD |  | character | allowed-values list ;; case normalization ;; punctuation normalization |
+| string | token | username | jlecy ;; user_1024 |  | character | unique where required ;; allowed character pattern ;; minimum and maximum length |
+| string | phrase | person_name | Jesse Lecy ;; Lecy, Jesse |  | character | trim whitespace ;; normalize repeated spaces ;; flag digits or invalid punctuation ;; optional name-component parsing |
+| string | phrase | organization_name | Urban Institute ;; Arizona State University |  | character | trim whitespace ;; normalize punctuation and suffixes ;; minimum and maximum length |
+| string | phrase | place_name | Phoenix ;; Maricopa County |  | character | reference-list lookup ;; spelling normalization ;; geographic hierarchy consistency |
+| string | phrase | title | Executive Director ;; Annual Report |  | character | trim whitespace ;; maximum length ;; normalize capitalization |
+| string | sentence | text | single sentence ;; short response ;; UTF-8 text |  | character | maximum length ;; valid encoding ;; trim whitespace ;; flag embedded markup if prohibited |
+| string | passage | long_text | paragraph ;; narrative response ;; abstract |  | character | valid encoding ;; maximum length ;; preserve line breaks ;; flag control characters |
+| string | markup | formatted_text | HTML ;; Markdown ;; XML fragment |  | character | valid syntax where applicable ;; sanitize prohibited tags ;; valid encoding |
+| string | structured | email | user@example.org |  | character | email pattern ;; lowercase domain ;; trim whitespace ;; optional uniqueness |
+| string | structured | phone | (602) 555-1234 ;; +1-602-555-1234 |  | character | valid phone pattern ;; country-code consistency ;; normalize extensions |
+| string | structured | url | https://example.org ;; ftp://example.org |  | character | valid URI syntax ;; allowed schemes ;; trim whitespace |
+| string | structured | address | 123 Main St ;; PO Box 100 ;; multiline address |  | character | minimum component presence ;; postal-code consistency ;; normalize street suffixes |
+| string | structured | postal_code | 85001 ;; 85001-1234 ;; SW1A 1AA |  | character | country-specific pattern ;; preserve leading zeros ;; geographic lookup |
+| string | structured | geographic_code | AZ ;; US-AZ ;; 04013 |  | character | reference-list lookup ;; fixed length ;; preserve leading zeros ;; hierarchy consistency |
+| string | structured | administrative_code | 12-3456789 ;; EIN-12-3456789 ;; CAGE code |  | character | domain-specific pattern ;; checksum where available ;; preserve punctuation and leading zeros |
+| string | structured | classification_code | NTEE B20 ;; NAICS 541720 ;; ICD-10 A01.1 |  | character ;; factor | reference-list lookup ;; valid code vintage ;; parent-child hierarchy consistency |
+| string | serialized | delimited_values | A;B;C ;; red\|blue\|green ;; comma-separated list |  | character ;; list | declared delimiter ;; valid member values ;; no duplicate members ;; escape-character handling |
+| string | serialized | json | ["A","B"] ;; {"x":1} |  | character ;; list | valid JSON ;; expected schema ;; required keys ;; value-type validation |
+| string | serialized | geometry | POINT(-112.07 33.45) ;; GeoJSON | CRS identifier | character ;; sfc | valid geometry syntax ;; valid coordinate bounds ;; declared CRS ;; geometry-type consistency |
+| string | encoded | binary_content | Base64 ;; hexadecimal | encoding scheme | character ;; raw | valid encoding ;; expected decoded size ;; checksum where available |
+| string | unknown | unclassified_text | unknown text pattern |  | character | profile length and characters ;; inspect missing-value tokens ;; defer coercion |
+| string | mixed | mixed_text | labels and numbers ;; multiple incompatible formats |  | character | identify dominant patterns ;; flag exceptions ;; do not coerce until resolved |
+| number | discrete | integer | -2 ;; 0 ;; 15 | integer units | integer ;; double | whole-number check ;; minimum and maximum ;; missingness rules |
+| number | discrete | count | 0 ;; 25 ;; 1042 | events ;; persons ;; organizations | integer ;; integer64 ;; double | nonnegative ;; whole-number check ;; plausible maximum ;; zero allowed |
+| number | discrete | frequency | 0 ;; 3 ;; 14 | occurrences per period | integer ;; integer64 | nonnegative ;; whole-number check ;; period consistency ;; plausible maximum |
+| number | discrete | rank | 1 ;; 2 ;; 15 | rank position | integer | positive integer ;; no impossible ties if unique rank required ;; bounded by group size |
+| number | discrete | score | 0 ;; 7 ;; 100 | scale points | integer ;; double | allowed range ;; permitted increments ;; scale-direction check |
+| number | discrete | coded_value | 1 ;; 2 ;; 9 | codebook-defined | integer ;; factor | allowed-values lookup ;; distinguish missing codes ;; do not treat as quantity |
+| number | continuous | decimal | 1.25 ;; -0.04 ;; 3.14159 | unspecified | double | numeric parse ;; decimal precision ;; minimum and maximum ;; finite-values check |
+| number | continuous | measurement | 12.5 ;; 36 ;; 0.25 | inches ;; kilograms ;; liters ;; degrees Celsius | double | unit declared ;; plausible range ;; precision ;; nonnegative where applicable |
+| number | continuous | currency | 1234.56 ;; $1,234.56 ;; 1.234,56 | USD ;; EUR ;; constant 2025 USD | double ;; integer64 ;; decimal | currency declared ;; locale-aware parsing ;; decimal precision ;; inflation-year consistency |
+| number | continuous | coordinate | 33.4484 ;; -112.0740 | decimal degrees ;; meters | double | CRS declared ;; latitude/longitude bounds ;; coordinate-pair completeness |
+| number | continuous | probability | 0 ;; 0.75 ;; 1 | probability 0-1 | double | minimum 0 ;; maximum 1 ;; finite-values check |
+| number | continuous | proportion | 0.25 ;; 0.873 | proportion 0-1 | double | minimum 0 ;; maximum 1 ;; denominator definition ;; component consistency |
+| number | continuous | percentage | 25 ;; 87.3 ;; 25% | percent 0-100 | double | minimum 0 ;; maximum 100 unless change measure ;; percent-sign normalization |
+| number | continuous | ratio | 2.4 ;; 0.75 ;; 1:5 | numerator/denominator relationship | double | denominator nonzero ;; parsing convention declared ;; plausible range |
+| number | continuous | rate | 4.2 ;; 18.6 | per capita ;; per 1,000 ;; per year | double | denominator and exposure declared ;; nonnegative where applicable ;; period consistency |
+| number | continuous | index | -1.25 ;; 50 ;; 102.4 | index-specific scale | double | documented construction ;; expected range ;; directionality ;; base-period consistency |
+| number | continuous | standardized_score | -2.1 ;; 0 ;; 1.4 | z-score ;; T-score | double | expected center and spread ;; plausible range ;; scale definition |
+| number | continuous | coefficient | -0.23 ;; 1.07 | model-specific | double | finite-values check ;; model and scale metadata ;; sign plausibility where defined |
+| number | continuous | estimate | 14.7 ;; 102.3 | variable-specific | double | finite-values check ;; unit consistency ;; associated uncertainty fields where expected |
+| number | continuous | standard_error | 0.04 ;; 2.13 | same unit as estimate | double | nonnegative ;; finite-values check ;; paired estimate exists |
+| number | continuous | weight | 0.25 ;; 4.7 ;; 125.2 | sampling weight ;; analytic weight | double | positive or nonnegative as defined ;; finite-values check ;; normalization documented |
+| number | bounded | rating | 1 ;; 3.5 ;; 5 | 1-5 scale ;; 0-10 scale | integer ;; double | minimum and maximum ;; permitted increments ;; missing codes excluded |
+| number | bounded | likert_score | 1 ;; 2 ;; 5 | ordered response scale | integer ;; ordered factor | allowed-values list ;; order declared ;; reverse-coded items documented |
+| number | bounded | percentile | 0 ;; 50 ;; 99.5 | percentile 0-100 | double | minimum 0 ;; maximum 100 ;; ranking population declared |
+| number | signed | change | -12 ;; 0 ;; 24 | variable-specific units | integer ;; double | sign allowed ;; base and comparison periods declared ;; reconcile with source values |
+| number | signed | difference | -3.4 ;; 0 ;; 8.1 | variable-specific units | double | sign allowed ;; operand order declared ;; reconcile with component values |
+| number | signed | growth_rate | -5.2 ;; 0 ;; 12.7 | percent per period | double | period declared ;; denominator nonzero ;; outlier and sign checks |
+| number | signed | balance | -1200 ;; 0 ;; 4500 | USD ;; units | double ;; integer64 | sign allowed ;; unit declared ;; accounting reconciliation where applicable |
+| number | large_integer | count | 2147483648 ;; 9000000000 | events ;; records | integer64 ;; double ;; character | whole-number check ;; exceed 32-bit threshold check ;; precision-loss check ;; nonnegative |
+| number | large_integer | currency | 10000000000 | cents ;; dollars | integer64 ;; double ;; decimal | whole-number check if minor units ;; currency declared ;; precision-loss check |
+| number | high_precision | scientific_measurement | 0.0000001234 ;; 6.022e23 | domain-specific | double ;; arbitrary precision ;; character | significant digits ;; exponent bounds ;; unit declared ;; precision-loss check |
+| number | high_precision | financial_amount | 1234.567890 | currency units | decimal ;; character ;; double | required decimal precision ;; rounding rule ;; currency declared |
+| number | interval | confidence_interval | [1.2, 3.8] ;; 1.2-3.8 | same unit as estimate | two doubles ;; list ;; character | lower less than or equal to upper ;; confidence level declared ;; paired estimate within interval when expected |
+| number | interval | numeric_range | 10-20 ;; 100+ | variable-specific | two doubles ;; list ;; character | lower less than or equal to upper ;; open-ended bounds declared ;; unit consistency |
+| number | special | complex_number | 2+3i ;; 0-1i | complex plane | complex | valid complex syntax ;; finite real and imaginary components |
+| number | unknown | unclassified_number | numeric but meaning unknown | unknown | double | profile integerness, range, precision, and missingness ;; defer semantic validation |
+| number | mixed | mixed_numeric | 1 ;; 2.5 ;; $3 ;; N/A | mixed | character ;; double after parsing | identify parse patterns ;; normalize symbols and separators ;; flag nonnumeric exceptions |
+| boolean | logical | indicator | yes/no ;; 1/0 ;; true/false ;; Y/N ;; T/F | binary state | logical ;; integer ;; character | exactly two valid states ;; normalize case ;; distinguish missing from false |
+| boolean | logical | presence | present/absent ;; included/not included ;; 1/0 | binary state | logical ;; integer ;; character | exactly two valid states ;; missingness distinct from absence |
+| boolean | logical | eligibility | eligible/ineligible ;; qualified/not qualified | binary state | logical ;; factor ;; character | exactly two valid states ;; rule-based consistency with eligibility criteria |
+| boolean | logical | status | active/inactive ;; open/closed | binary state | logical ;; factor ;; character | exactly two valid states ;; temporal consistency with status dates |
+| boolean | logical | response | yes/no ;; agree/disagree | binary response | logical ;; factor ;; character | exactly two valid responses ;; missing and refusal codes handled separately |
+| boolean | logical | checkbox | X/blank ;; checked/unchecked ;; 1/0 | binary state | logical ;; integer ;; character | declared checked token ;; blank interpreted explicitly ;; distinguish blank from missing |
+| categorical | nominal | category | red/blue/green ;; A/B/C ;; numeric labels | unordered levels | factor ;; character ;; integer | allowed-values list ;; unexpected-level check ;; missing codes separated |
+| categorical | ordinal | ordered_category | low/medium/high ;; poor/fair/good/excellent | ordered levels | ordered factor ;; integer ;; character | allowed-values list ;; order declared ;; monotonic coding |
+| categorical | binary | two_group_category | case/control ;; treatment/comparison | two unordered levels | factor ;; character ;; integer | exactly two allowed levels ;; reference level declared |
+| categorical | multiselect | multiple_categories | A;B;C ;; red\|blue ;; JSON array | set of levels | character ;; list ;; multiple logical columns | allowed member values ;; delimiter declared ;; no duplicate members ;; cardinality limits |
+| categorical | hierarchical | taxonomy_category | B20 ;; B2 ;; parent/child labels | taxonomy levels | factor ;; character | valid taxonomy node ;; parent-child consistency ;; taxonomy vintage |
+| categorical | geographic | geography | AZ ;; Arizona ;; Maricopa County | geographic levels | factor ;; character | reference-list lookup ;; level declared ;; hierarchy consistency ;; spelling normalization |
+| categorical | classification | classification_code | NAICS 541720 ;; NTEE B20 ;; SOC 19-3099 | classification system | character ;; factor | valid code and vintage ;; code-description consistency ;; hierarchy consistency |
+| categorical | missingness | missingness_reason | unknown ;; refused ;; not applicable ;; suppressed | missingness categories | factor ;; character | allowed missingness codes ;; mutually exclusive reasons ;; separate from substantive values |
+| temporal | point | date | 2026-07-13 ;; 07/13/2026 ;; 13-Jul-2026 | calendar date | Date ;; character | valid calendar date ;; declared order ;; range check ;; no impossible dates |
+| temporal | point | datetime | 2026-07-13T14:30:00-07:00 ;; 2026-07-13 14:30:00 | timestamp | POSIXct ;; POSIXlt ;; character | valid timestamp ;; timezone declared ;; daylight-saving handling ;; range check |
+| temporal | point | time | 14:30 ;; 14:30:15 ;; 2:30 PM | time of day | hms ;; difftime ;; character | valid hour/minute/second ;; 12/24-hour convention ;; timezone if relevant |
+| temporal | period | year | 2025 ;; FY2025 | calendar or fiscal year | integer ;; character | valid year range ;; fiscal/calendar convention declared |
+| temporal | period | year_month | 2025-01 ;; Jan-2025 | calendar month | yearmon ;; Date ;; character | valid month ;; declared parsing convention ;; period range |
+| temporal | period | quarter | 2025Q1 ;; FY24-Q3 | calendar or fiscal quarter | yearqtr ;; character | valid quarter ;; fiscal/calendar convention ;; period range |
+| temporal | period | reporting_period | FY2025 ;; 2025-01-01/2025-12-31 | reporting period | character ;; interval ;; two Date columns | start before or equal to end ;; expected duration ;; overlap and gap checks |
+| temporal | duration | elapsed_time | 90 seconds ;; 2.5 hours ;; P3D | seconds ;; minutes ;; hours ;; days | difftime ;; double ;; duration | nonnegative where applicable ;; unit declared ;; finite-values check |
+| temporal | interval | date_interval | 2025-01-01/2025-12-31 ;; start/end | date interval | interval ;; two Date columns ;; list | start before or equal to end ;; open/closed bounds declared ;; overlap rules |
+| temporal | duration | age | 18 years ;; 15 months ;; 540 days | years ;; months ;; days | integer ;; double ;; difftime | nonnegative ;; plausible maximum ;; reference date declared ;; reconcile with birth date |
+| identifier | surrogate | record_id | 1 ;; 000001 ;; UUID | identifier | character ;; integer ;; integer64 | unique ;; non-missing ;; stable across versions ;; preserve leading zeros |
+| identifier | entity | entity_id | ORG-001 ;; person_123 | identifier | character ;; integer64 | unique within entity domain ;; non-missing where required ;; stable over time |
+| identifier | relational | foreign_key | parent_id ;; lookup_id | identifier | character ;; integer ;; integer64 | referential integrity ;; compatible type with parent key ;; allowed missingness |
+| identifier | composite | composite_key | EIN-year ;; state-county-tract | identifier | character ;; multiple columns | component completeness ;; combined uniqueness ;; delimiter escaping ;; component validation |
+| identifier | geographic | geographic_id | GEOID ;; FIPS ;; ZIP | geographic identifier | character | fixed length ;; preserve leading zeros ;; valid geography vintage ;; hierarchy consistency |
+| identifier | administrative | administrative_id | EIN ;; DUNS ;; permit number | administrative identifier | character | domain-specific pattern ;; checksum where available ;; uniqueness scope ;; preserve leading zeros |
+| identifier | version | version_id | v1.2 ;; revision 3 ;; 20260713 | version identifier | character ;; integer | valid version syntax ;; monotonicity where expected ;; uniqueness within object |
+| identifier | hash | hash | MD5 ;; SHA-1 ;; SHA-256 | hash digest | character ;; raw | expected length and alphabet ;; algorithm declared ;; checksum verification |
+| structured | collection | list | JSON array ;; delimited members ;; nested values | collection | list ;; character | member schema ;; cardinality limits ;; member-type consistency |
+| structured | multidimensional | array | matrix ;; multidimensional array ;; tensor | dimensions | matrix ;; array ;; list | dimension consistency ;; element-type consistency ;; shape declared |
+| structured | record | object | JSON object ;; nested record | record schema | list ;; data.frame ;; character | required keys ;; field types ;; schema version ;; no unexpected keys where strict |
+| structured | mapping | key_value | key:value ;; dictionary ;; named list | mapping | list ;; character | unique keys ;; allowed keys ;; value-type rules ;; valid delimiter or syntax |
+| structured | spatial | geometry | WKT ;; WKB ;; GeoJSON | CRS identifier | sfc ;; raw ;; character | valid geometry ;; CRS declared ;; geometry-type consistency ;; coordinate bounds |
+| binary | bytes | raw_bytes | binary stream ;; byte sequence | bytes | raw | expected length ;; checksum ;; magic-number or signature validation |
+| binary | encoded | encoded_file | Base64 ;; hexadecimal | encoding scheme | character ;; raw | valid encoding ;; decoded MIME type ;; expected size ;; checksum |
+| binary | media | image | PNG ;; JPEG ;; TIFF | file format | raw ;; external file path | valid file signature ;; dimensions ;; MIME type ;; maximum size |
+| binary | document | document | PDF ;; DOCX ;; XLSX | file format | raw ;; external file path | valid file signature ;; MIME type ;; readable file ;; maximum size |
+| unknown | unclassified | unknown | unknown pattern |  | character | retain original values ;; profile candidate types ;; do not coerce automatically |
+| unknown | mixed | mixed_type | numbers, text, and dates mixed |  | character ;; list | identify dominant type ;; flag exceptions ;; split or standardize before coercion |
+| unknown | malformed | parse_failure | corrupted values ;; invalid encoding ;; truncated records |  | character ;; raw | retain source text ;; log parse errors ;; quantify failure rate ;; manual review |

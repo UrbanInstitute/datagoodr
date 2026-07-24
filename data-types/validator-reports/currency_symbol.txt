@@ -1,0 +1,16 @@
+################  ERROR REPORT: currency symbol + amount (regex, max 2 decimals) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (347 / 347, 100.0%):
+   $12.39 | $18.30 | $12.27 
+
+S2 false positives -- negatives wrongly ACCEPTED (113 / 440, 25.7%):
+   $11330 | $12.90 | $18.37 
+
+S3 false positives -- negatives wrongly ACCEPTED (6 / 459, 1.3%):
+   €75 | $14 | $45 
+
+SP false positives -- negatives wrongly ACCEPTED (6 / 122, 4.9%):
+   £11.0 | $09.9 | €55.0 
+

@@ -1,0 +1,127 @@
+---
+title: "Guessing a Column's Type"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Guessing a Column's Type}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+library(datagoodr)
+```
+
+## The chooser above the detectors
+
+The *Data-Type Detector Guide* describes the detector library: dozens of pure
+predicates that each answer one yes/no question about a column
+(`is_currency_code()`, `is_iso_date()`, `is_county_fips()`, ...).
+`guess_data_type()` sits **above** them. Given a column of values, it runs the
+whole library, ranks what matched, and returns a single best guess anchored to
+the ontology --- the function `create_dgf()` leans on to make its first pass at
+typing a dataset.
+
+```{r first}
+g <- guess_data_type(c("USD", "EUR", "JPY", "GBP"))
+g$guess
+g$ontology
+```
+
+The guess is a **detector name** (`"currency_code"`); the ontology coordinates
+say what that means for governance --- a currency code is a `categorical`
+`code`, not a number. The full return value carries the evidence behind the
+call:
+
+```{r return}
+str(g, max.level = 1)
+```
+
+* **`guess`** --- the winning detector, or `NA` when nothing is confident enough.
+* **`ontology`** --- `c(data_type, data_subtype, data_class, data_format)` for the
+  guess.
+* **`confidence`** --- the winner's pass rate (share of values it matched).
+* **`candidates`** --- every type that cleared the reporting `floor`, ranked.
+* **`n`** --- how many unique values were actually scored.
+
+## How it decides
+
+Four steps, designed to stay cheap on a big dataset:
+
+1. **Dedupe + sample.** Only the unique non-missing values are scored, and at
+   most `n_sample` of them (default 100). Scoring a million-row column costs the
+   same as scoring its distinct values.
+2. **Fast tier first.** The fast detectors run first; the slow tier (fuzzy
+   matchers) is consulted only if nothing fast clears `threshold`. (No detectors
+   are slow today, so this is currently a single pass.)
+3. **Rank with tie-breakers.** Candidates are ordered by pass rate, then by a
+   variable-**name** hint, then by **specificity** (a loose, catch-many detector
+   loses a tie to a precise one).
+4. **Map to the ontology.** The winning detector name is resolved to its
+   ontology coordinates.
+
+The raw first step is exposed on its own as `score_data_type()`, which returns
+every detector's pass rate against a set of values:
+
+```{r score}
+score_data_type(c("USD", "EUR", "XYZ"))[1, ]
+```
+
+## The name hint breaks ties the data can't
+
+Some values match more than one type. A five-digit code like `06037` is a valid
+ZIP **and** a valid county FIPS --- both detectors pass at 100%. The data alone
+cannot choose; the **variable name** can:
+
+```{r namehint}
+vals <- c("06037", "36061", "48201", "17031")
+
+guess_data_type(vals, name = "county_fips")$guess
+guess_data_type(vals, name = "zip_code")$guess
+```
+
+Look at the ranked candidates to see *why*. Both types pass at `1.0`, so the
+`name_match` column casts the deciding vote:
+
+```{r candidates}
+guess_data_type(vals, name = "county_fips")$candidates
+```
+
+With no name supplied, the tie falls to the more **specific** detector, so a
+bare column of five-digit codes is not silently mislabeled by whichever type
+happens to sort first.
+
+## Confidence, and the `threshold` / `floor` knobs
+
+When nothing matches well, the honest answer is "I don't know":
+
+```{r unknown}
+guess_data_type(c("apple", "banana", "cherry"))$guess
+```
+
+Two thresholds control how bold the guess is:
+
+* **`threshold`** (default `0.8`) --- the top type must match at least this share
+  of values to be *reported* as the guess; below it, `guess` is `NA`.
+* **`floor`** (default `0.5`) --- the minimum pass rate for a type to even appear
+  in `candidates`.
+
+Lower the threshold to accept a messier column; raise it to demand near-uniform
+matches. Because scoring is separated from the decision, you can also inspect
+`candidates` yourself and apply your own rule.
+
+```{r knobs}
+# a column that is 3/4 ISO dates: unknown at the default, a date if you relax it
+messy <- c("2016-03-15", "2016-03-13", "1999-12-31", "not a date")
+guess_data_type(messy)$guess               # NA (below 0.8)
+guess_data_type(messy, threshold = 0.7)$guess
+```
+
+## Where it is used
+
+`create_dgf()` calls `guess_data_type()` once per column (via
+`guess_dgf_types()`), passing the variable name as the hint, to seed each
+variable's `desired_data_type` / `subtype` / `class` and to flag near-unique
+keys. You then correct what the data alone could not reveal --- see the
+*Rule-Based Data Governance* vignette for that workflow, and the *Data-Type
+Detector Guide* for the predicates underneath.

@@ -1,0 +1,13 @@
+################  ERROR REPORT: UniProt accession ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (73 / 235, 31.1%):
+   P33627 | P35664 | P32947 
+
+S2 false positives -- negatives wrongly ACCEPTED (73 / 235, 31.1%):
+   P33627 | P35664 | P32947 
+
+S3 false positives -- negatives wrongly ACCEPTED (4 / 235, 1.7%):
+   Q9BWQ1 | X7W830 | T9K6K9 
+

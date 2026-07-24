@@ -1,0 +1,14 @@
+################  ERROR REPORT: MAC address ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (240 / 240, 100.0%):
+   40-6F-3C-B6-3C-B4 | 42-17-8a-Ba-5C-BC | fA-B6-eC-C6-dC-DC 
+
+S2 false positives -- negatives wrongly ACCEPTED (6 / 240, 2.5%):
+   14-1F-8E-dC-75-ae | 2a-14-eC-75-E5-7B | 9D-a7-eF-F2-9F-DE 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 223, 0.0%):
+

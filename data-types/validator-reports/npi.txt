@@ -1,0 +1,12 @@
+################  ERROR REPORT: US NPI (health provider) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (17 / 200, 8.5%):
+   7226154889 | 2222051130 | 1640367276 
+
+S2 false positives -- negatives wrongly ACCEPTED (17 / 200, 8.5%):
+   7226154889 | 2222051130 | 1640367276 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+

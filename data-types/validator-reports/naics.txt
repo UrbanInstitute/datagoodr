@@ -1,0 +1,13 @@
+################  ERROR REPORT: NAICS industry code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (26 / 190, 13.7%):
+   31 | 22 | 48 
+
+S2 false positives -- negatives wrongly ACCEPTED (26 / 190, 13.7%):
+   31 | 22 | 48 
+
+S3 false positives -- negatives wrongly ACCEPTED (1 / 228, 0.4%):
+   71 
+

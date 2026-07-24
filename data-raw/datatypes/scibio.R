@@ -1,0 +1,44 @@
+## data-raw/datatypes/scibio.R
+## Positive examples for the SCIENTIFIC / BIO IDENTIFIER family. Seeded from
+## the AutoType benchmark, expanded with canonical accessions/codes.
+
+ensembl_id <- c(
+  "ENSMUSG00000102659", "ENSMUSG00000093178", "ENST00000407559",
+  "ENSG00000139618", "ENSG00000158636", "ENSG00000107949",
+  "ENSMUSG00000027967", "ENSDARG00000024771", "ENSG00000141510",
+  "ENSP00000269305", "ENST00000380152", "ENSMUST00000000001"
+)
+
+uniprot_id <- c(
+  "P33667", "P17888", "P02338", "Q9BWD1", "Q46806", "P33353",
+  "P75830", "Q9LJX4", "P00533", "Q9Y6K9", "O00255", "P0DTC2"
+)
+
+icd9_code <- c(
+  "078.11", "008.8", "005.9", "117.9", "003.0", "098.0", "041.86",
+  "070.9", "250.00", "401.9", "V70.0", "E880.9"
+)
+
+icd10_code <- c(
+  "I61", "I63", "G45", "D76.0", "D76.3", "D76.1", "E75.2", "C93.0",
+  "A00", "J45.909", "S72.001A", "Z00.00"
+)
+
+snp_id <- c(
+  "rs3918290", "rs1801159", "rs1801265", "rs17376848", "rs1801160",
+  "rs2297595", "rs112036357", "rs151125290", "rs53576", "rs1815739",
+  "rs7412", "rs429358"
+)
+
+asin <- c(
+  "B01L7DYXL0", "B0065RHC2Q", "B004M8T1XS", "B004M8T30O", "B0065RRJGK",
+  "B004M8T1QK", "B004M8T34A", "B0065RNRR0", "B00ZV9PXP2", "B07FZ8S74R",
+  "B08N5WRWNW", "B09G9FPHY6"
+)
+
+bibcode <- c(
+  "2004PASP..116...98K", "2003ApJ...597..957H", "2003A&A...405..175M",
+  "2003ApJ...590..895W", "2003A&A...404..249B", "2002ApJS..138...35H",
+  "2000ApJ...541..308H", "1999MNRAS.308..473F", "1998AJ....116..759C",
+  "1995ApJ...438..527H", "1974AJ.....79..819H", "2016MNRAS.455.1691H"
+)

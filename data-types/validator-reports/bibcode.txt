@@ -1,0 +1,16 @@
+################  ERROR REPORT: ADS bibcode ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (42 / 240, 17.5%):
+   2504MAJ4..3B6...99K | 2004P2JS..1KB...9BP | 2507ApJ...C9A..9pPH 
+
+S2 false positives -- negatives wrongly ACCEPTED (43 / 240, 17.9%):
+   2204PNAP.R11632K98F | 2094PAARCW79CW.N98K | 2003ppJ.H&698..05MP 
+
+S3 false positives -- negatives wrongly ACCEPTED (4 / 240, 1.7%):
+   2003A6c.wT59U..55bW | 2003A&AY.z4s8..249B | 20034&A.V.J04..24BB 
+
+SP false positives -- negatives wrongly ACCEPTED (111 / 213, 52.1%):
+   2004PAS.P.11..6.98K | 2004..PASP..11698.K | 2004PA.SP.116...98K 
+

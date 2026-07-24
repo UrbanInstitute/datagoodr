@@ -1,0 +1,14 @@
+################  ERROR REPORT: ISO 8601 date ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (67 / 199, 33.7%):
+   0006-08-16 | 7015-09-14 | 2010-03-15 
+
+S2 false positives -- negatives wrongly ACCEPTED (17 / 199, 8.5%):
+   9016-02-15 | 7026-03-13 | 0016-03-13 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 110, 0.0%):
+

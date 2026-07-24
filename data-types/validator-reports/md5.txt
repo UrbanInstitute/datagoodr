@@ -1,0 +1,12 @@
+################  ERROR REPORT: MD5 digest (32 hex) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   6e1f6548a62364b29da9b91c6d61e1a7 | 8ffaa44da6136923dda5e91fd8e27fdd | ee6a6448a0ee642f5da9e91fd8613f7c 
+
+S2 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   6e1f6548a62364b29da9b91c6d61e1a7 | 8ffaa44da6136923dda5e91fd8e27fdd | ee6a6448a0ee642f5da9e91fd8613f7c 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+

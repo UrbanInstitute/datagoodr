@@ -1,0 +1,15 @@
+################  ERROR REPORT: international phone number ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (199 / 199, 100.0%):
+   +1-9240013981 | +1-4650538781 | +1-4300382783 
+
+S2 false positives -- negatives wrongly ACCEPTED (56 / 200, 28.0%):
+   +101230013981 | +15426 3(398( | +5-225673-981 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (66 / 180, 36.7%):
+   +1425-0013981 | +14250-013981 | +61 36 216 0864 
+

@@ -1,0 +1,12 @@
+################  ERROR REPORT: Chinese resident ID ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (13 / 140, 9.3%):
+   141700197808190444 | 931026117701848330 | 317711198699115795 
+
+S2 false positives -- negatives wrongly ACCEPTED (13 / 140, 9.3%):
+   141700197808190444 | 931026117701848330 | 317711198699115795 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 140, 0.0%):
+

@@ -1,0 +1,94 @@
+﻿data_type,data_subtype,data_format,data_unit,data_class,data_storage,suggested_validation
+string,token,short text ;; title case ;; uppercase,,label,character,non-missing if required ;; maximum length ;; trim whitespace ;; normalize case
+string,token,ABC123 ;; A01.1 ;; alphanumeric code,,code,character,allowed character pattern ;; fixed or bounded length ;; preserve leading zeros ;; code-list lookup
+string,token,AZ ;; Inc. ;; PhD,,abbreviation,character,allowed-values list ;; case normalization ;; punctuation normalization
+string,token,jlecy ;; user_1024,,username,character,unique where required ;; allowed character pattern ;; minimum and maximum length
+string,phrase,"Jesse Lecy ;; Lecy, Jesse",,person_name,character,trim whitespace ;; normalize repeated spaces ;; flag digits or invalid punctuation ;; optional name-component parsing
+string,phrase,Urban Institute ;; Arizona State University,,organization_name,character,trim whitespace ;; normalize punctuation and suffixes ;; minimum and maximum length
+string,phrase,Phoenix ;; Maricopa County,,place_name,character,reference-list lookup ;; spelling normalization ;; geographic hierarchy consistency
+string,phrase,Executive Director ;; Annual Report,,title,character,trim whitespace ;; maximum length ;; normalize capitalization
+string,sentence,single sentence ;; short response ;; UTF-8 text,,text,character,maximum length ;; valid encoding ;; trim whitespace ;; flag embedded markup if prohibited
+string,passage,paragraph ;; narrative response ;; abstract,,long_text,character,valid encoding ;; maximum length ;; preserve line breaks ;; flag control characters
+string,markup,HTML ;; Markdown ;; XML fragment,,formatted_text,character,valid syntax where applicable ;; sanitize prohibited tags ;; valid encoding
+string,structured,user@example.org,,email,character,email pattern ;; lowercase domain ;; trim whitespace ;; optional uniqueness
+string,structured,(602) 555-1234 ;; +1-602-555-1234,,phone,character,valid phone pattern ;; country-code consistency ;; normalize extensions
+string,structured,https://example.org ;; ftp://example.org,,url,character,valid URI syntax ;; allowed schemes ;; trim whitespace
+string,structured,123 Main St ;; PO Box 100 ;; multiline address,,address,character,minimum component presence ;; postal-code consistency ;; normalize street suffixes
+string,structured,85001 ;; 85001-1234 ;; SW1A 1AA,,postal_code,character,country-specific pattern ;; preserve leading zeros ;; geographic lookup
+string,structured,AZ ;; US-AZ ;; 04013,,geographic_code,character,reference-list lookup ;; fixed length ;; preserve leading zeros ;; hierarchy consistency
+string,structured,12-3456789 ;; EIN-12-3456789 ;; CAGE code,,administrative_code,character,domain-specific pattern ;; checksum where available ;; preserve punctuation and leading zeros
+string,structured,NTEE B20 ;; NAICS 541720 ;; ICD-10 A01.1,,classification_code,character ;; factor,reference-list lookup ;; valid code vintage ;; parent-child hierarchy consistency
+string,serialized,A;B;C ;; red|blue|green ;; comma-separated list,,delimited_values,character ;; list,declared delimiter ;; valid member values ;; no duplicate members ;; escape-character handling
+string,serialized,"[""A"",""B""] ;; {""x"":1}",,json,character ;; list,valid JSON ;; expected schema ;; required keys ;; value-type validation
+string,serialized,POINT(-112.07 33.45) ;; GeoJSON,CRS identifier,geometry,character ;; sfc,valid geometry syntax ;; valid coordinate bounds ;; declared CRS ;; geometry-type consistency
+string,encoded,Base64 ;; hexadecimal,encoding scheme,binary_content,character ;; raw,valid encoding ;; expected decoded size ;; checksum where available
+string,unknown,unknown text pattern,,unclassified_text,character,profile length and characters ;; inspect missing-value tokens ;; defer coercion
+string,mixed,labels and numbers ;; multiple incompatible formats,,mixed_text,character,identify dominant patterns ;; flag exceptions ;; do not coerce until resolved
+number,discrete,-2 ;; 0 ;; 15,integer units,integer,integer ;; double,whole-number check ;; minimum and maximum ;; missingness rules
+number,discrete,0 ;; 25 ;; 1042,events ;; persons ;; organizations,count,integer ;; integer64 ;; double,nonnegative ;; whole-number check ;; plausible maximum ;; zero allowed
+number,discrete,0 ;; 3 ;; 14,occurrences per period,frequency,integer ;; integer64,nonnegative ;; whole-number check ;; period consistency ;; plausible maximum
+number,discrete,1 ;; 2 ;; 15,rank position,rank,integer,positive integer ;; no impossible ties if unique rank required ;; bounded by group size
+number,discrete,0 ;; 7 ;; 100,scale points,score,integer ;; double,allowed range ;; permitted increments ;; scale-direction check
+number,discrete,1 ;; 2 ;; 9,codebook-defined,coded_value,integer ;; factor,allowed-values lookup ;; distinguish missing codes ;; do not treat as quantity
+number,continuous,1.25 ;; -0.04 ;; 3.14159,unspecified,decimal,double,numeric parse ;; decimal precision ;; minimum and maximum ;; finite-values check
+number,continuous,12.5 ;; 36 ;; 0.25,inches ;; kilograms ;; liters ;; degrees Celsius,measurement,double,unit declared ;; plausible range ;; precision ;; nonnegative where applicable
+number,continuous,"1234.56 ;; $1,234.56 ;; 1.234,56",USD ;; EUR ;; constant 2025 USD,currency,double ;; integer64 ;; decimal,currency declared ;; locale-aware parsing ;; decimal precision ;; inflation-year consistency
+number,continuous,33.4484 ;; -112.0740,decimal degrees ;; meters,coordinate,double,CRS declared ;; latitude/longitude bounds ;; coordinate-pair completeness
+number,continuous,0 ;; 0.75 ;; 1,probability 0-1,probability,double,minimum 0 ;; maximum 1 ;; finite-values check
+number,continuous,0.25 ;; 0.873,proportion 0-1,proportion,double,minimum 0 ;; maximum 1 ;; denominator definition ;; component consistency
+number,continuous,25 ;; 87.3 ;; 25%,percent 0-100,percentage,double,minimum 0 ;; maximum 100 unless change measure ;; percent-sign normalization
+number,continuous,2.4 ;; 0.75 ;; 1:5,numerator/denominator relationship,ratio,double,denominator nonzero ;; parsing convention declared ;; plausible range
+number,continuous,4.2 ;; 18.6,"per capita ;; per 1,000 ;; per year",rate,double,denominator and exposure declared ;; nonnegative where applicable ;; period consistency
+number,continuous,-1.25 ;; 50 ;; 102.4,index-specific scale,index,double,documented construction ;; expected range ;; directionality ;; base-period consistency
+number,continuous,-2.1 ;; 0 ;; 1.4,z-score ;; T-score,standardized_score,double,expected center and spread ;; plausible range ;; scale definition
+number,continuous,-0.23 ;; 1.07,model-specific,coefficient,double,finite-values check ;; model and scale metadata ;; sign plausibility where defined
+number,continuous,14.7 ;; 102.3,variable-specific,estimate,double,finite-values check ;; unit consistency ;; associated uncertainty fields where expected
+number,continuous,0.04 ;; 2.13,same unit as estimate,standard_error,double,nonnegative ;; finite-values check ;; paired estimate exists
+number,continuous,0.25 ;; 4.7 ;; 125.2,sampling weight ;; analytic weight,weight,double,positive or nonnegative as defined ;; finite-values check ;; normalization documented
+number,bounded,1 ;; 3.5 ;; 5,1-5 scale ;; 0-10 scale,rating,integer ;; double,minimum and maximum ;; permitted increments ;; missing codes excluded
+number,bounded,1 ;; 2 ;; 5,ordered response scale,likert_score,integer ;; ordered factor,allowed-values list ;; order declared ;; reverse-coded items documented
+number,bounded,0 ;; 50 ;; 99.5,percentile 0-100,percentile,double,minimum 0 ;; maximum 100 ;; ranking population declared
+number,signed,-12 ;; 0 ;; 24,variable-specific units,change,integer ;; double,sign allowed ;; base and comparison periods declared ;; reconcile with source values
+number,signed,-3.4 ;; 0 ;; 8.1,variable-specific units,difference,double,sign allowed ;; operand order declared ;; reconcile with component values
+number,signed,-5.2 ;; 0 ;; 12.7,percent per period,growth_rate,double,period declared ;; denominator nonzero ;; outlier and sign checks
+number,signed,-1200 ;; 0 ;; 4500,USD ;; units,balance,double ;; integer64,sign allowed ;; unit declared ;; accounting reconciliation where applicable
+number,large_integer,2147483648 ;; 9000000000,events ;; records,count,integer64 ;; double ;; character,whole-number check ;; exceed 32-bit threshold check ;; precision-loss check ;; nonnegative
+number,large_integer,10000000000,cents ;; dollars,currency,integer64 ;; double ;; decimal,whole-number check if minor units ;; currency declared ;; precision-loss check
+number,high_precision,0.0000001234 ;; 6.022e23,domain-specific,scientific_measurement,double ;; arbitrary precision ;; character,significant digits ;; exponent bounds ;; unit declared ;; precision-loss check
+number,high_precision,1234.56789,currency units,financial_amount,decimal ;; character ;; double,required decimal precision ;; rounding rule ;; currency declared
+number,interval,"[1.2, 3.8] ;; 1.2-3.8",same unit as estimate,confidence_interval,two doubles ;; list ;; character,lower less than or equal to upper ;; confidence level declared ;; paired estimate within interval when expected
+number,interval,10-20 ;; 100+,variable-specific,numeric_range,two doubles ;; list ;; character,lower less than or equal to upper ;; open-ended bounds declared ;; unit consistency
+number,special,2+3i ;; 0-1i,complex plane,complex_number,complex,valid complex syntax ;; finite real and imaginary components
+boolean,logical,yes/no ;; 1/0 ;; true/false ;; Y/N ;; T/F,binary state,indicator,logical ;; integer ;; character,exactly two valid states ;; normalize case ;; distinguish missing from false
+boolean,logical,present/absent ;; included/not included ;; 1/0,binary state,presence,logical ;; integer ;; character,exactly two valid states ;; missingness distinct from absence
+boolean,logical,eligible/ineligible ;; qualified/not qualified,binary state,eligibility,logical ;; factor ;; character,exactly two valid states ;; rule-based consistency with eligibility criteria
+boolean,logical,active/inactive ;; open/closed,binary state,status,logical ;; factor ;; character,exactly two valid states ;; temporal consistency with status dates
+boolean,logical,yes/no ;; agree/disagree,binary response,response,logical ;; factor ;; character,exactly two valid responses ;; missing and refusal codes handled separately
+boolean,logical,X/blank ;; checked/unchecked ;; 1/0,binary state,checkbox,logical ;; integer ;; character,declared checked token ;; blank interpreted explicitly ;; distinguish blank from missing
+categorical,nominal,red/blue/green ;; A/B/C ;; numeric labels,unordered levels,category,factor ;; character ;; integer,allowed-values list ;; unexpected-level check ;; missing codes separated
+categorical,ordinal,low/medium/high ;; poor/fair/good/excellent,ordered levels,ordered_category,ordered factor ;; integer ;; character,allowed-values list ;; order declared ;; monotonic coding
+categorical,binary,case/control ;; treatment/comparison,two unordered levels,two_group_category,factor ;; character ;; integer,exactly two allowed levels ;; reference level declared
+categorical,multiselect,A;B;C ;; red|blue ;; JSON array,set of levels,multiple_categories,character ;; list ;; multiple logical columns,allowed member values ;; delimiter declared ;; no duplicate members ;; cardinality limits
+categorical,hierarchical,B20 ;; B2 ;; parent/child labels,taxonomy levels,taxonomy_category,factor ;; character,valid taxonomy node ;; parent-child consistency ;; taxonomy vintage
+categorical,geographic,AZ ;; Arizona ;; Maricopa County,geographic levels,geography,factor ;; character,reference-list lookup ;; level declared ;; hierarchy consistency ;; spelling normalization
+categorical,classification,NAICS 541720 ;; NTEE B20 ;; SOC 19-3099,classification system,classification_code,character ;; factor,valid code and vintage ;; code-description consistency ;; hierarchy consistency
+categorical,missingness,unknown ;; refused ;; not applicable ;; suppressed,missingness categories,missingness_reason,factor ;; character,allowed missingness codes ;; mutually exclusive reasons ;; separate from substantive values
+temporal,point,2026-07-13 ;; 07/13/2026 ;; 13-Jul-2026,calendar date,date,Date ;; character,valid calendar date ;; declared order ;; range check ;; no impossible dates
+temporal,point,2026-07-13T14:30:00-07:00 ;; 2026-07-13 14:30:00,timestamp,datetime,POSIXct ;; POSIXlt ;; character,valid timestamp ;; timezone declared ;; daylight-saving handling ;; range check
+temporal,point,14:30 ;; 14:30:15 ;; 2:30 PM,time of day,time,hms ;; difftime ;; character,valid hour/minute/second ;; 12/24-hour convention ;; timezone if relevant
+temporal,period,2025 ;; FY2025,calendar or fiscal year,year,integer ;; character,valid year range ;; fiscal/calendar convention declared
+temporal,period,2025-01 ;; Jan-2025,calendar month,year_month,yearmon ;; Date ;; character,valid month ;; declared parsing convention ;; period range
+temporal,period,2025Q1 ;; FY24-Q3,calendar or fiscal quarter,quarter,yearqtr ;; character,valid quarter ;; fiscal/calendar convention ;; period range
+temporal,period,FY2025 ;; 2025-01-01/2025-12-31,reporting period,reporting_period,character ;; interval ;; two Date columns,start before or equal to end ;; expected duration ;; overlap and gap checks
+temporal,duration,90 seconds ;; 2.5 hours ;; P3D,seconds ;; minutes ;; hours ;; days,elapsed_time,difftime ;; double ;; duration,nonnegative where applicable ;; unit declared ;; finite-values check
+temporal,interval,2025-01-01/2025-12-31 ;; start/end,date interval,date_interval,interval ;; two Date columns ;; list,start before or equal to end ;; open/closed bounds declared ;; overlap rules
+temporal,duration,18 years ;; 15 months ;; 540 days,years ;; months ;; days,age,integer ;; double ;; difftime,nonnegative ;; plausible maximum ;; reference date declared ;; reconcile with birth date
+identifier,surrogate,1 ;; 000001 ;; UUID,identifier,record_id,character ;; integer ;; integer64,unique ;; non-missing ;; stable across versions ;; preserve leading zeros
+identifier,entity,ORG-001 ;; person_123,identifier,entity_id,character ;; integer64,unique within entity domain ;; non-missing where required ;; stable over time
+identifier,relational,parent_id ;; lookup_id,identifier,foreign_key,character ;; integer ;; integer64,referential integrity ;; compatible type with parent key ;; allowed missingness
+identifier,composite,EIN-year ;; state-county-tract,identifier,composite_key,character ;; multiple columns,component completeness ;; combined uniqueness ;; delimiter escaping ;; component validation
+identifier,geographic,GEOID ;; FIPS ;; ZIP,geographic identifier,geographic_id,character,fixed length ;; preserve leading zeros ;; valid geography vintage ;; hierarchy consistency
+identifier,administrative,EIN ;; DUNS ;; permit number,administrative identifier,administrative_id,character,domain-specific pattern ;; checksum where available ;; uniqueness scope ;; preserve leading zeros
+identifier,version,v1.2 ;; revision 3 ;; 20260713,version identifier,version_id,character ;; integer,valid version syntax ;; monotonicity where expected ;; uniqueness within object
+identifier,hash,MD5 ;; SHA-1 ;; SHA-256,hash digest,hash,character ;; raw,expected length and alphabet ;; algorithm declared ;; checksum verification
+unknown,unclassified,unknown pattern,,unknown,character,retain original values ;; profile candidate types ;; do not coerce automatically

@@ -1,0 +1,15 @@
+################  ERROR REPORT: US ZIP code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (303 / 303, 100.0%):
+   98822 | 99012 | 98887 
+
+S2 false positives -- negatives wrongly ACCEPTED (225 / 303, 74.3%):
+   98822 | 99012 | 98887 
+
+S3 false positives -- negatives wrongly ACCEPTED (6 / 313, 1.9%):
+   27992 | 15001 | 10011 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 13, 0.0%):
+

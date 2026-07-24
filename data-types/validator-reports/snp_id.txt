@@ -1,0 +1,12 @@
+################  ERROR REPORT: dbSNP reference SNP ID ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (33 / 237, 13.9%):
+   rs1912698 | rs1815159 | rs8801159 
+
+S2 false positives -- negatives wrongly ACCEPTED (33 / 237, 13.9%):
+   rs1912698 | rs1815159 | rs8801159 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 238, 0.0%):
+

@@ -1,0 +1,15 @@
+################  ERROR REPORT: DOI ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (9 / 200, 4.5%):
+   10.1129/I3DCSW.25C7.43 | 10.1105/PIPIC.2015.r3M37n4 | 10.1038/zphys117I 
+
+S2 false positives -- negatives wrongly ACCEPTED (1 / 200, 0.5%):
+   10.0109/In5heW26M4.84 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (23 / 175, 13.1%):
+   10.1109/ICDCSW2017..43 | 10.1109/ICDCSW2.017.43 | 10.1109/ICDCSW.2.01743 
+

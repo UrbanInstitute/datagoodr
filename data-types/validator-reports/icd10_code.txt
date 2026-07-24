@@ -1,0 +1,15 @@
+################  ERROR REPORT: ICD-10 code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (85 / 213, 39.9%):
+   I69 | I66 | J61 
+
+S2 false positives -- negatives wrongly ACCEPTED (55 / 227, 24.2%):
+   I66 | A61 | Z61 
+
+S3 false positives -- negatives wrongly ACCEPTED (8 / 223, 3.6%):
+   I11 | Q61 | I93 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 33, 0.0%):
+

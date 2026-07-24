@@ -1,0 +1,13 @@
+################  ERROR REPORT: Roman numeral ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (37 / 149, 24.8%):
+   DX | DI | CI 
+
+S2 false positives -- negatives wrongly ACCEPTED (37 / 149, 24.8%):
+   DX | DI | CI 
+
+S3 false positives -- negatives wrongly ACCEPTED (3 / 290, 1.0%):
+   DII | CIII | CL 
+

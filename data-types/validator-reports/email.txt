@@ -1,0 +1,16 @@
+################  ERROR REPORT: email address ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (204 / 300, 68.0%):
+   cjxngcins0@de.ru | 0juto1wns1@ee.vu | bbudgkcnv0@de.wb 
+
+S2 false positives -- negatives wrongly ACCEPTED (45 / 300, 15.0%):
+   cjhngcins0@de.ku | cjva2ain@73d2.ve | cgurrkinl0@wc.sd 
+
+S3 false positives -- negatives wrongly ACCEPTED (3 / 300, 1.0%):
+   cjhagVins0@de.fu | nscoZZh7@AtuJkleupYe.eom | uRerMNag@gmril.bIm 
+
+SP false positives -- negatives wrongly ACCEPTED (95 / 219, 43.4%):
+   cjudgki@ns0de.vu | cj@udgkins0de.vu | cjudgk@ins0.devu 
+

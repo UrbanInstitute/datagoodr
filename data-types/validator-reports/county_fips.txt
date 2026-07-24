@@ -1,0 +1,13 @@
+################  ERROR REPORT: county FIPS code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (221 / 298, 74.2%):
+   06617 | 06665 | 06337 
+
+S2 false positives -- negatives wrongly ACCEPTED (221 / 298, 74.2%):
+   06617 | 06665 | 06337 
+
+S3 false positives -- negatives wrongly ACCEPTED (5 / 307, 1.6%):
+   12986 | 25015 | 31001 
+

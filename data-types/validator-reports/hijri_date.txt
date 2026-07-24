@@ -1,0 +1,13 @@
+################  ERROR REPORT: Hijri (Islamic) date ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (1 / 160, 0.6%):
+   15 Shaban 5443 
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 160, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 160, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 99, 0.0%):
+

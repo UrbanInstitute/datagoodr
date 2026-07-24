@@ -1,0 +1,14 @@
+################  ERROR REPORT: US/NANP phone number ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (210 / 240, 87.5%):
+   511-597-3201 | 111-574-3726 | 543-273-3260 
+
+S2 false positives -- negatives wrongly ACCEPTED (5 / 240, 2.1%):
+   610-574-3221 | (609)-763-4401 | 650-334-9916 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 181, 0.0%):
+

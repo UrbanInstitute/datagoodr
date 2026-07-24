@@ -1,0 +1,14 @@
+################  ERROR REPORT: HSL triple (H, S%, L%) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (117 / 231, 50.6%):
+   113, 100%, 29% | 122, 100%, 64% | 116, 50%, 00% 
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 237, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (9 / 231, 3.9%):
+   196,60%, 49 % | 200,29%,  55% | 200,61%,  50% 
+

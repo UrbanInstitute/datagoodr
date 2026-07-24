@@ -1,0 +1,14 @@
+################  ERROR REPORT: GUID / UUID ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   f2dc9860-1d1a-F9F8-942f-7fedf994a811 | f1a12966-1d1a-d829-4a2f-F99Ffad5a8fe | f26cc36a-1d9a-49F8-f150-f9cdffd5a01e 
+
+S2 false positives -- negatives wrongly ACCEPTED (7 / 200, 3.5%):
+   26d4c66d-9a50-476b-9e7c-9F08adfa765c | 2ffd5e6b-9db8-ab0a-deF6-c1087dd2e676 | 0eFc64f5-2e3f-46de-c356-075b25f8c9bf 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 184, 0.0%):
+

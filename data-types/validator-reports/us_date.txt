@@ -1,0 +1,15 @@
+################  ERROR REPORT: US numeric date (M/D/Y) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (118 / 192, 61.5%):
+   3/1/17 | 9/6/16 | 8/2/16 
+
+S2 false positives -- negatives wrongly ACCEPTED (25 / 200, 12.5%):
+   3/3/46 | 3/3/14 | 8/7/16 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (3 / 93, 3.2%):
+   1/2/716 | 1/2/3199 | 1/01/85 
+

@@ -1,0 +1,13 @@
+################  ERROR REPORT: date range ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (23 / 160, 14.4%):
+   07/81/86 to 08/00/36 | 07/99/06 to 04/89/16 | 47/27/17 to 03/69/83 
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 160, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 160, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 156, 0.0%):
+

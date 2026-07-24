@@ -1,0 +1,16 @@
+################  ERROR REPORT: RGB triple (0-255) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (79 / 251, 31.5%):
+   220,210,220 | 020,226,238 | 220,243,220 
+
+S2 false positives -- negatives wrongly ACCEPTED (18 / 256, 7.0%):
+   229,229,220 | 255,25 ,050 | 243,230,240 
+
+S3 false positives -- negatives wrongly ACCEPTED (1 / 259, 0.4%):
+   5,0,0 
+
+SP false positives -- negatives wrongly ACCEPTED (5 / 144, 3.5%):
+   22,0220,220 | 255,25,0250 | 128 , 64,32 
+

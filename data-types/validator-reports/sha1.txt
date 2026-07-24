@@ -1,0 +1,12 @@
+################  ERROR REPORT: SHA-1 digest (40 hex) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   16c173e8fcd093e65a441a884c79b407071503aa | 1ed7e8ea9cd0930a6ba68a804c4d30c6077b238d | 166ef0f8fc1593464ab1ba893c84bac6871b66ab 
+
+S2 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   16c173e8fcd093e65a441a884c79b407071503aa | 1ed7e8ea9cd0930a6ba68a804c4d30c6077b238d | 166ef0f8fc1593464ab1ba893c84bac6871b66ab 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+

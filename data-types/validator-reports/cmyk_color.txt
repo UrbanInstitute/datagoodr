@@ -1,0 +1,14 @@
+################  ERROR REPORT: CMYK quadruple (0-1) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (23 / 237, 9.7%):
+   0.4,0.31,0.37,0.2 | 0.0,0.36,0.47,0.0 | 0.0,0.01,0.96,0.0 
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 238, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 239, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (2 / 216, 0.9%):
+   00.,0.31,0.37,00. | 00.9,0.41,0.0,0.0 
+

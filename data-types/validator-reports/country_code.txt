@@ -1,0 +1,13 @@
+################  ERROR REPORT: ISO 3166-1 country code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (91 / 195, 46.7%):
+   BI | MR | FM 
+
+S2 false positives -- negatives wrongly ACCEPTED (91 / 195, 46.7%):
+   BI | MR | FM 
+
+S3 false positives -- negatives wrongly ACCEPTED (64 / 296, 21.6%):
+   TH | Mt | Mk 
+

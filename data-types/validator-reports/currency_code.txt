@@ -1,0 +1,13 @@
+################  ERROR REPORT: currency code (ISO 4217 lookup) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (5 / 468, 1.1%):
+   AMD | SRD | MNT 
+
+S2 false positives -- negatives wrongly ACCEPTED (5 / 468, 1.1%):
+   AMD | SRD | MNT 
+
+S3 false positives -- negatives wrongly ACCEPTED (3 / 497, 0.6%):
+   cHF | NzD | kRW 
+

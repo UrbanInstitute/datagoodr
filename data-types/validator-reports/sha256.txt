@@ -1,0 +1,12 @@
+################  ERROR REPORT: SHA-256 digest (64 hex) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   96726bea0e727b404724e951878656c5ca2f55117bd40bb776aa6c1ebd815bb0 | 667162e70985cb199c244d5fa656f90accc65a6478fcebb0e9ac9a1f2d5c6629 | b69e82ea0d727b419724cd1f96b659aa7f165a7978c1bdb376c61ce499d10d51 
+
+S2 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   96726bea0e727b404724e951878656c5ca2f55117bd40bb776aa6c1ebd815bb0 | 667162e70985cb199c244d5fa656f90accc65a6478fcebb0e9ac9a1f2d5c6629 | b69e82ea0d727b419724cd1f96b659aa7f165a7978c1bdb376c61ce499d10d51 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+

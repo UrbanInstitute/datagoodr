@@ -29,6 +29,7 @@ Imports:
 Suggests:
     DescTools,
     crosswalkr,
+    ISOcodes,
     fs,
     ggplot2,
     ggwordcloud,
@@ -37,7 +38,9 @@ Suggests:
     htmltools,
     kableExtra,
     lattice,
+    maps,
     psych,
+    rmarkdown,
     scales,
     tm,
     tools,

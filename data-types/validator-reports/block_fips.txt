@@ -1,0 +1,12 @@
+################  ERROR REPORT: census block FIPS ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (117 / 160, 73.1%):
+   066570062001001 | 069080067041801 | 560272862909171 
+
+S2 false positives -- negatives wrongly ACCEPTED (117 / 160, 73.1%):
+   066570062001001 | 069080067041801 | 560272862909171 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 160, 0.0%):
+

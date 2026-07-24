@@ -1,0 +1,12 @@
+################  ERROR REPORT: US city / place name ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (0 / 336, 0.0%):
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 338, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 337, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 18, 0.0%):
+

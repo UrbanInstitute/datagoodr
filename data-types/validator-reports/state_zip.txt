@@ -1,0 +1,14 @@
+################  ERROR REPORT: State ZIP ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (6 / 200, 3.0%):
+   IN 27101 | CT, 56410 | CT, 46410 
+
+S2 false positives -- negatives wrongly ACCEPTED (3 / 199, 1.5%):
+   IN 47721 | CT, 06470 | CT, 86410 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 69, 0.0%):
+

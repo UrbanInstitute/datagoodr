@@ -1,0 +1,13 @@
+################  ERROR REPORT: Amazon ASIN ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (63 / 240, 26.2%):
+   B0Y47FYXL0 | B0167DSD92 | B0ZS65GDL0 
+
+S2 false positives -- negatives wrongly ACCEPTED (63 / 240, 26.2%):
+   B0Y47FYXL0 | B0167DSD92 | B0ZS65GDL0 
+
+S3 false positives -- negatives wrongly ACCEPTED (3 / 240, 1.2%):
+   B0065RORR0 | B00Z49PXH2 | B09G9FPVY6 
+

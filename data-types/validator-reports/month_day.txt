@@ -1,0 +1,14 @@
+################  ERROR REPORT: Month Day (no year) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (1 / 197, 0.5%):
+   July 25 
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 198, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (1 / 199, 0.5%):
+   August 10 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 48, 0.0%):
+

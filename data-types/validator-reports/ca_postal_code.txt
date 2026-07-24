@@ -1,0 +1,15 @@
+################  ERROR REPORT: Canadian postal code / FSA ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (57 / 204, 27.9%):
+   V5X | M5K | C5K 
+
+S2 false positives -- negatives wrongly ACCEPTED (47 / 202, 23.3%):
+   V5X | Y5K | A9K 
+
+S3 false positives -- negatives wrongly ACCEPTED (32 / 210, 15.2%):
+   h5a | U2B | V1K 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 19, 0.0%):
+

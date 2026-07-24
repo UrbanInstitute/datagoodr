@@ -1,0 +1,13 @@
+################  ERROR REPORT: HTTP status code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (131 / 187, 70.1%):
+   109 | 140 | 501 
+
+S2 false positives -- negatives wrongly ACCEPTED (131 / 187, 70.1%):
+   109 | 140 | 501 
+
+S3 false positives -- negatives wrongly ACCEPTED (5 / 324, 1.5%):
+   110 | 191 | 375 
+

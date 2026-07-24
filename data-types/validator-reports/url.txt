@@ -1,0 +1,15 @@
+################  ERROR REPORT: URL (http/https/ftp) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (20 / 300, 6.7%):
+   http://efuraxy.qayloh.ldu/ | https://wwc.er08rry.ungib.ut/ | https://www.ej2roxg.uniwq.it/ 
+
+S2 false positives -- negatives wrongly ACCEPTED (3 / 300, 1.0%):
+   https://gww.e/nroiy.?nw=o1ejm | https://www.g1ktlspcom | https://a.m.c.jziwzoo 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 300, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (10 / 295, 3.4%):
+   http://ezproxy.bayl.ored/u | https://www.ezp/roxy.unibo.it | http://ezproxy.anzca.edu/.au 
+

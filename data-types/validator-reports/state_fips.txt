@@ -1,0 +1,13 @@
+################  ERROR REPORT: state FIPS code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (38 / 72, 52.8%):
+   26 | 66 | 16 
+
+S2 false positives -- negatives wrongly ACCEPTED (38 / 72, 52.8%):
+   26 | 66 | 16 
+
+S3 false positives -- negatives wrongly ACCEPTED (5 / 220, 2.3%):
+   16 | 34 | 08 
+

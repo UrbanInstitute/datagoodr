@@ -1,0 +1,13 @@
+################  ERROR REPORT: US state abbreviation ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (12 / 204, 5.9%):
+   ID | WY | NH 
+
+S2 false positives -- negatives wrongly ACCEPTED (12 / 204, 5.9%):
+   ID | WY | NH 
+
+S3 false positives -- negatives wrongly ACCEPTED (17 / 296, 5.7%):
+   nC | WY | NE 
+

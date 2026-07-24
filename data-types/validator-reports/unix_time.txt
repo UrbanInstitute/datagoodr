@@ -1,0 +1,13 @@
+################  ERROR REPORT: Unix timestamp (seconds) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (239 / 240, 99.6%):
+   1505086980 | 5553034980 | 1503018940 
+
+S2 false positives -- negatives wrongly ACCEPTED (239 / 240, 99.6%):
+   1505086980 | 5553034980 | 1503018940 
+
+S3 false positives -- negatives wrongly ACCEPTED (1 / 240, 0.4%):
+   946689705 
+

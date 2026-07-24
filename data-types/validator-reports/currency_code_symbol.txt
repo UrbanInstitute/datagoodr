@@ -1,0 +1,15 @@
+################  ERROR REPORT: currency code + symbol + amount (regex + lookup) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (14 / 486, 2.9%):
+   USD$13.30 | EUR€291.14 | EUR€22 
+
+S2 false positives -- negatives wrongly ACCEPTED (4 / 497, 0.8%):
+   GBP£1822 | GBP£1282 | NZD$54 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 495, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (3 / 158, 1.9%):
+   EUR€2991.0 | USD$09.9 | AUD$15.0 
+

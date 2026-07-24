@@ -1,0 +1,14 @@
+################  ERROR REPORT: IPv6 address ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (200 / 200, 100.0%):
+   8981:8654:d143:d0d0:498f:85e4:b1ee:4b60 | f9ab:e151:9134:d1d0:e457:73e3:c679:4710 | 5ea4:ed54:7143:81f0:b98b:7314:cac1:48f0 
+
+S2 false positives -- negatives wrongly ACCEPTED (1 / 200, 0.5%):
+   fe20:6:8:a:400:5191:ee21:67fe 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 198, 0.0%):
+

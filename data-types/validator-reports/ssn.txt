@@ -1,0 +1,14 @@
+################  ERROR REPORT: US Social Security Number ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (189 / 200, 94.5%):
+   544-36-4268 | 444-39-4213 | 345-36-4169 
+
+S2 false positives -- negatives wrongly ACCEPTED (42 / 200, 21.0%):
+   519-44-9268 | 440-15-4268 | 170-39-2268 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 118, 0.0%):
+

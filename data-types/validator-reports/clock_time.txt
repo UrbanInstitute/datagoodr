@@ -1,0 +1,14 @@
+################  ERROR REPORT: clock time ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (22 / 192, 11.5%):
+   6:06:37 AM | 6:05:87 AM | 6:04:88 AM 
+
+S2 false positives -- negatives wrongly ACCEPTED (4 / 199, 2.0%):
+   23:49 | 21:45 | 20:45 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 198, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 128, 0.0%):
+

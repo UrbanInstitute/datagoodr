@@ -1,0 +1,12 @@
+################  ERROR REPORT: census tract FIPS ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (157 / 200, 78.5%):
+   06647606200 | 66036208715 | 04832212215 
+
+S2 false positives -- negatives wrongly ACCEPTED (157 / 200, 78.5%):
+   06647606200 | 66036208715 | 04832212215 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+

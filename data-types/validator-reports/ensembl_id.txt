@@ -1,0 +1,10 @@
+################  ERROR REPORT: Ensembl gene/transcript ID ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+

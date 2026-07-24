@@ -1,0 +1,14 @@
+################  ERROR REPORT: ORCID iD ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (14 / 240, 5.8%):
+   0706-0593-0438-2072 | 0021-0071-5716-7241 | 5080-4202-0296-7242 
+
+S2 false positives -- negatives wrongly ACCEPTED (3 / 240, 1.2%):
+   6000-0013-6738-7863 | 0000-9206-2600-8998 | 7680-7009-2829-317X 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 201, 0.0%):
+

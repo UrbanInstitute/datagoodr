@@ -1,0 +1,14 @@
+################  ERROR REPORT: ISSN ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (22 / 239, 9.2%):
+   0009-2592 | 0002-2306 | 6563-229X 
+
+S2 false positives -- negatives wrongly ACCEPTED (8 / 239, 3.3%):
+   0501-2562 | 4044-0729 | 0504-4677 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 63, 0.0%):
+

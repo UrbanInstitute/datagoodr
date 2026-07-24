@@ -1,0 +1,15 @@
+################  ERROR REPORT: hex color (#RRGGBB) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (291 / 291, 100.0%):
+   #4fCcd8 | #8d9cf8 | #C83cfe 
+
+S2 false positives -- negatives wrongly ACCEPTED (128 / 291, 44.0%):
+   #4cBc48 | #fddcf8 | #6d98f1 
+
+S3 false positives -- negatives wrongly ACCEPTED (7 / 294, 2.4%):
+   #eacCaa | #dc9B7b | #ea54f4 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 57, 0.0%):
+

@@ -1,0 +1,221 @@
+---
+title: "Data-Type Detector Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data-Type Detector Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, collapse = TRUE, comment = "#>")
+library(datagoodr)
+```
+
+## What this is
+
+`datagoodr` ships a library of **data-type detectors**: small functions that
+answer one yes/no question about a column of values --- *"is each value an
+X?"* --- where X is a semantic type such as an email address, an ISO currency
+code, a census tract GEOID, or an ORCID iD. Each detector is a pure predicate:
+
+* **input:** a character vector `x`
+* **output:** a logical vector the same length as `x` (`TRUE` where the value
+  matches the type, `NA` where `x` is `NA`); detectors never error.
+
+The detectors are deliberately independent of the workflow that *chooses* among
+types (`guess_data_type()`), so each can be tuned in isolation. This guide is
+the catalog of what is implemented today, grouped by family, with a short
+definition, examples, the detection strategy, and a validation report for each
+type.
+
+## How the detectors are validated
+
+Every type ships with a set of real **positive** examples. To measure whether a
+detector is not just *permissive* but *precise*, we also generate
+plausible-but-wrong **negatives** from those positives, using the mutation
+strategies from the AutoType paper (Yan & He, *SIGMOD* 2018), plus a
+structure-scramble strategy:
+
+| Tier | Name | What it changes | Purpose |
+|------|------|-----------------|---------|
+| **S1** | preserve-structure | replaces only alphanumeric characters, leaving punctuation/delimiters in place | weakest negatives; for loosely-structured types it often regenerates *valid* values |
+| **S2** | preserve-alphabet | replaces any character, drawing only from the alphabet actually observed | corrupts structure while staying "in vocabulary" |
+| **S3** | random | replaces characters with arbitrary printable ASCII | strongest random negatives |
+| **SP** | scramble-structure | keeps the alphanumeric characters and their order, but permutes the *positions* of punctuation/delimiters | catches detectors that check "right characters present" but not "in the right place" (decimal point, grouping, symbol order) |
+
+The frozen mix of valid + labelled negatives is the bundled
+[`data_type_tests`] object. The report below applies each detector to that
+fixture and reports **pass rates** per tier:
+
+* **Recall** --- share of real positives accepted. Should be **1.00**.
+* **S1 / S2 / S3 / SP** --- share of generated negatives *wrongly* accepted (a
+  false-positive rate). Lower is better; blank means that tier produced no
+  distinct negatives for the type.
+
+One caveat to read the numbers correctly: a **high S1** is expected and *not* a
+bug for loosely-structured types. Mutating only the digits of `"$12.30"` yields
+`"$47.99"` --- still a valid amount --- so S1 measures little there. The
+discriminating tiers for such types are S2/S3/SP.
+
+```{r helpers}
+groups <- list(
+  "Currency" = c("currency_code", "currency_symbol", "currency_code_symbol"),
+  "Web / network" = c("email", "url", "ipv4", "ipv6", "mac"),
+  "Color" = c("hex_color", "rgb_color", "hsl_color", "cmyk_color"),
+  "Hash / UUID" = c("md5", "sha1", "sha256", "guid"),
+  "Scientific / bio IDs" = c("ensembl_id", "uniprot_id", "icd9_code",
+                             "icd10_code", "snp_id", "asin", "bibcode"),
+  "Codes / lookups" = c("roman", "http_status", "unix_time", "zip_code",
+                        "uk_postcode", "ca_postal_code", "us_state",
+                        "country_code"),
+  "Date / time" = c("iso_date", "iso_datetime", "us_date", "us_datetime",
+                    "abbr_month_date", "rfc2822_datetime", "long_date",
+                    "month_year", "month_day", "clock_time", "date_range",
+                    "hijri_date"),
+  "Address" = c("street_address", "po_box", "city_name", "city_state",
+                "state_zip", "address"),
+  "Geography" = c("state_fips", "county_fips", "tract_fips",
+                  "block_group_fips", "block_fips", "cbsa", "csa",
+                  "metro_area_name", "nces_locale", "urban_rural",
+                  "census_region"),
+  "Government / entity IDs" = c("ssn", "ein", "dea", "chinese_resident_id",
+                                "uei", "naics"),
+  "Phone" = c("phone", "intl_phone", "msisdn"),
+  "Research / scholarly IDs" = c("doi", "orcid", "isbn", "issn", "npi")
+)
+
+docs <- list(
+  currency_code = c("exact lookup", "ISO 4217 three-letter alphabetic currency code (USD, EUR, JPY).", "Upper-cases the value and tests membership in the ISO 4217 code list."),
+  currency_symbol = c("structured regex", "A currency symbol immediately followed by an amount, e.g. $12.30.", "Regex: a leading symbol ($ euro yen pound) + digits + optional 1-2 decimals."),
+  currency_code_symbol = c("regex + lookup", "An ISO code, symbol, and amount together, e.g. USD$12.30.", "Regex for code+symbol+amount, then validates the 3-letter code against ISO 4217."),
+  email = c("structured regex (loose)", "An email address.", "Regex: local part + @ + dotted domain + TLD; pragmatic, not full RFC 5322."),
+  url = c("structured regex", "An http/https/ftp URL.", "Regex: scheme :// + dotted host + optional path/query."),
+  ipv4 = c("regex + range", "An IPv4 dotted-quad address.", "Regex for four numeric octets, then validates each is 0-255."),
+  ipv6 = c("structured regex", "An IPv6 address (full or ::-compressed).", "Regex over eight hex groups plus common :: compressions."),
+  mac = c("structured regex", "A MAC hardware address.", "Regex: six colon- or dash-separated hex octet pairs."),
+  hex_color = c("structured regex", "A hex color such as #4d9cf8 or #fff.", "Regex: # + 3 or 6 hex digits."),
+  rgb_color = c("regex + range", "An RGB triple such as 220,220,220.", "Three comma-separated integers, each validated 0-255."),
+  hsl_color = c("regex + range", "An HSL triple such as 195, 100%, 27%.", "Hue validated 0-360 and two percentages 0-100."),
+  cmyk_color = c("regex + range", "A CMYK quadruple such as 0.0,0.31,0.37,0.0.", "Four comma-separated values, each validated 0-1."),
+  md5 = c("fixed-length regex", "An MD5 message digest.", "Exactly 32 hexadecimal characters."),
+  sha1 = c("fixed-length regex", "A SHA-1 message digest.", "Exactly 40 hexadecimal characters."),
+  sha256 = c("fixed-length regex", "A SHA-256 message digest.", "Exactly 64 hexadecimal characters."),
+  guid = c("structured regex", "A GUID / UUID.", "The 8-4-4-4-12 hexadecimal UUID pattern."),
+  ensembl_id = c("structured regex", "An Ensembl gene/transcript/protein ID (ENSG..., ENSMUSG...).", "Regex: ENS + optional species + feature letter (E/G/T/P) + 11 digits."),
+  uniprot_id = c("structured regex", "A UniProtKB protein accession (P33667, Q9BWD1).", "The official UniProt accession-number pattern."),
+  icd9_code = c("structured regex", "An ICD-9-CM diagnosis code.", "Regex: three digits (or an E/V code) + optional decimal detail."),
+  icd10_code = c("structured regex", "An ICD-10 code (I61, D76.0).", "Regex: a letter + two digits + optional dotted detail."),
+  snp_id = c("structured regex", "A dbSNP reference SNP ID (rs3918290).", "Regex: rs followed by digits."),
+  asin = c("structured regex", "An Amazon Standard Identification Number.", "Regex: B0 followed by eight alphanumerics."),
+  bibcode = c("structured regex", "A 19-character NASA ADS bibliographic code.", "Regex: 4-digit year + 14 code characters + a final letter."),
+  roman = c("structured regex", "A Roman numeral.", "The canonical well-formed Roman-numeral regex (rejects e.g. IIII)."),
+  http_status = c("regex + range", "An HTTP status code.", "Three digits within 100-599."),
+  unix_time = c("regex + range (loose)", "A Unix epoch timestamp in seconds.", "9-10 digits within a plausible epoch range; inherently loose."),
+  zip_code = c("structured regex", "A US ZIP or ZIP+4 code.", "Five digits, optionally + four."),
+  uk_postcode = c("structured regex", "A UK postcode.", "The standard UK postcode outward/inward pattern."),
+  ca_postal_code = c("structured regex", "A Canadian postal code or 3-character FSA.", "Letter-digit-letter, optionally followed by digit-letter-digit."),
+  us_state = c("exact lookup", "A USPS two-letter state code.", "Membership in the 50 states + DC."),
+  country_code = c("exact lookup", "An ISO 3166-1 alpha-2 country code.", "Membership in the ISO 3166-1 code list."),
+  iso_date = c("regex + range", "An ISO 8601 calendar date (YYYY-MM-DD).", "Regex + a month/day range check."),
+  iso_datetime = c("structured regex", "An ISO 8601 datetime with optional fraction/zone.", "Regex over date + T + time + optional .fraction and Z/offset."),
+  us_date = c("regex + range", "A US numeric date (M/D/YY).", "Regex + month/day validation."),
+  us_datetime = c("structured regex", "A US numeric datetime with AM/PM.", "Regex: M/D/YYYY (slash or dash) + time + optional AM/PM."),
+  abbr_month_date = c("structured regex", "Day-month-year with an abbreviated month (1-Jul-14).", "Regex: day + separator + 3-letter month + year."),
+  rfc2822_datetime = c("structured regex", "An RFC 2822 / HTTP datetime.", "Regex: weekday, DD Mon YYYY hh:mm:ss + zone."),
+  long_date = c("structured regex", "A verbose English date (Friday, June 16, 1967).", "Regex allowing optional weekday, full/abbrev month, day, year (with era) and time; requires a weekday or a year so it does not overlap Month-Day."),
+  month_year = c("structured regex", "A Month-Year value (February 1987).", "Regex: month name + optional comma + 4-digit year."),
+  month_day = c("structured regex", "A Month-Day value with no year (February 6).", "Regex: month name + 1-2 digit day."),
+  clock_time = c("regex + range", "A clock time (6:00:37 AM).", "Regex + hour/minute range validation."),
+  date_range = c("structured regex", "Two dates joined by 'to' or '-'.", "Regex over two ISO/US dates and a joiner."),
+  hijri_date = c("structured regex", "A Hijri (Islamic-calendar) date (11 Shawwal 1430).", "Regex: day + Islamic month name + year."),
+  street_address = c("heuristic regex", "A street-address line (2325 140th St).", "Regex: house number + name + a street-type suffix (St/Ave/Blvd/...)."),
+  po_box = c("structured regex", "A PO box (PO Box 12, P.O.B. 3).", "Regex covering PO / POB / Post Office Box variants + a number."),
+  city_name = c("exact lookup (partial coverage)", "A US city / place name.", "Normalized membership test against ~1,000 larger US cities; smaller towns miss by design (precision over recall)."),
+  city_state = c("regex + lookup", "A 'City, State' value.", "Splits on the comma and validates the trailing token is a real state (abbrev or name)."),
+  state_zip = c("regex + lookup", "A 'State ZIP' value.", "Regex whose leading token must be a real state, followed by a ZIP."),
+  address = c("heuristic composite", "A full postal address.", "Scans one string for street / PO box / city / state / ZIP components and fires when at least three co-occur."),
+  state_fips = c("exact lookup", "A 2-digit state FIPS code.", "Membership in the valid state/territory FIPS set."),
+  county_fips = c("anchor + length", "A 5-digit county FIPS (GEOID).", "Five digits whose first two are a valid state FIPS."),
+  tract_fips = c("anchor + length", "An 11-digit census-tract GEOID.", "Eleven digits with a valid state prefix."),
+  block_group_fips = c("anchor + length", "A 12-digit census block-group GEOID.", "Twelve digits with a valid state prefix."),
+  block_fips = c("anchor + length", "A 15-digit census-block GEOID.", "Fifteen digits with a valid state prefix."),
+  cbsa = c("exact lookup", "A 5-digit Core Based Statistical Area code.", "Membership in the Census CBSA code list."),
+  csa = c("exact lookup", "A 3-digit Combined Statistical Area code.", "Membership in the Census CSA code list."),
+  metro_area_name = c("exact lookup (partial)", "A CBSA / CSA area title (metro-area name).", "Normalized membership against the official metro-area titles (full and state-stripped forms); distinct from city_name, which will not match these hyphenated multi-city titles."),
+  nces_locale = c("small enum", "An NCES locale code (11-13, 21-23, 31-33, 41-43).", "Two-digit enum for City/Suburb/Town/Rural x Large/Midsize/Small."),
+  urban_rural = c("small enum", "An urban / rural designation label.", "Membership in a designation vocabulary (urban, rural, suburban, exurban, ...)."),
+  census_region = c("small enum", "A US census region or division name.", "Membership in the four regions + nine divisions."),
+  ssn = c("regex + rules", "A US Social Security Number.", "ddd-dd-dddd with issuance validity rules (area not 000/666/900+, group not 00, serial not 0000)."),
+  ein = c("structured regex", "A US Employer Identification Number.", "Two digits, a dash, seven digits."),
+  dea = c("checksum", "A DEA registration number.", "Two letters + seven digits, with the DEA check digit validated."),
+  chinese_resident_id = c("checksum", "A Chinese resident identity-card number.", "Eighteen characters with an ISO 7064 mod-11-2 check character."),
+  uei = c("structured regex", "A SAM.gov Unique Entity Identifier (the 12-character code that replaced the DUNS number).", "Twelve alphanumerics excluding the letters I and O, first character not 0."),
+  naics = c("exact lookup", "A NAICS industry code (2-6 digits).", "Membership in the full 2022 NAICS code set, rolled up to every level."),
+  phone = c("loose regex", "A US / NANP phone number.", "Regex over the common US formats and separators."),
+  intl_phone = c("loose regex", "A +-prefixed international phone number.", "Regex: + country code + 8-15 digits with separators/parentheses."),
+  msisdn = c("loose regex", "A bare MSISDN subscriber number.", "10-15 digits; very loose, best paired with a variable-name hint."),
+  doi = c("structured regex", "A Digital Object Identifier.", "Regex: 10.<registrant>/<suffix>."),
+  orcid = c("checksum", "An ORCID researcher iD.", "dddd-dddd-dddd-dddC with an ISO 7064 mod-11-2 check digit (C may be X)."),
+  isbn = c("checksum", "An ISBN-10 or ISBN-13.", "Validates the ISBN-10 (mod 11) or ISBN-13 (mod 10) check digit."),
+  issn = c("checksum", "An ISSN serial number.", "dddd-dddC with a mod-11 check digit (C may be X)."),
+  npi = c("checksum", "A US National Provider Identifier.", "Ten digits with a Luhn check over the 80840 prefix + first nine digits.")
+)
+
+detector_for <- function(nm) get(paste0("is_", nm), mode = "function")
+
+type_report <- function(nm) {
+  df  <- data_type_tests[[nm]]
+  det <- detector_for(nm)
+  rate <- function(t) {
+    cs <- df$case[df$label == t]
+    if (!length(cs)) NA_real_ else round(mean(det(cs), na.rm = TRUE), 3)
+  }
+  data.frame(Recall = rate("valid"), S1 = rate("S1"), S2 = rate("S2"),
+             S3 = rate("S3"), SP = rate("SP"), check.names = FALSE)
+}
+```
+
+## The catalogue
+
+```{r catalogue, results = "asis"}
+for (grp in names(groups)) {
+  cat("\n### ", grp, "\n\n", sep = "")
+  for (nm in groups[[grp]]) {
+    d  <- docs[[nm]]
+    ex <- head(data_type_tests[[nm]]$case[data_type_tests[[nm]]$label == "valid"], 5)
+    cat("#### `is_", nm, "()`\n\n", sep = "")
+    cat(d[2], "\n\n", sep = "")
+    cat("**Precision:** ", d[1], "  \n", sep = "")
+    cat("**Strategy:** ", d[3], "  \n", sep = "")
+    cat("**Examples:** ", paste0("`", ex, "`", collapse = ", "), "\n\n", sep = "")
+    cat(knitr::kable(type_report(nm), format = "pipe"), sep = "\n")
+    cat("\n\n")
+  }
+}
+```
+
+## Adding a new detector
+
+New types are added with a copy-paste, bring-your-own-LLM workflow --- no API
+key required. Collect 10-25 example values of the new type and call
+[`draft_detector_prompt()`]. It builds the AutoType test cases for your
+examples and assembles a self-contained prompt (a versioned contract + your
+positives + generated hard negatives) that you paste into any LLM:
+
+```{r prompt-demo, echo = TRUE, eval = FALSE}
+draft_detector_prompt(
+  examples  = c("ENSG00000139618", "ENSMUSG00000102659", "ENST00000407559"),
+  type_name = "ensembl_id"
+)
+```
+
+The prompt is printed to the console and written to a `.md` file you can attach
+to a chat. When the LLM returns an `is_<type>()` function, score it with
+[`evaluate_detector()`], which runs the same recall/precision report used
+above so you can see how it performs before adopting it. Once you are happy,
+drop the function into an `R/dt-<family>.R` file, add its positive examples to
+`data-raw/datatypes/<family>.R`, and register one line in
+`R/00-data-type-registry.R`.
+
+See `?draft_detector_prompt` and `?evaluate_detector` for details.

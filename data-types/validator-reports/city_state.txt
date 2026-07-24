@@ -1,0 +1,16 @@
+################  ERROR REPORT: City, State ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (74 / 239, 31.0%):
+   BcoosdXdtoC, ID | WtoPmirgtrn, Ia | nMoomvAggFN, IN 
+
+S2 false positives -- negatives wrongly ACCEPTED (15 / 240, 6.2%):
+   BlWamgO Mon, lA | BlMDAinAcoM, IN | BloldoMdion, IA 
+
+S3 false positives -- negatives wrongly ACCEPTED (12 / 240, 5.0%):
+   BloKsi~gcQnx,IN | Bcooming.=n, IN | yo6 A gelLx, CA 
+
+SP false positives -- negatives wrongly ACCEPTED (47 / 153, 30.7%):
+   Bloom ington,IN | Bloomington,IN  | Cheshire ,CT 
+

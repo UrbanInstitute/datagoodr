@@ -1,0 +1,15 @@
+################  ERROR REPORT: PO box ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (5 / 198, 2.5%):
+   PoB 789 | POB 787 | POB 779 
+
+S2 false positives -- negatives wrongly ACCEPTED (2 / 200, 1.0%):
+   POB 787 | POB 759 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 199, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (9 / 124, 7.3%):
+   POBox  1234 | P O Box1234 | PostOffice Box  42 
+

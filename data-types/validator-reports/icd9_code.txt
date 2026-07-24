@@ -1,0 +1,15 @@
+################  ERROR REPORT: ICD-9 code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (144 / 221, 65.2%):
+   077.15 | 978.11 | 619.11 
+
+S2 false positives -- negatives wrongly ACCEPTED (69 / 235, 29.4%):
+   078.31 | 072.17 | 038.81 
+
+S3 false positives -- negatives wrongly ACCEPTED (3 / 234, 1.3%):
+   009.0 | 950.00 | 301.9 
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 44, 0.0%):
+

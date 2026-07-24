@@ -1,0 +1,15 @@
+################  ERROR REPORT: ISBN (10 or 13) ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (14 / 240, 5.8%):
+   190913575-5 | 690955595-3 | 149050522-9 
+
+S2 false positives -- negatives wrongly ACCEPTED (6 / 238, 2.5%):
+   589911182-8 | 799337174-0 | 8761044377- 
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 240, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (90 / 90, 100.0%):
+   1409555259- | 1409-555259 | 1409555-259 
+

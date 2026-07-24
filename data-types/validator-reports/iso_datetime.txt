@@ -1,0 +1,13 @@
+################  ERROR REPORT: ISO 8601 datetime ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (33 / 200, 16.5%):
+   1928-82-06T06:50:37 | 2287-44-06T06:10:38 | 9977-02-04T11:05:57 
+
+S2 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+S3 false positives -- negatives wrongly ACCEPTED (0 / 200, 0.0%):
+
+SP false positives -- negatives wrongly ACCEPTED (0 / 186, 0.0%):
+

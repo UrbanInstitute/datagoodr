@@ -1,0 +1,13 @@
+################  ERROR REPORT: CSA code ################
+
+False negatives -- real positives REJECTED (0):
+
+S1 false positives -- negatives wrongly ACCEPTED (42 / 153, 27.5%):
+   105 | 104 | 228 
+
+S2 false positives -- negatives wrongly ACCEPTED (42 / 153, 27.5%):
+   105 | 104 | 228 
+
+S3 false positives -- negatives wrongly ACCEPTED (2 / 200, 1.0%):
+   221 | 290 
+
