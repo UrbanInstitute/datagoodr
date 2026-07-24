@@ -37,8 +37,8 @@
 ##
 # layout.character <- c(
 #   "div2  ;; dd_vlabel        ;; LABEL       ;; v_to_txt",
-#   "div3  ;; stable_data_type   ;; DATA TYPE   ;; v_to_txt",
+#   "div3  ;; desired_data_type   ;; DATA TYPE   ;; v_to_txt",
 #   "div4  ;; dd_vdesc         ;; DESCRIPTION ;; v_to_txt",
-#   "div4  ;; vloc          ;; NOTE        ;; paste_note",
+#   "div4  ;; dd_vname_alias ;; ALIAS       ;; paste_note",
 #   "div10 ;; rg_properties ;; PROPERTIES  ;; paste_properties",
 #   "div12 ;; rg_stats      ;; STATS       ;; paste_stats_chr" )

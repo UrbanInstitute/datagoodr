@@ -37,9 +37,9 @@
 ##     values=t$Freq 
 
 df <- Lahman::People
+cc <- as.data.frame( table( df$birthDate[ df$birthYear %in% 1980:1985 ] ) )
+calendarHeat( cc$Var1, cc$Freq, varname="Birth Date of MLB Players", color="r2w" )
 
-# cc <- as.data.frame( table( df$birthDate[ df$birthYear %in% 1980:1985 ] ) )
-# calendarHeat( cc$Var1, cc$Freq, varname="Birth Date of MLB Players", color="r2w" )
 # calendarHeat( cc$Var1, cc$Freq, varname="Birth Date of MLB Players", color="b2w" )
 # calendarHeat( cc$Var1, cc$Freq, varname="Birth Date of MLB Players", color="r2b" )
 # calendarHeat( cc$Var1, cc$Freq, varname="Birth Date of MLB Players", color="b2r" )

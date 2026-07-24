@@ -93,7 +93,7 @@ create_all_sections( dgf.num )
 
 ## Character
 
-```{r character, results="asis", fig.width=8, fig.height=6, echo=FALSE}
+```{r character, results="asis", fig.width=8, fig.height=4.5, echo=FALSE}
 create_all_sections( dgf.chr )
 ```
 

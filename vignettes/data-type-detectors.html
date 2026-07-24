@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Data-Type Detector Guide</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Data-Type Detector Guide</h1>
+
+
+
+<div id="what-this-is" class="section level2">
+<h2>What this is</h2>
+<p><code>datagoodr</code> ships a library of <strong>data-type
+detectors</strong>: small functions that answer one yes/no question
+about a column of values — <em>“is each value an X?”</em> — where X is a
+semantic type such as an email address, an ISO currency code, a census
+tract GEOID, or an ORCID iD. Each detector is a pure predicate:</p>
+<ul>
+<li><strong>input:</strong> a character vector <code>x</code></li>
+<li><strong>output:</strong> a logical vector the same length as
+<code>x</code> (<code>TRUE</code> where the value matches the type,
+<code>NA</code> where <code>x</code> is <code>NA</code>); detectors
+never error.</li>
+</ul>
+<p>The detectors are deliberately independent of the workflow that
+<em>chooses</em> among types (<code>guess_data_type()</code>), so each
+can be tuned in isolation. This guide is the catalog of what is
+implemented today, grouped by family, with a short definition, examples,
+the detection strategy, and a validation report for each type.</p>
+</div>
+<div id="how-the-detectors-are-validated" class="section level2">
+<h2>How the detectors are validated</h2>
+<p>Every type ships with a set of real <strong>positive</strong>
+examples. To measure whether a detector is not just <em>permissive</em>
+but <em>precise</em>, we also generate plausible-but-wrong
+<strong>negatives</strong> from those positives, using the mutation
+strategies from the AutoType paper (Yan &amp; He, <em>SIGMOD</em> 2018),
+plus a structure-scramble strategy:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="15%" />
+<col width="44%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>Name</th>
+<th>What it changes</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>S1</strong></td>
+<td>preserve-structure</td>
+<td>replaces only alphanumeric characters, leaving
+punctuation/delimiters in place</td>
+<td>weakest negatives; for loosely-structured types it often regenerates
+<em>valid</em> values</td>
+</tr>
+<tr class="even">
+<td><strong>S2</strong></td>
+<td>preserve-alphabet</td>
+<td>replaces any character, drawing only from the alphabet actually
+observed</td>
+<td>corrupts structure while staying “in vocabulary”</td>
+</tr>
+<tr class="odd">
+<td><strong>S3</strong></td>
+<td>random</td>
+<td>replaces characters with arbitrary printable ASCII</td>
+<td>strongest random negatives</td>
+</tr>
+<tr class="even">
+<td><strong>SP</strong></td>
+<td>scramble-structure</td>
+<td>keeps the alphanumeric characters and their order, but permutes the
+<em>positions</em> of punctuation/delimiters</td>
+<td>catches detectors that check “right characters present” but not “in
+the right place” (decimal point, grouping, symbol order)</td>
+</tr>
+</tbody>
+</table>
+<p>The frozen mix of valid + labelled negatives is the bundled
+[<code>data_type_tests</code>] object. The report below applies each
+detector to that fixture and reports <strong>pass rates</strong> per
+tier:</p>
+<ul>
+<li><strong>Recall</strong> — share of real positives accepted. Should
+be <strong>1.00</strong>.</li>
+<li><strong>S1 / S2 / S3 / SP</strong> — share of generated negatives
+<em>wrongly</em> accepted (a false-positive rate). Lower is better;
+blank means that tier produced no distinct negatives for the type.</li>
+</ul>
+<p>One caveat to read the numbers correctly: a <strong>high S1</strong>
+is expected and <em>not</em> a bug for loosely-structured types.
+Mutating only the digits of <code>&quot;$12.30&quot;</code> yields
+<code>&quot;$47.99&quot;</code> — still a valid amount — so S1 measures little
+there. The discriminating tiers for such types are S2/S3/SP.</p>
+</div>
+<div id="the-catalogue" class="section level2">
+<h2>The catalogue</h2>
+<div id="currency" class="section level3">
+<h3>Currency</h3>
+<div id="is_currency_code" class="section level4">
+<h4><code>is_currency_code()</code></h4>
+<p>ISO 4217 three-letter alphabetic currency code (USD, EUR, JPY).</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Upper-cases the value and tests membership in
+the ISO 4217 code list.<br />
+<strong>Examples:</strong> <code>AUD</code>, <code>CAD</code>,
+<code>CNY</code>, <code>DKK</code>, <code>EUR</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.006</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_currency_symbol" class="section level4">
+<h4><code>is_currency_symbol()</code></h4>
+<p>A currency symbol immediately followed by an amount, e.g. $12.30.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: a leading symbol ($ euro yen pound) +
+digits + optional 1-2 decimals.<br />
+<strong>Examples:</strong> <code>$12.30</code>, <code>€299.10</code>,
+<code>¥19</code>, <code>£1222</code>, <code>$1</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.257</td>
+<td align="right">0.013</td>
+<td align="right">0.049</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_currency_code_symbol" class="section level4">
+<h4><code>is_currency_code_symbol()</code></h4>
+<p>An ISO code, symbol, and amount together, e.g. USD$12.30.</p>
+<p><strong>Precision:</strong> regex + lookup<br />
+<strong>Strategy:</strong> Regex for code+symbol+amount, then validates
+the 3-letter code against ISO 4217.<br />
+<strong>Examples:</strong> <code>USD$12.30</code>,
+<code>EUR€299.10</code>, <code>USD$1</code>, <code>EUR€21</code>,
+<code>JPY¥22</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.029</td>
+<td align="right">0.008</td>
+<td align="right">0</td>
+<td align="right">0.019</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="web-network" class="section level3">
+<h3>Web / network</h3>
+<div id="is_email" class="section level4">
+<h4><code>is_email()</code></h4>
+<p>An email address.</p>
+<p><strong>Precision:</strong> structured regex (loose)<br />
+<strong>Strategy:</strong> Regex: local part + @ + dotted domain + TLD;
+pragmatic, not full RFC 5322.<br />
+<strong>Examples:</strong> <code>cjudgkins0@de.vu</code>,
+<code>csoutar1@bigcartel.com</code>,
+<code>afeavearyear2@skype.com</code>,
+<code>fmacgilrewy3@yellowpages.com</code>,
+<code>aeadmeades4@tamu.edu</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.68</td>
+<td align="right">0.15</td>
+<td align="right">0.01</td>
+<td align="right">0.434</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_url" class="section level4">
+<h4><code>is_url()</code></h4>
+<p>An http/https/ftp URL.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: scheme :// + dotted host + optional
+path/query.<br />
+<strong>Examples:</strong> <code>http://ezproxy.baylor.edu/</code>,
+<code>https://www.ezproxy.unibo.it/</code>,
+<code>http://ezproxy.anzca.edu.au/</code>,
+<code>http://libproxy.aalto.fi/</code>,
+<code>http://elibrary.einstein.yu.edu/</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.067</td>
+<td align="right">0.01</td>
+<td align="right">0</td>
+<td align="right">0.034</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_ipv4" class="section level4">
+<h4><code>is_ipv4()</code></h4>
+<p>An IPv4 dotted-quad address.</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Regex for four numeric octets, then validates
+each is 0-255.<br />
+<strong>Examples:</strong> <code>54.219.219.166</code>,
+<code>49.200.88.156</code>, <code>189.7.190.3</code>,
+<code>206.120.6.24</code>, <code>80.78.48.54</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.421</td>
+<td align="right">0.077</td>
+<td align="right">0.003</td>
+<td align="right">0.06</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_ipv6" class="section level4">
+<h4><code>is_ipv6()</code></h4>
+<p>An IPv6 address (full or ::-compressed).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex over eight hex groups plus common ::
+compressions.<br />
+<strong>Examples:</strong>
+<code>89a4:e654:d143:d1d0:b986:73e4:c8e1:4710</code>,
+<code>f385:9ac0:aede:bb7e:a620:b2a5:dd6b:ebfb</code>,
+<code>4f:45b6:3366:d336:e41b:8df4:696:e02</code>,
+<code>8316:886e:bebc:738:e0e0:215f:89de:89fb</code>,
+<code>70eb:2fd0:84c2:9abd:7682:ff5b:afff:c24d</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.005</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_mac" class="section level4">
+<h4><code>is_mac()</code></h4>
+<p>A MAC hardware address.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: six colon- or dash-separated hex octet
+pairs.<br />
+<strong>Examples:</strong> <code>40-1F-3C-B6-3C-BC</code>,
+<code>1E-42-64-5E-54-69</code>, <code>1F-9C-F0-33-2E-E5</code>,
+<code>22-1F-8C-02-75-1D</code>, <code>9B-D7-6F-02-9F-D5</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.025</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="color" class="section level3">
+<h3>Color</h3>
+<div id="is_hex_color" class="section level4">
+<h4><code>is_hex_color()</code></h4>
+<p>A hex color such as #4d9cf8 or #fff.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: # + 3 or 6 hex digits.<br />
+<strong>Examples:</strong> <code>#4d9cf8</code>, <code>#1f3a8e</code>,
+<code>#eac3aa</code>, <code>#dc937b</code>, <code>#2cb0c3</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.44</td>
+<td align="right">0.024</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_rgb_color" class="section level4">
+<h4><code>is_rgb_color()</code></h4>
+<p>An RGB triple such as 220,220,220.</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Three comma-separated integers, each
+validated 0-255.<br />
+<strong>Examples:</strong> <code>220,220,220</code>,
+<code>255,250,250</code>, <code>253,245,245</code>,
+<code>240,240,240</code>, <code>250,235,235</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.315</td>
+<td align="right">0.07</td>
+<td align="right">0.004</td>
+<td align="right">0.035</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_hsl_color" class="section level4">
+<h4><code>is_hsl_color()</code></h4>
+<p>An HSL triple such as 195, 100%, 27%.</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Hue validated 0-360 and two percentages
+0-100.<br />
+<strong>Examples:</strong> <code>195, 100%, 27%</code>,
+<code>195, 100%, 47%</code>, <code>196, 60%, 49%</code>,
+<code>197, 72%, 55%</code>, <code>200, 29%, 55%</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.506</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.039</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_cmyk_color" class="section level4">
+<h4><code>is_cmyk_color()</code></h4>
+<p>A CMYK quadruple such as 0.0,0.31,0.37,0.0.</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Four comma-separated values, each validated
+0-1.<br />
+<strong>Examples:</strong> <code>0.0,0.31,0.37,0.0</code>,
+<code>0.0,0.52,1.0,0.64</code>, <code>0.35,0.0,0.25,0.0</code>,
+<code>0.52,0.63,0.48,0.0</code>, <code>0.30,0.6,0.0,0.0</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.097</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.009</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="hash-uuid" class="section level3">
+<h3>Hash / UUID</h3>
+<div id="is_md5" class="section level4">
+<h4><code>is_md5()</code></h4>
+<p>An MD5 message digest.</p>
+<p><strong>Precision:</strong> fixed-length regex<br />
+<strong>Strategy:</strong> Exactly 32 hexadecimal characters.<br />
+<strong>Examples:</strong>
+<code>6e8a6448a62364225da9991fd8e1ef8c</code>,
+<code>3df4ffb6eb24fffab3763041f13dbdea</code>,
+<code>b205e37bafd229efeb6345565ce428a0</code>,
+<code>d604c1cd26544a8c30f0bb20a689eac7</code>,
+<code>793fce16a0a172e58c193b2899e0c025</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_sha1" class="section level4">
+<h4><code>is_sha1()</code></h4>
+<p>A SHA-1 message digest.</p>
+<p><strong>Precision:</strong> fixed-length regex<br />
+<strong>Strategy:</strong> Exactly 40 hexadecimal characters.<br />
+<strong>Examples:</strong>
+<code>16de70e8fcd093964a448a86bc89b1c607152ead</code>,
+<code>efb6759998e36322258c172aa7e8ba6416b3235f</code>,
+<code>f1d48e18f51de36d01bafab5bfa68d16a8c0192b</code>,
+<code>0ceee2d04e239856ecf18f93b5ee75d72e031f92</code>,
+<code>ac8a1226405cab9d6049304163d658c5ae611c1a</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_sha256" class="section level4">
+<h4><code>is_sha256()</code></h4>
+<p>A SHA-256 message digest.</p>
+<p><strong>Precision:</strong> fixed-length regex<br />
+<strong>Strategy:</strong> Exactly 64 hexadecimal characters.<br />
+<strong>Examples:</strong>
+<code>96a162ea0e727b109724d95fa66659aacc2f5a1478c12bb779aa9c1fbd510450</code>,
+<code>59d3b1aafad9d120e6df4a1a6ae6b5edf006be7a044e646b63a9feb8e909c900</code>,
+<code>18f778c3525b95d98292595ebd8a0c5ac31bfb6cddeafefff04089468e304b96</code>,
+<code>e93042fecce04326c178d34b88c70f3ef8e90aaaefbc14e53a17a772c149b113</code>,
+<code>21995f09908d3bb4f2c7eaf99a50cbad991aeb652208bb71c55e3161fcfaa493</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_guid" class="section level4">
+<h4><code>is_guid()</code></h4>
+<p>A GUID / UUID.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> The 8-4-4-4-12 hexadecimal UUID
+pattern.<br />
+<strong>Examples:</strong>
+<code>f2a59360-1d1a-49e8-9a2f-f9cdf0d5a811</code>,
+<code>5ff3cc50-709c-4ba2-88a7-a2e4cca9f32c</code>,
+<code>241c3e6c-1aa5-41c6-bbac-8ad08bdfcde9</code>,
+<code>12e8b5a7-a1be-4dec-933a-6f9b040f8da3</code>,
+<code>2eddc761-2258-4305-9e7b-c1087df3165c</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.035</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="scientific-bio-ids" class="section level3">
+<h3>Scientific / bio IDs</h3>
+<div id="is_ensembl_id" class="section level4">
+<h4><code>is_ensembl_id()</code></h4>
+<p>An Ensembl gene/transcript/protein ID (ENSG…, ENSMUSG…).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: ENS + optional species + feature
+letter (E/G/T/P) + 11 digits.<br />
+<strong>Examples:</strong> <code>ENSMUSG00000102659</code>,
+<code>ENSMUSG00000093178</code>, <code>ENST00000407559</code>,
+<code>ENSG00000139618</code>, <code>ENSG00000158636</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_uniprot_id" class="section level4">
+<h4><code>is_uniprot_id()</code></h4>
+<p>A UniProtKB protein accession (P33667, Q9BWD1).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> The official UniProt accession-number
+pattern.<br />
+<strong>Examples:</strong> <code>P33667</code>, <code>P17888</code>,
+<code>P02338</code>, <code>Q9BWD1</code>, <code>Q46806</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.311</td>
+<td align="right">0.311</td>
+<td align="right">0.017</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_icd9_code" class="section level4">
+<h4><code>is_icd9_code()</code></h4>
+<p>An ICD-9-CM diagnosis code.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: three digits (or an E/V code) +
+optional decimal detail.<br />
+<strong>Examples:</strong> <code>078.11</code>, <code>008.8</code>,
+<code>005.9</code>, <code>117.9</code>, <code>003.0</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.652</td>
+<td align="right">0.294</td>
+<td align="right">0.013</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_icd10_code" class="section level4">
+<h4><code>is_icd10_code()</code></h4>
+<p>An ICD-10 code (I61, D76.0).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: a letter + two digits + optional
+dotted detail.<br />
+<strong>Examples:</strong> <code>I61</code>, <code>I63</code>,
+<code>G45</code>, <code>D76.0</code>, <code>D76.3</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.399</td>
+<td align="right">0.242</td>
+<td align="right">0.036</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_snp_id" class="section level4">
+<h4><code>is_snp_id()</code></h4>
+<p>A dbSNP reference SNP ID (rs3918290).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: rs followed by digits.<br />
+<strong>Examples:</strong> <code>rs3918290</code>,
+<code>rs1801159</code>, <code>rs1801265</code>, <code>rs17376848</code>,
+<code>rs1801160</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.139</td>
+<td align="right">0.139</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_asin" class="section level4">
+<h4><code>is_asin()</code></h4>
+<p>An Amazon Standard Identification Number.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: B0 followed by eight
+alphanumerics.<br />
+<strong>Examples:</strong> <code>B01L7DYXL0</code>,
+<code>B0065RHC2Q</code>, <code>B004M8T1XS</code>,
+<code>B004M8T30O</code>, <code>B0065RRJGK</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.262</td>
+<td align="right">0.262</td>
+<td align="right">0.013</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_bibcode" class="section level4">
+<h4><code>is_bibcode()</code></h4>
+<p>A 19-character NASA ADS bibliographic code.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: 4-digit year + 14 code characters + a
+final letter.<br />
+<strong>Examples:</strong> <code>2004PASP..116...98K</code>,
+<code>2003ApJ...597..957H</code>, <code>2003A&amp;A...405..175M</code>,
+<code>2003ApJ...590..895W</code>,
+<code>2003A&amp;A...404..249B</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.175</td>
+<td align="right">0.179</td>
+<td align="right">0.017</td>
+<td align="right">0.521</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="codes-lookups" class="section level3">
+<h3>Codes / lookups</h3>
+<div id="is_roman" class="section level4">
+<h4><code>is_roman()</code></h4>
+<p>A Roman numeral.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> The canonical well-formed Roman-numeral regex
+(rejects e.g. IIII).<br />
+<strong>Examples:</strong> <code>I</code>, <code>II</code>,
+<code>III</code>, <code>IV</code>, <code>V</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.248</td>
+<td align="right">0.248</td>
+<td align="right">0.01</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_http_status" class="section level4">
+<h4><code>is_http_status()</code></h4>
+<p>An HTTP status code.</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Three digits within 100-599.<br />
+<strong>Examples:</strong> <code>100</code>, <code>101</code>,
+<code>200</code>, <code>201</code>, <code>202</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.701</td>
+<td align="right">0.701</td>
+<td align="right">0.015</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_unix_time" class="section level4">
+<h4><code>is_unix_time()</code></h4>
+<p>A Unix epoch timestamp in seconds.</p>
+<p><strong>Precision:</strong> regex + range (loose)<br />
+<strong>Strategy:</strong> 9-10 digits within a plausible epoch range;
+inherently loose.<br />
+<strong>Examples:</strong> <code>1513036980</code>,
+<code>1503296497</code>, <code>1451638800</code>,
+<code>1360228214</code>, <code>1497917283</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.996</td>
+<td align="right">0.996</td>
+<td align="right">0.004</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_zip_code" class="section level4">
+<h4><code>is_zip_code()</code></h4>
+<p>A US ZIP or ZIP+4 code.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Five digits, optionally + four.<br />
+<strong>Examples:</strong> <code>98052</code>, <code>15206</code>,
+<code>32792</code>, <code>50613</code>, <code>27292</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.743</td>
+<td align="right">0.019</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_uk_postcode" class="section level4">
+<h4><code>is_uk_postcode()</code></h4>
+<p>A UK postcode.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> The standard UK postcode outward/inward
+pattern.<br />
+<strong>Examples:</strong> <code>SA43 2BU</code>, <code>PO12 2DU</code>,
+<code>KA20 3LN</code>, <code>MK43 7TA</code>, <code>DT4 8US</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.258</td>
+<td align="right">0.109</td>
+<td align="right">0.046</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_ca_postal_code" class="section level4">
+<h4><code>is_ca_postal_code()</code></h4>
+<p>A Canadian postal code or 3-character FSA.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Letter-digit-letter, optionally followed by
+digit-letter-digit.<br />
+<strong>Examples:</strong> <code>V5K</code>, <code>K0H</code>,
+<code>T4A</code>, <code>T4B</code>, <code>T9S</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.279</td>
+<td align="right">0.233</td>
+<td align="right">0.152</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_us_state" class="section level4">
+<h4><code>is_us_state()</code></h4>
+<p>A USPS two-letter state code.</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Membership in the 50 states + DC.<br />
+<strong>Examples:</strong> <code>WA</code>, <code>OH</code>,
+<code>DC</code>, <code>NY</code>, <code>PA</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.059</td>
+<td align="right">0.059</td>
+<td align="right">0.057</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_country_code" class="section level4">
+<h4><code>is_country_code()</code></h4>
+<p>An ISO 3166-1 alpha-2 country code.</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Membership in the ISO 3166-1 code list.<br />
+<strong>Examples:</strong> <code>MA</code>, <code>AR</code>,
+<code>GR</code>, <code>CD</code>, <code>KP</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.467</td>
+<td align="right">0.467</td>
+<td align="right">0.216</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="date-time" class="section level3">
+<h3>Date / time</h3>
+<div id="is_iso_date" class="section level4">
+<h4><code>is_iso_date()</code></h4>
+<p>An ISO 8601 calendar date (YYYY-MM-DD).</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Regex + a month/day range check.<br />
+<strong>Examples:</strong> <code>2016-03-15</code>,
+<code>2016-03-13</code>, <code>2016-03-12</code>,
+<code>2016-03-11</code>, <code>2020-01-01</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.337</td>
+<td align="right">0.085</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_iso_datetime" class="section level4">
+<h4><code>is_iso_datetime()</code></h4>
+<p>An ISO 8601 datetime with optional fraction/zone.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex over date + T + time + optional
+.fraction and Z/offset.<br />
+<strong>Examples:</strong> <code>1987-02-06T06:00:37</code>,
+<code>1988-01-12T06:34:58</code>, <code>1930-07-06T02:08:45</code>,
+<code>2009-06-15T13:45:30</code>, <code>2010-06-15T13:45:30</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.165</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_us_date" class="section level4">
+<h4><code>is_us_date()</code></h4>
+<p>A US numeric date (M/D/YY).</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Regex + month/day validation.<br />
+<strong>Examples:</strong> <code>3/3/16</code>, <code>1/27/16</code>,
+<code>12/31/99</code>, <code>7/4/2016</code>, <code>2/29/2020</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.615</td>
+<td align="right">0.125</td>
+<td align="right">0</td>
+<td align="right">0.032</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_us_datetime" class="section level4">
+<h4><code>is_us_datetime()</code></h4>
+<p>A US numeric datetime with AM/PM.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: M/D/YYYY (slash or dash) + time +
+optional AM/PM.<br />
+<strong>Examples:</strong> <code>2/6/1987 6:00:37 AM</code>,
+<code>1/12/1988 6:34:58 AM</code>, <code>7/6/1930 2:08:45 AM</code>,
+<code>7/15/1971 6:43:21 AM</code>, <code>05-13-2009 12:35 PM</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.085</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_abbr_month_date" class="section level4">
+<h4><code>is_abbr_month_date()</code></h4>
+<p>Day-month-year with an abbreviated month (1-Jul-14).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: day + separator + 3-letter month +
+year.<br />
+<strong>Examples:</strong> <code>1-Jul-14</code>, <code>2-Jul-14</code>,
+<code>3-Jul-14</code>, <code>4-Jul-14</code>,
+<code>21/Nov/2012</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.02</td>
+<td align="right">0.005</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_rfc2822_datetime" class="section level4">
+<h4><code>is_rfc2822_datetime()</code></h4>
+<p>An RFC 2822 / HTTP datetime.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: weekday, DD Mon YYYY hh:mm:ss +
+zone.<br />
+<strong>Examples:</strong> <code>Fri, 06 Feb 1987 06:00:37 GMT</code>,
+<code>Tue, 12 Jan 1988 06:34:58 GMT</code>,
+<code>Sun, 06 Jul 1930 02:08:45 GMT</code>,
+<code>Thu, 15 Jul 1971 06:43:21 GMT</code>,
+<code>Mon, 01 Jan 2001 00:00:00 GMT</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_long_date" class="section level4">
+<h4><code>is_long_date()</code></h4>
+<p>A verbose English date (Friday, June 16, 1967).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex allowing optional weekday, full/abbrev
+month, day, year (with era) and time; requires a weekday or a year so it
+does not overlap Month-Day.<br />
+<strong>Examples:</strong> <code>Friday, June 16, 1967</code>,
+<code>Thursday, June 9, 1955</code>,
+<code>Wednesday, May 17, 1967</code>,
+<code>Friday, June 16, 1967 8:46:44 AM</code>,
+<code>Friday, February 6, 1987 2:00:37 PM</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_month_year" class="section level4">
+<h4><code>is_month_year()</code></h4>
+<p>A Month-Year value (February 1987).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: month name + optional comma + 4-digit
+year.<br />
+<strong>Examples:</strong> <code>February 1987</code>,
+<code>January 1988</code>, <code>July 1930</code>,
+<code>July 1971</code>, <code>August, 2005</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_month_day" class="section level4">
+<h4><code>is_month_day()</code></h4>
+<p>A Month-Day value with no year (February 6).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: month name + 1-2 digit day.<br />
+<strong>Examples:</strong> <code>February 6</code>,
+<code>January 12</code>, <code>July 6</code>, <code>July 15</code>,
+<code>March 1</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.005</td>
+<td align="right">0</td>
+<td align="right">0.005</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_clock_time" class="section level4">
+<h4><code>is_clock_time()</code></h4>
+<p>A clock time (6:00:37 AM).</p>
+<p><strong>Precision:</strong> regex + range<br />
+<strong>Strategy:</strong> Regex + hour/minute range validation.<br />
+<strong>Examples:</strong> <code>6:00:37 AM</code>,
+<code>6:34:58 AM</code>, <code>2:08:45 AM</code>,
+<code>6:43:21 AM</code>, <code>11:59 PM</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.115</td>
+<td align="right">0.02</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_date_range" class="section level4">
+<h4><code>is_date_range()</code></h4>
+<p>Two dates joined by ‘to’ or ‘-’.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex over two ISO/US dates and a
+joiner.<br />
+<strong>Examples:</strong> <code>07/21/16 to 08/19/16</code>,
+<code>08/20/16 to 09/20/16</code>, <code>09/21/16 to 10/20/16</code>,
+<code>1972-01-01 - 1972-07-01</code>,
+<code>1972-07-01 - 1973-01-01</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_hijri_date" class="section level4">
+<h4><code>is_hijri_date()</code></h4>
+<p>A Hijri (Islamic-calendar) date (11 Shawwal 1430).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: day + Islamic month name + year.<br />
+<strong>Examples:</strong> <code>11 Shawwal 1430</code>,
+<code>5 Muharram 1300</code>, <code>19 Rajab 1460</code>,
+<code>6 Muharram 1300</code>, <code>1 Ramadan 1445</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.006</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="address" class="section level3">
+<h3>Address</h3>
+<div id="is_street_address" class="section level4">
+<h4><code>is_street_address()</code></h4>
+<p>A street-address line (2325 140th St).</p>
+<p><strong>Precision:</strong> heuristic regex<br />
+<strong>Strategy:</strong> Regex: house number + name + a street-type
+suffix (St/Ave/Blvd/…).<br />
+<strong>Examples:</strong> <code>2325 140th St</code>,
+<code>303 Aspen Ct</code>, <code>1225 S Walnut St</code>,
+<code>30 Grandview Ct</code>, <code>100 Main St</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+<td align="right">0.003</td>
+<td align="right">0.047</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_po_box" class="section level4">
+<h4><code>is_po_box()</code></h4>
+<p>A PO box (PO Box 12, P.O.B. 3).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex covering PO / POB / Post Office Box
+variants + a number.<br />
+<strong>Examples:</strong> <code>PO Box 1234</code>,
+<code>P.O. Box 56</code>, <code>POB 789</code>,
+<code>Post Office Box 42</code>, <code>PO BOX 100</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.025</td>
+<td align="right">0.01</td>
+<td align="right">0</td>
+<td align="right">0.073</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_city_name" class="section level4">
+<h4><code>is_city_name()</code></h4>
+<p>A US city / place name.</p>
+<p><strong>Precision:</strong> exact lookup (partial coverage)<br />
+<strong>Strategy:</strong> Normalized membership test against ~1,000
+larger US cities; smaller towns miss by design (precision over
+recall).<br />
+<strong>Examples:</strong> <code>Chicago</code>,
+<code>New Orleans</code>, <code>Springfield</code>,
+<code>Pittsburgh</code>, <code>Bloomington</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_city_state" class="section level4">
+<h4><code>is_city_state()</code></h4>
+<p>A ‘City, State’ value.</p>
+<p><strong>Precision:</strong> regex + lookup<br />
+<strong>Strategy:</strong> Splits on the comma and validates the
+trailing token is a real state (abbrev or name).<br />
+<strong>Examples:</strong> <code>Bloomington, IN</code>,
+<code>Cheshire, CT</code>, <code>Bloomington, Indiana</code>,
+<code>Los Angeles, CA</code>, <code>New York, NY</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.31</td>
+<td align="right">0.062</td>
+<td align="right">0.05</td>
+<td align="right">0.307</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_state_zip" class="section level4">
+<h4><code>is_state_zip()</code></h4>
+<p>A ‘State ZIP’ value.</p>
+<p><strong>Precision:</strong> regex + lookup<br />
+<strong>Strategy:</strong> Regex whose leading token must be a real
+state, followed by a ZIP.<br />
+<strong>Examples:</strong> <code>IN 47401</code>,
+<code>CT, 06410</code>, <code>Indiana 47401</code>,
+<code>CA 90210</code>, <code>TX 78701</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.03</td>
+<td align="right">0.015</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_address" class="section level4">
+<h4><code>is_address()</code></h4>
+<p>A full postal address.</p>
+<p><strong>Precision:</strong> heuristic composite<br />
+<strong>Strategy:</strong> Scans one string for street / PO box / city /
+state / ZIP components and fires when at least three co-occur.<br />
+<strong>Examples:</strong>
+<code>1225 S Walnut St, Bloomington, IN 47401</code>,
+<code>30 Grandview Ct, Cheshire, CT 06410</code>,
+<code>1600 Pennsylvania Ave, Washington, DC 20500</code>,
+<code>350 Fifth Avenue, New York, NY 10118</code>,
+<code>742 Evergreen Terrace, Springfield, IL 62704</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.005</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.07</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="geography" class="section level3">
+<h3>Geography</h3>
+<div id="is_state_fips" class="section level4">
+<h4><code>is_state_fips()</code></h4>
+<p>A 2-digit state FIPS code.</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Membership in the valid state/territory FIPS
+set.<br />
+<strong>Examples:</strong> <code>06</code>, <code>36</code>,
+<code>48</code>, <code>17</code>, <code>12</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.528</td>
+<td align="right">0.528</td>
+<td align="right">0.023</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_county_fips" class="section level4">
+<h4><code>is_county_fips()</code></h4>
+<p>A 5-digit county FIPS (GEOID).</p>
+<p><strong>Precision:</strong> anchor + length<br />
+<strong>Strategy:</strong> Five digits whose first two are a valid state
+FIPS.<br />
+<strong>Examples:</strong> <code>06037</code>, <code>36061</code>,
+<code>48201</code>, <code>17031</code>, <code>12086</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.742</td>
+<td align="right">0.742</td>
+<td align="right">0.016</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_tract_fips" class="section level4">
+<h4><code>is_tract_fips()</code></h4>
+<p>An 11-digit census-tract GEOID.</p>
+<p><strong>Precision:</strong> anchor + length<br />
+<strong>Strategy:</strong> Eleven digits with a valid state
+prefix.<br />
+<strong>Examples:</strong> <code>06037206200</code>,
+<code>36061014500</code>, <code>17031839100</code>,
+<code>48201100000</code>, <code>12086001000</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.785</td>
+<td align="right">0.785</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_block_group_fips" class="section level4">
+<h4><code>is_block_group_fips()</code></h4>
+<p>A 12-digit census block-group GEOID.</p>
+<p><strong>Precision:</strong> anchor + length<br />
+<strong>Strategy:</strong> Twelve digits with a valid state
+prefix.<br />
+<strong>Examples:</strong> <code>060372062001</code>,
+<code>360610145001</code>, <code>170318391001</code>,
+<code>482011000001</code>, <code>120860010001</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.75</td>
+<td align="right">0.75</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_block_fips" class="section level4">
+<h4><code>is_block_fips()</code></h4>
+<p>A 15-digit census-block GEOID.</p>
+<p><strong>Precision:</strong> anchor + length<br />
+<strong>Strategy:</strong> Fifteen digits with a valid state
+prefix.<br />
+<strong>Examples:</strong> <code>060372062001001</code>,
+<code>360610145001000</code>, <code>170318391001002</code>,
+<code>482011000001003</code>, <code>120860010001000</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.731</td>
+<td align="right">0.731</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_cbsa" class="section level4">
+<h4><code>is_cbsa()</code></h4>
+<p>A 5-digit Core Based Statistical Area code.</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Membership in the Census CBSA code
+list.<br />
+<strong>Examples:</strong> <code>10100</code>, <code>10140</code>,
+<code>10180</code>, <code>10220</code>, <code>10300</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.141</td>
+<td align="right">0.141</td>
+<td align="right">0.013</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_csa" class="section level4">
+<h4><code>is_csa()</code></h4>
+<p>A 3-digit Combined Statistical Area code.</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Membership in the Census CSA code list.<br />
+<strong>Examples:</strong> <code>101</code>, <code>220</code>,
+<code>364</code>, <code>408</code>, <code>348</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.275</td>
+<td align="right">0.275</td>
+<td align="right">0.01</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_metro_area_name" class="section level4">
+<h4><code>is_metro_area_name()</code></h4>
+<p>A CBSA / CSA area title (metro-area name).</p>
+<p><strong>Precision:</strong> exact lookup (partial)<br />
+<strong>Strategy:</strong> Normalized membership against the official
+metro-area titles (full and state-stripped forms); distinct from
+city_name, which will not match these hyphenated multi-city
+titles.<br />
+<strong>Examples:</strong> <code>Aberdeen, SD</code>,
+<code>Abilene, TX</code>, <code>Akron, OH</code>,
+<code>Athens-Clarke County, GA</code>,
+<code>Corpus Christi, TX</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_nces_locale" class="section level4">
+<h4><code>is_nces_locale()</code></h4>
+<p>An NCES locale code (11-13, 21-23, 31-33, 41-43).</p>
+<p><strong>Precision:</strong> small enum<br />
+<strong>Strategy:</strong> Two-digit enum for City/Suburb/Town/Rural x
+Large/Midsize/Small.<br />
+<strong>Examples:</strong> <code>11</code>, <code>12</code>,
+<code>13</code>, <code>21</code>, <code>22</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_urban_rural" class="section level4">
+<h4><code>is_urban_rural()</code></h4>
+<p>An urban / rural designation label.</p>
+<p><strong>Precision:</strong> small enum<br />
+<strong>Strategy:</strong> Membership in a designation vocabulary
+(urban, rural, suburban, exurban, …).<br />
+<strong>Examples:</strong> <code>Urban</code>, <code>Rural</code>,
+<code>Suburban</code>, <code>Suburb</code>, <code>Exurban</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_census_region" class="section level4">
+<h4><code>is_census_region()</code></h4>
+<p>A US census region or division name.</p>
+<p><strong>Precision:</strong> small enum<br />
+<strong>Strategy:</strong> Membership in the four regions + nine
+divisions.<br />
+<strong>Examples:</strong> <code>Northeast</code>, <code>Midwest</code>,
+<code>South</code>, <code>West</code>, <code>New England</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="government-entity-ids" class="section level3">
+<h3>Government / entity IDs</h3>
+<div id="is_ssn" class="section level4">
+<h4><code>is_ssn()</code></h4>
+<p>A US Social Security Number.</p>
+<p><strong>Precision:</strong> regex + rules<br />
+<strong>Strategy:</strong> ddd-dd-dddd with issuance validity rules
+(area not 000/666/900+, group not 00, serial not 0000).<br />
+<strong>Examples:</strong> <code>540-39-4268</code>,
+<code>518-07-5084</code>, <code>531-33-7396</code>,
+<code>212-61-9091</code>, <code>478-46-4157</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.945</td>
+<td align="right">0.21</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_ein" class="section level4">
+<h4><code>is_ein()</code></h4>
+<p>A US Employer Identification Number.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Two digits, a dash, seven digits.<br />
+<strong>Examples:</strong> <code>15-4464349</code>,
+<code>58-9042990</code>, <code>17-5287634</code>,
+<code>11-9778467</code>, <code>79-3293856</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.33</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_dea" class="section level4">
+<h4><code>is_dea()</code></h4>
+<p>A DEA registration number.</p>
+<p><strong>Precision:</strong> checksum<br />
+<strong>Strategy:</strong> Two letters + seven digits, with the DEA
+check digit validated.<br />
+<strong>Examples:</strong> <code>AP5836727</code>,
+<code>BJ6125341</code>, <code>AD0865937</code>, <code>AS9432042</code>,
+<code>AJ3247194</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.018</td>
+<td align="right">0.018</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_chinese_resident_id" class="section level4">
+<h4><code>is_chinese_resident_id()</code></h4>
+<p>A Chinese resident identity-card number.</p>
+<p><strong>Precision:</strong> checksum<br />
+<strong>Strategy:</strong> Eighteen characters with an ISO 7064 mod-11-2
+check character.<br />
+<strong>Examples:</strong> <code>141002197808194474</code>,
+<code>431026197506218370</code>, <code>210811198609188735</code>,
+<code>371625197902109782</code>, <code>140427197602187066</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.093</td>
+<td align="right">0.093</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_uei" class="section level4">
+<h4><code>is_uei()</code></h4>
+<p>A SAM.gov Unique Entity Identifier (the 12-character code that
+replaced the DUNS number).</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Twelve alphanumerics excluding the letters I
+and O, first character not 0.<br />
+<strong>Examples:</strong> <code>ZQGGHJH74DW7</code>,
+<code>R7KZ8N2QP4M5</code>, <code>H3JD9FGT2WX6</code>,
+<code>AB1CD2EF3GH4</code>, <code>M5N6P7Q8R9S2</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.005</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_naics" class="section level4">
+<h4><code>is_naics()</code></h4>
+<p>A NAICS industry code (2-6 digits).</p>
+<p><strong>Precision:</strong> exact lookup<br />
+<strong>Strategy:</strong> Membership in the full 2022 NAICS code set,
+rolled up to every level.<br />
+<strong>Examples:</strong> <code>11</code>, <code>236</code>,
+<code>311</code>, <code>541511</code>, <code>5415</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.137</td>
+<td align="right">0.137</td>
+<td align="right">0.004</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="phone" class="section level3">
+<h3>Phone</h3>
+<div id="is_phone" class="section level4">
+<h4><code>is_phone()</code></h4>
+<p>A US / NANP phone number.</p>
+<p><strong>Precision:</strong> loose regex<br />
+<strong>Strategy:</strong> Regex over the common US formats and
+separators.<br />
+<strong>Examples:</strong> <code>510-577-3201</code>,
+<code>(309) 647-1820</code>, <code>(609)-993-3001</code>,
+<code>650-384-9911</code>, <code>1-650-384-9911</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.875</td>
+<td align="right">0.021</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_intl_phone" class="section level4">
+<h4><code>is_intl_phone()</code></h4>
+<p>A +-prefixed international phone number.</p>
+<p><strong>Precision:</strong> loose regex<br />
+<strong>Strategy:</strong> Regex: + country code + 8-15 digits with
+separators/parentheses.<br />
+<strong>Examples:</strong> <code>+1-4250013981</code>,
+<code>+61 3 6216 0864</code>, <code>+64 3 477 4000</code>,
+<code>+44 20 7946 0958</code>, <code>+49 30 12345678</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.28</td>
+<td align="right">0</td>
+<td align="right">0.367</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_msisdn" class="section level4">
+<h4><code>is_msisdn()</code></h4>
+<p>A bare MSISDN subscriber number.</p>
+<p><strong>Precision:</strong> loose regex<br />
+<strong>Strategy:</strong> 10-15 digits; very loose, best paired with a
+variable-name hint.<br />
+<strong>Examples:</strong> <code>919961345678</code>,
+<code>13109976224</code>, <code>12481234567</code>,
+<code>27821234567</code>, <code>447912345678</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="research-scholarly-ids" class="section level3">
+<h3>Research / scholarly IDs</h3>
+<div id="is_doi" class="section level4">
+<h4><code>is_doi()</code></h4>
+<p>A Digital Object Identifier.</p>
+<p><strong>Precision:</strong> structured regex<br />
+<strong>Strategy:</strong> Regex: 10.<registrant>/<suffix>.<br />
+<strong>Examples:</strong> <code>10.1109/ICDCSW.2017.43</code>,
+<code>10.1109/IRI.2016.84</code>, <code>10.1109/ACC.2016.7526681</code>,
+<code>10.1109/PIMRC.2015.7343424</code>,
+<code>10.1109/ICICA.2014.47</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.045</td>
+<td align="right">0.005</td>
+<td align="right">0</td>
+<td align="right">0.131</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_orcid" class="section level4">
+<h4><code>is_orcid()</code></h4>
+<p>An ORCID researcher iD.</p>
+<p><strong>Precision:</strong> checksum<br />
+<strong>Strategy:</strong> dddd-dddd-dddd-dddC with an ISO 7064 mod-11-2
+check digit (C may be X).<br />
+<strong>Examples:</strong> <code>0000-0002-0488-8591</code>,
+<code>0000-0002-6390-6569</code>, <code>0000-0001-8666-7241</code>,
+<code>0000-0001-6352-7991</code>, <code>0000-0003-2738-1803</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.058</td>
+<td align="right">0.013</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_isbn" class="section level4">
+<h4><code>is_isbn()</code></h4>
+<p>An ISBN-10 or ISBN-13.</p>
+<p><strong>Precision:</strong> checksum<br />
+<strong>Strategy:</strong> Validates the ISBN-10 (mod 11) or ISBN-13
+(mod 10) check digit.<br />
+<strong>Examples:</strong> <code>140955525-9</code>,
+<code>038027303-9</code>, <code>489911182-7</code>,
+<code>099337131-0</code>, <code>712334370-0</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.058</td>
+<td align="right">0.025</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_issn" class="section level4">
+<h4><code>is_issn()</code></h4>
+<p>An ISSN serial number.</p>
+<p><strong>Precision:</strong> checksum<br />
+<strong>Strategy:</strong> dddd-dddC with a mod-11 check digit (C may be
+X).<br />
+<strong>Examples:</strong> <code>0001-2092</code>,
+<code>0001-253X</code>, <code>0002-0729</code>, <code>0003-021X</code>,
+<code>0004-4687</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.092</td>
+<td align="right">0.033</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="is_npi" class="section level4">
+<h4><code>is_npi()</code></h4>
+<p>A US National Provider Identifier.</p>
+<p><strong>Precision:</strong> checksum<br />
+<strong>Strategy:</strong> Ten digits with a Luhn check over the 80840
+prefix + first nine digits.<br />
+<strong>Examples:</strong> <code>1225155880</code>,
+<code>1649397217</code>, <code>1578680153</code>,
+<code>1346368917</code>, <code>1487772901</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Recall</th>
+<th align="right">S1</th>
+<th align="right">S2</th>
+<th align="right">S3</th>
+<th align="right">SP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.085</td>
+<td align="right">0.085</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="adding-a-new-detector" class="section level2">
+<h2>Adding a new detector</h2>
+<p>New types are added with a copy-paste, bring-your-own-LLM workflow —
+no API key required. Collect 10-25 example values of the new type and
+call [<code>draft_detector_prompt()</code>]. It builds the AutoType test
+cases for your examples and assembles a self-contained prompt (a
+versioned contract + your positives + generated hard negatives) that you
+paste into any LLM:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">draft_detector_prompt</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">examples  =</span> <span class="fu">c</span>(<span class="st">&quot;ENSG00000139618&quot;</span>, <span class="st">&quot;ENSMUSG00000102659&quot;</span>, <span class="st">&quot;ENST00000407559&quot;</span>),</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">type_name =</span> <span class="st">&quot;ensembl_id&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>)</span></code></pre></div>
+<p>The prompt is printed to the console and written to a
+<code>.md</code> file you can attach to a chat. When the LLM returns an
+<code>is_&lt;type&gt;()</code> function, score it with
+[<code>evaluate_detector()</code>], which runs the same recall/precision
+report used above so you can see how it performs before adopting it.
+Once you are happy, drop the function into an
+<code>R/dt-&lt;family&gt;.R</code> file, add its positive examples to
+<code>data-raw/datatypes/&lt;family&gt;.R</code>, and register one line
+in <code>R/00-data-type-registry.R</code>.</p>
+<p>See <code>?draft_detector_prompt</code> and
+<code>?evaluate_detector</code> for details.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

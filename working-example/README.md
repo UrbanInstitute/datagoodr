@@ -1,62 +1,63 @@
-# Working Example 
+# Working Example
 
+A CSV has no schema. Whether `201912` is a date, `36081001900` a geography ID, or
+`27244` a dollar amount is invisible to whoever opens the file next — every tool
+guesses, and they guess differently. `datagoodr` fixes this by pairing the data
+with a **Data Governance File (DGF)**: one row per variable recording how the
+data is stored, how it should be read, and what it means.
 
-The following code executes a working example of the datagoodR workflow. 
+This folder contains two runnable examples.
 
-## Step 0: Save data file in data-dev/ directory. 
+## The main walkthrough — `walkthrough.R`
 
-Currently data-dev/DEMO-DATA-SMALL.csv is a good example. 
+One script, end to end, on a real (slightly messy) IRS nonprofit extract
+(`data-dev/DEMO-DATA-SMALL.csv`). Run it from the package root:
 
-## Step 1: Create the DGF
+```r
+Rscript working-example/walkthrough.R
+```
 
-Run the STEP1.R file to create the DGF. This step inputs a data file then outputs 
-the DGF as an excel and csv file. These files can then be manually (or iteratively)
-updated until they have all the information you want. 
+It moves through the rule-based workflow — three stages (`raw_` → `stable_` →
+`desired_`) joined by two rule bridges:
 
-This step creates DGF-V1.csv and DGF-V1.xlsx as the "first" attempt at a DGF. 
-Then makes DGF-V2.csv and DGF-V2.xlsx as "updated" versions with more information. 
+1. **Create the DGF.** `create_dgf()` profiles every column, runs the detector
+   library over it, and writes `DGF.csv` / `DGF.xlsx` with a first guess at each
+   variable's type, subtype, class, key flags, and the `rg_` render profile.
+2. **Correct the guesses R can't make from data alone.** `retype_dgf()` fixes
+   the semantic calls the bytes don't reveal — the `YYYYMM` tax-period columns
+   are monthly **dates**, not categories; the 11-digit census tract is an
+   **identifier**, not a number — and re-profiles just those variables so the
+   stored graphic matches the corrected type.
+3. **Add semantic context.** Set the `desired_*` fields (subtype / class) to say
+   what each column *is*, independent of storage.
+4. **Reformat to a governed CSV.** Drop `as_*` rule names in
+   `raw_to_stable_transform`; `stabilize_data()` applies them (each guarded by
+   its `is_*` detector) and `write_stable_csv()` writes a self-describing CSV
+   with an embedded, portable copy of the DGF.
+5. **Validate & render.** `inspect_dgf()` checks the DGF is well formed, then
+   `create_rg()` scaffolds a Quarto project and renders the Research Guide (it
+   also drops a `DG.R` you can edit to customize formatting and layouts).
+6. **Refresh when the data changes.** `update_dgf()` compares a new extract to
+   the DGF by content hash — unchanged variables keep their curated row, changed
+   ones are re-profiled — and re-runs the rule guards, flagging any that no
+   longer fit the cleaned data.
 
-The goal of the DGF is to store the "minimum" amount of information to render the 
-research guide without needed to read the raw data into the quarto document in
-step 3. 
+Outputs land in this folder: `DGF.csv`/`DGF.xlsx` (the governance file),
+`DGF-governed.csv` (the stabilized data), and `research-guide.*` (the report).
 
-## Step 2: Validate the DGF
+## The temporal showcase — `STEP-temporal-demo.R`
 
-Run the STEP2.R file to validate the DGF before rendering. `inspect_dgf()`
-checks that each column is in a format Step 3 can handle: all required columns
-are present, every `vtype_class` is renderable, the JSON columns still contain
-valid JSON, every function named in `vconvert`/`vformat` is defined, and every
-variable has an `rg_hash`. It prints a report and returns `report$valid` plus a
-list of any problems found.
+A compact second example focused on the date/time detectors and units. It builds
+a synthetic dataset (`make-temporal-demo-data.R`) spanning the messy temporal
+formats a real extract throws at you — abbreviated month/weekday names, `m-d-Y`
+vs `d-m-y`, `YYYY-MM`, am/pm clock times, a full timestamp, bare years — then
+shows the `create_dgf()` → `retype_dgf()` (type + unit) → `create_rg()` loop.
+The graphic for each temporal is chosen at render from `stable_data_unit`
+(calendar heatmap, month bars, day-of-week, year histogram, …).
 
-## Step 3: Render the RG
+## Learn more
 
-
-This step inputs the DGF you made in step 1 (and vaildated in step 2) 
-then renders qmd-templates/RG.qmd file. This file makes the reacher guide in PDF 
-and HTML file type at qmd-template/RG.pdf and qmd-template/RG.html. 
-
-If you are only generating documentation for this data set one time, you can stop 
-here. Step 4 and 5 are for when you need to regularly update the data, and thus 
-regularly update the associated RG. 
-
-
-## Step 4: Refresh the DGF
-
-Run the STEP4.R file to refresh the DGF when the data set is updated.
-`update_dgf()` compares the new data to the old DGF using each variable's
-`rg_hash`: if the new hash matches, that variable is unchanged and its curated
-DGF row is kept as-is; if it differs, that variable's data summaries
-(`rg_[preview/properties/stats/graphics/hash]`) are refreshed. Curated fields
-and hand-edited factor level labels are preserved, and any added / removed
-variables are reported. The updated DGF is written to `DGF-V3.*`.
-
-
-## Step 5: Customize
-
-Run the STEP5.R file to scaffold a customizable documentation project.
-`create_rg()` (full data profile) and `create_dd()` (descriptors only) copy a
-Quarto template pointed at your DGF plus a starter `DG.R`. Customize by editing
-`DG.R` (override formatting/graphic functions or a layout object), the `<style>`
-block in the `.qmd` (page grid, fonts, colors), or by adding narrative around
-the automatic sections. Non-customizers can just render the default template.
+The **"Rule-Based Data Governance"** vignette explains the three-stage model and
+the `as_*` / `is_*` rule-and-guard system; the **"Data-Type Detector Guide"**
+vignette catalogs the detectors that power both `guess_data_type()` and the
+rule guards.

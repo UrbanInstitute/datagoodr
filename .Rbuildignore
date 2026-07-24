@@ -5,8 +5,10 @@
 ^working-example$
 ^pptx$
 ^data-dev$
+^data-types$
 ^qmd-templates$
 ^.*\.Rproj$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^data-raw$

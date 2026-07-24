@@ -1,0 +1,281 @@
+/* ==========================================================================
+   datagoodr report stylesheet
+   Single source of truth for the RG / DD templates (served via datagoodr_css()).
+   Tweak the tokens in :root to restyle the whole report.
+   ========================================================================== */
+
+:root {
+  --dg-serif: Georgia, "Times New Roman", serif;
+  --dg-sans:  -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --dg-mono:  "Anonymous Pro", Consolas, Menlo, monospace;
+
+  --dg-ink:    #1a1a1a;   /* primary text            */
+  --dg-label:  #6b6b6b;   /* field / section labels  */
+  --dg-muted:  #8a8a8a;   /* secondary text          */
+  --dg-rule:   #dcdcdc;   /* hairline table rules     */
+  --dg-accent: #1a1a1a;   /* title underline          */
+
+  --dg-gap-row: 6px;
+  --dg-gap-col: 26px;
+}
+
+/* --- per-variable grid ---------------------------------------------------- */
+/* Three equal columns. Each section (a div) is placed by flow, in layout
+   order, and sized with `grid-column: span N` -> 1/3, 2/3, or full width.
+   The div number stays the section's identity + style hook; only the span
+   sets width. Keep each visual row's spans summing to 3 (1+2, 1+1+1, 3). */
+.parent {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  /* the whole grid is indented under the flush-left variable title (which is
+     emitted outside .parent), matching the reference layout. */
+  padding-left: 3.2em;
+  /* minmax(0, 1fr) keeps the three columns strictly equal and lets wide
+     content (long preview lines, wide tables) overflow instead of blowing
+     out a column. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  grid-column-gap: var(--dg-gap-col);
+  grid-row-gap: var(--dg-gap-row);
+  /* breathing room after each variable block, before the next section title */
+  margin-bottom: 2.2em;
+}
+
+/* keep every rendered graphic inside its cell - never overflow the column */
+.parent img, .parent svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Standard section template - one div scheme shared by every variable type:
+     div3 attributes (1/3)  + div4 description (2/3)
+     div5 PREVIEW label (1/3) + div6 preview data (2/3)
+     div7 PROPERTIES (1/3)  + div8 graphic (2/3)
+     div9 full-width extra table (3/3): STATS / levels / most-common values */
+.div1  { grid-column: span 3; padding-bottom: 4px; }  /* title (outside grid) */
+.div2  { grid-column: span 3; }   /* label            */
+.div3  { grid-column: span 1; }   /* type/scope/length */
+.div4  { grid-column: span 2; }   /* description       */
+.div5  { grid-column: span 1; }   /* preview label     */
+.div6  { grid-column: span 2; }   /* preview data      */
+.div7  { grid-column: span 1; }   /* properties        */
+.div8  { grid-column: span 2; }   /* graphic           */
+.div9  { grid-column: span 3; }   /* full-width table  */
+
+/* empty spacers usable directly from a layout object (e.g. "blank1") */
+.blank1 { grid-column: span 1; }
+.blank2 { grid-column: span 2; }
+
+/* left-hand column cells get a small indent to sit under the title's text */
+.div3, .div5, .div7 { padding-left: 2px; }
+
+/* PROPERTIES (div7) shares a row with the tall word cloud (div8). The cell
+   still stretches to the row height (so the band rule below aligns at the top),
+   but its content is centered vertically to sit level with the graphic. */
+.div7 { display: flex; flex-direction: column; justify-content: center; }
+
+/* Band separators: a full-width hairline + breathing room at the start of each
+   major block (preview / properties+graphic / stats). Applying the rule to both
+   cells of a row spans it across all three columns (grid items stretch, so the
+   tops align). The dictionary block (div2/div3/div4) gets no top rule. */
+.div5, .div6,          /* PREVIEW band         */
+.div7, .div8,          /* PROPERTIES + graphic */
+.div9 {                /* stats / most-common  */
+  border-top: 1px solid var(--dg-rule);
+  padding-top: 0.9em;
+  margin-top: 0.5em;
+}
+
+/* the full-width extra table is height-capped and scrolls when long (e.g. a
+   factor with many levels, or a long most-common-values list) */
+.div9 { max-height: 22em; overflow-y: auto; }
+
+/* ==========================================================================
+   Visual hierarchy
+   L1 title  >  L2 label  >  L3 field labels  >  L4 values/data
+   ========================================================================== */
+
+/* L1 - variable name */
+h1.title { color: var(--dg-ink); font-family: var(--dg-serif); font-size: 2.3em; }
+h2.anchored { color: #c9c9c9; }
+h3.anchored { color: var(--dg-muted); }
+
+h4 {
+  font-family: var(--dg-serif);
+  font-size: 2.5em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--dg-ink);
+  border-bottom: 3px solid var(--dg-accent);
+  width: 100%;
+  /* extra top margin sets each variable's title apart from the block above */
+  margin: 0.8em 0 0.2em 0;
+  padding-bottom: 2px;
+}
+
+h5 { font-size: 0.9em; }
+
+/* L2 - the plain-language variable label (div2), printed without a prefix */
+.div2 p {
+  font-family: var(--dg-sans);
+  font-size: 1.3em;
+  font-weight: 400;
+  color: var(--dg-ink);
+  line-height: 1.3;
+  margin: 0.1em 0 0.5em 0;
+}
+
+/* L3 - field & section labels (DATA TYPE:, DEFINITION:, LEVELS:, ...) rendered
+   as <strong>. One consistent treatment across all descriptor divs. */
+.div3 strong, .div4 strong {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--dg-label);
+}
+
+/* L4 - values */
+.div3 p {
+  font-family: var(--dg-sans);
+  font-size: 0.95em;
+  color: var(--dg-ink);
+  line-height: 1.2;
+  margin: 0 0 0.15em 0;
+}
+
+.div4 p {
+  font-family: var(--dg-sans);
+  font-size: 0.95em;
+  color: var(--dg-ink);
+  line-height: 1.4;
+  margin: 0 0 0.55em 0;
+}
+
+/* --- descriptor fields (v_to_txt) ----------------------------------------- */
+/* Emitted as <div class="dg-field"><span class="dg-k">LABEL</span>
+   <span class="dg-v">value</span></div>. div3 = short metadata aligned into a
+   two-column definition block (dark label + bold mono value); div4 = uppercase
+   label followed by flowing prose (DESCRIPTION, LOCATION CODE). */
+.dg-field .dg-k {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72em;
+  font-weight: 700;
+}
+
+.div3 .dg-field {
+  display: grid;
+  grid-template-columns: 6.2em 1fr;
+  align-items: baseline;
+  column-gap: 0.5em;
+  margin: 0 0 0.32em 0;
+}
+.div3 .dg-k { color: var(--dg-ink); }
+.div3 .dg-v {
+  font-family: var(--dg-mono);
+  font-weight: 700;
+  font-size: 0.92em;
+  color: var(--dg-ink);
+}
+
+.div4 .dg-field { margin: 0 0 0.55em 0; line-height: 1.4; }
+.div4 .dg-k { color: var(--dg-label); }
+.div4 .dg-k::after { content: ":\00a0"; }
+.div4 .dg-v {
+  font-family: var(--dg-sans);
+  font-size: 0.95em;
+  color: var(--dg-ink);
+}
+
+/* --- data preview: wrapped monospace block (wrap_preview / paste_preview) -- */
+pre.dg-preview {
+  font-family: var(--dg-mono);
+  font-size: 0.7em;
+  line-height: 1.4;
+  white-space: pre;
+  overflow-x: auto;      /* contain any stray long line inside the cell */
+  max-width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0.15em 0 0 0;
+  color: #333;
+}
+
+/* ==========================================================================
+   Data-profile tables (properties / quantiles / stats)
+   ========================================================================== */
+
+/* section labels: div5 (PREVIEW), div7 (PROPERTIES), div9 (STATS/levels/...) */
+.div5 p, .div7 p, .div9 p {
+  margin: 0 0 0.15em 0;
+}
+.div5 strong, .div7 strong, .div9 strong {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--dg-label);
+}
+
+/* mono cells in the properties (div7), graphic-cell table (div8, the identifier
+   MOST COMMON VALUES table), and full-width (div9) tables. div8 is a graphic for
+   every other type, so these table rules only bite for the identifier. */
+.div7 td, .div8 td, .div9 td {
+  font-family: var(--dg-mono);
+  font-size: 0.85em;
+}
+
+.div7 table, .div8 table, .div9 table { margin-left: 2px; }
+
+/* strip default table chrome; use tight cells + hairline row rules */
+.table { width: auto; }
+.table > tbody { border-top: none; }
+.table > :not(caption) > * > * { padding: 0.05rem 0.6rem 0.05rem 0; }
+
+tbody, tfoot, tr, td, th {
+  border-color: inherit;
+  border-style: none;
+  border-width: 0;
+}
+
+.div7 tr, .div8 tr, .div9 tr {
+  border-bottom: 1px solid var(--dg-rule);
+}
+/* hide the header on the self-evident STAT/VAL/PER properties table ... */
+.div7 th { display: none; }
+/* ... but keep it on the div8 identifier table and the full-width extra table,
+   where the columns aren't self-evident (STATS names, factor
+   LABEL/FREQUENCY/MEANING, most-common VALUE/FREQUENCY, logical category
+   codes). */
+.div8 th, .div9 th {
+  font-family: var(--dg-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.7em;
+  font-weight: 700;
+  color: var(--dg-label);
+  text-align: left;
+}
+
+/* the DISTRIBUTION SHAPE table (numeric div9, under STATS) is self-evident, so
+   its header (stat / num / interpretation) is hidden - same treatment as the
+   PROPERTIES table. */
+.dg-shape thead, .dg-shape th { display: none; }
+
+/* graphic anchored to the bottom-right of its cell */
+.div8 img, .div8 svg { align-self: end; justify-self: end; }
+
+@media print {
+  body {
+    display: table;
+    table-layout: fixed;
+    padding: 2.5cm 1.5cm 3cm 1.5cm;
+    height: auto;
+  }
+}

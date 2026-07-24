@@ -263,3 +263,52 @@ and the test pinning that behaviour in tests/testthat/test-render-record.R.
 
 
 
+
+## Data-type module: add `update_package_tools()` / rebuild orchestration
+
+The data-type detector library (`R/dt-<family>.R`, `R/00-data-type-registry.R`,
+`data-raw/datatypes/`) grows by dropping in new families. The build steps that
+turn raw material into shipped assets are currently spread across
+`data-raw/build_test_cases.R` plus manual `devtools::document()`. Consolidate
+the housekeeping into one entry point:
+
+- [ ] Add a single rebuild orchestrator (dev tooling, **not** exported -- a
+      `data-raw/rebuild.R` script or an internal helper) that runs the full
+      chain after a new family is added:
+        1. regenerate `data/data_type_tests.rda` from `data-raw/datatypes/`
+           (currently `build_test_cases.R`),
+        2. rebuild the `data-types/validator-reports/` artifacts,
+        3. optionally chain `devtools::document()` + `devtools::test()`.
+- [ ] Keep the "add a family" contract to three touch points only: a
+      `data-raw/datatypes/<family>.R` vector file, an `R/dt-<family>.R`
+      detector file, and one line per type in `R/00-data-type-registry.R`.
+      The rebuild script must need no edits when a family is added.
+- [ ] Decision deferred (see conversation 2026-07-22): whether the module
+      eventually becomes its own package (`datatypesr`). Kept inside datagoodr
+      for now as a decoupled module whose only public seam is
+      `guess_data_type()`, so extraction later is mechanical. Revisit at
+      ~5-10 families or when an external consumer wants the library alone.
+
+## Data-type detectors: protocol / scientific message formats (deferred)
+
+Twelve AutoType types are specialized message/sequence formats -- SWIFT, FIX,
+EDIFACT, NMEA, AIS, TAF, PIREPS, NOTAM (finance/aviation/maritime messages) and
+FASTA, FASTQ, InChI, SMILES (bio/chem sequences). They are rare in research
+tabular data, so they are deferred. If needed, implement with the standard
+pattern (data-raw/datatypes/<family>.R + R/dt-<family>.R + registry lines +
+fixture), using this generic recipe:
+
+- [ ] **Anchor on the format signature.** Each has a distinctive header/prefix
+      or delimiter structure: FIX is `8=FIX.<ver>` then `tag=value` pairs on a
+      `|`/SOH delimiter; NMEA sentences are `$GPxxx,<comma fields>*<checksum>`;
+      SWIFT is brace blocks `{1:...}{2:...}`; FASTA is a `>` header line + a
+      sequence over `[ACGTN...]`; SMILES/InChI are constrained chemical
+      character sets (`InChI=` prefix for InChI). Detect the signature first.
+- [ ] **Validate the field/charset body**, not just the prefix, to keep
+      precision up (e.g. NMEA field count + allowed chars; FASTA sequence
+      alphabet; FIX required tags).
+- [ ] **Validate the checksum where the format carries one** (NMEA `*XX`
+      trailing hex checksum) using the same helper pattern as the ID checksums.
+- [ ] These are all `tier = "fast"` (regex/charset), no external data needed.
+      Precision will be high (formal grammars) so S3/SP rejection should be
+      near-total.

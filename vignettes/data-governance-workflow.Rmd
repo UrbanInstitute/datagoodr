@@ -1,0 +1,140 @@
+---
+title: "Rule-Based Data Governance"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Rule-Based Data Governance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, comment = "#>")
+```
+
+## The problem: a CSV has no schema
+
+A CSV is just text. Whether `47401` is a ZIP code, a county FIPS, or a count is
+invisible to the reader — every program that opens the file has to *guess*, and
+they guess differently. `datagoodr` fixes this by pairing the data with a **Data
+Governance File (DGF)**: a small table, one row per variable, that records how
+the data is stored, how it should be read, and what it means. The DGF is a
+**rule-based** artifact — you write the *name* of a rule in a cell, and the
+package applies it — so governance is declarative, portable, and reproducible.
+
+## Three stages, two bridges
+
+A variable's type lives on a short journey from the raw file to how you actually
+want to analyze it. The DGF columns are grouped to mirror that journey:
+
+```
+RAW CSV ──raw_to_stable_transform──▶ GOVERNED CSV ──desired_data_import_rule──▶ ANALYSIS
+   │            (reformat: lossless)        │           (coerce into type)          │
+ raw_*                              stable_*                               desired_*
+ how R reads the raw file           the canonical current state           what it should BE
+ (storage, format)                  (storage, unit, format)               (type, subtype, class)
+```
+
+* **`raw_`** — the raw file as received: `raw_data_storage` (how R reads it),
+  `raw_data_format`, and profiling (`raw_first5`, `raw_duplicated`).
+* **`stable_`** — the **governed CSV** after cleanup: `stable_data_storage`,
+  `stable_data_unit`, `stable_data_format`. These describe the data *as it
+  currently is*.
+* **`desired_`** — the **intended interpretation**, which does not change across
+  file versions: `desired_data_type`, `desired_data_subtype`,
+  `desired_data_class`.
+
+Between the stages sit two **rule** columns — each holds the *name* of an `as_*`
+function:
+
+* **`raw_to_stable_transform`** — the lossless **reformat** (standardize weird
+  dates to ISO, strip thousands separators, zero-pad IDs). Its job is to produce
+  a *canonical* governed CSV that every tool reads correctly.
+* **`desired_data_import_rule`** — the **coercion** that reads the governed
+  column into the desired R type (`as_date`, `as_EIN`, ...).
+
+## Which bridge closes the gap? A mechanical rule
+
+The storage a reader produces can be one of only four base types
+(`text`, `number`, `boolean`, `temporal`); the *desired* type may also be a
+semantic type a CSV cannot express (`categorical`, `identifier`, `list`). That
+tells you which bridge to use:
+
+| the desired type is… | example | close the gap with |
+|---|---|---|
+| **reader-achievable** (base) | a date read as text | **reformat** (`raw_to_stable_transform`) — make the reader hit it |
+| **not expressible in a CSV** (semantic) | a ZIP that is a `categorical`, an ID that is an `identifier` | **import rule** (`desired_data_import_rule`) — only metadata can say it |
+
+The design goal is to push as much as possible into the *reformat* (it is
+lossless and every downstream tool benefits), leaving import rules only for the
+genuinely schema-dependent distinctions.
+
+## `as_*` rules and their `is_*` guards
+
+Every rule is an `as_*` coercion, and every `as_*` has a matching **`is_*`
+guard** — and the guards are the detector library documented in the
+*Data-Type Detector Guide*. Before `as_ddmmyyyy` runs, `is_ddmmyyyy` checks that
+the column actually looks like `dd/mm/yyyy`; if it does not, the rule does not
+match the data and you get an error instead of silent corruption. That single
+idea ties the whole system together:
+
+* **governance** — drop an `as_*` name in a cell and it is applied;
+* **safety** — its `is_*` guard validates the precondition;
+* **iteration** — `update_dgf()` re-runs the guards against the *current* data
+  and flags rules that no longer fit (because you cleaned the file).
+
+## The workflow
+
+```{r workflow}
+library(datagoodr)
+
+# 1. create_dgf() launches the guessers and populates the pipeline.
+#    It profiles each column, runs the detector library over it (guess_data_type
+#    with the variable name as a hint), and fills in a first pass at every column
+#    of the DGF -- storage, a semantic desired_data_type/subtype/class, factor
+#    levels, near-unique key flags, and the rg_ profile used to render.
+dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)
+```
+
+`create_dgf()` does the heavy first guess; **your job is to curate two things**:
+
+**(a) Move the data from raw to canonical** — add reformat rules to
+`raw_to_stable_transform` so the governed CSV is clean and self-describing
+(standardize dates, declutter grouped numbers, preserve leading zeros). This is
+representation only: no information is lost, the values just get written in a
+form every tool reads.
+
+**(b) Add semantic context** — set the `desired_*` fields to say what each column
+should *be*, independent of how it happens to be stored. A grade coded `1`–`12`
+is `categorical/ordinal`, not a number; a FIPS code is `identifier/geographic_id`
+when it is a key, `categorical/geography` when it is a grouping variable. This is
+where you encode meaning the CSV alone cannot carry.
+
+```{r curate}
+# Edit the DGF in Excel, or programmatically:
+dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "as_mmddyyyy"  # -> ISO
+dgf$desired_data_type[dgf$var_name == "grade_level"]   <- "categorical"
+dgf$desired_data_subtype[dgf$var_name == "grade_level"] <- "ordinal"
+
+# 2. Apply the reformat rules to a raw extract -> a canonical, governed CSV.
+stable <- stabilize_data(raw_data, dgf)
+write_stable_csv(stable, "data-governed.csv", dgf = dgf)
+
+# 3. Re-profile after you have changed a type or cleaned the data.
+dgf <- update_dgf(dgf, raw_data)   # re-runs guards, recomputes rg_* for changed vars
+```
+
+## Why the split pays off
+
+* **Iterative improvement.** Governance is not one-shot. You clean a column, and
+  `update_dgf()` reconciles the DGF with the new state — the `desired_`
+  interpretation is stable, while the `raw_`/`stable_` storage and the rules
+  needed to bridge to it evolve as the data improves.
+* **Portability.** Because `stable_data_unit`/`stable_data_format` describe the
+  data as it is, and the `desired_` fields describe intent, the governed CSV
+  carries enough to be understood by non-R tools — and maps cleanly onto
+  archival standards (DDI) for deposit in a repository like Dataverse.
+* **No hidden magic.** Every transformation is a named rule you can read, and
+  every rule has a guard that refuses to run on data it does not fit.
+
+See also the companion *Data-Type Detector Guide* vignette for the `is_*`
+detectors that power both `guess_data_type()` and the rule guards.
