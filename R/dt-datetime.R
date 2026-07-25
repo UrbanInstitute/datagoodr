@@ -174,6 +174,26 @@ is_month_year <- function(x) {
   out
 }
 
+#' Is it a compact YYYYMM year-month?
+#'
+#' Six digits: a four-digit year (1900-2099) followed by a two-digit month
+#' (01-12), e.g. a fiscal reporting period like `201912`. Constrained to a sane
+#' year window and a valid month so it does not swallow arbitrary six-digit
+#' counts.
+#'
+#' @param x A character vector.
+#' @return Logical vector; `TRUE` for a valid `YYYYMM` string.
+#' @examples
+#' is_yyyymm(c("201912", "201301", "201913", "2019", NA))
+#' @family datetime detectors
+#' @export
+is_yyyymm <- function(x) {
+  x <- as.character(x)
+  out <- grepl("^(19|20)[0-9]{2}(0[1-9]|1[0-2])$", x)
+  out[is.na(x)] <- NA
+  out
+}
+
 #' Is it a Month-Day value (no year)?
 #'
 #' @param x A character vector.

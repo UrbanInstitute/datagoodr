@@ -63,6 +63,7 @@
   rfc2822_datetime = c("temporal", "point",    "timestamp",     "rfc2822"),
   long_date        = c("temporal", "point",    "calendar_date", "long"),
   month_year       = c("temporal", "period",   "month",         "Myyyy"),
+  yyyymm           = c("temporal", "period",   "month",         "yyyymm"),
   month_day        = c("temporal", "point",    "calendar_date", "Md"),
   clock_time       = c("temporal", "point",    "time_of_day",   "hhii"),
   date_range       = c("temporal", "interval", "date_range",    "range"),
@@ -121,7 +122,7 @@
 #' @noRd
 .loose_detectors <- c("phone", "intl_phone", "msisdn", "unix_time",
                       "http_status", "roman", "state_fips", "county_fips",
-                      "nces_locale", "us_state", "country_code")
+                      "nces_locale", "us_state", "country_code", "ein")
 
 #' Ontology coordinates for a detector type
 #'

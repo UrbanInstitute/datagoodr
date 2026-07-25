@@ -62,7 +62,7 @@ temporal,period,year,yyyy ;; FYyyyy,calendar or fiscal year,integer ;; character
 temporal,period,quarter,yyyyQq,calendar or fiscal quarter,yearqtr ;; character,valid quarter ;; fiscal/calendar convention ;; period range,no
 temporal,period,semester,plain,academic or fiscal semester,character,valid semester ;; convention declared ;; period range,no
 temporal,period,season,plain,season span,character,valid season ;; hemisphere convention ;; period range,no
-temporal,period,month,yyyy-mm ;; Myyyy,calendar month,yearmon ;; Date ;; character,valid month ;; declared parsing convention ;; period range,yes
+temporal,period,month,yyyy-mm ;; yyyymm ;; Myyyy,calendar month,yearmon ;; Date ;; character,valid month ;; declared parsing convention ;; period range,yes
 temporal,period,reporting_period,range,fiscal or reporting period,character ;; interval ;; two Date columns,start before or equal to end ;; expected duration ;; overlap and gap checks,no
 temporal,phase,hour_of_day,H ;; h,hour position 0-23,integer ;; character,in range 0-23 ;; 12/24-hour convention,no
 temporal,phase,day_of_week,WWW ;; WWWW ;; number,weekday position,integer ;; factor ;; character,valid weekday ;; week-start convention (Sun/Mon),no

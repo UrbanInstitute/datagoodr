@@ -80,6 +80,7 @@
   rfc2822_datetime = list(detector = "is_rfc2822_datetime", label = "RFC 2822 / HTTP datetime"),
   long_date        = list(detector = "is_long_date",        label = "verbose English date"),
   month_year       = list(detector = "is_month_year",       label = "Month Year"),
+  yyyymm           = list(detector = "is_yyyymm",           label = "Year-month (YYYYMM)"),
   month_day        = list(detector = "is_month_day",        label = "Month Day (no year)"),
   clock_time       = list(detector = "is_clock_time",       label = "clock time"),
   date_range       = list(detector = "is_date_range",       label = "date range"),

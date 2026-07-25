@@ -62,6 +62,12 @@ month_year <- c(
   "December 2020", "March, 1999"
 )
 
+## Compact YYYYMM year-month (e.g. a fiscal reporting period)
+yyyymm <- c(
+  "201912", "201301", "200006", "199901", "202012",
+  "201706", "198802", "203011", "195005", "209912"
+)
+
 ## Month Day, no year (date-m)
 month_day <- c(
   "February 6", "January 12", "July 6", "July 15", "March 1",
