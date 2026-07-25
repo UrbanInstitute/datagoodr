@@ -1,0 +1,131 @@
+---
+title: "Research Guide"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-location: body
+    toc-depth: 5
+    toc-expand: true
+execute:
+  keep-md: true
+params:
+  dgf_file: 'DGF-V2.xlsx'
+  data_file: null
+---
+
+<!-- datagoodr research guide template.
+
+     Customize without editing the package:
+       - DG.R           custom functions & layout overrides
+       - datagoodr.css  the page grid, fonts, and colors
+     See vignette("customizing", package = "datagoodr").
+
+     Render from the console with:  quarto::quarto_render("research-guide.qmd")
+     or re-render against a different DGF/dataset without editing this file:
+       datagoodr::update_rg("research-guide.qmd", DGF = "DGF-V2.xlsx") -->
+
+<br>
+
+
+<br><br>
+
+```{r setup, echo=F, message=FALSE, warning=FALSE, include=FALSE}
+
+# datagoodr is the only package this report needs to attach. Everything it
+# renders is a datagoodr function, and those load what they need themselves.
+library( datagoodr )
+
+# Source the project customization file (custom functions / layout overrides)
+# if it sits next to this document.
+if( file.exists("DG.R") ) source("DG.R")
+
+
+# The DGF drives the whole report. The path comes from the `dgf_file` param, so
+# this document renders on its own - and update_rg() can point it at a
+# different DGF at render time without editing this file.
+dgf <- readxl::read_excel( params$dgf_file )
+
+# Optional raw dataset. The report renders from the DGF alone - every statistic
+# and graphic is already stored in its rg_* columns - so this stays NULL unless
+# a caller supplies `data_file`. When supplied it is read once here and left
+# available to DG.R and to any custom chunk that needs the underlying values.
+raw.data <- if( is.null( params$data_file ) ) NULL else
+            suppressMessages( readr::read_csv( params$data_file ) )
+
+
+# Each variable type gets its own section because each plot type needs its own
+# fig width and height. To add a new variable type:
+# 1. add the new desired_data_type to the DGF
+# 2. add a layout for it (see R/03-01-layouts.R)
+# 3. add the functions that layout needs to read
+# 4. add a dgf.TYPE subset and a section below
+
+dgf.log  <-  dgf[ dgf$desired_data_type == "boolean",     ]
+dgf.fact <-  dgf[ dgf$desired_data_type == "categorical", ]
+dgf.chr  <-  dgf[ dgf$desired_data_type %in% c("text","string"), ]
+dgf.num  <-  dgf[ dgf$desired_data_type == "number",      ]
+dgf.id   <-  dgf[ dgf$desired_data_type == "identifier",  ]
+dgf.time <-  dgf[ dgf$desired_data_type == "temporal",    ]
+
+
+```
+
+
+## Logical
+
+```{r logical, results="asis", echo=FALSE}
+create_all_sections( dgf.log )
+
+```
+
+## Factor
+
+```{r factor, results="asis", echo=FALSE}
+create_all_sections( dgf.fact )
+```
+
+## Numeric 
+
+```{r numeric, results="asis", fig.width=8, fig.height=2, echo=FALSE}
+create_all_sections( dgf.num )
+```
+
+## Character
+
+```{r character, results="asis", fig.width=8, fig.height=4.5, echo=FALSE}
+create_all_sections( dgf.chr )
+```
+
+## Identifier
+
+```{r identifier, results="asis", echo=FALSE}
+create_all_sections( dgf.id )
+```
+
+## Temporal
+
+```{r temporal, results="asis", fig.width=8, fig.height=4, echo=FALSE}
+create_all_sections( dgf.time )
+```
+
+
+
+
+```{r datagoodr-style, echo=FALSE, results="asis"}
+# The report stylesheet comes from a single source: datagoodr.css (a local
+# copy overrides the packaged one). Edit that file to restyle the report.
+cat( "<style>\n", datagoodr_css(), "\n</style>\n" )
+```
+
+```{r datagoodr-record, echo=FALSE, results="asis"}
+# Provenance for this render - which DGF produced this file, its content hash,
+# package/R/quarto versions, and when. Written as an HTML comment, so it travels
+# with the report without appearing in it; read it back with
+# datagoodr::read_render_record("research-guide.html").
+#
+#   visible  = TRUE  also prints it as a table in the report
+#   identify = TRUE  adds your username and absolute paths. Off by default:
+#                    this file is meant to be shared.
+render_record( dgf, params$dgf_file, params$data_file )
+```
