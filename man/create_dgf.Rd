@@ -8,6 +8,7 @@ create_dgf(
   df,
   vtypes = NULL,
   use.df.types = FALSE,
+  read_as_text = TRUE,
   guess.factors = TRUE,
   guess.dates = FALSE,
   max_factor_levels = 50,
@@ -38,6 +39,13 @@ implemented yet. See `dev/TO-DO.md`.}
 \item{use.df.types}{Logical; keep the data frame's existing column types
 instead of re-reading the data with `readr` to re-infer them. Defaults to
 `FALSE`.}
+
+\item{read_as_text}{Logical; read every column as character to preserve the
+source representation exactly - avoiding `readr`'s inference dropping leading
+zeros (`06037` -> `6037`) or casting long-integer IDs to lossy doubles - then
+promote only the columns that are safe to store as numeric (see internal
+`.safe_numeric`). Defaults to `TRUE`. Set `FALSE` for the legacy
+`readr`-inference behaviour.}
 
 \item{guess.factors}{Logical; treat low-cardinality columns as factors.
 Defaults to `TRUE`.}

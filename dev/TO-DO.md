@@ -112,6 +112,46 @@ cardinality-based geography->identifier promotion):
       confirms, not a hard auto-cast - each has false positives (a genuine
       fixed-precision measurement; a Benford-passing pool of IDs).
 
+## Confirm-before-profile workflow (idea 2026-07-26)
+
+Today: `create_dgf()` profiles the raw data -> user corrects types -> 
+`retype_dgf()` **re-profiles** the corrected variables (that function exists
+precisely because profiling happens before correction). Reordering to
+**confirm types before profiling** collapses that to profiling **once**, on the
+right types, and fits transform-requiring columns better.
+
+Target flow:
+
+> read-as-text -> guess (**type + a suggested `as_*` rule**) -> user confirms
+> both -> apply rules (`stabilize_data`) -> profile once on the **stabilized**
+> values.
+
+Design notes:
+
+- [ ] Two kinds of correction, and the guesser/UI must distinguish them:
+      **(a) pure re-interpretation** - values are already fine (read-as-text
+      keeps them intact), just relabel the type (a number-read column that is
+      really an ID/category); no transform. **(b) type-requires-transform** -
+      the raw representation does not directly yield the type (`"201912"` -> a
+      date needs `as_yyyymm`; `"$1,234"` -> a number needs `$`/`,` stripped; a
+      date range -> split). These need a `raw_to_stable_transform` (reformat) or
+      `desired_data_import_rule` (coercion) rule, not just a type label.
+- [ ] Because (b) columns must be transformed before their stats/graphics mean
+      anything (a monthly-date's distribution is computed on the *parsed* dates,
+      not raw strings), the profiling pass must run on the **stabilized** values.
+      Effectively promote `stabilize_data()` to run *before* profiling instead of
+      after - which is why confirm-first suits transform columns better than the
+      current profile-first model that is forced to re-profile.
+- [ ] **Suggested-rule source:** map the detector's ontology `data_format` to a
+      suggested `as_*` rule (`yyyymm` -> `as_yyyymm`, `us_date` -> `as_mmddyyyy`,
+      ...). That mapping is what makes "the guess proposes a transformation," not
+      just a type, real.
+- [ ] **Confirmation UX:** the editable DGF (open in Excel, adjust, re-run) is
+      already an asynchronous confirm step and scales to wide data better than a
+      per-column interactive prompt; an interactive "here are the guesses,
+      confirm/override" is a possible fast-path for the first pass. The
+      spreadsheet stays the batch-review workhorse.
+
 ## DONE: Create inspect_dgf() function (2026-07-10)
 
 `inspect_dgf()` (R/02-06-inspect-dgf.R) validates a DGF after manual edits.

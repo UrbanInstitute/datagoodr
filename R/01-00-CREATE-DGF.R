@@ -16,6 +16,12 @@
 #' @param use.df.types Logical; keep the data frame's existing column types
 #'   instead of re-reading the data with `readr` to re-infer them. Defaults to
 #'   `FALSE`.
+#' @param read_as_text Logical; read every column as character to preserve the
+#'   source representation exactly - avoiding `readr`'s inference dropping
+#'   leading zeros (`06037` -> `6037`) or casting long-integer IDs to lossy
+#'   doubles - then promote only the columns that are safe to store as numeric
+#'   (see internal `.safe_numeric`). Defaults to `TRUE`. Set `FALSE` for the
+#'   legacy `readr`-inference behaviour.
 #' @param guess.factors Logical; treat low-cardinality columns as factors.
 #'   Defaults to `TRUE`.
 #' @param max_factor_levels Integer; the maximum number of factor/logical levels
@@ -52,6 +58,7 @@ create_dgf <- function(         # ----------------
          df,
          vtypes=NULL,
          use.df.types=FALSE,
+         read_as_text=TRUE,
          guess.factors=TRUE,
          guess.dates=FALSE,
          max_factor_levels=50,
@@ -86,16 +93,34 @@ create_dgf <- function(         # ----------------
       TRUE,
       FALSE )
 
+  # read_as_text: read every column as character so the source representation is
+  # preserved exactly (leading zeros, long IDs) - readr's default inference is
+  # what drops "06037" -> 6037 and casts big-integer IDs to lossy doubles. Read
+  # eagerly (lazy = FALSE) to avoid the vroom ALTREP path. A guarded numeric
+  # promotion below re-types the columns that are safe to store as numbers.
   if( is.filename )
-  { df <- suppressMessages( readr::read_csv( df ) ) }
+  { df <- if( read_as_text )
+            suppressMessages( readr::read_csv( df,
+                       col_types = readr::cols(.default = "c"), lazy = FALSE ) )
+          else
+            suppressMessages( readr::read_csv( df ) ) }
 
   ## RELOAD DATA WITH READR TO RESET DATA TYPES?
 
   if( is.df & ! use.df.types )
   {
-    tfile <- tempfile( "temp", fileext = ".csv" )
-    readr::write_csv(df, tfile)
-    df <- suppressMessages( readr::read_csv( tfile ) )
+    if( read_as_text )
+    {
+      # reading as character IS the type reset - no temp CSV round-trip needed
+      df <- as.data.frame( lapply( df, as.character ),
+                           stringsAsFactors = FALSE, check.names = FALSE )
+    }
+    else
+    {
+      tfile <- tempfile( "temp", fileext = ".csv" )
+      readr::write_csv(df, tfile)
+      df <- suppressMessages( readr::read_csv( tfile ) )
+    }
   }
 
   N_row <- nrow(df)
@@ -118,6 +143,19 @@ create_dgf <- function(         # ----------------
 
   raw_data_storage      <- primary_class( df )
 
+  ## GUARDED NUMERIC PROMOTION
+  # After the all-character read, promote only the columns that are SAFE to
+  # store as numeric (.safe_numeric: all values parse as numbers, no leading-zero
+  # integers, none past the 2^53 exact range). Everything else stays character,
+  # so zero-padded codes and long IDs keep their exact form for the factor /
+  # temporal / identifier / detector path. raw_data_storage above still records
+  # the honest raw read ("character"); the promotion is a derived typing choice.
+  if( read_as_text )
+  {
+    num_cols <- vapply( df, .safe_numeric, logical(1) )
+    if( any(num_cols) )
+      df[ num_cols ] <- lapply( df[ num_cols ], as.numeric )
+  }
 
   ## TRY TO GUESS FACTORS
   if( guess.factors )
@@ -128,16 +166,19 @@ create_dgf <- function(         # ----------------
 
   ## Set up data classes
   if(!is.null(desired_data_import_rule)){
+    # `df[[i]]` (not `df[, i]` / `dplyr::pull`) so this works whether df is a
+    # base data.frame (read_as_text) or a tibble - `df[, i]` drops to a vector on
+    # a data.frame, and dplyr::pull() then errors on that vector.
     df_converted <- sapply(seq_along(desired_data_import_rule), function(i) {
       if (is.na(desired_data_import_rule[i]) | correct.guess[i]) {
-        return(dplyr::pull(df[, i], 1))  # Keep the original column if desired_data_import_rule[i] is NA
+        return(df[[i]])  # Keep the original column if desired_data_import_rule[i] is NA
       } else {
         func_name <- desired_data_import_rule[i]
         if (exists(func_name, mode = "function")) {
-            return(try(sapply(dplyr::pull(df[,i],1), get(func_name)), silent=TRUE))
+            return(try(sapply(df[[i]], get(func_name)), silent=TRUE))
         } else {
           warning(paste("Function", func_name, "not found. Returning original column."))
-          return(df[, i])  # Keep original column if function doesn't exist
+          return(df[[i]])  # Keep original column if function doesn't exist
         }
       }
     }, simplify = FALSE)  # Keep output as a list to avoid unintended type conversion

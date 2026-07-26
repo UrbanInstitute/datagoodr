@@ -71,3 +71,23 @@ test_that("a type-changing stable_data_format on a numeric column does not break
   expect_match(dgf$rg_preview, "\\$")             # preview is formatted
   expect_true(validate_json(dgf$rg_stats))        # numeric stats produced
 })
+
+test_that("read_as_text preserves zero-padded codes and long IDs, promotes safe numerics", {
+  df <- data.frame(
+    zip    = c("06037", "36061", "48201", "90210", "02139", "10001"),  # leading zero
+    bigid  = c("1234567890123456", "2234567890123456", "3234567890123456",
+               "4234567890123456", "5234567890123456", "6234567890123456"), # 16-digit
+    amount = c("10.5", "22.1", "3.7", "88.0", "45.2", "7.9"),           # clean numeric
+    stringsAsFactors = FALSE)
+  dgf <- suppressMessages(suppressWarnings(
+    { utils::capture.output(d <- create_dgf(df, file = tempfile("dgf"), open = FALSE)); d }))
+  ty <- setNames(dgf$desired_data_type, dgf$var_name)
+
+  # a zero-padded code is NOT promoted to number, and its leading zero survives
+  expect_false(unname(ty["zip"]) == "number")
+  expect_match(dgf$raw_first5[dgf$var_name == "zip"], "06037")
+  # a 16-digit id stays text (past the double integer-safe range)
+  expect_false(unname(ty["bigid"]) == "number")
+  # a clean decimal column promotes to number
+  expect_equal(unname(ty["amount"]), "number")
+})
