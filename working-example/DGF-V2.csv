@@ -1,9 +1,9 @@
 "var_name","dd_vname_alias","dd_vlabel","dd_vdesc","dd_f_levels","dd_is_join_key","raw_data_storage","raw_data_format","raw_first5","raw_duplicated","raw_to_stable_transform","stable_data_storage","stable_data_unit","stable_data_format","desired_data_import_rule","desired_data_type","desired_data_subtype","desired_data_class","desired_data_format","rg_properties","rg_preview","rg_stats","rg_graphics","rg_max_chr","validate_rules","validate_format","prov_start_hash","prov_current_hash"
-"F9_00_ORG_NAME_L1",NA,"Organization name","Legal name of the filing organization (Form 990, header).","",NA,"character",NA,"INTERNATIONAL UNI... ;; 
+"F9_00_ORG_NAME_L1","","Organization name","Legal name of the filing organization (Form 990, header).","","","character","","INTERNATIONAL UNI... ;; 
 RETAIL MERCHANTS ... ;; 
 MORRIS COUNTY FAR... ;; 
 NATIONAL ASSOCIAT... ;; 
-AMERICAN MEAD MAK...",FALSE,NA,"character",NA,NA,NA,"text","phrase","organization_name","plain","[ 
+AMERICAN MEAD MAK...",FALSE,"","character","","","","text","phrase","organization_name","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""17,455""  ,  ""PER"" :  ""(69.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -116,12 +116,12 @@ AMERICAN MEAD MAK...",FALSE,NA,"character",NA,NA,NA,"text","phrase","organizatio
   {  ""ww"" :  ""CALIFORNIA""  ,  ""Freq"" :  318  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  317  }, 
   {  ""ww"" :  ""COMMUNITY""  ,  ""Freq"" :  316  }
-]",97,NA,NA,NA,"c37e83a29aac696516a76c253df473d9"
-"F0_00_ORG_CONTACT",NA,"Contact person","Name of the organization's principal officer or contact.","",NA,"character",NA,"JACK ARGILA ;; 
+]",97,"","","","c37e83a29aac696516a76c253df473d9"
+"F0_00_ORG_CONTACT","","Contact person","Name of the organization's principal officer or contact.","","","character","","JACK ARGILA ;; 
 KATHY/NANCY ;; 
 DAVE A WARRINGTON ;; 
 BRIAN WING ;; 
-GARY M SIMMONS",FALSE,NA,"character",NA,NA,NA,"text","phrase","person_name","plain","[ 
+GARY M SIMMONS",FALSE,"","character","","","","text","phrase","person_name","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""10,990""  ,  ""PER"" :  ""(44.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""13,392""  ,  ""PER"" :  ""(53.6%)""  }
@@ -234,12 +234,12 @@ GARY M SIMMONS",FALSE,NA,"character",NA,NA,NA,"text","phrase","person_name","pla
   {  ""ww"" :  ""GEORGE""  ,  ""Freq"" :  60  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  56  }, 
   {  ""ww"" :  ""FRANK""  ,  ""Freq"" :  56  }
-]",33,NA,NA,NA,"76eeb54cf49bfd89dd1feb1306dfeb31"
-"F9_00_ORG_ADDR_L1",NA,"Street address","Mailing street address of the organization.","",NA,"character",NA,"4 COURT SQUARE ;; 
+]",33,"","","","76eeb54cf49bfd89dd1feb1306dfeb31"
+"F9_00_ORG_ADDR_L1","","Street address","Mailing street address of the organization.","","","character","","4 COURT SQUARE ;; 
 5101 MONUMENT AVE ;; 
 818 LINDA DR ;; 
 PO BOX 7002 ;; 
-5214 25TH AVE N",FALSE,NA,"character",NA,NA,NA,"text","line","address","plain","[ 
+5214 25TH AVE N",FALSE,"","character","","","","text","line","address","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""18,785""  ,  ""PER"" :  ""(75.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -352,12 +352,12 @@ PO BOX 7002 ;;
   {  ""ww"" :  ""2""  ,  ""Freq"" :  118  }, 
   {  ""ww"" :  ""3RD""  ,  ""Freq"" :  116  }, 
   {  ""ww"" :  ""EAST""  ,  ""Freq"" :  116  }
-]",35,NA,NA,NA,"e9393b1aed63f68b36fe261c33347f0e"
-"F9_00_ORG_ADDR_CITY",NA,"City","City of the organization's mailing address.","",NA,"character",NA,"LONG ISLAND CITY ;; 
+]",35,"","","","e9393b1aed63f68b36fe261c33347f0e"
+"F9_00_ORG_ADDR_CITY","","City","City of the organization's mailing address.","","","character","","LONG ISLAND CITY ;; 
 RICHMOND ;; 
 DAINGERFIELD ;; 
 FREDERICKSBRG ;; 
-ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain","[ 
+ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5,986""  ,  ""PER"" :  ""(23.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -470,12 +470,12 @@ ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain
   {  ""ww"" :  ""PHOENIX""  ,  ""Freq"" :  71  }, 
   {  ""ww"" :  ""ALBANY""  ,  ""Freq"" :  70  }, 
   {  ""ww"" :  ""DES""  ,  ""Freq"" :  70  }
-]",22,NA,NA,NA,"f5dbd5c29eebf7a4dc24a738a5ee5b5d"
-"EIN",NA,"Employer Identification Number","IRS-assigned 9-digit taxpayer ID; the unique key for the organization.","",NA,"numeric",NA,"113161527 ;; 
+]",22,"","","","f5dbd5c29eebf7a4dc24a738a5ee5b5d"
+"EIN","","Employer Identification Number","IRS-assigned 9-digit taxpayer ID; the unique key for the organization.","","TRUE","character","","113161527 ;; 
 540354670 ;; 
 751627109 ;; 
 61636713 ;; 
-542015951",FALSE,NA,"numeric",NA,NA,NA,"identifier","numeric_id","administrative_id","plain","[ 
+542015951",FALSE,"","numeric","","","","identifier","numeric_id","administrative_id","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,794""  ,  ""PER"" :  ""(99.2%)""  }
 ]","10100593 ;; 10218055 ;; 10220588 ;; 10266289 ;; 10273431 ;; 10286963 ;; 10440702 ;; 10468398 ;; 10523313 ;; 10524078 ;; 10573723 ;; 10715375 ;; 10744517 ;; 10815981 ;; 10852125 ;; 10874048 ;; 10961458 ;; 16011483 ;; 16012302 ;; 16019950 ;; 16022337 ;; 16123853 ;; 20172119 ;; 20187390 ;; 20212092 ;; 20232424 ;; 20241397 ;; 20257793 ;; 20324779 ;; 20349390 ;; 20542944 ;; 20548015 ;; 20624171 ;; 2069","{
@@ -516,8 +516,8 @@ ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain
       ""Frequency"": 2
     }
   ]
-}","",9,NA,NA,NA,"ea94ea5d1fc3c2d7f7ec49efc2e4b6f3"
-"SUBSECCD",NA,"IRS subsection code","501(c) subsection under which the organization is tax-exempt.","[ 
+}","",9,"","","","ea94ea5d1fc3c2d7f7ec49efc2e4b6f3"
+"SUBSECCD","","IRS subsection code","501(c) subsection under which the organization is tax-exempt.","[ 
   {  ""level"" :  ""2""  ,  ""label"" :  ""501(c)(2) Title-holding corporation""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""501(c)(4) Social welfare organization""  }, 
   {  ""level"" :  ""5""  ,  ""label"" :  ""501(c)(5) Labor / agricultural org""  }, 
@@ -541,11 +541,11 @@ ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain
   {  ""level"" :  ""26""  ,  ""label"" :  ""501(c)(26) State high-risk health coverage org""  }, 
   {  ""level"" :  ""27""  ,  ""label"" :  ""501(c)(27) State workers' comp reinsurance org""  }, 
   {  ""level"" :  ""29""  ,  ""label"" :  ""501(c)(29) Qualified nonprofit health insurer (CO-OP)""  }
-]",NA,"numeric",NA,"5 ;; 
+]","","character","","5 ;; 
 6 ;; 
 25 ;; 
 4 ;; 
-19",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","administrative_code","code","[ 
+19",FALSE,"","factor","","","","categorical","nominal","administrative_code","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23""  ,  ""PER"" :  ""(0.1%)""  }
 ]","6 ;; 4 ;; 7 ;; 5 ;; 8 ;; 19 ;; 9 ;; 12 ;; 13 ;; 2 ;; 10 ;; 14 ;; 25 ;; 15 ;; 17 ;; 23 ;; 11 ;; 26 ;; 16 ;; 18 ;; 24 ;; 27 ;; 29","[ 
@@ -584,12 +584,12 @@ ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain
   {  ""x"" :  ""13""  ,  ""Freq"" :  561  }, 
   {  ""x"" :  ""2""  ,  ""Freq"" :  545  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  934  }
-]",2,NA,NA,NA,"8545f03c0a4d4efa73af76e780bf57fd"
-"BMF_ACTIV1",NA,"BMF activity code","Primary IRS Business Master File activity code (legacy numeric code).","",NA,"numeric",NA,"263 ;; 
+]",2,"","","","8545f03c0a4d4efa73af76e780bf57fd"
+"BMF_ACTIV1","","BMF activity code","Primary IRS Business Master File activity code (legacy numeric code).","","","character","","263 ;; 
 200 ;; 
 379 ;; 
 0 ;; 
-407",FALSE,NA,"numeric",NA,NA,NA,"number","","","","[ 
+407",FALSE,"","numeric","","","","number","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""230""  ,  ""PER"" :  ""(0.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }, 
@@ -827,8 +827,8 @@ ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain
     ""max""  :  [ 
 999
 ]
-  }",3,NA,NA,NA,"29e54c4937b4da29973ebbc051d5b635"
-"NTMAJ12",NA,"NTEE major group (12-category)","NCCS 12-category summary of the organization's NTEE classification.","[ 
+  }",3,"","","","29e54c4937b4da29973ebbc051d5b635"
+"NTMAJ12","","NTEE major group (12-category)","NCCS 12-category summary of the organization's NTEE classification.","[ 
   {  ""level"" :  ""AR""  ,  ""label"" :  ""Arts, culture & humanities""  }, 
   {  ""level"" :  ""BH""  ,  ""label"" :  ""Higher education""  }, 
   {  ""level"" :  ""ED""  ,  ""label"" :  ""Education (excl. higher ed)""  }, 
@@ -841,11 +841,11 @@ ST PETERSBURG",FALSE,NA,"character",NA,NA,NA,"text","phrase","place_name","plain
   {  ""level"" :  ""PU""  ,  ""label"" :  ""Public & societal benefit""  }, 
   {  ""level"" :  ""RE""  ,  ""label"" :  ""Religion-related""  }, 
   {  ""level"" :  ""UN""  ,  ""label"" :  ""Unknown / unclassified""  }
-]",NA,"character",NA,"HU ;; 
+]","","character","","HU ;; 
 PU ;; 
 UN ;; 
 ED ;; 
-AR",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","classification_code","code","[ 
+AR",FALSE,"","factor","","","","categorical","nominal","classification_code","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }
 ]","PU ;; HU ;; MU ;; ED ;; UN ;; HE ;; AR ;; EN ;; IN ;; EH ;; RE ;; BH","[ 
@@ -871,8 +871,8 @@ AR",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","classification_code","co
   {  ""x"" :  ""AR""  ,  ""Freq"" :  615  }, 
   {  ""x"" :  ""EN""  ,  ""Freq"" :  508  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  268  }
-]",2,NA,NA,NA,"47e592979b51bef034581a5ac944748c"
-"NTEE1",NA,"NTEE major group","First letter of the National Taxonomy of Exempt Entities code - the broad activity area.","[ 
+]",2,"","","","47e592979b51bef034581a5ac944748c"
+"NTEE1","","NTEE major group","First letter of the National Taxonomy of Exempt Entities code - the broad activity area.","[ 
   {  ""level"" :  ""A""  ,  ""label"" :  ""Arts, Culture & Humanities""  }, 
   {  ""level"" :  ""B""  ,  ""label"" :  ""Education""  }, 
   {  ""level"" :  ""C""  ,  ""label"" :  ""Environmental Quality""  }, 
@@ -899,11 +899,11 @@ AR",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","classification_code","co
   {  ""level"" :  ""X""  ,  ""label"" :  ""Religion-Related""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Mutual & Membership Benefit""  }, 
   {  ""level"" :  ""Z""  ,  ""label"" :  ""Unknown""  }
-]",NA,"character",NA,"J ;; 
+]","","character","","J ;; 
 S ;; 
 K ;; 
 N ;; 
-M",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","classification_code","code","[ 
+M",FALSE,"","factor","","","","categorical","nominal","classification_code","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""27""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }
@@ -948,12 +948,12 @@ M",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","classification_code","cod
   {  ""x"" :  ""E""  ,  ""Freq"" :  574  }, 
   {  ""x"" :  ""I""  ,  ""Freq"" :  557  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1959  }
-]",1,NA,NA,NA,"cc2692a6b5411ae2949be174b9e1198a"
-"NTEEFINAL",NA,"NTEE code","Full National Taxonomy of Exempt Entities code assigned to the organization.","",NA,"character",NA,"J40 ;; 
+]",1,"","","","cc2692a6b5411ae2949be174b9e1198a"
+"NTEEFINAL","","NTEE code","Full National Taxonomy of Exempt Entities code assigned to the organization.","","","character","","J40 ;; 
 S41 ;; 
 K28 ;; 
 N61 ;; 
-S47",FALSE,NA,"character",NA,NA,NA,"text","token","classification_code","code","[ 
+S47",FALSE,"","character","","","","text","token","classification_code","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""654""  ,  ""PER"" :  ""(2.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }
@@ -1065,8 +1065,8 @@ S47",FALSE,NA,"character",NA,NA,NA,"text","token","classification_code","code","
   {  ""ww"" :  ""C32""  ,  ""Freq"" :  65  }, 
   {  ""ww"" :  ""E03""  ,  ""Freq"" :  64  }, 
   {  ""ww"" :  ""S81""  ,  ""Freq"" :  64  }
-]",5,NA,NA,NA,"e8e685b8bf5924b0bec8f604b1c0d599"
-"NTEESRC",NA,"NTEE source","Method or source by which the NTEE code was assigned.","[ 
+]",5,"","","","e8e685b8bf5924b0bec8f604b1c0d599"
+"NTEESRC","","NTEE source","Method or source by which the NTEE code was assigned.","[ 
   {  ""level"" :  ""ACT1""  ,  ""label"" :  ""Assigned from activity code""  }, 
   {  ""level"" :  ""BEST""  ,  ""label"" :  ""Best available assignment""  }, 
   {  ""level"" :  ""END2""  ,  ""label"" :  ""End-of-process assignment""  }, 
@@ -1082,11 +1082,11 @@ S47",FALSE,NA,"character",NA,NA,NA,"text","token","classification_code","code","
   {  ""level"" :  ""VER""  ,  ""label"" :  ""Manually verified""  }, 
   {  ""level"" :  ""WORD""  ,  ""label"" :  ""Keyword / text-based""  }, 
   {  ""level"" :  ""ZZ""  ,  ""label"" :  ""Unassigned""  }
-]",NA,"character",NA,"NEW ;; 
+]","","character","","NEW ;; 
 BEST ;; 
 IRS ;; 
 WORD ;; 
-ZZ",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","category","code","[ 
+ZZ",FALSE,"","factor","","","","categorical","nominal","category","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""16""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -1113,16 +1113,16 @@ ZZ",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","category","code","[
   {  ""x"" :  ""IRS""  ,  ""Freq"" :  2540  }, 
   {  ""x"" :  ""SOI""  ,  ""Freq"" :  855  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1196  }
-]",4,NA,NA,NA,"32332a74c73a19d148592c2e9a853b0f"
-"DEDUCTCD",NA,"Deductibility code","Whether contributions to the organization are tax-deductible.","[ 
+]",4,"","","","32332a74c73a19d148592c2e9a853b0f"
+"DEDUCTCD","","Deductibility code","Whether contributions to the organization are tax-deductible.","[ 
   {  ""level"" :  ""0""  ,  ""label"" :  ""Not specified""  }, 
   {  ""level"" :  ""1""  ,  ""label"" :  ""Contributions are tax-deductible""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""Contributions are not tax-deductible""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""Deductible by treaty (foreign org)""  }
-]",NA,"numeric",NA,"2 ;; 
+]","","character","","2 ;; 
 1 ;; 
 0 ;; 
-4",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","administrative_code","code","[ 
+4",FALSE,"","factor","","","","categorical","nominal","administrative_code","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }
@@ -1136,16 +1136,16 @@ ZZ",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","category","code","[
   {  ""x"" :  ""1""  ,  ""Freq"" :  3932  }, 
   {  ""x"" :  ""0""  ,  ""Freq"" :  685  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  2  }
-]",1,NA,NA,NA,"3090ed2798b253515d5dbda22454f646"
-"OUTREAS",NA,"Out-of-scope reason","Reason the organization is excluded from the NCCS core file.","[ 
+]",1,"","","","3090ed2798b253515d5dbda22454f646"
+"OUTREAS","","Out-of-scope reason","Reason the organization is excluded from the NCCS core file.","[ 
   {  ""level"" :  ""F""  ,  ""label"" :  ""Foreign / non-US""  }, 
   {  ""level"" :  ""N""  ,  ""label"" :  ""Not a reporting public charity""  }, 
   {  ""level"" :  ""S""  ,  ""label"" :  ""Small (below filing threshold)""  }, 
   {  ""level"" :  ""T""  ,  ""label"" :  ""Terminated / defunct""  }
-]",NA,"character",NA,"S ;; 
+]","","character","","S ;; 
 F ;; 
 T ;; 
-N",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","category","code","[ 
+N",FALSE,"","factor","","","","categorical","nominal","category","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""24,961""  ,  ""PER"" :  ""(99.8%)""  }
@@ -1160,12 +1160,12 @@ N",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","category","code","[
   {  ""x"" :  ""S""  ,  ""Freq"" :  11  }, 
   {  ""x"" :  ""N""  ,  ""Freq"" :  1  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
-]",1,NA,NA,NA,"df8f9376a47dc8108ed65257ca6d78e4"
-"F9_05_UBIZ_IMCOME_OVER_LIMIT_X",NA,"UBI over filing threshold","Whether unrelated business income exceeded the $1,000 filing threshold.","[ 
+]",1,"","","","df8f9376a47dc8108ed65257ca6d78e4"
+"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","UBI over filing threshold","Whether unrelated business income exceeded the $1,000 filing threshold.","[ 
   {  ""level"" :  ""N""  ,  ""label"" :  ""No""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Yes""  }
-]",NA,"character",NA,"N ;; 
-Y",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[ 
+]","","character","","N ;; 
+Y",FALSE,"","factor","","","","boolean","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2""  ,  ""PER"" :  ""(0.0%)""  }
 ]","N ;; Y","[ 
@@ -1174,12 +1174,12 @@ Y",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
 ]","[ 
   {  ""f"" :  ""N""  ,  ""Freq"" :  21550  }, 
   {  ""f"" :  ""Y""  ,  ""Freq"" :  3450  }
-]",1,NA,NA,NA,"00dcadf8e089921fed0b41ac50326cf7"
-"OUTNCCS",NA,"In / out of NCCS core","Whether the organization is included in the NCCS core file.","[ 
+]",1,"","","","00dcadf8e089921fed0b41ac50326cf7"
+"OUTNCCS","","In / out of NCCS core","Whether the organization is included in the NCCS core file.","[ 
   {  ""level"" :  ""IN""  ,  ""label"" :  ""In NCCS core file""  }, 
   {  ""level"" :  ""OUT""  ,  ""label"" :  ""Out of NCCS core file""  }
-]",NA,"character",NA,"IN ;; 
-OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[ 
+]","","character","","IN ;; 
+OUT",FALSE,"","factor","","","","boolean","","","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""3""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,361""  ,  ""PER"" :  ""(9.4%)""  }
@@ -1191,12 +1191,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""f"" :  ""IN""  ,  ""Freq"" :  22600  }, 
   {  ""f"" :  ""NA""  ,  ""Freq"" :  2361  }, 
   {  ""f"" :  ""OUT""  ,  ""Freq"" :  39  }
-]",3,NA,NA,NA,"5336c64575243bfeeacea9749cd0e6d8"
-"COUNTY_FIPS",NA,"County (FIPS)","5-digit Census county FIPS code of the organization's location.","",NA,"numeric",NA,"36081 ;; 
+]",3,"","","","5336c64575243bfeeacea9749cd0e6d8"
+"COUNTY_FIPS","","County (FIPS)","5-digit Census county FIPS code of the organization's location.","","","character","","36081 ;; 
 51087 ;; 
 48343 ;; 
 51630 ;; 
-36001",FALSE,NA,"numeric",NA,NA,NA,"identifier","numeric_id","geographic_id","plain","[ 
+36001",FALSE,"","numeric","","","","identifier","numeric_id","geographic_id","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2,411""  ,  ""PER"" :  ""(9.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,389""  ,  ""PER"" :  ""(9.6%)""  }
@@ -1238,250 +1238,55 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
       ""Frequency"": 186
     }
   ]
-}","",5,NA,NA,NA,"247ce7eedae483be8e1ac6cff555c593"
-"CEO_CENSUSTRACT",NA,"Census tract (GEOID)","11-digit Census tract identifier of the organization's location.","",NA,"numeric",NA,"36081001900 ;; 
+}","",5,"","","","247ce7eedae483be8e1ac6cff555c593"
+"CEO_CENSUSTRACT","","Census tract (GEOID)","11-digit Census tract identifier of the organization's location.","","","character","","36081001900 ;; 
 51087200301 ;; 
 48343950300 ;; 
 51630000500 ;; 
-36001000300",FALSE,NA,"numeric",NA,NA,NA,"number","","","","[ 
+36001000300",FALSE,"","numeric","","","","identifier","numeric_id","geographic_id","plain","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""14,265""  ,  ""PER"" :  ""(57.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""3,110""  ,  ""PER"" :  ""(12.4%)""  }
-]","11001010700 ;; 48201531700 ;; 6037294421 ;; 11001010100 ;; 11001005800 ;; 17031839100 ;; 6067001101 ;; 6073020809 ;; 48113020300 ;; 11001005900 ;; 18097391000 ;; 4013941000 ;; 51510201900 ;; 6085512100 ;; 36061016100 ;; 42003020100 ;; 48453000102 ;; 48453001100 ;; 6075011700 ;; 11001006202 ;; 39049004000 ;; 17031320100 ;; 42003191100 ;; 1097003707 ;; 6075061500 ;; 22033003501 ;; 28049010500 ;; 350","[ 
-  {  ""STAT"" :  ""Minimum""  ,  ""VAL"" :  ""1,001,020,500""  }, 
-  {  ""STAT"" :  ""Q - 05""  ,  ""VAL"" :  ""6,029,003,250""  }, 
-  {  ""STAT"" :  ""Q - 25""  ,  ""VAL"" :  ""17,031,320,100""  }, 
-  {  ""STAT"" :  ""Median""  ,  ""VAL"" :  ""28,012,950,350""  }, 
-  {  ""STAT"" :  ""Mean""  ,  ""VAL"" :  ""28,488,147,053""  }, 
-  {  ""STAT"" :  ""Q - 75""  ,  ""VAL"" :  ""41,051,008,202""  }, 
-  {  ""STAT"" :  ""Q - 95""  ,  ""VAL"" :  ""53,033,008,055""  }, 
-  {  ""STAT"" :  ""Maximum""  ,  ""VAL"" :  ""5.6043e+10""  }, 
-  {  ""STAT"" :  ""Skew""  ,  ""VAL"" :  ""-0.02""  }, 
-  {  ""STAT"" :  ""Kurtosis""  ,  ""VAL"" :  ""-1.17""  }
-]","  { 
-    ""breaks""  :  [ 
-6029003306, 
-    6969083399.9, 
-    7909163493.8, 
-    8849243587.7, 
-    9789323681.6, 
-    10729403775.5, 
-    11669483869.4, 
-    12609563963.3, 
-    13549644057.2, 
-    14489724151.1, 
-    15429804245, 
-    16369884338.9, 
-    17309964432.8, 
-    18250044526.7, 
-    19190124620.6, 
-    20130204714.5, 
-    21070284808.4, 
-    22010364902.3, 
-    22950444996.2, 
-    23890525090.1, 
-    24830605184, 
-    25770685277.9, 
-    26710765371.8, 
-    27650845465.7, 
-    28590925559.6, 
-    29531005653.5, 
-    30471085747.4, 
-    31411165841.3, 
-    32351245935.2, 
-    33291326029.1, 
-    34231406123, 
-    35171486216.9, 
-    36111566310.8, 
-    37051646404.7, 
-    37991726498.6, 
-    38931806592.5, 
-    39871886686.4, 
-    40811966780.3, 
-    41752046874.2, 
-    42692126968.1, 
-    43632207062, 
-    44572287155.9, 
-    45512367249.8, 
-    46452447343.7, 
-    47392527437.6, 
-    48332607531.5, 
-    49272687625.4, 
-    50212767719.3, 
-    51152847813.2, 
-    52092927907.1, 
-    53033008001
-], 
-    ""density""  :  [ 
-0.0869, 
-    0, 
-    0.0192, 
-    0.0177, 
-    0.0044, 
-    0.0142, 
-    0.0401, 
-    0.0232, 
-    0, 
-    0.0041, 
-    0.0054, 
-    0.0531, 
-    0.0345, 
-    0.0193, 
-    0.008, 
-    0.0112, 
-    0.0109, 
-    0.0134, 
-    0.0074, 
-    0.0221, 
-    0.0341, 
-    0.0391, 
-    0.031, 
-    0.0111, 
-    0.0257, 
-    0.0071, 
-    0.0093, 
-    0.0053, 
-    0.0066, 
-    0.0342, 
-    0.0059, 
-    0.0642, 
-    0.0127, 
-    0.019, 
-    0.0059, 
-    0.049, 
-    0.0117, 
-    0.0146, 
-    0.0606, 
-    0, 
-    0.0061, 
-    0.0118, 
-    0.0058, 
-    0.0175, 
-    0.0459, 
-    0.0271, 
-    0.0047, 
-    0.0151, 
-    0.0156, 
-    0.008
-], 
-    ""y""  :  [ 
-1711, 
-    0, 
-    379, 
-    348, 
-    87, 
-    280, 
-    789, 
-    458, 
-    0, 
-    81, 
-    107, 
-    1046, 
-    679, 
-    381, 
-    157, 
-    221, 
-    215, 
-    263, 
-    146, 
-    435, 
-    672, 
-    771, 
-    611, 
-    218, 
-    506, 
-    139, 
-    184, 
-    104, 
-    130, 
-    673, 
-    116, 
-    1265, 
-    250, 
-    375, 
-    117, 
-    965, 
-    231, 
-    288, 
-    1194, 
-    0, 
-    121, 
-    233, 
-    114, 
-    345, 
-    905, 
-    534, 
-    92, 
-    298, 
-    308, 
-    158
-], 
-    ""mids""  :  [ 
-6499043352.95, 
-    7439123446.85, 
-    8379203540.75, 
-    9319283634.65, 
-    10259363728.55, 
-    11199443822.45, 
-    12139523916.35, 
-    13079604010.25, 
-    14019684104.15, 
-    14959764198.05, 
-    15899844291.95, 
-    16839924385.85, 
-    17780004479.75, 
-    18720084573.65, 
-    19660164667.55, 
-    20600244761.45, 
-    21540324855.35, 
-    22480404949.25, 
-    23420485043.15, 
-    24360565137.05, 
-    25300645230.95, 
-    26240725324.85, 
-    27180805418.75, 
-    28120885512.65, 
-    29060965606.55, 
-    30001045700.45, 
-    30941125794.35, 
-    31881205888.25, 
-    32821285982.15, 
-    33761366076.05, 
-    34701446169.95, 
-    35641526263.85, 
-    36581606357.75, 
-    37521686451.65, 
-    38461766545.55, 
-    39401846639.45, 
-    40341926733.35, 
-    41282006827.25, 
-    42222086921.15, 
-    43162167015.05, 
-    44102247108.95, 
-    45042327202.85, 
-    45982407296.75, 
-    46922487390.65, 
-    47862567484.55, 
-    48802647578.45, 
-    49742727672.35, 
-    50682807766.25, 
-    51622887860.15, 
-    52562967954.05
-], 
-    ""mean""  :  [ 
-28488147052.6496
-], 
-    ""median""  :  [ 
-28012950350
-], 
-    ""min""  :  [ 
-1001020500
-], 
-    ""max""  :  [ 
-56043000200
-]
-  }",11,NA,NA,NA,"afbc196795d8aeaf02161da0a2f65571"
-"F9_00_TAX_PERIOD_END_DATE",NA,"Tax period end","Year and month (YYYYMM) the reporting tax period ended.","[ 
+]","11001010700 ;; 48201531700 ;; 6037294421 ;; 11001010100 ;; 11001005800 ;; 17031839100 ;; 6067001101 ;; 6073020809 ;; 48113020300 ;; 11001005900 ;; 18097391000 ;; 4013941000 ;; 51510201900 ;; 6085512100 ;; 36061016100 ;; 42003020100 ;; 48453000102 ;; 48453001100 ;; 6075011700 ;; 11001006202 ;; 39049004000 ;; 17031320100 ;; 42003191100 ;; 1097003707 ;; 6075061500 ;; 22033003501 ;; 28049010500 ;; 350","{
+  ""STATS"": [
+    {
+      ""STAT"": ""Distinct"",
+      ""VAL"": 14264
+    },
+    {
+      ""STAT"": ""Duplicated"",
+      ""VAL"": 7626
+    }
+  ],
+  ""HIST"": [],
+  ""COMMON"": [
+    {
+      ""Value"": ""11001010700"",
+      ""Frequency"": 69
+    },
+    {
+      ""Value"": ""48201531700"",
+      ""Frequency"": 63
+    },
+    {
+      ""Value"": ""6037294421"",
+      ""Frequency"": 36
+    },
+    {
+      ""Value"": ""11001010100"",
+      ""Frequency"": 34
+    },
+    {
+      ""Value"": ""11001005800"",
+      ""Frequency"": 32
+    },
+    {
+      ""Value"": ""17031839100"",
+      ""Frequency"": 31
+    }
+  ]
+}","",11,"","","","afbc196795d8aeaf02161da0a2f65571"
+"F9_00_TAX_PERIOD_END_DATE","","Tax period end","Year and month (YYYYMM) the reporting tax period ended.","[ 
   {  ""level"" :  ""201701""  ,  ""label"" :  ""201701""  }, 
   {  ""level"" :  ""201702""  ,  ""label"" :  ""201702""  }, 
   {  ""level"" :  ""201703""  ,  ""label"" :  ""201703""  }, 
@@ -1529,72 +1334,63 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""level"" :  ""202009""  ,  ""label"" :  ""202009""  }, 
   {  ""level"" :  ""202010""  ,  ""label"" :  ""202010""  }, 
   {  ""level"" :  ""202011""  ,  ""label"" :  ""202011""  }
-]",NA,"numeric",NA,"201912 ;; 
+]","","character","","201912 ;; 
 201812 ;; 
 201712 ;; 
 201906 ;; 
-201905",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","reporting_period","code","[ 
+201905",FALSE,"","factor","month","","","temporal","nominal","reporting_period","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }
-]","201912 ;; 201812 ;; 201906 ;; 201712 ;; 202006 ;; 201806 ;; 201909 ;; 201908 ;; 201706 ;; 201903 ;; 202003 ;; 201905 ;; 201904 ;; 201910 ;; 202005 ;; 201809 ;; 202004 ;; 201907 ;; 201805 ;; 201808 ;; 201911 ;; 201709 ;; 201803 ;; 201804 ;; 201810 ;; 202007 ;; 202008 ;; 202009 ;; 202001 ;; 201807 ;; 201705 ;; 201708 ;; 202002 ;; 201902 ;; 201704 ;; 201710 ;; 201811 ;; 201901 ;; 201707 ;; 201802","[ 
-  {  ""Value"" :  ""201912""  ,  ""Frequency"" :  9884  }, 
-  {  ""Value"" :  ""201812""  ,  ""Frequency"" :  3477  }, 
-  {  ""Value"" :  ""201906""  ,  ""Frequency"" :  2064  }, 
-  {  ""Value"" :  ""201712""  ,  ""Frequency"" :  1626  }, 
-  {  ""Value"" :  ""202006""  ,  ""Frequency"" :  1312  }, 
-  {  ""Value"" :  ""201806""  ,  ""Frequency"" :  840  }, 
-  {  ""Value"" :  ""201909""  ,  ""Frequency"" :  812  }, 
-  {  ""Value"" :  ""201908""  ,  ""Frequency"" :  406  }, 
-  {  ""Value"" :  ""201706""  ,  ""Frequency"" :  362  }, 
-  {  ""Value"" :  ""201903""  ,  ""Frequency"" :  356  }, 
-  {  ""Value"" :  ""202003""  ,  ""Frequency"" :  352  }, 
-  {  ""Value"" :  ""201905""  ,  ""Frequency"" :  326  }, 
-  {  ""Value"" :  ""201904""  ,  ""Frequency"" :  278  }, 
-  {  ""Value"" :  ""201910""  ,  ""Frequency"" :  272  }, 
-  {  ""Value"" :  ""202005""  ,  ""Frequency"" :  252  }, 
-  {  ""Value"" :  ""201809""  ,  ""Frequency"" :  244  }, 
-  {  ""Value"" :  ""202004""  ,  ""Frequency"" :  183  }, 
-  {  ""Value"" :  ""201907""  ,  ""Frequency"" :  161  }, 
-  {  ""Value"" :  ""201805""  ,  ""Frequency"" :  154  }, 
-  {  ""Value"" :  ""201808""  ,  ""Frequency"" :  139  }, 
-  {  ""Value"" :  ""201911""  ,  ""Frequency"" :  123  }, 
-  {  ""Value"" :  ""201709""  ,  ""Frequency"" :  121  }, 
-  {  ""Value"" :  ""201803""  ,  ""Frequency"" :  110  }, 
-  {  ""Value"" :  ""201804""  ,  ""Frequency"" :  102  }, 
-  {  ""Value"" :  ""201810""  ,  ""Frequency"" :  94  }, 
-  {  ""Value"" :  ""202007""  ,  ""Frequency"" :  91  }, 
-  {  ""Value"" :  ""202008""  ,  ""Frequency"" :  79  }, 
-  {  ""Value"" :  ""202009""  ,  ""Frequency"" :  74  }, 
-  {  ""Value"" :  ""202001""  ,  ""Frequency"" :  66  }, 
-  {  ""Value"" :  ""201807""  ,  ""Frequency"" :  65  }, 
-  {  ""Value"" :  ""201705""  ,  ""Frequency"" :  64  }, 
-  {  ""Value"" :  ""201708""  ,  ""Frequency"" :  64  }, 
-  {  ""Value"" :  ""202002""  ,  ""Frequency"" :  59  }, 
-  {  ""Value"" :  ""201902""  ,  ""Frequency"" :  57  }, 
-  {  ""Value"" :  ""201704""  ,  ""Frequency"" :  46  }, 
-  {  ""Value"" :  ""201710""  ,  ""Frequency"" :  46  }, 
-  {  ""Value"" :  ""201811""  ,  ""Frequency"" :  46  }, 
-  {  ""Value"" :  ""201901""  ,  ""Frequency"" :  34  }, 
-  {  ""Value"" :  ""201707""  ,  ""Frequency"" :  32  }, 
-  {  ""Value"" :  ""201802""  ,  ""Frequency"" :  32  }, 
-  {  ""Value"" :  ""201703""  ,  ""Frequency"" :  31  }, 
-  {  ""Value"" :  ""201711""  ,  ""Frequency"" :  25  }, 
-  {  ""Value"" :  ""202010""  ,  ""Frequency"" :  13  }, 
-  {  ""Value"" :  ""201801""  ,  ""Frequency"" :  9  }, 
-  {  ""Value"" :  ""201701""  ,  ""Frequency"" :  8  }, 
-  {  ""Value"" :  ""201702""  ,  ""Frequency"" :  8  }, 
-  {  ""Value"" :  ""202011""  ,  ""Frequency"" :  1  }
-]","[ 
-  {  ""x"" :  ""201912""  ,  ""Freq"" :  9884  }, 
-  {  ""x"" :  ""201812""  ,  ""Freq"" :  3477  }, 
-  {  ""x"" :  ""201906""  ,  ""Freq"" :  2064  }, 
-  {  ""x"" :  ""201712""  ,  ""Freq"" :  1626  }, 
-  {  ""x"" :  ""202006""  ,  ""Freq"" :  1312  }, 
-  {  ""x"" :  ""201806""  ,  ""Freq"" :  840  }, 
-  {  ""x"" :  ""201909""  ,  ""Freq"" :  812  }, 
-  {  ""x"" :  ""other""  ,  ""Freq"" :  4985  }
-]",6,NA,NA,NA,"526e383609b33f5bc631532a410fa5de"
-"F9_00_TAX_PERIOD_END_DATE_PY",NA,"Tax period end (prior year)","Year and month the prior-year tax period ended.","[ 
+]","201912 ;; 201812 ;; 201906 ;; 201712 ;; 202006 ;; 201806 ;; 201909 ;; 201908 ;; 201706 ;; 201903 ;; 202003 ;; 201905 ;; 201904 ;; 201910 ;; 202005 ;; 201809 ;; 202004 ;; 201907 ;; 201805 ;; 201808 ;; 201911 ;; 201709 ;; 201803 ;; 201804 ;; 201810 ;; 202007 ;; 202008 ;; 202009 ;; 202001 ;; 201807 ;; 201705 ;; 201708 ;; 202002 ;; 201902 ;; 201704 ;; 201710 ;; 201811 ;; 201901 ;; 201707 ;; 201802","","[ 
+  {  ""Value"" :  ""201701""  ,  ""Count"" :  8  }, 
+  {  ""Value"" :  ""201702""  ,  ""Count"" :  8  }, 
+  {  ""Value"" :  ""201703""  ,  ""Count"" :  31  }, 
+  {  ""Value"" :  ""201704""  ,  ""Count"" :  46  }, 
+  {  ""Value"" :  ""201705""  ,  ""Count"" :  64  }, 
+  {  ""Value"" :  ""201706""  ,  ""Count"" :  362  }, 
+  {  ""Value"" :  ""201707""  ,  ""Count"" :  32  }, 
+  {  ""Value"" :  ""201708""  ,  ""Count"" :  64  }, 
+  {  ""Value"" :  ""201709""  ,  ""Count"" :  121  }, 
+  {  ""Value"" :  ""201710""  ,  ""Count"" :  46  }, 
+  {  ""Value"" :  ""201711""  ,  ""Count"" :  25  }, 
+  {  ""Value"" :  ""201712""  ,  ""Count"" :  1626  }, 
+  {  ""Value"" :  ""201801""  ,  ""Count"" :  9  }, 
+  {  ""Value"" :  ""201802""  ,  ""Count"" :  32  }, 
+  {  ""Value"" :  ""201803""  ,  ""Count"" :  110  }, 
+  {  ""Value"" :  ""201804""  ,  ""Count"" :  102  }, 
+  {  ""Value"" :  ""201805""  ,  ""Count"" :  154  }, 
+  {  ""Value"" :  ""201806""  ,  ""Count"" :  840  }, 
+  {  ""Value"" :  ""201807""  ,  ""Count"" :  65  }, 
+  {  ""Value"" :  ""201808""  ,  ""Count"" :  139  }, 
+  {  ""Value"" :  ""201809""  ,  ""Count"" :  244  }, 
+  {  ""Value"" :  ""201810""  ,  ""Count"" :  94  }, 
+  {  ""Value"" :  ""201811""  ,  ""Count"" :  46  }, 
+  {  ""Value"" :  ""201812""  ,  ""Count"" :  3477  }, 
+  {  ""Value"" :  ""201901""  ,  ""Count"" :  34  }, 
+  {  ""Value"" :  ""201902""  ,  ""Count"" :  57  }, 
+  {  ""Value"" :  ""201903""  ,  ""Count"" :  356  }, 
+  {  ""Value"" :  ""201904""  ,  ""Count"" :  278  }, 
+  {  ""Value"" :  ""201905""  ,  ""Count"" :  326  }, 
+  {  ""Value"" :  ""201906""  ,  ""Count"" :  2064  }, 
+  {  ""Value"" :  ""201907""  ,  ""Count"" :  161  }, 
+  {  ""Value"" :  ""201908""  ,  ""Count"" :  406  }, 
+  {  ""Value"" :  ""201909""  ,  ""Count"" :  812  }, 
+  {  ""Value"" :  ""201910""  ,  ""Count"" :  272  }, 
+  {  ""Value"" :  ""201911""  ,  ""Count"" :  123  }, 
+  {  ""Value"" :  ""201912""  ,  ""Count"" :  9884  }, 
+  {  ""Value"" :  ""202001""  ,  ""Count"" :  66  }, 
+  {  ""Value"" :  ""202002""  ,  ""Count"" :  59  }, 
+  {  ""Value"" :  ""202003""  ,  ""Count"" :  352  }, 
+  {  ""Value"" :  ""202004""  ,  ""Count"" :  183  }, 
+  {  ""Value"" :  ""202005""  ,  ""Count"" :  252  }, 
+  {  ""Value"" :  ""202006""  ,  ""Count"" :  1312  }, 
+  {  ""Value"" :  ""202007""  ,  ""Count"" :  91  }, 
+  {  ""Value"" :  ""202008""  ,  ""Count"" :  79  }, 
+  {  ""Value"" :  ""202009""  ,  ""Count"" :  74  }, 
+  {  ""Value"" :  ""202010""  ,  ""Count"" :  13  }, 
+  {  ""Value"" :  ""202011""  ,  ""Count"" :  1  }
+]",6,"","","","526e383609b33f5bc631532a410fa5de"
+"F9_00_TAX_PERIOD_END_DATE_PY","","Tax period end (prior year)","Year and month the prior-year tax period ended.","[ 
   {  ""level"" :  ""201601""  ,  ""label"" :  ""201601""  }, 
   {  ""level"" :  ""201602""  ,  ""label"" :  ""201602""  }, 
   {  ""level"" :  ""201603""  ,  ""label"" :  ""201603""  }, 
@@ -1641,72 +1437,63 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""level"" :  ""201908""  ,  ""label"" :  ""201908""  }, 
   {  ""level"" :  ""201909""  ,  ""label"" :  ""201909""  }, 
   {  ""level"" :  ""201910""  ,  ""label"" :  ""201910""  }
-]",NA,"numeric",NA,"201812 ;; 
+]","","character","","201812 ;; 
 201712 ;; 
 201806 ;; 
 201805 ;; 
-201809",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","reporting_period","code","[ 
+201809",FALSE,"","factor","month","","","temporal","nominal","reporting_period","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }
-]","201812 ;; 201712 ;; 201806 ;; 201906 ;; 201809 ;; 201706 ;; 201612 ;; 201808 ;; 201803 ;; 201903 ;; 201805 ;; 201810 ;; 201804 ;; 201905 ;; 201709 ;; 201606 ;; 201904 ;; 201807 ;; 201811 ;; 201708 ;; 201705 ;; 201710 ;; 201704 ;; 201901 ;; 201907 ;; 201703 ;; 201902 ;; 201802 ;; 201908 ;; 201909 ;; 201711 ;; 201707 ;; 201605 ;; 201609 ;; 201801 ;; 201604 ;; 201608 ;; 201702 ;; 201603 ;; 201607","[ 
-  {  ""Value"" :  ""201812""  ,  ""Frequency"" :  9298  }, 
-  {  ""Value"" :  ""201712""  ,  ""Frequency"" :  3002  }, 
-  {  ""Value"" :  ""201806""  ,  ""Frequency"" :  1767  }, 
-  {  ""Value"" :  ""201906""  ,  ""Frequency"" :  1060  }, 
-  {  ""Value"" :  ""201809""  ,  ""Frequency"" :  744  }, 
-  {  ""Value"" :  ""201706""  ,  ""Frequency"" :  539  }, 
-  {  ""Value"" :  ""201612""  ,  ""Frequency"" :  478  }, 
-  {  ""Value"" :  ""201808""  ,  ""Frequency"" :  370  }, 
-  {  ""Value"" :  ""201803""  ,  ""Frequency"" :  321  }, 
-  {  ""Value"" :  ""201903""  ,  ""Frequency"" :  319  }, 
-  {  ""Value"" :  ""201805""  ,  ""Frequency"" :  265  }, 
-  {  ""Value"" :  ""201810""  ,  ""Frequency"" :  255  }, 
-  {  ""Value"" :  ""201804""  ,  ""Frequency"" :  246  }, 
-  {  ""Value"" :  ""201905""  ,  ""Frequency"" :  206  }, 
-  {  ""Value"" :  ""201709""  ,  ""Frequency"" :  195  }, 
-  {  ""Value"" :  ""201606""  ,  ""Frequency"" :  164  }, 
-  {  ""Value"" :  ""201904""  ,  ""Frequency"" :  162  }, 
-  {  ""Value"" :  ""201807""  ,  ""Frequency"" :  123  }, 
-  {  ""Value"" :  ""201811""  ,  ""Frequency"" :  122  }, 
-  {  ""Value"" :  ""201708""  ,  ""Frequency"" :  101  }, 
-  {  ""Value"" :  ""201705""  ,  ""Frequency"" :  90  }, 
-  {  ""Value"" :  ""201710""  ,  ""Frequency"" :  88  }, 
-  {  ""Value"" :  ""201704""  ,  ""Frequency"" :  64  }, 
-  {  ""Value"" :  ""201901""  ,  ""Frequency"" :  61  }, 
-  {  ""Value"" :  ""201907""  ,  ""Frequency"" :  58  }, 
-  {  ""Value"" :  ""201703""  ,  ""Frequency"" :  51  }, 
-  {  ""Value"" :  ""201902""  ,  ""Frequency"" :  49  }, 
-  {  ""Value"" :  ""201802""  ,  ""Frequency"" :  46  }, 
-  {  ""Value"" :  ""201908""  ,  ""Frequency"" :  44  }, 
-  {  ""Value"" :  ""201909""  ,  ""Frequency"" :  42  }, 
-  {  ""Value"" :  ""201711""  ,  ""Frequency"" :  41  }, 
-  {  ""Value"" :  ""201707""  ,  ""Frequency"" :  39  }, 
-  {  ""Value"" :  ""201605""  ,  ""Frequency"" :  36  }, 
-  {  ""Value"" :  ""201609""  ,  ""Frequency"" :  34  }, 
-  {  ""Value"" :  ""201801""  ,  ""Frequency"" :  29  }, 
-  {  ""Value"" :  ""201604""  ,  ""Frequency"" :  27  }, 
-  {  ""Value"" :  ""201608""  ,  ""Frequency"" :  23  }, 
-  {  ""Value"" :  ""201702""  ,  ""Frequency"" :  22  }, 
-  {  ""Value"" :  ""201603""  ,  ""Frequency"" :  18  }, 
-  {  ""Value"" :  ""201607""  ,  ""Frequency"" :  16  }, 
-  {  ""Value"" :  ""201610""  ,  ""Frequency"" :  13  }, 
-  {  ""Value"" :  ""201611""  ,  ""Frequency"" :  9  }, 
-  {  ""Value"" :  ""201910""  ,  ""Frequency"" :  7  }, 
-  {  ""Value"" :  ""201601""  ,  ""Frequency"" :  5  }, 
-  {  ""Value"" :  ""201602""  ,  ""Frequency"" :  4  }, 
-  {  ""Value"" :  ""201701""  ,  ""Frequency"" :  3  }
-]","[ 
-  {  ""x"" :  ""201812""  ,  ""Freq"" :  9298  }, 
-  {  ""x"" :  ""201712""  ,  ""Freq"" :  3002  }, 
-  {  ""x"" :  ""201806""  ,  ""Freq"" :  1767  }, 
-  {  ""x"" :  ""201906""  ,  ""Freq"" :  1060  }, 
-  {  ""x"" :  ""201809""  ,  ""Freq"" :  744  }, 
-  {  ""x"" :  ""201706""  ,  ""Freq"" :  539  }, 
-  {  ""x"" :  ""201612""  ,  ""Freq"" :  478  }, 
-  {  ""x"" :  ""other""  ,  ""Freq"" :  3768  }
-]",6,NA,NA,NA,"71492f447d0e1a8bd2bf530dbafaf3da"
-"F9_00_TAX_PERIOD_BEGIN_DATE",NA,"Tax period begin","Fiscal-period start code for the reporting year.","[ 
+]","201812 ;; 201712 ;; 201806 ;; 201906 ;; 201809 ;; 201706 ;; 201612 ;; 201808 ;; 201803 ;; 201903 ;; 201805 ;; 201810 ;; 201804 ;; 201905 ;; 201709 ;; 201606 ;; 201904 ;; 201807 ;; 201811 ;; 201708 ;; 201705 ;; 201710 ;; 201704 ;; 201901 ;; 201907 ;; 201703 ;; 201902 ;; 201802 ;; 201908 ;; 201909 ;; 201711 ;; 201707 ;; 201605 ;; 201609 ;; 201801 ;; 201604 ;; 201608 ;; 201702 ;; 201603 ;; 201607","","[ 
+  {  ""Value"" :  ""201601""  ,  ""Count"" :  5  }, 
+  {  ""Value"" :  ""201602""  ,  ""Count"" :  4  }, 
+  {  ""Value"" :  ""201603""  ,  ""Count"" :  18  }, 
+  {  ""Value"" :  ""201604""  ,  ""Count"" :  27  }, 
+  {  ""Value"" :  ""201605""  ,  ""Count"" :  36  }, 
+  {  ""Value"" :  ""201606""  ,  ""Count"" :  164  }, 
+  {  ""Value"" :  ""201607""  ,  ""Count"" :  16  }, 
+  {  ""Value"" :  ""201608""  ,  ""Count"" :  23  }, 
+  {  ""Value"" :  ""201609""  ,  ""Count"" :  34  }, 
+  {  ""Value"" :  ""201610""  ,  ""Count"" :  13  }, 
+  {  ""Value"" :  ""201611""  ,  ""Count"" :  9  }, 
+  {  ""Value"" :  ""201612""  ,  ""Count"" :  478  }, 
+  {  ""Value"" :  ""201701""  ,  ""Count"" :  3  }, 
+  {  ""Value"" :  ""201702""  ,  ""Count"" :  22  }, 
+  {  ""Value"" :  ""201703""  ,  ""Count"" :  51  }, 
+  {  ""Value"" :  ""201704""  ,  ""Count"" :  64  }, 
+  {  ""Value"" :  ""201705""  ,  ""Count"" :  90  }, 
+  {  ""Value"" :  ""201706""  ,  ""Count"" :  539  }, 
+  {  ""Value"" :  ""201707""  ,  ""Count"" :  39  }, 
+  {  ""Value"" :  ""201708""  ,  ""Count"" :  101  }, 
+  {  ""Value"" :  ""201709""  ,  ""Count"" :  195  }, 
+  {  ""Value"" :  ""201710""  ,  ""Count"" :  88  }, 
+  {  ""Value"" :  ""201711""  ,  ""Count"" :  41  }, 
+  {  ""Value"" :  ""201712""  ,  ""Count"" :  3002  }, 
+  {  ""Value"" :  ""201801""  ,  ""Count"" :  29  }, 
+  {  ""Value"" :  ""201802""  ,  ""Count"" :  46  }, 
+  {  ""Value"" :  ""201803""  ,  ""Count"" :  321  }, 
+  {  ""Value"" :  ""201804""  ,  ""Count"" :  246  }, 
+  {  ""Value"" :  ""201805""  ,  ""Count"" :  265  }, 
+  {  ""Value"" :  ""201806""  ,  ""Count"" :  1767  }, 
+  {  ""Value"" :  ""201807""  ,  ""Count"" :  123  }, 
+  {  ""Value"" :  ""201808""  ,  ""Count"" :  370  }, 
+  {  ""Value"" :  ""201809""  ,  ""Count"" :  744  }, 
+  {  ""Value"" :  ""201810""  ,  ""Count"" :  255  }, 
+  {  ""Value"" :  ""201811""  ,  ""Count"" :  122  }, 
+  {  ""Value"" :  ""201812""  ,  ""Count"" :  9298  }, 
+  {  ""Value"" :  ""201901""  ,  ""Count"" :  61  }, 
+  {  ""Value"" :  ""201902""  ,  ""Count"" :  49  }, 
+  {  ""Value"" :  ""201903""  ,  ""Count"" :  319  }, 
+  {  ""Value"" :  ""201904""  ,  ""Count"" :  162  }, 
+  {  ""Value"" :  ""201905""  ,  ""Count"" :  206  }, 
+  {  ""Value"" :  ""201906""  ,  ""Count"" :  1060  }, 
+  {  ""Value"" :  ""201907""  ,  ""Count"" :  58  }, 
+  {  ""Value"" :  ""201908""  ,  ""Count"" :  44  }, 
+  {  ""Value"" :  ""201909""  ,  ""Count"" :  42  }, 
+  {  ""Value"" :  ""201910""  ,  ""Count"" :  7  }
+]",6,"","","","71492f447d0e1a8bd2bf530dbafaf3da"
+"F9_00_TAX_PERIOD_BEGIN_DATE","","Tax period begin","Fiscal-period start code for the reporting year.","[ 
   {  ""level"" :  ""20169""  ,  ""label"" :  ""20169""  }, 
   {  ""level"" :  ""20170""  ,  ""label"" :  ""20170""  }, 
   {  ""level"" :  ""20171""  ,  ""label"" :  ""20171""  }, 
@@ -1719,11 +1506,11 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""level"" :  ""20199""  ,  ""label"" :  ""20199""  }, 
   {  ""level"" :  ""20200""  ,  ""label"" :  ""20200""  }, 
   {  ""level"" :  ""20201""  ,  ""label"" :  ""20201""  }
-]",NA,"numeric",NA,"20190 ;; 
+]","","character","","20190 ;; 
 20180 ;; 
 20170 ;; 
 20189 ;; 
-20199",FALSE,NA,"factor",NA,NA,NA,"categorical","nominal","reporting_period","code","[ 
+20199",FALSE,"","factor","","","","categorical","nominal","reporting_period","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }
 ]","20190 ;; 20189 ;; 20180 ;; 20199 ;; 20179 ;; 20170 ;; 20169 ;; 20191 ;; 20200 ;; 20181 ;; 20171 ;; 20201","[ 
@@ -1748,8 +1535,8 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""x"" :  ""20170""  ,  ""Freq"" :  1680  }, 
   {  ""x"" :  ""20169""  ,  ""Freq"" :  728  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  274  }
-]",5,NA,NA,NA,"a905739d1b1e108281fd6442ba2a7442"
-"F9_00_TAX_ACCPER",NA,"Accounting period","Month in which the organization's fiscal year ends.","[ 
+]",5,"","","","a905739d1b1e108281fd6442ba2a7442"
+"F9_00_TAX_ACCPER","","Accounting period","Month in which the organization's fiscal year ends.","[ 
   {  ""level"" :  ""1""  ,  ""label"" :  ""January""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""February""  }, 
   {  ""level"" :  ""3""  ,  ""label"" :  ""March""  }, 
@@ -1762,11 +1549,11 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""level"" :  ""10""  ,  ""label"" :  ""October""  }, 
   {  ""level"" :  ""11""  ,  ""label"" :  ""November""  }, 
   {  ""level"" :  ""12""  ,  ""label"" :  ""December""  }
-]",NA,"numeric",NA,"12 ;; 
+]","","character","","12 ;; 
 6 ;; 
 5 ;; 
 9 ;; 
-11",FALSE,NA,"factor",NA,NA,NA,"categorical","ordinal","month_of_year","code","[ 
+11",FALSE,"","factor","","","","categorical","ordinal","month_of_year","code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }
 ]","12 ;; 6 ;; 9 ;; 3 ;; 5 ;; 8 ;; 4 ;; 10 ;; 7 ;; 11 ;; 2 ;; 1","[ 
@@ -1791,12 +1578,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
   {  ""x"" :  ""8""  ,  ""Freq"" :  688  }, 
   {  ""x"" :  ""4""  ,  ""Freq"" :  609  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1242  }
-]",2,NA,NA,NA,"8d3fa250e9b2dae208ec26600e0c53a4"
-"F9_08_REV_TOT_TOT",NA,"Total revenue","Total revenue for the year (Form 990, Part VIII).","",NA,"numeric",NA,"11139366 ;; 
+]",2,"","","","8d3fa250e9b2dae208ec26600e0c53a4"
+"F9_08_REV_TOT_TOT","","Total revenue","Total revenue for the year (Form 990, Part VIII).","","","character","","11139366 ;; 
 894312 ;; 
 110663 ;; 
 272444 ;; 
-6093701",FALSE,NA,"numeric",NA,NA,NA,"number","continuous","currency","currency","[ 
+6093701",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,817""  ,  ""PER"" :  ""(95.3%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""413""  ,  ""PER"" :  ""(1.7%)""  }
@@ -2033,12 +1820,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
     ""max""  :  [ 
 4178522311
 ]
-  }",10,NA,NA,NA,"d2e4429d44416d4fd723ee541e73d2a3"
-"F9_10_ASSET_TOT_BOY",NA,"Total assets (BOY)","Total assets at the beginning of the year (Form 990, Part X).","",NA,"numeric",NA,"34227234 ;; 
+  }",10,"","","","d2e4429d44416d4fd723ee541e73d2a3"
+"F9_10_ASSET_TOT_BOY","","Total assets (BOY)","Total assets at the beginning of the year (Form 990, Part X).","","","character","","34227234 ;; 
 17491720 ;; 
 101131 ;; 
 0 ;; 
-3011522",FALSE,NA,"numeric",NA,NA,NA,"number","continuous","currency","currency","[ 
+3011522",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,195""  ,  ""PER"" :  ""(80.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -2276,12 +2063,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
     ""max""  :  [ 
 11226543829
 ]
-  }",11,NA,NA,NA,"e70794cebd95ead0ac4363dfeb80cf83"
-"F9_10_ASSET_TOT_EOY",NA,"Total assets (EOY)","Total assets at the end of the year (Form 990, Part X).","",NA,"numeric",NA,"40131275 ;; 
+  }",11,"","","","e70794cebd95ead0ac4363dfeb80cf83"
+"F9_10_ASSET_TOT_EOY","","Total assets (EOY)","Total assets at the end of the year (Form 990, Part X).","","","character","","40131275 ;; 
 20157050 ;; 
 92924 ;; 
 19430176 ;; 
-2856785",FALSE,NA,"numeric",NA,NA,NA,"number","continuous","currency","currency","[ 
+2856785",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,122""  ,  ""PER"" :  ""(96.5%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""110""  ,  ""PER"" :  ""(0.4%)""  }
@@ -2518,12 +2305,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
     ""max""  :  [ 
 38468314242
 ]
-  }",11,NA,NA,NA,"4334f11236e70cf8809e059a71d77d72"
-"F9_10_NAFB_TOT_BOY",NA,"Net assets (BOY)","Net assets or fund balances at the beginning of the year.","",NA,"numeric",NA,"32671349 ;; 
+  }",11,"","","","4334f11236e70cf8809e059a71d77d72"
+"F9_10_NAFB_TOT_BOY","","Net assets (BOY)","Net assets or fund balances at the beginning of the year.","","","character","","32671349 ;; 
 17460787 ;; 
 100443 ;; 
 1788316 ;; 
-589818",FALSE,NA,"numeric",NA,NA,NA,"number","continuous","currency","currency","[ 
+589818",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,145""  ,  ""PER"" :  ""(80.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }, 
@@ -2761,12 +2548,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
     ""max""  :  [ 
 6323689488
 ]
-  }",10,NA,NA,NA,"212ad23bd9c04244582a6ccdce4e11bc"
-"F9_09_EXP_TOT_TOT",NA,"Total expenses","Total functional expenses for the year (Form 990, Part IX).","",NA,"numeric",NA,"6743081 ;; 
+  }",10,"","","","212ad23bd9c04244582a6ccdce4e11bc"
+"F9_09_EXP_TOT_TOT","","Total expenses","Total functional expenses for the year (Form 990, Part IX).","","","character","","6743081 ;; 
 1196713 ;; 
 119018 ;; 
 1067754 ;; 
-6231030",FALSE,NA,"numeric",NA,NA,NA,"number","continuous","currency","currency","[ 
+6231030",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,740""  ,  ""PER"" :  ""(95.0%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""489""  ,  ""PER"" :  ""(2.0%)""  }
@@ -3003,12 +2790,12 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
     ""max""  :  [ 
 4256605589
 ]
-  }",10,NA,NA,NA,"a79675365db63a755cffad928a8a02cd"
-"F9_01_EXP_TOT_PY",NA,"Total expenses (prior year)","Total expenses reported for the prior year.","",NA,"numeric",NA,"6901865 ;; 
+  }",10,"","","","a79675365db63a755cffad928a8a02cd"
+"F9_01_EXP_TOT_PY","","Total expenses (prior year)","Total expenses reported for the prior year.","","","character","","6901865 ;; 
 1166814 ;; 
 112215 ;; 
 0 ;; 
-7111943",FALSE,NA,"numeric",NA,NA,NA,"number","continuous","currency","currency","[ 
+7111943",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""19,931""  ,  ""PER"" :  ""(79.7%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -3246,4 +3033,4 @@ OUT",FALSE,NA,"factor",NA,NA,NA,"boolean","","","","[
     ""max""  :  [ 
 4624922368
 ]
-  }",10,NA,NA,NA,"d5008897331c88803798ab5c9be108be"
+  }",10,"","","","d5008897331c88803798ab5c9be108be"

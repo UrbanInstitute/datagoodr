@@ -61,15 +61,6 @@ is_501c3
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -81,9 +72,6 @@ is_501c3
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -137,6 +125,13 @@ TRUE · FALSE
 
 ::: {.div9} 
 
+**CATEGORY LABELS**:
+
+|FALSE |TRUE | 
+ |:-----|:----| 
+ |      |     | 
+
+
 
 
 
@@ -172,15 +167,6 @@ ntee_program
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -192,9 +178,6 @@ ntee_program
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -296,15 +279,6 @@ num_programs
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -316,9 +290,6 @@ num_programs
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -430,15 +401,6 @@ org_name
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -450,9 +412,6 @@ org_name
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -556,15 +515,15 @@ ein
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">numeric_id</span></div>
 
 
 
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">administrative_id</span></div>
 
 
 
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">plain</span></div>
 
 
 
@@ -576,9 +535,6 @@ ein
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -673,15 +629,6 @@ day_of_week
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -697,9 +644,6 @@ day_of_week
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -781,15 +725,6 @@ date_mdy
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -805,9 +740,6 @@ date_mdy
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -892,15 +824,6 @@ date_dmy
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -916,9 +839,6 @@ date_dmy
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1003,15 +923,6 @@ month_abbr
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -1027,9 +938,6 @@ month_abbr
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1112,15 +1020,6 @@ month_ym
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -1136,9 +1035,6 @@ month_ym
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1239,7 +1135,7 @@ hour_ampm
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 8</span></div>
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 7</span></div>
 
 
 
@@ -1247,9 +1143,6 @@ hour_ampm
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1268,10 +1161,10 @@ hour_ampm
 ::: {.div6} 
 
 <pre class="dg-preview">
-00:36:00 · 01:51:00 · 02:16:00 · 02:32:00 · 02:38:00 · 02:55:00
-04:09:00 · 04:18:00 · 04:52:00 · 05:07:00 · 05:59:00 · 07:06:00
-07:39:00 · 08:08:00 · 08:15:00 · 08:22:00 · 09:52:00 · 10:26:00
-13:27:00 · 14:26:00 · 14:48:00 · 15:02:00 · 15:12:00 · 15:26:00
+1:27pm · 1:51am · 10:26am · 10:27pm · 10:48pm · 12:36am · 2:16am
+2:26pm · 2:32am · 2:38am · 2:48pm · 2:55am · 3:02pm · 3:12pm
+3:26pm · 3:36pm · 3:42pm · 4:09am · 4:18am · 4:52am · 5:07am
+5:18pm · 5:59am · 7:05pm · 7:06am · 7:39am · 8:08am · 8:15am
 
 </pre>
 
@@ -1334,15 +1227,6 @@ event_ts
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -1358,9 +1242,6 @@ event_ts
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1445,15 +1326,6 @@ rule_year
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -1469,9 +1341,6 @@ rule_year
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1556,15 +1425,6 @@ age_years
 
 
 
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v"></span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v"></span></div>
 
 
 
@@ -1580,9 +1440,6 @@ age_years
 ::: 
 
 ::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v"></span></div>
 
 
 
@@ -1949,4 +1806,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-24T22:40:08Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-temporal-demo.xlsx","dgf_hash":"500226bef81500e7e075d5ca8a6a7720","dgf_variables":14} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-26T20:15:48Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-temporal-demo.xlsx","dgf_hash":"479f47d2d3d714bc66367a5d2dba8279","dgf_variables":14} -->

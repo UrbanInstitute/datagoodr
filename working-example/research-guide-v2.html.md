@@ -1065,344 +1065,6 @@ T · F · S · N
 
 ::: {.div1} 
 
-#### F9_00_TAX_PERIOD_END_DATE
-
-::: 
-
-::::: {.parent} 
-
-::: {.div2} 
-
-Tax period end 
-
-
-
-
-::: 
-
-::: {.div3} 
-
-
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">nominal</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">reporting_period</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">code</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">6</span></div>
-
-
-
-
-::: 
-
-::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Year and month (YYYYMM) the reporting tax period ended.</span></div>
-
-
-
-
-::: 
-
-::: {.div5} 
-
-**PREVIEW**:
-
-
-
-
-::: 
-
-::: {.div6} 
-
-<pre class="dg-preview">
-201912 · 201812 · 201906 · 201712 · 202006 · 201806 · 201909
-201908 · 201706 · 201903 · 202003 · 201905 · 201904 · 201910
-202005 · 201809 · 202004 · 201907 · 201805 · 201808 · 201911
-201709 · 201803 · 201804 · 201810 · 202007 · 202008 · 202009
-
-</pre>
-
-
-
-
-::: 
-
-::: {.div7} 
-
-**PROPERTIES**: 
-
-|STAT     |    VAL|    PER| 
- |:--------|------:|------:| 
- |Rows     | 25,000|       | 
- |Distinct |     47| (0.2%)| 
-
-
-
-
-
-::: 
-
-::: {.div8} 
-
-![](research-guide-v2_files/figure-html/factor-7.png){width=672}
-
-
-
-
-::: 
-
-::: {.div9} 
-
-**FACTOR LEVELS**:
-
-| Frequency|     (%)|Label  | 
- |---------:|-------:|:------| 
- |     9,884| (39.5%)|201912 | 
- |     3,477| (13.9%)|201812 | 
- |     2,064|  (8.3%)|201906 | 
- |     1,626|  (6.5%)|201712 | 
- |     1,312|  (5.2%)|202006 | 
- |       840|  (3.4%)|201806 | 
- |       812|  (3.2%)|201909 | 
- |       406|  (1.6%)|201908 | 
- |       362|  (1.4%)|201706 | 
- |       356|  (1.4%)|201903 | 
- |       352|  (1.4%)|202003 | 
- |       326|  (1.3%)|201905 | 
- |       278|  (1.1%)|201904 | 
- |       272|  (1.1%)|201910 | 
- |       252|  (1.0%)|202005 | 
- |       244|  (1.0%)|201809 | 
- |       183|  (0.7%)|202004 | 
- |       161|  (0.6%)|201907 | 
- |       154|  (0.6%)|201805 | 
- |       139|  (0.6%)|201808 | 
- |       123|  (0.5%)|201911 | 
- |       121|  (0.5%)|201709 | 
- |       110|  (0.4%)|201803 | 
- |       102|  (0.4%)|201804 | 
- |        94|  (0.4%)|201810 | 
- |        91|  (0.4%)|202007 | 
- |        79|  (0.3%)|202008 | 
- |        74|  (0.3%)|202009 | 
- |        66|  (0.3%)|202001 | 
- |        65|  (0.3%)|201807 | 
- |        64|  (0.3%)|201705 | 
- |        64|  (0.3%)|201708 | 
- |        59|  (0.2%)|202002 | 
- |        57|  (0.2%)|201902 | 
- |        46|  (0.2%)|201704 | 
- |        46|  (0.2%)|201710 | 
- |        46|  (0.2%)|201811 | 
- |        34|  (0.1%)|201901 | 
- |        32|  (0.1%)|201707 | 
- |        32|  (0.1%)|201802 | 
- |        31|  (0.1%)|201703 | 
- |        25|  (0.1%)|201711 | 
- |        13|  (0.1%)|202010 | 
- |         9|  (0.0%)|201801 | 
- |         8|  (0.0%)|201701 | 
- |         8|  (0.0%)|201702 | 
- |         1|  (0.0%)|202011 | 
-
-
-
-
-
-::: 
-
-:::::  
-
-
-
-
-
-{{< pagebreak >}} 
-
-::: {.div1} 
-
-#### F9_00_TAX_PERIOD_END_DATE_PY
-
-::: 
-
-::::: {.parent} 
-
-::: {.div2} 
-
-Tax period end (prior year) 
-
-
-
-
-::: 
-
-::: {.div3} 
-
-
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">categorical</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">nominal</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">reporting_period</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">code</span></div>
-
-
-
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">6</span></div>
-
-
-
-
-::: 
-
-::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Year and month the prior-year tax period ended.</span></div>
-
-
-
-
-::: 
-
-::: {.div5} 
-
-**PREVIEW**:
-
-
-
-
-::: 
-
-::: {.div6} 
-
-<pre class="dg-preview">
-201812 · 201712 · 201806 · 201906 · 201809 · 201706 · 201612
-201808 · 201803 · 201903 · 201805 · 201810 · 201804 · 201905
-201709 · 201606 · 201904 · 201807 · 201811 · 201708 · 201705
-201710 · 201704 · 201901 · 201907 · 201703 · 201902 · 201802
-
-</pre>
-
-
-
-
-::: 
-
-::: {.div7} 
-
-**PROPERTIES**: 
-
-|STAT       |    VAL|     PER| 
- |:----------|------:|-------:| 
- |Rows       | 25,000|        | 
- |Distinct   |     47|  (0.2%)| 
- |Missing/NA |  4,344| (17.4%)| 
-
-
-
-
-
-::: 
-
-::: {.div8} 
-
-![](research-guide-v2_files/figure-html/factor-8.png){width=672}
-
-
-
-
-::: 
-
-::: {.div9} 
-
-**FACTOR LEVELS**:
-
-| Frequency|     (%)|Label  | 
- |---------:|-------:|:------| 
- |     9,298| (37.2%)|201812 | 
- |     3,002| (12.0%)|201712 | 
- |     1,767|  (7.1%)|201806 | 
- |     1,060|  (4.2%)|201906 | 
- |       744|  (3.0%)|201809 | 
- |       539|  (2.2%)|201706 | 
- |       478|  (1.9%)|201612 | 
- |       370|  (1.5%)|201808 | 
- |       321|  (1.3%)|201803 | 
- |       319|  (1.3%)|201903 | 
- |       265|  (1.1%)|201805 | 
- |       255|  (1.0%)|201810 | 
- |       246|  (1.0%)|201804 | 
- |       206|  (0.8%)|201905 | 
- |       195|  (0.8%)|201709 | 
- |       164|  (0.7%)|201606 | 
- |       162|  (0.6%)|201904 | 
- |       123|  (0.5%)|201807 | 
- |       122|  (0.5%)|201811 | 
- |       101|  (0.4%)|201708 | 
- |        90|  (0.4%)|201705 | 
- |        88|  (0.4%)|201710 | 
- |        64|  (0.3%)|201704 | 
- |        61|  (0.2%)|201901 | 
- |        58|  (0.2%)|201907 | 
- |        51|  (0.2%)|201703 | 
- |        49|  (0.2%)|201902 | 
- |        46|  (0.2%)|201802 | 
- |        44|  (0.2%)|201908 | 
- |        42|  (0.2%)|201909 | 
- |        41|  (0.2%)|201711 | 
- |        39|  (0.2%)|201707 | 
- |        36|  (0.1%)|201605 | 
- |        34|  (0.1%)|201609 | 
- |        29|  (0.1%)|201801 | 
- |        27|  (0.1%)|201604 | 
- |        23|  (0.1%)|201608 | 
- |        22|  (0.1%)|201702 | 
- |        18|  (0.1%)|201603 | 
- |        16|  (0.1%)|201607 | 
- |        13|  (0.1%)|201610 | 
- |         9|  (0.0%)|201611 | 
- |         7|  (0.0%)|201910 | 
- |         5|  (0.0%)|201601 | 
- |         4|  (0.0%)|201602 | 
- |         3|  (0.0%)|201701 | 
-
-
-
-
-
-::: 
-
-:::::  
-
-
-
-
-
-{{< pagebreak >}} 
-
-::: {.div1} 
-
 #### F9_00_TAX_PERIOD_BEGIN_DATE
 
 ::: 
@@ -1493,7 +1155,7 @@ Tax period begin
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/factor-9.png){width=672}
+![](research-guide-v2_files/figure-html/factor-7.png){width=672}
 
 
 
@@ -1624,7 +1286,7 @@ Accounting period
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/factor-10.png){width=672}
+![](research-guide-v2_files/figure-html/factor-8.png){width=672}
 
 
 
@@ -1793,134 +1455,6 @@ BMF activity code
 
 ::: {.div1} 
 
-#### CEO_CENSUSTRACT
-
-::: 
-
-::::: {.parent} 
-
-::: {.div2} 
-
-Census tract (GEOID) 
-
-
-
-
-::: 
-
-::: {.div3} 
-
-
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">number</span></div>
-
-
-
-
-
-
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">11</span></div>
-
-
-
-
-::: 
-
-::: {.div4} 
-
-
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">11-digit Census tract identifier of the organization's location.</span></div>
-
-
-
-
-::: 
-
-::: {.div5} 
-
-**PREVIEW**:
-
-
-
-
-::: 
-
-::: {.div6} 
-
-<pre class="dg-preview">
-11001010700 · 48201531700 · 6037294421 · 11001010100 · 11001005800
-17031839100 · 6067001101 · 6073020809 · 48113020300 · 11001005900
-18097391000 · 4013941000 · 51510201900 · 6085512100 · 36061016100
-42003020100 · 48453000102 · 48453001100 · 6075011700 · 11001006202
-
-</pre>
-
-
-
-
-::: 
-
-::: {.div7} 
-
-**PROPERTIES**: 
-
-|STAT       |    VAL|     PER| 
- |:----------|------:|-------:| 
- |Rows       | 25,000|        | 
- |Distinct   | 14,265| (57.1%)| 
- |Missing/NA |  3,110| (12.4%)| 
-
-
-
-
-
-::: 
-
-::: {.div8} 
-
-![](research-guide-v2_files/figure-html/numeric-2.png){width=768}
-
-
-
-
-::: 
-
-::: {.div9} 
-
-**STATS**:
-
-|           MIN|        MAX|           MEAN|           Q05|            Q25|            Q50|            Q75|            Q95| 
- |-------------:|----------:|--------------:|-------------:|--------------:|--------------:|--------------:|--------------:| 
- | 1,001,020,500| 5.6043e+10| 28,488,147,053| 6,029,003,250| 17,031,320,100| 28,012,950,350| 41,051,008,202| 53,033,008,055| 
-
-
-
-**DISTRIBUTION SHAPE**:
-
-::: {.dg-shape}
-
-|stat     |   num|interpretation | 
- |:--------|-----:|:--------------| 
- |Skew     | -0.02|LOW            | 
- |Kurtosis | -1.17|MED            | 
-
-
-::: 
-
-
-
-
-::: 
-
-:::::  
-
-
-
-
-
-{{< pagebreak >}} 
-
-::: {.div1} 
-
 #### F9_08_REV_TOT_TOT
 
 ::: 
@@ -2014,7 +1548,7 @@ Total revenue
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/numeric-3.png){width=768}
+![](research-guide-v2_files/figure-html/numeric-2.png){width=768}
 
 
 
@@ -2152,7 +1686,7 @@ Total assets (BOY)
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/numeric-4.png){width=768}
+![](research-guide-v2_files/figure-html/numeric-3.png){width=768}
 
 
 
@@ -2289,7 +1823,7 @@ Total assets (EOY)
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/numeric-5.png){width=768}
+![](research-guide-v2_files/figure-html/numeric-4.png){width=768}
 
 
 
@@ -2427,7 +1961,7 @@ Net assets (BOY)
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/numeric-6.png){width=768}
+![](research-guide-v2_files/figure-html/numeric-5.png){width=768}
 
 
 
@@ -2564,7 +2098,7 @@ Total expenses
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/numeric-7.png){width=768}
+![](research-guide-v2_files/figure-html/numeric-6.png){width=768}
 
 
 
@@ -2702,7 +2236,7 @@ Total expenses (prior year)
 
 ::: {.div8} 
 
-![](research-guide-v2_files/figure-html/numeric-8.png){width=768}
+![](research-guide-v2_files/figure-html/numeric-7.png){width=768}
 
 
 
@@ -3421,7 +2955,7 @@ Employer Identification Number
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">9</span></div>
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 9</span></div>
 
 
 
@@ -3540,7 +3074,7 @@ County (FIPS)
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">5</span></div>
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 5</span></div>
 
 
 
@@ -3618,9 +3152,346 @@ County (FIPS)
 
 :::::  
 
+
+
+
+
+{{< pagebreak >}} 
+
+::: {.div1} 
+
+#### CEO_CENSUSTRACT
+
+::: 
+
+::::: {.parent} 
+
+::: {.div2} 
+
+Census tract (GEOID) 
+
+
+
+
+::: 
+
+::: {.div3} 
+
+
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">identifier</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">numeric_id</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">geographic_id</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">plain</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">11</span></div>
+
+
+
+
+::: 
+
+::: {.div4} 
+
+
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">11-digit Census tract identifier of the organization's location.</span></div>
+
+
+
+
+::: 
+
+::: {.div5} 
+
+**PREVIEW**:
+
+
+
+
+::: 
+
+::: {.div6} 
+
+<pre class="dg-preview">
+11001010700 · 48201531700 · 6037294421 · 11001010100 · 11001005800
+17031839100 · 6067001101 · 6073020809 · 48113020300 · 11001005900
+18097391000 · 4013941000 · 51510201900 · 6085512100 · 36061016100
+42003020100 · 48453000102 · 48453001100 · 6075011700 · 11001006202
+
+</pre>
+
+
+
+
+::: 
+
+::: {.div7} 
+
+**PROPERTIES**: 
+
+|STAT       |    VAL|     PER| 
+ |:----------|------:|-------:| 
+ |Rows       | 25,000|        | 
+ |Distinct   | 14,265| (57.1%)| 
+ |Missing/NA |  3,110| (12.4%)| 
+
+
+
+
+
+::: 
+
+::: {.div8} 
+
+**MOST COMMON VALUES**: 
+
+|Value       | Frequency|    (%)| 
+ |:-----------|---------:|------:| 
+ |11001010700 |        69| (0.3%)| 
+ |48201531700 |        63| (0.3%)| 
+ |6037294421  |        36| (0.1%)| 
+ |11001010100 |        34| (0.1%)| 
+ |11001005800 |        32| (0.1%)| 
+ |17031839100 |        31| (0.1%)| 
+
+
+
+
+
+::: 
+
+:::::  
+
 ## Temporal
 
+{{< pagebreak >}} 
 
+::: {.div1} 
+
+#### F9_00_TAX_PERIOD_END_DATE
+
+::: 
+
+::::: {.parent} 
+
+::: {.div2} 
+
+Tax period end 
+
+
+
+
+::: 
+
+::: {.div3} 
+
+
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">temporal</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">nominal</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">reporting_period</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">code</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">month</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">6</span></div>
+
+
+
+
+::: 
+
+::: {.div4} 
+
+
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Year and month (YYYYMM) the reporting tax period ended.</span></div>
+
+
+
+
+::: 
+
+::: {.div5} 
+
+**PREVIEW**:
+
+
+
+
+::: 
+
+::: {.div6} 
+
+<pre class="dg-preview">
+201912 · 201812 · 201906 · 201712 · 202006 · 201806 · 201909
+201908 · 201706 · 201903 · 202003 · 201905 · 201904 · 201910
+202005 · 201809 · 202004 · 201907 · 201805 · 201808 · 201911
+201709 · 201803 · 201804 · 201810 · 202007 · 202008 · 202009
+
+</pre>
+
+
+
+
+::: 
+
+::: {.div7} 
+
+**PROPERTIES**: 
+
+|STAT     |    VAL|    PER| 
+ |:--------|------:|------:| 
+ |Rows     | 25,000|       | 
+ |Distinct |     47| (0.2%)| 
+
+
+
+
+
+::: 
+
+::: {.div8} 
+
+![](research-guide-v2_files/figure-html/temporal-1.png){width=768}
+
+
+::: 
+
+:::::  
+
+
+
+
+
+{{< pagebreak >}} 
+
+::: {.div1} 
+
+#### F9_00_TAX_PERIOD_END_DATE_PY
+
+::: 
+
+::::: {.parent} 
+
+::: {.div2} 
+
+Tax period end (prior year) 
+
+
+
+
+::: 
+
+::: {.div3} 
+
+
+<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">temporal</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">SUBTYPE</span><span class="dg-v">nominal</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">CLASS</span><span class="dg-v">reporting_period</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">FORMAT</span><span class="dg-v">code</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">UNIT</span><span class="dg-v">month</span></div>
+
+
+
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">6</span></div>
+
+
+
+
+::: 
+
+::: {.div4} 
+
+
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Year and month the prior-year tax period ended.</span></div>
+
+
+
+
+::: 
+
+::: {.div5} 
+
+**PREVIEW**:
+
+
+
+
+::: 
+
+::: {.div6} 
+
+<pre class="dg-preview">
+201812 · 201712 · 201806 · 201906 · 201809 · 201706 · 201612
+201808 · 201803 · 201903 · 201805 · 201810 · 201804 · 201905
+201709 · 201606 · 201904 · 201807 · 201811 · 201708 · 201705
+201710 · 201704 · 201901 · 201907 · 201703 · 201902 · 201802
+
+</pre>
+
+
+
+
+::: 
+
+::: {.div7} 
+
+**PROPERTIES**: 
+
+|STAT       |    VAL|     PER| 
+ |:----------|------:|-------:| 
+ |Rows       | 25,000|        | 
+ |Distinct   |     47|  (0.2%)| 
+ |Missing/NA |  4,344| (17.4%)| 
+
+
+
+
+
+::: 
+
+::: {.div8} 
+
+![](research-guide-v2_files/figure-html/temporal-2.png){width=768}
+
+
+::: 
+
+:::::  
 
 
 
@@ -3934,4 +3805,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-25T00:42:26Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-V2.xlsx","dgf_hash":"06f5b47e18cc5cc22a1be5fe8d5f903e","dgf_variables":27} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-07-26T20:17:07Z","r":"4.5.1","quarto":"1.8.25","dgf_file":"DGF-V2.xlsx","dgf_hash":"49618d38a191727b8231f7e408cfd4c0","dgf_variables":27} -->
