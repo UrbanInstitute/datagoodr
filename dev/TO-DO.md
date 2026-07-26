@@ -53,7 +53,64 @@ Method note: these were found by comparing each exported function's formals
 against the symbols actually referenced in its body. Worth re-running after any
 signature change - it also surfaced the dead `rg.name` in `datagoodr()`.
 
+## Typing integer columns: identifiers/codes vs. measured quantities
 
+The guesser conflates structured/artificial integers (IDs, FIPS, ZIP, EINs,
+account numbers) with genuinely measured quantities because both arrive as
+numbers - and `readr`'s inference actively corrupts the structured ones (drops
+leading zeros, casts >2^53 IDs to lossy doubles). Two related pieces of work.
+
+### Read raw as text + guarded numeric promotion (scoped 2026-07-26)
+
+- [ ] Read every column as character by default
+      (`readr::read_csv(path, col_types = cols(.default = "c"))`), preserving the
+      exact source representation - this also lets the temp write->read
+      round-trip in `create_dgf()` be deleted (reading as character *is* the
+      type reset). Then a `.safe_numeric()` promotion pass types a column as
+      `number` only when it is safe: all values parse as numeric **and** no
+      leading-zero integers (`^-?0[0-9]`) **and** within the integer-safe range
+      (no integer-like value >15 digits / `abs >= 2^53`). Everything else stays
+      character and flows into the existing factor / `detect_temporal` /
+      `detect_identifier` / `guess_dgf_types` path, which now sees intact values
+      so FIPS/tract/EIN detect correctly. `df_stats` must `as.numeric()` the
+      promoted columns for stats/graphics. Gate behind `read_as_text = TRUE` for
+      back-compat. Highest-leverage fix for the ID-misclassification class.
+- [ ] Reader choice: for an all-character read (no inference), `data.table::fread`
+      is fastest and samples rows from throughout the file for any typing it does
+      (readr guesses head-only); `readr` with `lazy = FALSE` (eager) is likely
+      both faster-to-a-stable-result and less crash-prone than the default vroom
+      ALTREP path, which is a plausible contributor to the intermittent segfaults.
+      Reading as character defers all typing to an in-memory pass over the full
+      column, so `guess_data_type()`'s existing dedupe+sample is already unbiased
+      across all rows - no head-bias, no need for a two-pass "sample then read".
+      A reservoir-sampling + chunked-streaming "big-file mode" is a later,
+      separate design (you can't quickly read *random* rows from a CSV without a
+      full-pass index).
+
+### Heuristics to separate IDs from quantities (idea 2026-07-26)
+
+Among columns that ARE all-integer, flag likely identifiers/codes rather than
+quantities using cheap statistical signals (complements the existing
+cardinality-based geography->identifier promotion):
+
+- [ ] **Fixed width.** All values the same digit-length (constant `nchar`)
+      strongly suggests a structured code/ID (EIN=9, ZIP=5, FIPS=5/11), whereas
+      measurements span magnitudes and vary in width.
+- [ ] **Benford / forensic-accounting fit.** Naturally occurring measurement
+      data follows Benford's Law (leading-digit distribution ~ `log10(1+1/d)`);
+      artificial/structured numbers (sequential IDs, fixed-format codes) deviate
+      sharply. A Benford goodness-of-fit (plus second-digit / last-digit
+      uniformity tests) could score "looks like a real measurement" vs "looks
+      manufactured". Caveat: needs values spanning several orders of magnitude
+      and a decent sample; fixed-width IDs fail Benford trivially - which is
+      exactly the signal we want.
+- [ ] **Uniqueness x entropy.** Near-unique + monotonic/sequential (or a
+      contiguous ID-like range) -> row key. Combine the distinct-ratio with
+      digit / positional entropy to catch numeric sort-order IDs and low-entropy
+      code sets.
+- [ ] Surface these as a **confidence signal / candidate flag** the user
+      confirms, not a hard auto-cast - each has false positives (a genuine
+      fixed-precision measurement; a Benford-passing pool of IDs).
 
 ## DONE: Create inspect_dgf() function (2026-07-10)
 
