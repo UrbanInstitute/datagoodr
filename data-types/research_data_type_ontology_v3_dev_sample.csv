@@ -1,0 +1,127 @@
+data_type,data_class,data_subclass,examples,data_format,raw_to_stable_transform,stable_format,stable_import_rule,data_format_default_type,data_format_default_class,dd_data_unit,short_desc,detail,validation,default_storage,implemented
+number,quantity,measurement,72.5 ;; 98.6 ;; -4.2,"[][-Inf,Inf][.n]",{none},72.5 ;; 98.6 ;; -4.2,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",unit-specific (kg;;m;;C;;L),A measured value on a unit scale.,A continuous measurement; unit kept in dd_data_unit.,unit declared ;; plausible range ;; precision,double,no
+number,quantity,count,0 ;; 1 ;; 42.00,"[][0,Inf][.0]",as_integer,{as_integer} 0 ;; 1 ;; 42,as_integer,"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",,A count of things.,"A non-negative whole tally. Interval [0,Inf) with .0 precision (integer).",whole number ;; >= 0,integer,no
+number,quantity,rate,12.4 ;; 0.03,"[][0,Inf][.n]",{none},12.4 ;; 0.03,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]","per capita;;per 1,000;;per year",An amount per unit of exposure or time.,A quantity normalized by a denominator or period.,denominator & period declared ;; nonnegative where applicable,double,no
+number,quantity,ratio,1.5 ;; 0.75,"[][0,Inf][.n]",{none},1.5 ;; 0.75,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",numerator/denominator,A ratio of two quantities.,Numerator over denominator; denominator nonzero.,denominator nonzero ;; parsing convention declared,double,no
+number,quantity,duration,3.5 ;; 120,"[][0,Inf][.n]",{none},3.5 ;; 120,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",seconds;;minutes;;hours;;days;;years,An elapsed amount of time as a number.,A length of time as a numeric magnitude; unit in dd_data_unit.,unit declared ;; nonnegative where applicable,double,no
+number,quantity,score,85 ;; 4.5,"[][0,Inf][.n]",{none},85 ;; 4.5,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",scale points,A score on a defined scale.,Points on an instrument or test.,allowed range ;; permitted increments ;; scale direction,double,no
+number,quantity,index,100 ;; 118.2,"[][-Inf,Inf][.n]",{none},100 ;; 118.2,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",index-specific scale,A constructed index relative to a base.,A composite indicator with a documented base period.,base-period & directionality documented ;; expected range,double,no
+number,quantity,rank,1 ;; 2.5 ;; 17,"[][1,Inf][.0]",as_rank,{as_rank} 1 ;; 2 ;; 17,as_integer,"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{data_class=quantity:}
+[][-Inf,Inf][.n]",rank position,An ordinal rank position.,Integer position within an ordering.,positive integer ;; bounded by group size,integer,no
+number,currency,balance,"2300.00 ;; 1,234 ;; -45.10","[][-Inf,Inf][.2]",as_currency,{as_currency} 2300.00 ;; 1234.00 ;; -45.10,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=currency:}
+[^\d.][-Inf,Inf][.2]",USD,A signed account balance.,A monetary balance that may be negative.,sign allowed ;; accounting reconciliation,double,no
+number,currency,usd,"$-45 ;; $2300.00 ;; 17,298$","[$,][-Inf,Inf][.2]",as_usd,{as_usd} -45.00 ;; 2300.00 ;; 17298.00,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=currency:}
+[^\d.][-Inf,Inf][.2]",USD,A signed account balance.,A monetary balance that may be negative.,sign allowed ;; accounting reconciliation,double,no
+number,currency,euro,"2300,00€ ;; € 17.298 ;; -45€","[€.][-Inf,Inf][,2]",as_euro,{as_euro} 2300.00 ;; 17298.00 ;; -45.00,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=currency:}
+[^\d.][-Inf,Inf][.2]",EUR,A signed account balance.,A monetary balance that may be negative.,sign allowed ;; accounting reconciliation,double,no
+number,portion,probability,0.05 ;; 0.5,"[][0,1][.n]",{none},0.05 ;; 0.5,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=portion:}
+[%][0,Inf][.n]",,A probability (0-1).,A likelihood bounded to the unit interval.,min 0 ;; max 1,double,no
+number,portion,odds,1:5 ;; 8:7,odds_ratio,as_probability,0.1667 ;; 0.5333,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=portion:}
+[%][0,Inf][.n]",,A probability (0-1).,A likelihood bounded to the unit interval.,min 0 ;; max 1,double,no
+number,portion,percent,40 ;; 12.5 ;; 40%,"[%][0,100][.n]",as_percent,40 ;; 12.5 ;; 40,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=portion:}
+[%][0,Inf][.n]",,A percentage (0-100).,A proportion on a 0-100 scale; as_percent strips a trailing %.,min 0 ;; max 100,double,no
+number,portion,percentile,90 ;; 50 ;; 99th,"[%a-zA-Z][0,100][.0]",as_number,90 ;; 50 ;; 99,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=portion}
+[%][0,Inf][.n]",percentile 0-100,A percentile position (0-100).,Rank against a reference population on 0-100.,min 0 ;; max 100 ;; population declared,double,no
+number,range,min_max,"1.2, 3.4","lo,hi",as_range,{split}[_lo][_hi],{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=range}
+[][-Inf,Inf][.n][split=""^\d.""]",same unit as estimate,A confidence interval.,"A low-high interval around an estimate, with a confidence level.",confidence level declared,character,no
+number,range,min_max,20 to 10,hi to lo,as_range,{split}[_lo][_hi],{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=range}
+[][-Inf,Inf][.n][split=""^\d.""]",same unit as estimate,A confidence interval.,"A low-high interval around an estimate, with a confidence level.",confidence level declared,character,no
+number,range,confidence_interval,"[1.2, 3.4]","[lo,hi]",as_range,{split}[_lo][_hi],{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]","{class=range}
+[][-Inf,Inf][.n][split=""^\d.""]",same unit as estimate,A confidence interval.,"A low-high interval around an estimate, with a confidence level.",confidence level declared,character,no
+number,coordinate,lat_lon,"40° 44' 55"" N, 74° 00' 22"" W",gcs:dms:latlon,"as_coord(format=""gcs:dms"",val=""latlon"")",{split}[epsg:4326_lat=40.7128][epsg:4326_lon=-74.006],{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]",as_coord,EPSG:4326,A latitude.,Decimal-degree latitude (WGS84 by default).,in range -90..90,double,no
+number,coordinate,lon_lat,"74° 00' 22"" W, 40° 44' 55"" N",gcs:dms:lonlat,"as_coord(format=""gcs:dms"",val=""lonlat"")",{split}[epsg:4326_lat=40.7128][epsg:4326_lon=-74.006],{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]",as_coord,EPSG:4326,A latitude.,Decimal-degree latitude (WGS84 by default).,in range -90..90,double,no
+number,coordinate,lat_lon,+40.7128-074.0060',iso:6709:latlon,"as_coord(format=""iso:6709"",val=""latlon"")",{split}[epsg:4326_lat=40.7128][epsg:4326_lon=-74.006],{default:numeric},,as_coord,EPSG:4326,,,,,
+number,coordinate,lat,34.0522,epsg:4326:lat,"as_coord(format=""epsg:4326"",val=""lat"")",34.0522,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]",as_coord,EPSG:4326,A latitude.,Decimal-degree latitude (WGS84 by default).,in range -90..90,double,no
+number,coordinate,lon,-118.2437,epsg:4326:lon,"as_coord(format=""epsg:4326"",val=""lon"")",-118.2437,{default:numeric},"{data_type=number:}
+[^\d.][-Inf,Inf][.n]",as_coord,EPSG:4326,A longitude.,Decimal-degree longitude (WGS84 by default).,in range -180..180,double,no
+text,text,literal,40% ;; 02168 ;; (605) 348-9999 ;; www.usa.com,literal,{none},40% ;; 02168 ;; (605) 348-9999 ;; www.usa.com,as_text,as_text,as_text,,Preserve raw data as-is,The literal classification ensures raw data is imported as text to protect the original values and applies no formatting or cleaning to the variable. ,,,
+text,text,label,North wing ;; Draft,{none},{none},North wing ;; Draft,{default:character},{none},{none},token,A short human label.,A brief descriptive label (not a controlled category).,normalize case,character,no
+text,text,title,Annual Report 2019,{none},{none},Annual Report 2019,{default:character},{none},{none},phrase,A title or heading.,A work or section title.,normalize capitalization ;; max length,character,no
+text,text,long,The organization was founded in...,{none},{none},The organization was founded in...,{default:character},{none},{none},paragraph,Long free text.,Multi-sentence notes or descriptions.,preserve line breaks ;; flag control characters,character,no
+text,text,serialized,{a:1} ;; a|b|c,json;;xml;;delimited,"as_serial(delim="":"")","c(""a"",""1"") ;; c(""a"",""b"",""c"")",as_list;;as_string,{none},{none},list,Serialized text (JSON/XML/delimited).,Structured data carried as a string.,valid syntax (promote to structured if parsed),character,no
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,

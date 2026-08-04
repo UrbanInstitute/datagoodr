@@ -1,0 +1,88 @@
+data_type,data_subtype,data_class,data_format,data_unit,data_storage,suggested_validation,implemented
+number,discrete,integer,plain ;; grouped,integer units,integer ;; double,whole-number check ;; minimum and maximum ;; missingness rules,no
+number,discrete,count,plain ;; grouped,events ;; persons ;; organizations,integer ;; integer64 ;; double,nonnegative ;; whole-number check ;; plausible maximum,no
+number,discrete,frequency,plain,occurrences per period,integer ;; integer64,nonnegative ;; whole-number check ;; period consistency,no
+number,discrete,rank,plain,rank position,integer,positive integer ;; bounded by group size ;; no impossible ties if unique,no
+number,discrete,score,plain,scale points,integer ;; double,allowed range ;; permitted increments ;; scale-direction check,no
+number,continuous,decimal,decimal ;; scientific,unspecified,double,numeric parse ;; decimal precision ;; finite-values check,no
+number,continuous,measurement,decimal ;; scientific,unit-specific (kg ;; m ;; C ;; L),double,unit declared ;; plausible range ;; precision ;; nonnegative where applicable,no
+number,continuous,currency,currency ;; grouped ;; decimal,USD ;; EUR ;; constant-year,double ;; integer64,currency declared ;; locale-aware parse ;; decimal precision ;; inflation-year consistency,yes
+number,continuous,coordinate,decimal,decimal degrees ;; meters,double,CRS declared ;; latitude/longitude bounds ;; coordinate-pair completeness,no
+number,continuous,probability,decimal,probability 0-1,double,minimum 0 ;; maximum 1 ;; finite-values check,no
+number,continuous,proportion,decimal ;; percent,0-1 ;; percent,double,minimum and maximum per unit ;; denominator defined,no
+number,continuous,percentile,decimal,percentile 0-100,double,minimum 0 ;; maximum 100 ;; ranking population declared,no
+number,continuous,rate,decimal,"per capita ;; per 1,000 ;; per year",double,denominator and exposure declared ;; nonnegative where applicable ;; period consistency,no
+number,continuous,ratio,decimal,numerator/denominator,double,denominator nonzero ;; parsing convention declared ;; plausible range,no
+number,continuous,index,decimal,index-specific scale,double,documented construction ;; expected range ;; directionality ;; base-period consistency,no
+number,continuous,standardized_score,decimal,z-score ;; T-score,double,expected center and spread ;; plausible range,no
+number,continuous,coefficient,decimal ;; scientific,model-specific,double,finite-values check ;; model and scale metadata ;; sign plausibility,no
+number,continuous,estimate,decimal,variable-specific,double,finite-values check ;; unit consistency ;; associated uncertainty fields,no
+number,continuous,standard_error,decimal,same unit as estimate,double,nonnegative ;; finite-values check ;; paired estimate exists,no
+number,continuous,weight,decimal,sampling weight ;; analytic weight,double,positive or nonnegative as defined ;; normalization documented,no
+number,continuous,duration,decimal,seconds ;; minutes ;; hours ;; days ;; years,double ;; difftime,nonnegative where applicable ;; unit declared ;; reference date for age,no
+number,continuous,difference,decimal,variable-specific,double,sign allowed ;; operand order declared ;; reconcile with components,no
+number,continuous,growth_rate,percent ;; decimal,percent per period,double,period declared ;; denominator nonzero ;; outlier and sign checks,no
+number,continuous,balance,decimal ;; currency,USD ;; units,double ;; integer64,sign allowed ;; unit declared ;; accounting reconciliation,no
+number,range,numeric_range,range,variable-specific,character ;; two doubles ;; list,lower less than or equal to upper ;; open-ended bounds declared ;; unit consistency,no
+number,range,confidence_interval,range,same unit as estimate,character ;; two doubles ;; list,lower less than or equal to upper ;; confidence level declared,no
+text,token,label,plain,,character,non-missing if required ;; maximum length ;; normalize case,no
+text,token,username,plain,,character,allowed character pattern ;; unique where required ;; minimum and maximum length,no
+text,token,email,plain,,character,email pattern ;; lowercase domain ;; trim whitespace ;; optional uniqueness,yes
+text,token,url,plain,,character,valid URI syntax ;; allowed schemes ;; trim whitespace,yes
+text,token,phone,plain,,character,valid phone pattern ;; country-code consistency ;; normalize extensions,yes
+text,token,network_address,plain,,character,valid address pattern (IPv4 ;; IPv6 ;; MAC) ;; canonical form,yes
+text,token,color,hex ;; rgb ;; hsl ;; cmyk,color model,character,valid color syntax ;; channel range check,yes
+text,line,person_name,plain,"Last, First ;; First Last",character,trim whitespace ;; normalize repeated spaces ;; flag digits or invalid punctuation,no
+text,line,organization_name,plain,,character,trim whitespace ;; normalize suffixes ;; minimum and maximum length,no
+text,line,place_name,plain,,character,reference-list lookup where categorical ;; spelling normalization,no
+text,line,title,plain,,character,trim whitespace ;; maximum length ;; normalize capitalization,no
+text,line,address,plain,,character,minimum component presence ;; postal-code consistency ;; normalize street suffixes,yes
+text,block,text,plain ;; markup,,character,maximum length ;; valid encoding ;; trim whitespace,no
+text,block,long_text,plain ;; markup,,character,valid encoding ;; preserve line breaks ;; flag control characters,no
+text,block,serialized_text,serialized,JSON ;; delimited ;; XML,character,valid syntax ;; expected schema (promote to structured if parsed),no
+categorical,nominal,category,code ;; label ;; code+label,unordered levels,factor ;; character ;; integer,allowed-values list ;; unexpected-level check ;; missing codes separated,yes
+categorical,nominal,geography,code ;; label,geographic level (state ;; county ;; place),factor ;; character,reference-list lookup ;; level declared ;; hierarchy consistency ;; spelling normalization,yes
+categorical,nominal,classification_code,code ;; label,classification system and level (NAICS 2-6),factor ;; character,valid code and vintage ;; parent-child consistency ;; code-description consistency,yes
+categorical,nominal,group,code ;; label,two or more unordered groups,factor ;; character,allowed levels ;; reference level declared,no
+categorical,nominal,missingness_reason,label,missingness categories,factor ;; character,allowed missingness codes ;; mutually exclusive ;; separate from substantive values,no
+categorical,ordinal,ordered_category,code ;; label,ordered levels,ordered factor ;; integer ;; character,order declared ;; monotonic coding,yes
+categorical,ordinal,grade_level,code ;; label,ordered levels (1-12 ;; K-12),ordered factor ;; integer,order declared ;; bounded range,no
+categorical,ordinal,likert,code ;; label,ordered response scale,ordered factor ;; integer,allowed-values list ;; order declared ;; reverse-coded items documented,no
+categorical,ordinal,rating,code ;; label,ordered scale (1-5 ;; 1-10),ordered factor ;; integer,minimum and maximum ;; permitted increments ;; missing codes excluded,no
+categorical,multiselect,multiple_categories,code ;; label,set of levels,character ;; list ;; multiple logical columns,allowed member values ;; delimiter declared ;; no duplicate members ;; cardinality limits,no
+boolean,binary,indicator,true_false ;; one_zero ;; yes_no ;; y_n,binary state,logical ;; integer ;; character ;; factor,exactly two valid states ;; normalize case ;; distinguish missing from false,no
+boolean,binary,presence,present_absent ;; one_zero,binary state,logical ;; integer ;; character,exactly two valid states ;; missingness distinct from absence,no
+boolean,binary,status,plain,binary state (active/inactive ;; open/closed),logical ;; factor ;; character,exactly two valid states ;; temporal consistency with status dates,no
+boolean,binary,response,yes_no ;; agree_disagree,binary response,logical ;; factor ;; character,exactly two valid responses ;; missing and refusal codes handled separately,no
+boolean,binary,eligibility,yes_no ;; one_zero,binary state,logical ;; factor ;; character,exactly two valid states ;; rule-based consistency with eligibility criteria,no
+temporal,point,calendar_date,yyyymmdd ;; mmddyyyy ;; ddmmyyyy ;; dMyyyy ;; Md ;; long ;; hijri,day ;; dow ;; doy ;; week ;; month ;; year,Date ;; character,valid calendar date ;; declared order ;; range check ;; no impossible dates,yes
+temporal,point,timestamp,yyyymmddHHiiss ;; mmddyyyyhhiiA ;; rfc2822 ;; epoch,datetime ;; timezone,POSIXct ;; POSIXlt ;; character,valid timestamp ;; timezone declared ;; daylight-saving handling ;; range check,yes
+temporal,point,time_of_day,HHii ;; hhiiA ;; hhii,hour ;; minute,hms ;; difftime ;; character,valid hour/minute/second ;; 12/24-hour convention ;; timezone if relevant,yes
+temporal,period,year,yyyy ;; FYyyyy,calendar or fiscal year,integer ;; character,valid year range ;; fiscal/calendar convention declared,no
+temporal,period,quarter,yyyyQq,calendar or fiscal quarter,yearqtr ;; character,valid quarter ;; fiscal/calendar convention ;; period range,no
+temporal,period,semester,plain,academic or fiscal semester,character,valid semester ;; convention declared ;; period range,no
+temporal,period,season,plain,season span,character,valid season ;; hemisphere convention ;; period range,no
+temporal,period,month,yyyy-mm ;; yyyymm ;; Myyyy,calendar month,yearmon ;; Date ;; character,valid month ;; declared parsing convention ;; period range,yes
+temporal,period,reporting_period,range,fiscal or reporting period,character ;; interval ;; two Date columns,start before or equal to end ;; expected duration ;; overlap and gap checks,no
+temporal,phase,hour_of_day,H ;; h,hour position 0-23,integer ;; character,in range 0-23 ;; 12/24-hour convention,no
+temporal,phase,day_of_week,WWW ;; WWWW ;; number,weekday position,integer ;; factor ;; character,valid weekday ;; week-start convention (Sun/Mon),no
+temporal,phase,week_of_year,ww,week position 1-53,integer ;; character,in range 1-53 ;; week-numbering convention,no
+temporal,phase,month_of_year,mm ;; MMM ;; MMMM,month position 1-12,integer ;; factor ;; character,in range 1-12,no
+temporal,phase,season_of_year,plain,season position,factor ;; character,four-season or meteorological convention,no
+temporal,interval,date_range,range,date interval,interval ;; two Date columns ;; list,start before or equal to end ;; open/closed bounds declared ;; overlap rules,yes
+identifier,numeric_id,record_id,plain ;; zero_padded,identifier,integer ;; integer64 ;; character,unique ;; non-missing ;; preserve leading zeros ;; precision-loss check ;; no arithmetic,no
+identifier,numeric_id,geographic_id,zero_padded,GEOID ;; FIPS ;; ZIP,character ;; integer,fixed length ;; preserve leading zeros ;; valid geography vintage ;; hierarchy consistency,no
+identifier,numeric_id,administrative_id,plain,EIN ;; SSN ;; NPI ;; ISBN ;; ORCID,character ;; integer64,domain-specific pattern ;; checksum where available ;; preserve leading zeros,yes
+identifier,text_id,record_id,plain,identifier (UUID ;; slug),character,unique ;; non-missing ;; stable across versions ;; case sensitivity declared,yes
+identifier,text_id,entity_id,plain ;; delimited,identifier (ORG-001 ;; accession),character,unique within entity domain ;; stable over time ;; encoding consistency,yes
+identifier,text_id,administrative_id,plain,DEA ;; DUNS ;; UEI ;; DOI,character,domain-specific pattern ;; checksum where available ;; uniqueness scope,yes
+identifier,text_id,version_id,plain,version identifier,character,valid version syntax ;; monotonicity where expected ;; uniqueness within object,no
+identifier,hash_id,record_id,plain,hash digest (MD5 ;; SHA-256),character,expected length and alphabet ;; algorithm declared ;; checksum verification,yes
+structured,collection,list,serialized,collection,list ;; character,member schema ;; cardinality limits ;; member-type consistency,no
+structured,collection,array,serialized,dimensions,matrix ;; array ;; list,dimension consistency ;; element-type consistency ;; shape declared,no
+structured,record,object,serialized,record schema,list ;; data.frame ;; character,required keys ;; field types ;; schema version ;; no unexpected keys where strict,no
+structured,record,key_value,serialized,mapping,list ;; character,unique keys ;; allowed keys ;; value-type rules ;; valid delimiter or syntax,no
+structured,spatial,geometry,wkt ;; wkb ;; geojson,CRS identifier,sfc ;; raw ;; character,valid geometry ;; CRS declared ;; geometry-type consistency ;; coordinate bounds,no
+unknown,unclassified,unclassified,plain,,character,retain original values ;; profile candidate types ;; do not coerce automatically,no
+unknown,mixed,mixed_type,plain,,character ;; list,identify dominant type ;; flag exceptions ;; split or standardize before coercion,no
+unknown,malformed,parse_failure,plain,,character ;; raw,retain source text ;; log parse errors ;; quantify failure rate ;; manual review,no

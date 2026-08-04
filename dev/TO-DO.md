@@ -409,3 +409,80 @@ fixture), using this generic recipe:
 - [ ] These are all `tier = "fast"` (regex/charset), no external data needed.
       Precision will be high (formal grammars) so S3/SP rejection should be
       near-total.
+
+## Raw-stage summary statistics for audit-by-inspection (idea 2026-08-02)
+
+Capture per-variable summary statistics computed on the **raw (pre-transform)**
+values and preserve them in the DGF, so a reviewer can see whether a variable
+was materially changed by the cleaning / transformation / join steps. This is
+**audit by inspection, not reproduction** — the package's target audience is
+reviewers without CS expertise (e.g. the social-science research community,
+journal reviewers checking an archived data+code deposit), for whom there is
+today no standard way to document how a research database was assembled.
+Complements the workflow-by-example vector glimpses (raw -> stable examples)
+already carried in the type ontology.
+
+Statistics to capture for the raw variable (alongside the stable-stage `rg_*`
+profile), chosen to make significant unintended changes visible:
+
+- [ ] Shannon entropy (detects distributional collapse / mass-duplication).
+- [ ] Missingness count/rate (detects rows silently dropped, or NA injected by a
+      bad join or a failed type coercion).
+- [ ] Boolean & factor level count tables (detects lost / merged / renamed
+      levels).
+- [ ] Distinct count; numeric min/max/range; text length stats.
+- [ ] (later) a raw-vs-stable "delta" view that surfaces only the variables
+      whose distribution changed beyond a threshold, so a reviewer sees the
+      short list of things to scrutinize, not every variable.
+
+Storage: a `raw_*` stat family (or a parallel `rg_raw_*` set) in the DGF; decide
+whether to persist in the DGF or compute on demand from a retained raw glimpse.
+
+Why it matters / how it pairs with the ID audit: research databases are built by
+filtering, sampling, and joining ("black box" wrangling). Type-cast corruption
+is *type-system mojibake* -- silent, partial, and plausible-looking. Two
+complementary audits catch it:
+
+- **Distributional** (this idea): before/after summaries flag a variable whose
+  shape changed unexpectedly.
+- **Key-level** (ID stabilization): a hardened ID carried alongside its raw
+  numeric twin lets a row-pairwise check
+  (`all.equal(as_id_numeric(id_hardened), as.numeric(id_raw))`) catch a merge
+  key that was mojibaked mid-pipeline. This works where a column hash cannot,
+  because filtering/sampling changes the row set (so a start-to-end hash never
+  matches), whereas the row-local invariant survives filter/join/reorder. The
+  hardened ID is the default; the raw twin is opt-in (the canary) for the
+  wrangling/QA phase.
+
+## Dataset-source prefixes in variable names (idea 2026-08-02)
+
+When a research database is assembled by joining several sources, prefix each
+variable with its source of origin so provenance is legible from the schema
+alone -- a lineage record for reviewers, not just a naming convenience:
+
+```
+id_1  id_2            # the join keys
+census_var1  census_var2
+bls_var3  bls_var4
+irs_var5
+nccs_var6
+```
+
+A reader can see at a glance which columns came from which source during the
+joins. Pairs with the ID-hardening + audit work above (the keys) and the
+raw-stage summary statistics (the values). Future development for the
+manifest/governance layer: an opt-in `source_prefix=` on the ingest/join step,
+recorded in the DGF so the mapping (prefix -> source dataset + vintage) is
+documented and auditable.
+
+## raw_format vs stable_format as a cleaning audit trail (note 2026-08-02)
+
+The `raw_format` / `stable_format` pair is itself an audit artifact, not just a
+parsing aid: whenever the two differ, the value was changed by
+import/cleaning/stabilization, and the pair documents *how*. A reviewer (or an
+automated check) can scan for every variable where `raw_format != stable_format`
+to get the exact list of columns the wrangling touched, and the transform rule
+between them says what was done. Worth surfacing this diff explicitly in the
+Research Guide / manifest audit (a "what changed on import" section), and
+consider a flag for variables where raw and stable formats are identical (i.e.
+untouched) vs. transformed.
