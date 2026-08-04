@@ -58,14 +58,11 @@ test_that("ontology attribute rows render only when populated", {
   expect_false(any(grepl("SUBTYPE", plain)))
   expect_false(any(grepl("FORMAT", plain)))
 
-  # stamp the coordinates on a column and they appear
+  # stamp the class.subclass coordinate on a column and it appears
   i <- dgf$var_name == "cat"
-  dgf$desired_data_subtype[i] <- "nominal"
-  dgf$desired_data_class[i]   <- "geography"
-  dgf$desired_data_format[i]  <- "code"
+  dgf$desired_data_class[i] <- "mutually_exclusive.geographic"
   filled <- suppressMessages(suppressWarnings(
     capture.output(create_all_sections(dgf[i, ]))))
-  expect_true(any(grepl("SUBTYPE", filled)))
-  expect_true(any(grepl("geography", filled)))
-  expect_true(any(grepl("FORMAT", filled)))
+  expect_true(any(grepl("CLASS", filled)))
+  expect_true(any(grepl("mutually_exclusive.geographic", filled)))
 })

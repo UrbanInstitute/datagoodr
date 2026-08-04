@@ -36,16 +36,18 @@
 #' @param types A named character vector mapping variable name to the corrected
 #'   `desired_data_type` (`"temporal"`, `"identifier"`, `"number"`,
 #'   `"categorical"`, `"boolean"`, `"text"`).
-#' @param units A named character vector mapping variable name to
-#'   `stable_data_unit` (e.g. `c(founded = "year")`). Temporal only; may name
-#'   variables already the right type but needing a unit.
+#' @param units A named character vector mapping variable name to a temporal
+#'   grain (e.g. `c(founded = "year")`), written into `desired_data_class` as
+#'   `period.year` / `phase.day_of_week` / ... - the coordinate the render engine
+#'   reads to pick the graphic. Temporal only; may name variables already the
+#'   right type but needing a grain.
 #' @param env Environment for any rule functions (unused today; reserved).
 #'
 #' @return The DGF with the named variables re-typed, re-united, and re-profiled.
 #'
 #' @details Only the named variables are touched; everything else is left
 #'   verbatim, including any curation. The temporal graphic is chosen at render
-#'   from `stable_data_unit`, so a units-only change needs no re-profile - but a
+#'   from `desired_data_class`, so a units-only change needs no re-profile - but a
 #'   type change to `temporal` does, to store the value/count table its graphic
 #'   reads.
 #'
@@ -85,9 +87,18 @@ retype_dgf <- function( dgf, data, types = NULL, units = NULL,
     dgf$rg_graphics[i]   <- as.character( get_graphics( v, data, vc ) )
   }
 
+  ## `units` names a temporal grain (year/month/date/dow/...); the grain now
+  ## lives in desired_data_class (period.year, phase.day_of_week, ...), which the
+  ## render engine reads to pick the graphic - no separate unit column.
+  .grain_class <- function( u ) switch( u,
+    year = "period.year", quarter = "period.quarter", month = "period.month",
+    semester = "period.semester", season = "period.season",
+    date = "date.calendar", datetime = "date.timestamp", timestamp = "date.timestamp",
+    hour = "phase.hour_of_day", dow = "phase.day_of_week",
+    week = "phase.week_of_year", period = "period.reporting_period", u )
   for( v in names(units) ) {
     i <- match( v, dgf$var_name )
-    if( ! is.na(i) ) dgf$stable_data_unit[i] <- units[[v]]
+    if( ! is.na(i) ) dgf$desired_data_class[i] <- .grain_class( units[[v]] )
   }
 
   dgf

@@ -16,9 +16,11 @@ to a `.csv`). Needed to recompute the profile.}
 `desired_data_type` (`"temporal"`, `"identifier"`, `"number"`,
 `"categorical"`, `"boolean"`, `"text"`).}
 
-\item{units}{A named character vector mapping variable name to
-`stable_data_unit` (e.g. `c(founded = "year")`). Temporal only; may name
-variables already the right type but needing a unit.}
+\item{units}{A named character vector mapping variable name to a temporal
+grain (e.g. `c(founded = "year")`), written into `desired_data_class` as
+`period.year` / `phase.day_of_week` / ... - the coordinate the render engine
+reads to pick the graphic. Temporal only; may name variables already the
+right type but needing a grain.}
 
 \item{env}{Environment for any rule functions (unused today; reserved).}
 }
@@ -34,7 +36,7 @@ for the iterative Step-1 -> Step-2 loop: build, correct, re-profile, render.
 \details{
 Only the named variables are touched; everything else is left
   verbatim, including any curation. The temporal graphic is chosen at render
-  from `stable_data_unit`, so a units-only change needs no re-profile - but a
+  from `desired_data_class`, so a units-only change needs no re-profile - but a
   type change to `temporal` does, to store the value/count table its graphic
   reads.
 }

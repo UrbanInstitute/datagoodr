@@ -22,7 +22,7 @@ counts.
 is_yyyymm(c("201912", "201301", "201913", "2019", NA))
 }
 \seealso{
-Other datetime detectors:
+Other datetime detectors: 
 \code{\link{is_abbr_month_date}()},
 \code{\link{is_clock_time}()},
 \code{\link{is_date_range}()},

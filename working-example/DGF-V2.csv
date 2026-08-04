@@ -1,9 +1,9 @@
-"var_name","dd_vname_alias","dd_vlabel","dd_vdesc","dd_f_levels","dd_is_join_key","raw_data_storage","raw_data_format","raw_first5","raw_duplicated","raw_to_stable_transform","stable_data_storage","stable_data_unit","stable_data_format","desired_data_import_rule","desired_data_type","desired_data_subtype","desired_data_class","desired_data_format","rg_properties","rg_preview","rg_stats","rg_graphics","rg_max_chr","validate_rules","validate_format","prov_start_hash","prov_current_hash"
-"F9_00_ORG_NAME_L1","","Organization name","Legal name of the filing organization (Form 990, header).","","","character","","INTERNATIONAL UNI... ;; 
+"var_name","dd_vname_alias","dd_vlabel","dd_vdesc","dd_data_unit","dd_f_levels","dd_is_join_key","raw_data_type","raw_data_format","raw_first5","raw_duplicated","raw_to_stable_transform","stable_data_type","stable_data_format","desired_data_import_rule","desired_data_type","desired_data_class","rg_properties","rg_preview","rg_stats","rg_graphics","rg_max_chr","validate_rules","validate_format","prov_start_hash","prov_current_hash"
+"F9_00_ORG_NAME_L1","","Organization name","Legal name of the filing organization (Form 990, header).","","","","character","","INTERNATIONAL UNI... ;; 
 RETAIL MERCHANTS ... ;; 
 MORRIS COUNTY FAR... ;; 
 NATIONAL ASSOCIAT... ;; 
-AMERICAN MEAD MAK...",FALSE,"","character","","","","text","phrase","organization_name","plain","[ 
+AMERICAN MEAD MAK...",FALSE,"","character","","","text","name.organization","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""17,455""  ,  ""PER"" :  ""(69.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -116,12 +116,12 @@ AMERICAN MEAD MAK...",FALSE,"","character","","","","text","phrase","organizatio
   {  ""ww"" :  ""CALIFORNIA""  ,  ""Freq"" :  318  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  317  }, 
   {  ""ww"" :  ""COMMUNITY""  ,  ""Freq"" :  316  }
-]",97,"","","","c37e83a29aac696516a76c253df473d9"
-"F0_00_ORG_CONTACT","","Contact person","Name of the organization's principal officer or contact.","","","character","","JACK ARGILA ;; 
+]",97,"","","","4ef961799567072f22ad8e08a3b69cff"
+"F0_00_ORG_CONTACT","","Contact person","Name of the organization's principal officer or contact.","","","","character","","JACK ARGILA ;; 
 KATHY/NANCY ;; 
 DAVE A WARRINGTON ;; 
 BRIAN WING ;; 
-GARY M SIMMONS",FALSE,"","character","","","","text","phrase","person_name","plain","[ 
+GARY M SIMMONS",FALSE,"","character","","","text","name.person","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""10,990""  ,  ""PER"" :  ""(44.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""13,392""  ,  ""PER"" :  ""(53.6%)""  }
@@ -234,12 +234,12 @@ GARY M SIMMONS",FALSE,"","character","","","","text","phrase","person_name","pla
   {  ""ww"" :  ""GEORGE""  ,  ""Freq"" :  60  }, 
   {  ""ww"" :  ""COMPANY""  ,  ""Freq"" :  56  }, 
   {  ""ww"" :  ""FRANK""  ,  ""Freq"" :  56  }
-]",33,"","","","76eeb54cf49bfd89dd1feb1306dfeb31"
-"F9_00_ORG_ADDR_L1","","Street address","Mailing street address of the organization.","","","character","","4 COURT SQUARE ;; 
+]",33,"","","","1acd2bb4d0783929c455d2a5a3ab242d"
+"F9_00_ORG_ADDR_L1","","Street address","Mailing street address of the organization.","","","","character","","4 COURT SQUARE ;; 
 5101 MONUMENT AVE ;; 
 818 LINDA DR ;; 
 PO BOX 7002 ;; 
-5214 25TH AVE N",FALSE,"","character","","","","text","line","address","plain","[ 
+5214 25TH AVE N",FALSE,"","character","","","text","postal.full","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""18,785""  ,  ""PER"" :  ""(75.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -352,12 +352,12 @@ PO BOX 7002 ;;
   {  ""ww"" :  ""2""  ,  ""Freq"" :  118  }, 
   {  ""ww"" :  ""3RD""  ,  ""Freq"" :  116  }, 
   {  ""ww"" :  ""EAST""  ,  ""Freq"" :  116  }
-]",35,"","","","e9393b1aed63f68b36fe261c33347f0e"
-"F9_00_ORG_ADDR_CITY","","City","City of the organization's mailing address.","","","character","","LONG ISLAND CITY ;; 
+]",35,"","","","e7ca9c99b3380fabea4d25db3c901b90"
+"F9_00_ORG_ADDR_CITY","","City","City of the organization's mailing address.","","","","character","","LONG ISLAND CITY ;; 
 RICHMOND ;; 
 DAINGERFIELD ;; 
 FREDERICKSBRG ;; 
-ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain","[ 
+ST PETERSBURG",FALSE,"","character","","","text","name.place","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5,986""  ,  ""PER"" :  ""(23.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -470,12 +470,12 @@ ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain
   {  ""ww"" :  ""PHOENIX""  ,  ""Freq"" :  71  }, 
   {  ""ww"" :  ""ALBANY""  ,  ""Freq"" :  70  }, 
   {  ""ww"" :  ""DES""  ,  ""Freq"" :  70  }
-]",22,"","","","f5dbd5c29eebf7a4dc24a738a5ee5b5d"
-"EIN","","Employer Identification Number","IRS-assigned 9-digit taxpayer ID; the unique key for the organization.","","TRUE","character","","113161527 ;; 
+]",22,"","","","e12b80e4106f0f608bd13bbfe2063bee"
+"EIN","","Employer Identification Number","IRS-assigned 9-digit taxpayer ID; the unique key for the organization.","","","TRUE","character","","113161527 ;; 
 540354670 ;; 
 751627109 ;; 
 61636713 ;; 
-542015951",FALSE,"","numeric","","","","identifier","numeric_id","administrative_id","plain","[ 
+542015951",FALSE,"","numeric","","","identifier","id.administrative","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,794""  ,  ""PER"" :  ""(99.2%)""  }
 ]","10100593 ;; 10218055 ;; 10220588 ;; 10266289 ;; 10273431 ;; 10286963 ;; 10440702 ;; 10468398 ;; 10523313 ;; 10524078 ;; 10573723 ;; 10715375 ;; 10744517 ;; 10815981 ;; 10852125 ;; 10874048 ;; 10961458 ;; 16011483 ;; 16012302 ;; 16019950 ;; 16022337 ;; 16123853 ;; 20172119 ;; 20187390 ;; 20212092 ;; 20232424 ;; 20241397 ;; 20257793 ;; 20324779 ;; 20349390 ;; 20542944 ;; 20548015 ;; 20624171 ;; 2069","{
@@ -516,8 +516,8 @@ ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain
       ""Frequency"": 2
     }
   ]
-}","",9,"","","","ea94ea5d1fc3c2d7f7ec49efc2e4b6f3"
-"SUBSECCD","","IRS subsection code","501(c) subsection under which the organization is tax-exempt.","[ 
+}","",9,"","","","0c73e749121330ac8c3abe50c332f15a"
+"SUBSECCD","","IRS subsection code","501(c) subsection under which the organization is tax-exempt.","","[ 
   {  ""level"" :  ""2""  ,  ""label"" :  ""501(c)(2) Title-holding corporation""  }, 
   {  ""level"" :  ""4""  ,  ""label"" :  ""501(c)(4) Social welfare organization""  }, 
   {  ""level"" :  ""5""  ,  ""label"" :  ""501(c)(5) Labor / agricultural org""  }, 
@@ -545,7 +545,7 @@ ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain
 6 ;; 
 25 ;; 
 4 ;; 
-19",FALSE,"","factor","","","","categorical","nominal","administrative_code","code","[ 
+19",FALSE,"","factor","","","categorical","mutually_exclusive.classification_code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23""  ,  ""PER"" :  ""(0.1%)""  }
 ]","6 ;; 4 ;; 7 ;; 5 ;; 8 ;; 19 ;; 9 ;; 12 ;; 13 ;; 2 ;; 10 ;; 14 ;; 25 ;; 15 ;; 17 ;; 23 ;; 11 ;; 26 ;; 16 ;; 18 ;; 24 ;; 27 ;; 29","[ 
@@ -584,12 +584,12 @@ ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain
   {  ""x"" :  ""13""  ,  ""Freq"" :  561  }, 
   {  ""x"" :  ""2""  ,  ""Freq"" :  545  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  934  }
-]",2,"","","","8545f03c0a4d4efa73af76e780bf57fd"
-"BMF_ACTIV1","","BMF activity code","Primary IRS Business Master File activity code (legacy numeric code).","","","character","","263 ;; 
+]",2,"","","","e4f04f345cd9f92fc101148d297943e3"
+"BMF_ACTIV1","","BMF activity code","Primary IRS Business Master File activity code (legacy numeric code).","","","","character","","263 ;; 
 200 ;; 
 379 ;; 
 0 ;; 
-407",FALSE,"","numeric","","","","number","","","","[ 
+407",FALSE,"","numeric","","","number","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""230""  ,  ""PER"" :  ""(0.9%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }, 
@@ -827,8 +827,8 @@ ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain
     ""max""  :  [ 
 999
 ]
-  }",3,"","","","29e54c4937b4da29973ebbc051d5b635"
-"NTMAJ12","","NTEE major group (12-category)","NCCS 12-category summary of the organization's NTEE classification.","[ 
+  }",3,"","","","69f23e9e7994a8e1e46671571f7da03e"
+"NTMAJ12","","NTEE major group (12-category)","NCCS 12-category summary of the organization's NTEE classification.","","[ 
   {  ""level"" :  ""AR""  ,  ""label"" :  ""Arts, culture & humanities""  }, 
   {  ""level"" :  ""BH""  ,  ""label"" :  ""Higher education""  }, 
   {  ""level"" :  ""ED""  ,  ""label"" :  ""Education (excl. higher ed)""  }, 
@@ -845,7 +845,7 @@ ST PETERSBURG",FALSE,"","character","","","","text","phrase","place_name","plain
 PU ;; 
 UN ;; 
 ED ;; 
-AR",FALSE,"","factor","","","","categorical","nominal","classification_code","code","[ 
+AR",FALSE,"","factor","","","categorical","mutually_exclusive.classification_code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }
 ]","PU ;; HU ;; MU ;; ED ;; UN ;; HE ;; AR ;; EN ;; IN ;; EH ;; RE ;; BH","[ 
@@ -871,8 +871,8 @@ AR",FALSE,"","factor","","","","categorical","nominal","classification_code","co
   {  ""x"" :  ""AR""  ,  ""Freq"" :  615  }, 
   {  ""x"" :  ""EN""  ,  ""Freq"" :  508  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  268  }
-]",2,"","","","47e592979b51bef034581a5ac944748c"
-"NTEE1","","NTEE major group","First letter of the National Taxonomy of Exempt Entities code - the broad activity area.","[ 
+]",2,"","","","c8aaca93917b6be045cb2ecf1f90527a"
+"NTEE1","","NTEE major group","First letter of the National Taxonomy of Exempt Entities code - the broad activity area.","","[ 
   {  ""level"" :  ""A""  ,  ""label"" :  ""Arts, Culture & Humanities""  }, 
   {  ""level"" :  ""B""  ,  ""label"" :  ""Education""  }, 
   {  ""level"" :  ""C""  ,  ""label"" :  ""Environmental Quality""  }, 
@@ -903,7 +903,7 @@ AR",FALSE,"","factor","","","","categorical","nominal","classification_code","co
 S ;; 
 K ;; 
 N ;; 
-M",FALSE,"","factor","","","","categorical","nominal","classification_code","code","[ 
+M",FALSE,"","factor","","","categorical","mutually_exclusive.classification_code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""27""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }
@@ -948,12 +948,12 @@ M",FALSE,"","factor","","","","categorical","nominal","classification_code","cod
   {  ""x"" :  ""E""  ,  ""Freq"" :  574  }, 
   {  ""x"" :  ""I""  ,  ""Freq"" :  557  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1959  }
-]",1,"","","","cc2692a6b5411ae2949be174b9e1198a"
-"NTEEFINAL","","NTEE code","Full National Taxonomy of Exempt Entities code assigned to the organization.","","","character","","J40 ;; 
+]",1,"","","","9610c2a5a3c1d37fc15b0463196b0c2d"
+"NTEEFINAL","","NTEE code","Full National Taxonomy of Exempt Entities code assigned to the organization.","","","","character","","J40 ;; 
 S41 ;; 
 K28 ;; 
 N61 ;; 
-S47",FALSE,"","character","","","","text","token","classification_code","code","[ 
+S47",FALSE,"","character","","","text","mutually_exclusive.classification_code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""654""  ,  ""PER"" :  ""(2.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,497""  ,  ""PER"" :  ""(6.0%)""  }
@@ -1065,8 +1065,8 @@ S47",FALSE,"","character","","","","text","token","classification_code","code","
   {  ""ww"" :  ""C32""  ,  ""Freq"" :  65  }, 
   {  ""ww"" :  ""E03""  ,  ""Freq"" :  64  }, 
   {  ""ww"" :  ""S81""  ,  ""Freq"" :  64  }
-]",5,"","","","e8e685b8bf5924b0bec8f604b1c0d599"
-"NTEESRC","","NTEE source","Method or source by which the NTEE code was assigned.","[ 
+]",5,"","","","a31cb41203ca87e23825664094fcdabb"
+"NTEESRC","","NTEE source","Method or source by which the NTEE code was assigned.","","[ 
   {  ""level"" :  ""ACT1""  ,  ""label"" :  ""Assigned from activity code""  }, 
   {  ""level"" :  ""BEST""  ,  ""label"" :  ""Best available assignment""  }, 
   {  ""level"" :  ""END2""  ,  ""label"" :  ""End-of-process assignment""  }, 
@@ -1086,7 +1086,7 @@ S47",FALSE,"","character","","","","text","token","classification_code","code","
 BEST ;; 
 IRS ;; 
 WORD ;; 
-ZZ",FALSE,"","factor","","","","categorical","nominal","category","code","[ 
+ZZ",FALSE,"","factor","","","categorical","mutually_exclusive.unordered","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""16""  ,  ""PER"" :  ""(0.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,378""  ,  ""PER"" :  ""(5.5%)""  }
@@ -1113,8 +1113,8 @@ ZZ",FALSE,"","factor","","","","categorical","nominal","category","code","[
   {  ""x"" :  ""IRS""  ,  ""Freq"" :  2540  }, 
   {  ""x"" :  ""SOI""  ,  ""Freq"" :  855  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1196  }
-]",4,"","","","32332a74c73a19d148592c2e9a853b0f"
-"DEDUCTCD","","Deductibility code","Whether contributions to the organization are tax-deductible.","[ 
+]",4,"","","","3f7682cc60dc1f12bd4db8a768090a0a"
+"DEDUCTCD","","Deductibility code","Whether contributions to the organization are tax-deductible.","","[ 
   {  ""level"" :  ""0""  ,  ""label"" :  ""Not specified""  }, 
   {  ""level"" :  ""1""  ,  ""label"" :  ""Contributions are tax-deductible""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""Contributions are not tax-deductible""  }, 
@@ -1122,7 +1122,7 @@ ZZ",FALSE,"","factor","","","","categorical","nominal","category","code","[
 ]","","character","","2 ;; 
 1 ;; 
 0 ;; 
-4",FALSE,"","factor","","","","categorical","nominal","administrative_code","code","[ 
+4",FALSE,"","factor","","","categorical","mutually_exclusive.classification_code","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,887""  ,  ""PER"" :  ""(7.5%)""  }
@@ -1136,8 +1136,8 @@ ZZ",FALSE,"","factor","","","","categorical","nominal","category","code","[
   {  ""x"" :  ""1""  ,  ""Freq"" :  3932  }, 
   {  ""x"" :  ""0""  ,  ""Freq"" :  685  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  2  }
-]",1,"","","","3090ed2798b253515d5dbda22454f646"
-"OUTREAS","","Out-of-scope reason","Reason the organization is excluded from the NCCS core file.","[ 
+]",1,"","","","f4394e3865b8d9c9f58c0398c3394594"
+"OUTREAS","","Out-of-scope reason","Reason the organization is excluded from the NCCS core file.","","[ 
   {  ""level"" :  ""F""  ,  ""label"" :  ""Foreign / non-US""  }, 
   {  ""level"" :  ""N""  ,  ""label"" :  ""Not a reporting public charity""  }, 
   {  ""level"" :  ""S""  ,  ""label"" :  ""Small (below filing threshold)""  }, 
@@ -1145,7 +1145,7 @@ ZZ",FALSE,"","factor","","","","categorical","nominal","category","code","[
 ]","","character","","S ;; 
 F ;; 
 T ;; 
-N",FALSE,"","factor","","","","categorical","nominal","category","code","[ 
+N",FALSE,"","factor","","","categorical","mutually_exclusive.unordered","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""24,961""  ,  ""PER"" :  ""(99.8%)""  }
@@ -1160,12 +1160,12 @@ N",FALSE,"","factor","","","","categorical","nominal","category","code","[
   {  ""x"" :  ""S""  ,  ""Freq"" :  11  }, 
   {  ""x"" :  ""N""  ,  ""Freq"" :  1  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
-]",1,"","","","df8f9376a47dc8108ed65257ca6d78e4"
-"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","UBI over filing threshold","Whether unrelated business income exceeded the $1,000 filing threshold.","[ 
+]",1,"","","","9b32a55aae508a89e82b2cd06d109a75"
+"F9_05_UBIZ_IMCOME_OVER_LIMIT_X","","UBI over filing threshold","Whether unrelated business income exceeded the $1,000 filing threshold.","","[ 
   {  ""level"" :  ""N""  ,  ""label"" :  ""No""  }, 
   {  ""level"" :  ""Y""  ,  ""label"" :  ""Yes""  }
 ]","","character","","N ;; 
-Y",FALSE,"","factor","","","","boolean","","","","[ 
+Y",FALSE,"","factor","","","boolean","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2""  ,  ""PER"" :  ""(0.0%)""  }
 ]","N ;; Y","[ 
@@ -1174,12 +1174,12 @@ Y",FALSE,"","factor","","","","boolean","","","","[
 ]","[ 
   {  ""f"" :  ""N""  ,  ""Freq"" :  21550  }, 
   {  ""f"" :  ""Y""  ,  ""Freq"" :  3450  }
-]",1,"","","","00dcadf8e089921fed0b41ac50326cf7"
-"OUTNCCS","","In / out of NCCS core","Whether the organization is included in the NCCS core file.","[ 
+]",1,"","","","324606c21dd11eaed0843797c9c8f66f"
+"OUTNCCS","","In / out of NCCS core","Whether the organization is included in the NCCS core file.","","[ 
   {  ""level"" :  ""IN""  ,  ""label"" :  ""In NCCS core file""  }, 
   {  ""level"" :  ""OUT""  ,  ""label"" :  ""Out of NCCS core file""  }
 ]","","character","","IN ;; 
-OUT",FALSE,"","factor","","","","boolean","","","","[ 
+OUT",FALSE,"","factor","","","boolean","","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""3""  ,  ""PER"" :  ""(0.0%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,361""  ,  ""PER"" :  ""(9.4%)""  }
@@ -1191,12 +1191,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
   {  ""f"" :  ""IN""  ,  ""Freq"" :  22600  }, 
   {  ""f"" :  ""NA""  ,  ""Freq"" :  2361  }, 
   {  ""f"" :  ""OUT""  ,  ""Freq"" :  39  }
-]",3,"","","","5336c64575243bfeeacea9749cd0e6d8"
-"COUNTY_FIPS","","County (FIPS)","5-digit Census county FIPS code of the organization's location.","","","character","","36081 ;; 
+]",3,"","","","6df39f96fc98a8c3cecffd43c716e72e"
+"COUNTY_FIPS","","County (FIPS)","5-digit Census county FIPS code of the organization's location.","","","","character","","36081 ;; 
 51087 ;; 
 48343 ;; 
 51630 ;; 
-36001",FALSE,"","numeric","","","","identifier","numeric_id","geographic_id","plain","[ 
+36001",FALSE,"","numeric","","","identifier","id.geographic","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""2,411""  ,  ""PER"" :  ""(9.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""2,389""  ,  ""PER"" :  ""(9.6%)""  }
@@ -1238,12 +1238,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
       ""Frequency"": 186
     }
   ]
-}","",5,"","","","247ce7eedae483be8e1ac6cff555c593"
-"CEO_CENSUSTRACT","","Census tract (GEOID)","11-digit Census tract identifier of the organization's location.","","","character","","36081001900 ;; 
+}","",5,"","","","361df920a38b79dac2d46e3fbb561562"
+"CEO_CENSUSTRACT","","Census tract (GEOID)","11-digit Census tract identifier of the organization's location.","","","","character","","36081001900 ;; 
 51087200301 ;; 
 48343950300 ;; 
 51630000500 ;; 
-36001000300",FALSE,"","numeric","","","","identifier","numeric_id","geographic_id","plain","[ 
+36001000300",FALSE,"","numeric","","","identifier","id.geographic","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""14,265""  ,  ""PER"" :  ""(57.1%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""3,110""  ,  ""PER"" :  ""(12.4%)""  }
@@ -1285,8 +1285,8 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
       ""Frequency"": 31
     }
   ]
-}","",11,"","","","afbc196795d8aeaf02161da0a2f65571"
-"F9_00_TAX_PERIOD_END_DATE","","Tax period end","Year and month (YYYYMM) the reporting tax period ended.","[ 
+}","",11,"","","","9e470ed7d7a30549afc9b0ebc96d8fe4"
+"F9_00_TAX_PERIOD_END_DATE","","Tax period end","Year and month (YYYYMM) the reporting tax period ended.","","[ 
   {  ""level"" :  ""201701""  ,  ""label"" :  ""201701""  }, 
   {  ""level"" :  ""201702""  ,  ""label"" :  ""201702""  }, 
   {  ""level"" :  ""201703""  ,  ""label"" :  ""201703""  }, 
@@ -1338,7 +1338,7 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
 201812 ;; 
 201712 ;; 
 201906 ;; 
-201905",FALSE,"","factor","month","","","temporal","nominal","reporting_period","code","[ 
+201905",FALSE,"","factor","","","temporal","period.reporting_period","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }
 ]","201912 ;; 201812 ;; 201906 ;; 201712 ;; 202006 ;; 201806 ;; 201909 ;; 201908 ;; 201706 ;; 201903 ;; 202003 ;; 201905 ;; 201904 ;; 201910 ;; 202005 ;; 201809 ;; 202004 ;; 201907 ;; 201805 ;; 201808 ;; 201911 ;; 201709 ;; 201803 ;; 201804 ;; 201810 ;; 202007 ;; 202008 ;; 202009 ;; 202001 ;; 201807 ;; 201705 ;; 201708 ;; 202002 ;; 201902 ;; 201704 ;; 201710 ;; 201811 ;; 201901 ;; 201707 ;; 201802","","[ 
@@ -1389,8 +1389,8 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
   {  ""Value"" :  ""202009""  ,  ""Count"" :  74  }, 
   {  ""Value"" :  ""202010""  ,  ""Count"" :  13  }, 
   {  ""Value"" :  ""202011""  ,  ""Count"" :  1  }
-]",6,"","","","526e383609b33f5bc631532a410fa5de"
-"F9_00_TAX_PERIOD_END_DATE_PY","","Tax period end (prior year)","Year and month the prior-year tax period ended.","[ 
+]",6,"","","","382602ebc186b34106d6ee72ead6c25b"
+"F9_00_TAX_PERIOD_END_DATE_PY","","Tax period end (prior year)","Year and month the prior-year tax period ended.","","[ 
   {  ""level"" :  ""201601""  ,  ""label"" :  ""201601""  }, 
   {  ""level"" :  ""201602""  ,  ""label"" :  ""201602""  }, 
   {  ""level"" :  ""201603""  ,  ""label"" :  ""201603""  }, 
@@ -1441,7 +1441,7 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
 201712 ;; 
 201806 ;; 
 201805 ;; 
-201809",FALSE,"","factor","month","","","temporal","nominal","reporting_period","code","[ 
+201809",FALSE,"","factor","","","temporal","period.reporting_period","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  ""(0.2%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }
@@ -1492,8 +1492,8 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
   {  ""Value"" :  ""201908""  ,  ""Count"" :  44  }, 
   {  ""Value"" :  ""201909""  ,  ""Count"" :  42  }, 
   {  ""Value"" :  ""201910""  ,  ""Count"" :  7  }
-]",6,"","","","71492f447d0e1a8bd2bf530dbafaf3da"
-"F9_00_TAX_PERIOD_BEGIN_DATE","","Tax period begin","Fiscal-period start code for the reporting year.","[ 
+]",6,"","","","bb2061cb447d4a4e129bc1f4224501ff"
+"F9_00_TAX_PERIOD_BEGIN_DATE","","Tax period begin","Fiscal-period start code for the reporting year.","","[ 
   {  ""level"" :  ""20169""  ,  ""label"" :  ""20169""  }, 
   {  ""level"" :  ""20170""  ,  ""label"" :  ""20170""  }, 
   {  ""level"" :  ""20171""  ,  ""label"" :  ""20171""  }, 
@@ -1510,7 +1510,7 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
 20180 ;; 
 20170 ;; 
 20189 ;; 
-20199",FALSE,"","factor","","","","categorical","nominal","reporting_period","code","[ 
+20199",FALSE,"","factor","","","categorical","period.reporting_period","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }
 ]","20190 ;; 20189 ;; 20180 ;; 20199 ;; 20179 ;; 20170 ;; 20169 ;; 20191 ;; 20200 ;; 20181 ;; 20171 ;; 20201","[ 
@@ -1535,8 +1535,8 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
   {  ""x"" :  ""20170""  ,  ""Freq"" :  1680  }, 
   {  ""x"" :  ""20169""  ,  ""Freq"" :  728  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  274  }
-]",5,"","","","a905739d1b1e108281fd6442ba2a7442"
-"F9_00_TAX_ACCPER","","Accounting period","Month in which the organization's fiscal year ends.","[ 
+]",5,"","","","407a0c2e4e7a0fa3239ad2d55f2fc36e"
+"F9_00_TAX_ACCPER","","Accounting period","Month in which the organization's fiscal year ends.","","[ 
   {  ""level"" :  ""1""  ,  ""label"" :  ""January""  }, 
   {  ""level"" :  ""2""  ,  ""label"" :  ""February""  }, 
   {  ""level"" :  ""3""  ,  ""label"" :  ""March""  }, 
@@ -1553,7 +1553,7 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
 6 ;; 
 5 ;; 
 9 ;; 
-11",FALSE,"","factor","","","","categorical","ordinal","month_of_year","code","[ 
+11",FALSE,"","factor","","","categorical","phase.month_of_year","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(0.0%)""  }
 ]","12 ;; 6 ;; 9 ;; 3 ;; 5 ;; 8 ;; 4 ;; 10 ;; 7 ;; 11 ;; 2 ;; 1","[ 
@@ -1578,12 +1578,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
   {  ""x"" :  ""8""  ,  ""Freq"" :  688  }, 
   {  ""x"" :  ""4""  ,  ""Freq"" :  609  }, 
   {  ""x"" :  ""other""  ,  ""Freq"" :  1242  }
-]",2,"","","","8d3fa250e9b2dae208ec26600e0c53a4"
-"F9_08_REV_TOT_TOT","","Total revenue","Total revenue for the year (Form 990, Part VIII).","","","character","","11139366 ;; 
+]",2,"","","","77d2a2bde3d2fb98b816b4ee9d474c55"
+"F9_08_REV_TOT_TOT","","Total revenue","Total revenue for the year (Form 990, Part VIII).","","","","character","","11139366 ;; 
 894312 ;; 
 110663 ;; 
 272444 ;; 
-6093701",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
+6093701",FALSE,"","numeric","","","number","currency.usd","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,817""  ,  ""PER"" :  ""(95.3%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""413""  ,  ""PER"" :  ""(1.7%)""  }
@@ -1820,12 +1820,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
     ""max""  :  [ 
 4178522311
 ]
-  }",10,"","","","d2e4429d44416d4fd723ee541e73d2a3"
-"F9_10_ASSET_TOT_BOY","","Total assets (BOY)","Total assets at the beginning of the year (Form 990, Part X).","","","character","","34227234 ;; 
+  }",10,"","","","a678a582aadb9af4a26f11e0ed21ebbb"
+"F9_10_ASSET_TOT_BOY","","Total assets (BOY)","Total assets at the beginning of the year (Form 990, Part X).","","","","character","","34227234 ;; 
 17491720 ;; 
 101131 ;; 
 0 ;; 
-3011522",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
+3011522",FALSE,"","numeric","","","number","currency.usd","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,195""  ,  ""PER"" :  ""(80.8%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -2063,12 +2063,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
     ""max""  :  [ 
 11226543829
 ]
-  }",11,"","","","e70794cebd95ead0ac4363dfeb80cf83"
-"F9_10_ASSET_TOT_EOY","","Total assets (EOY)","Total assets at the end of the year (Form 990, Part X).","","","character","","40131275 ;; 
+  }",11,"","","","823945cdca867c6c4dc23c6499b11084"
+"F9_10_ASSET_TOT_EOY","","Total assets (EOY)","Total assets at the end of the year (Form 990, Part X).","","","","character","","40131275 ;; 
 20157050 ;; 
 92924 ;; 
 19430176 ;; 
-2856785",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
+2856785",FALSE,"","numeric","","","number","currency.usd","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24,122""  ,  ""PER"" :  ""(96.5%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""110""  ,  ""PER"" :  ""(0.4%)""  }
@@ -2305,12 +2305,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
     ""max""  :  [ 
 38468314242
 ]
-  }",11,"","","","4334f11236e70cf8809e059a71d77d72"
-"F9_10_NAFB_TOT_BOY","","Net assets (BOY)","Net assets or fund balances at the beginning of the year.","","","character","","32671349 ;; 
+  }",11,"","","","c8a21b3929addb18b7a19d83cabb20ed"
+"F9_10_NAFB_TOT_BOY","","Net assets (BOY)","Net assets or fund balances at the beginning of the year.","","","","character","","32671349 ;; 
 17460787 ;; 
 100443 ;; 
 1788316 ;; 
-589818",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
+589818",FALSE,"","numeric","","","number","currency.usd","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""20,145""  ,  ""PER"" :  ""(80.6%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4,344""  ,  ""PER"" :  ""(17.4%)""  }, 
@@ -2548,12 +2548,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
     ""max""  :  [ 
 6323689488
 ]
-  }",10,"","","","212ad23bd9c04244582a6ccdce4e11bc"
-"F9_09_EXP_TOT_TOT","","Total expenses","Total functional expenses for the year (Form 990, Part IX).","","","character","","6743081 ;; 
+  }",10,"","","","3296e20eca4cbc7e87bfa460f6e42ffc"
+"F9_09_EXP_TOT_TOT","","Total expenses","Total functional expenses for the year (Form 990, Part IX).","","","","character","","6743081 ;; 
 1196713 ;; 
 119018 ;; 
 1067754 ;; 
-6231030",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
+6231030",FALSE,"","numeric","","","number","currency.usd","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""23,740""  ,  ""PER"" :  ""(95.0%)""  }, 
   {  ""STAT"" :  ""Zero""  ,  ""VAL"" :  ""489""  ,  ""PER"" :  ""(2.0%)""  }
@@ -2790,12 +2790,12 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
     ""max""  :  [ 
 4256605589
 ]
-  }",10,"","","","a79675365db63a755cffad928a8a02cd"
-"F9_01_EXP_TOT_PY","","Total expenses (prior year)","Total expenses reported for the prior year.","","","character","","6901865 ;; 
+  }",10,"","","","9ee6c80a2c7bc0992054de6fdfa7eba8"
+"F9_01_EXP_TOT_PY","","Total expenses (prior year)","Total expenses reported for the prior year.","","","","character","","6901865 ;; 
 1166814 ;; 
 112215 ;; 
 0 ;; 
-7111943",FALSE,"","numeric","","","","number","continuous","currency","currency","[ 
+7111943",FALSE,"","numeric","","","number","currency.usd","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25,000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""19,931""  ,  ""PER"" :  ""(79.7%)""  }, 
   {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""1,377""  ,  ""PER"" :  ""(5.5%)""  }, 
@@ -3033,4 +3033,4 @@ OUT",FALSE,"","factor","","","","boolean","","","","[
     ""max""  :  [ 
 4624922368
 ]
-  }",10,"","","","d5008897331c88803798ab5c9be108be"
+  }",10,"","","","55868ff053971de62f7d63fce088f394"

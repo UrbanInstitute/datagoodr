@@ -80,24 +80,24 @@ dgf_schema_cols <- function() {
     "var_name",
 
     # dd_: data dictionary (user-authored, portable)
-    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_f_levels", "dd_is_join_key",
+    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_data_unit", "dd_f_levels",
+    "dd_is_join_key",
 
-    # raw_: the raw CSV as received (storage + profiling, no semantic type)
-    "raw_data_storage", "raw_data_format", "raw_first5", "raw_duplicated",
+    # raw_: the raw CSV as received (reader type + profiling, no semantic type)
+    "raw_data_type", "raw_data_format", "raw_first5", "raw_duplicated",
 
     # raw -> stable bridge: the lossless reformat rule (as_* transform)
     "raw_to_stable_transform",
 
     # stable_: the governed/canonical CSV, current state
-    "stable_data_storage", "stable_data_unit", "stable_data_format",
+    "stable_data_type", "stable_data_format",
 
     # stable -> desired bridge: the coercion-into-type rule (as_* import)
     "desired_data_import_rule",
 
-    # desired_: the intended interpretation (stage-invariant) - the four
-    # ontology coordinates (type / subtype / class / representation format)
-    "desired_data_type", "desired_data_subtype", "desired_data_class",
-    "desired_data_format",
+    # desired_: the intended interpretation (stage-invariant). Two ontology
+    # coordinates: the type, and the role as `class.subclass` (dotted).
+    "desired_data_type", "desired_data_class",
 
     # rg_: research guide artifacts (JSON strings)
     "rg_properties", "rg_preview", "rg_stats", "rg_graphics", "rg_max_chr",

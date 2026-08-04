@@ -28,15 +28,16 @@
 default_layouts <- function() {
 
   # the shared descriptor "attributes" column (top-left, 1/3): the ontology
-  # coordinates followed by the field width. `unit = TRUE` adds the temporal
-  # UNIT (stable_data_unit), which drives the temporal graphic.
+  # coordinates (type + class.subclass), the interpretation UNIT (dd_data_unit,
+  # e.g. USD/kg), and the field width. `v_to_txt` renders blank for any
+  # coordinate a variable does not carry, so a plain number shows fewer rows.
+  # The `unit` arg is retained for back-compat but no longer changes the output
+  # (the temporal grain now lives in desired_data_class, read at render time).
   attrs <- function( unit = FALSE ) c(
-    "div3 ;; desired_data_type    ;; DATA TYPE ;; v_to_txt",
-    "div3 ;; desired_data_subtype ;; SUBTYPE   ;; v_to_txt",
-    "div3 ;; desired_data_class   ;; CLASS     ;; v_to_txt",
-    "div3 ;; desired_data_format  ;; FORMAT    ;; v_to_txt",
-    if( unit ) "div3 ;; stable_data_unit ;; UNIT ;; v_to_txt" else NULL,
-    "div3 ;; rg_max_chr           ;; MAX NCHAR ;; v_to_txt" )
+    "div3 ;; desired_data_type  ;; DATA TYPE ;; v_to_txt",
+    "div3 ;; desired_data_class ;; CLASS     ;; v_to_txt",
+    "div3 ;; dd_data_unit       ;; UNIT      ;; v_to_txt",
+    "div3 ;; rg_max_chr         ;; MAX NCHAR ;; v_to_txt" )
 
   list(
 

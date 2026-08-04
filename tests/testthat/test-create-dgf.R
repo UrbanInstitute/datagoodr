@@ -11,7 +11,8 @@ test_that("create_dgf returns one row per variable with the expected columns", {
 test_that("create_dgf includes the metadata/schema columns", {
   dgf <- build_demo_dgf()
   # the six prefix families are all present
-  expect_true(all(c("dd_vlabel", "raw_data_storage", "desired_data_type",
+  expect_true(all(c("dd_vlabel", "raw_data_type", "desired_data_type",
+                    "desired_data_class", "dd_data_unit",
                     "rg_max_chr", "validate_rules", "prov_current_hash")
                   %in% names(dgf)))
   # rg_max_chr is the max character width

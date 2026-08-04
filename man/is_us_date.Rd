@@ -30,6 +30,7 @@ Other datetime detectors:
 \code{\link{is_month_day}()},
 \code{\link{is_month_year}()},
 \code{\link{is_rfc2822_datetime}()},
-\code{\link{is_us_datetime}()}
+\code{\link{is_us_datetime}()},
+\code{\link{is_yyyymm}()}
 }
 \concept{datetime detectors}

@@ -102,14 +102,15 @@ meta <- list(
     "continuous","currency","currency")
 )
 
+# meta carries the legacy (subtype, class, format) coordinates; translate them
+# to the v4 ontology's dotted `class.subclass` for desired_data_class.
 for (v in names(meta)) {
   i <- match(v, dgf$var_name); if (is.na(i)) next
   m <- meta[[v]]
   dgf$dd_vlabel[i] <- m[[1]]
   dgf$dd_vdesc[i]  <- m[[2]]
-  if (nzchar(m[[3]])) dgf$desired_data_subtype[i] <- m[[3]]
-  if (nzchar(m[[4]])) dgf$desired_data_class[i]   <- m[[4]]
-  if (nzchar(m[[5]])) dgf$desired_data_format[i]  <- m[[5]]
+  cs <- datagoodr:::.to_class_subclass(m[[3]], m[[4]], m[[5]])
+  if (nzchar(cs)) dgf$desired_data_class[i] <- cs
 }
 
 ## --- meaningful factor-level labels ------------------------------------------

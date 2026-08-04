@@ -28,7 +28,7 @@ test_that("retype_dgf changes the type and unit of a variable", {
                     units = c(founded_year = "year"))
   i <- out$var_name == "founded_year"
   expect_equal(out$desired_data_type[i], "temporal")
-  expect_equal(out$stable_data_unit[i], "year")
+  expect_equal(out$desired_data_class[i], "period.year")
 })
 
 test_that("retype_dgf re-profiles so the new graphic payload is present", {
@@ -52,7 +52,7 @@ test_that("a retyped temporal actually renders its graphic", {
                     units = c(founded_year = "year"))
   i <- match("founded_year", out$var_name)
   datagoodr:::set_xx(list(rg_graphics = out$rg_graphics[i],
-                          stable_data_unit = out$stable_data_unit[i]))
+                          desired_data_class = out$desired_data_class[i]))
   grDevices::png(tempfile(fileext = ".png"))
   err <- tryCatch({ datagoodr:::paste_temporal_graphic("rg_graphics"); NULL },
                   error = function(e) conditionMessage(e))
@@ -77,5 +77,5 @@ test_that("units-only retype needs no data re-profile", {
   df <- demo(); dgf <- build(df)
   # fips is already an identifier; give an unrelated var a unit without a type
   out <- retype_dgf(dgf, df, units = c(revenue = "year"))
-  expect_equal(out$stable_data_unit[out$var_name == "revenue"], "year")
+  expect_equal(out$desired_data_class[out$var_name == "revenue"], "period.year")
 })

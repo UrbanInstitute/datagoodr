@@ -16,7 +16,7 @@ create_dgf(
   var_name = NULL,
   dd_vlabel = NULL,
   dd_vdesc = NULL,
-  stable_data_storage = NULL,
+  stable_data_type = NULL,
   desired_data_import_rule = NULL,
   stable_data_format = NULL,
   dd_vname_alias = NULL,
@@ -41,11 +41,11 @@ instead of re-reading the data with `readr` to re-infer them. Defaults to
 `FALSE`.}
 
 \item{read_as_text}{Logical; read every column as character to preserve the
-source representation exactly - avoiding `readr`'s inference dropping leading
-zeros (`06037` -> `6037`) or casting long-integer IDs to lossy doubles - then
-promote only the columns that are safe to store as numeric (see internal
-`.safe_numeric`). Defaults to `TRUE`. Set `FALSE` for the legacy
-`readr`-inference behaviour.}
+source representation exactly - avoiding `readr`'s inference dropping
+leading zeros (`06037` -> `6037`) or casting long-integer IDs to lossy
+doubles - then promote only the columns that are safe to store as numeric
+(see internal `.safe_numeric`). Defaults to `TRUE`. Set `FALSE` for the
+legacy `readr`-inference behaviour.}
 
 \item{guess.factors}{Logical; treat low-cardinality columns as factors.
 Defaults to `TRUE`.}
@@ -56,7 +56,7 @@ to the most frequent `max_factor_levels` levels, matching the
 frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
 cell under Excel's 32,767-character limit). Defaults to `50`.}
 
-\item{var_name, dd_vlabel, dd_vdesc, stable_data_storage}{Optional character vectors of per-variable
+\item{var_name, dd_vlabel, dd_vdesc, stable_data_type}{Optional character vectors of per-variable
 metadata (name, short label, long description, type), each the same length
 and order as the columns of `df`. Default to blank.}
 

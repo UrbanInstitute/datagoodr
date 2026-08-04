@@ -1,6 +1,7 @@
 # Detector-driven type enrichment: create_dgf() refines its coarse R-storage
-# typing with guess_data_type(), fills desired_data_subtype/class, promotes
-# near-unique geographic categoricals to identifiers, and flags dd_is_join_key.
+# typing with guess_data_type(), fills desired_data_class (dotted
+# class.subclass), promotes near-unique geographic categoricals to identifiers,
+# and flags dd_is_join_key.
 
 test_that("guess_dgf_types refines coarse types and flags keys", {
   df <- data.frame(
@@ -18,24 +19,21 @@ test_that("guess_dgf_types refines coarse types and flags keys", {
 
   # near-unique geographic categorical -> identifier key
   expect_equal(r$desired_data_type[1], "identifier")
-  expect_equal(r$desired_data_class[1], "geographic_id")
+  expect_equal(r$desired_data_class[1], "id.geographic")
   expect_equal(r$dd_is_join_key[1], "TRUE")
 
   # low-cardinality geography stays a grouping categorical, not a key
   expect_equal(r$desired_data_type[2], "categorical")
-  expect_equal(r$desired_data_class[2], "geography")
+  expect_equal(r$desired_data_class[2], "mutually_exclusive.geographic")
   expect_equal(r$dd_is_join_key[2], "")
 
-  expect_equal(r$desired_data_type[3], "identifier")   # ORCID
-  expect_equal(r$desired_data_type[4], "temporal")     # date string
-  expect_equal(r$stable_data_unit[4], "date")          # calendar_date -> date
-  expect_equal(r$desired_data_format[4], "yyyymmdd")   # ISO date representation
+  expect_equal(r$desired_data_type[3], "identifier")     # ORCID
+  expect_equal(r$desired_data_type[4], "temporal")       # date string
+  expect_equal(r$desired_data_class[4], "date.calendar") # calendar date -> date graphic
 
   # a generic number with no confident match is left untouched
   expect_equal(r$desired_data_type[5], "number")
-  expect_equal(r$desired_data_class[5], "")
-  expect_equal(r$stable_data_unit[5], "")              # non-temporal: no unit
-  expect_equal(r$desired_data_format[5], "")           # no detector: blank format
+  expect_equal(r$desired_data_class[5], "")              # no detector: blank class
 })
 
 test_that("create_dgf populates ontology columns and dd_is_join_key", {
@@ -53,22 +51,21 @@ test_that("create_dgf populates ontology columns and dd_is_join_key", {
   jk  <- setNames(dgf$dd_is_join_key,    dgf$var_name)
 
   expect_equal(unname(ty["person_orcid"]),  "identifier")
-  expect_equal(unname(cls["person_orcid"]), "administrative_id")
+  expect_equal(unname(cls["person_orcid"]), "id.administrative")
   expect_equal(unname(jk["person_orcid"]),  "TRUE")          # unique ORCID -> key
-  expect_equal(unname(cls["home_state"]),   "geography")     # grouping, not a key
+  expect_equal(unname(cls["home_state"]),   "mutually_exclusive.geographic")  # grouping
   expect_equal(unname(jk["home_state"]),    "")
   expect_equal(unname(ty["amount"]),        "number")        # untouched
 })
 
-test_that("an identifier-typed geography column is stamped geographic_id", {
+test_that("an identifier-typed geography column is stamped id.geographic", {
   # detect_identifier types a column as identifier; when the detectors also
   # recognize it as a geography (a county FIPS key), the class must be
-  # geographic_id, not dropped as a geography-vs-identifier disagreement -- even
+  # id.geographic, not dropped as a geography-vs-identifier disagreement -- even
   # when the column is low-cardinality (so the near-unique promotion never fires).
   df <- data.frame(county = rep(c("06037", "36061", "48201"), 4),
                    stringsAsFactors = FALSE)
   r <- datagoodr:::guess_dgf_types(df, base_type = "identifier")
-  expect_equal(r$desired_data_type[1],    "identifier")
-  expect_equal(r$desired_data_subtype[1], "numeric_id")
-  expect_equal(r$desired_data_class[1],   "geographic_id")
+  expect_equal(r$desired_data_type[1],  "identifier")
+  expect_equal(r$desired_data_class[1], "id.geographic")
 })

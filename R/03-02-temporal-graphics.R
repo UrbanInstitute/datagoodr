@@ -33,8 +33,12 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   val <- as.character( tab$Value )
   cnt <- suppressWarnings( as.numeric( as.character( tab$Count ) ) )
 
-  unit <- tolower( trimws( as.character( get_xx()[["stable_data_unit"]] ) ) )
-  if( length(unit) == 0 || is.na(unit) ) unit <- ""
+  # The render grain (date/hour/week/dow/month/year) now travels in
+  # desired_data_class (period.month, phase.day_of_week, ...); derive it there
+  # instead of from a separate unit column.
+  cs   <- as.character( get_xx()[["desired_data_class"]] )
+  unit <- if( length(cs) && ! is.na(cs) && nzchar(trimws(cs)) )
+            .temporal_grain( cs ) else ""
 
   if( nzchar( trimws(LABEL) ) ) cat( "**", LABEL, "**:\n\n", sep = "" )
 

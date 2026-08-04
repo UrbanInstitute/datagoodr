@@ -23,7 +23,7 @@ test_that("create_dgf detects a date column as temporal with unit=date", {
     { utils::capture.output(d <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); d }))
   i <- dgf$var_name == "event_date"
   expect_equal(dgf$desired_data_type[i], "temporal")
-  expect_equal(dgf$stable_data_unit[i], "date")           # default unit
+  expect_equal(dgf$desired_data_class[i], "date.calendar")  # grain -> date graphic
   # graphic payload is a value/count table
   tab <- datagoodr:::json_to_df(dgf$rg_graphics[i])
   expect_true(all(c("Value", "Count") %in% names(tab)))
@@ -42,7 +42,7 @@ test_that("a date the detector library catches but detect_temporal misses is rec
     { utils::capture.output(x <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); x }))
   i <- dgf$var_name == "evt"
   expect_equal(dgf$desired_data_type[i], "temporal")
-  expect_equal(dgf$stable_data_unit[i], "date")            # reconciled unit
+  expect_equal(dgf$desired_data_class[i], "date.calendar")  # reconciled grain
   # profile reconciled to the temporal path: a value/count table, not a wordcloud
   tab <- datagoodr:::json_to_df(dgf$rg_graphics[i])
   expect_true(all(c("Value", "Count") %in% names(tab)))
@@ -63,10 +63,12 @@ test_that("the temporal graphic renders for every unit", {
     month = mk(sample(month.abb, 300, replace = TRUE)),
     dow   = mk(sample(c("Mon","Tue","Wed","Thu","Fri"), 300, replace = TRUE)),
     year  = mk(sample(1990:2020, 400, replace = TRUE)))
-  units <- c(date="date", hour="hour", week="week", month="month", dow="dow", year="year")
+  classes <- c(date="date.calendar", hour="phase.hour_of_day",
+               week="phase.week_of_year", month="phase.month_of_year",
+               dow="phase.day_of_week", year="period.year")
 
   for (k in names(cases)) {
-    datagoodr:::set_xx(list(rg_graphics = cases[[k]], stable_data_unit = units[[k]]))
+    datagoodr:::set_xx(list(rg_graphics = cases[[k]], desired_data_class = classes[[k]]))
     grDevices::png(tempfile(fileext = ".png"))
     err <- tryCatch({ datagoodr:::paste_temporal_graphic("rg_graphics"); NULL },
                     error = function(e) conditionMessage(e))
@@ -79,7 +81,7 @@ test_that("a blank unit falls back to a bar chart without error", {
   tt <- table(sample(2010:2015, 100, replace = TRUE))
   g <- datagoodr:::jsonify_df(data.frame(Value = names(tt), Count = as.integer(tt),
                                          stringsAsFactors = FALSE))
-  datagoodr:::set_xx(list(rg_graphics = g, stable_data_unit = ""))
+  datagoodr:::set_xx(list(rg_graphics = g, desired_data_class = ""))
   png(tempfile(fileext = ".png"))
   expect_error(datagoodr:::paste_temporal_graphic("rg_graphics"), NA)
   grDevices::dev.off()
@@ -92,8 +94,8 @@ test_that("changing the unit re-charts from the same build-time data", {
   tt <- table(c("2015-01-01","2015-01-01","2016-06-15"))
   g <- datagoodr:::jsonify_df(data.frame(Value = names(tt), Count = as.integer(tt),
                                          stringsAsFactors = FALSE))
-  for (u in c("date", "")) {
-    datagoodr:::set_xx(list(rg_graphics = g, stable_data_unit = u))
+  for (u in c("date.calendar", "")) {
+    datagoodr:::set_xx(list(rg_graphics = g, desired_data_class = u))
     png(tempfile(fileext = ".png"))
     expect_error(datagoodr:::paste_temporal_graphic("rg_graphics"), NA, info = u)
     grDevices::dev.off()
