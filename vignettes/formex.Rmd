@@ -1,0 +1,215 @@
+---
+title: "Formex: the format-expression syntax"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Formex: the format-expression syntax}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(datagoodr)
+```
+
+Formex is the small language DataGoodr uses to describe, per variable, **how a
+raw value is read, cleaned, and imported**. It lives in the machine-read columns
+of the DGF (`data_format`, `raw_to_stable_transform`, `stable_format`,
+`stable_import_rule`). Every example below is a real row from the type ontology.
+
+## The one rule: `{{ … }}` is the parsed part
+
+A cell is **prose with `{{ }}` interpolations** --- the Mustache/Jinja idiom.
+Anything inside `{{ }}` is parsed by Formex; anything outside is a human comment.
+
+```
+{{ yyyymmdd }} iso date          # "iso date" is just a comment
+{{ [strip:$,][dec:.2] }}
+{{ @handle }}                    # leads with { -> Excel can't treat it as a formula
+```
+
+Double braces (not single) do two jobs: a regex quantifier is a *single* brace
+(`[a-z]{4}`), so `{{ }}` lets single braces appear inside as content; and because
+every parsed cell starts with `{`, Excel never mis-reads it as a formula
+(`= + - @`), so leading zeros and `@`/`-` survive a CSV round-trip.
+
+A cell holds one of three things:
+
+| kind | looks like | used for |
+|---|---|---|
+| **formex** | `{{ [strip:$,][dec:.2] }}`, `{{ 9(2)-9(7) }}` | number *bundles* and ID/date *masks* |
+| **namespaced token** | `{{ fips:county }}`, `{{ handle:twitter }}` | registry-backed schemes |
+| **directive** | `{{ derive }}`, `{{ split:[_lo][_hi] }}`, `{{ none }}` | a mode, not a pattern |
+
+## Reading a row: raw -> stable -> import
+
+Each ontology row tells a small story across five columns. Take
+**`number.currency.usd`**:
+
+| column | value | meaning |
+|---|---|---|
+| `examples` | `$-45 ;; $2300.00 ;; 17,298$` | how the raw value arrives |
+| `data_format` | `{{ [strip:$,][range:-Inf,Inf][dec:.2] }}` | the pattern that matches the raw |
+| `raw_to_stable_transform` | `{{ as_usd }}` | the rule that cleans it |
+| `stable_format` | `{{ as_usd }} -45.00 ;; 2300.00 ;; 17298.00` | the cleaned result |
+| `stable_import_rule` | `{{ default:numeric }}` | how to load the stable value |
+
+Strip `$` and `,`, keep two decimals; the result is a plain number, so a normal
+read imports it with no extra rule.
+
+A few of these transforms ship today; the fuller `as_*` engine set is
+forthcoming. What works now:
+
+```{r transforms}
+# same digits: the format's element order decides the date
+as_mmddyyyy("03/04/2019")     # US, month-first -> March 4
+as_ddmmyyyy("03/04/2019")     # EU, day-first   -> April 3
+
+# identifiers stay text; leading zeros preserved
+as_id(c(" 06037 ", "36061"))
+```
+
+## Numbers: the four-slot bundle
+
+Number formats are a **bundle of attributes**, `[strip][range][dec][split]`, not
+a positional shape. Slots are labeled `[key:value]`, order-free, and empty slots
+disappear. `[range:…]` is **checked by validation, never coerced** --- only
+`strip` and `dec` change the value.
+
+| row | `data_format` | note |
+|---|---|---|
+| `count` | `{{ [range:0,Inf][dec:.0] }}` | non-negative integer; import `{{ as_integer }}` (a naive read gives a double) |
+| `currency.usd` | `{{ [strip:$,][range:-Inf,Inf][dec:.2] }}` | strip `$` and grouping comma; 2 decimals |
+| `currency.euro` | `{{ [strip:€.][range:-Inf,Inf][dec:,2] }}` | European: strip `€` and dot-thousands; **`,2`** = comma is the decimal |
+| `portion.percent` | `{{ [strip:%][range:0,100][dec:.n] }}` | strip `%`; bounded 0-100; `.n` = any decimals |
+
+**Ranges split into two variables** (`number.range.min_max`): raw `1.2, 3.4` (or
+`20 to 10`), format `{{ lo,hi }}` (or `{{ hi to lo }}`), stable
+`{{ split:[_lo][_hi] }}` --- yielding `x_lo` and `x_hi`.
+
+**Coordinates** are numbers with a CRS (`number.coordinate.lat_lon`): raw
+`40° 44' 55" N, 74° 00' 22" W`, format `{{ gcs:dms:latlon }}`, transform
+`{{ as_coord[from:gcs:dms][order:latlon] }}`, stable
+`{{ split:[epsg:4326_lat=40.7128][epsg:4326_lon=-74.006] }}`. `as_coord`
+reprojects to WGS-84 decimal degrees and splits.
+
+## Temporal: named-token masks, ISO out
+
+Date/time formats are masks where each token is a semantic unit; doubling sets
+width, separators auto-parse, and everything stabilizes to ISO.
+
+| row | raw | `data_format` | stable |
+|---|---|---|---|
+| `date.calendar` | `03/15/2019 ;; 3-15-2019` | `{{ mmddyyyy }}` | `2019-03-15` |
+| `time.clock` | `2:30 PM` | `{{ hh:ii12A }}` | `14:30` |
+| `phase.day_of_week` | `Mon` | `{{ WWW }}` | `1` |
+
+Three things to remember:
+
+- **Minute is `ii`, not `mm`** (`mm` is month; `M` is the text month) --- so a
+  12-hour clock is `{{ hh:ii12A }}`.
+- **Clock convention is an explicit `12`/`24` suffix**, not letter case
+  (`hh:ii12` vs `hh:ii24`), so it survives a careless edit. `h`/`H` are accepted
+  as synonyms.
+- **Phases stabilize to a number** (`Mon -> 1`, week-start declared), stored as
+  an ordered factor with the name as the label in `dd_f_levels`.
+
+## Identifiers: masks, schemes, and hardening
+
+An ID format is either a **named scheme** or a **COBOL-picture mask** (`9` digit,
+`A` letter, `X` alphanumeric; `(n)` count).
+
+```
+record          {{ hash:uuid }}   ->  {{ none }}   ->  import {{ as_id }}
+administrative  {{ gov:ein }}     ->  {{ as_ein }} ->  01-2345678 ;; 01-2345678
+custom ORG-00123                  ->  {{ A(3)-9(5) }}
+```
+
+`as_ein` restores a dropped leading zero *and* the delimiter, so `12345678` and
+`01-2345678` land on one canonical value.
+
+**Hardening** (`identifier.id.geographic`): raw `6037 ;; 06037`, format
+`{{ fips:county }}`, transform `{{ as_id[prefix:FIPS] }}`, stable
+`FIPS-06037`. An all-numeric key is zero-padded **and** prefixed, which forces
+every reader to load it as text (note the import is now just
+`{{ default:character }}`) and disambiguates a 5-digit FIPS from a 5-digit CBSA.
+This is the anti-mojibake default for numeric keys.
+
+## Geographic tokens: `system:unit`
+
+Geographies are a closed, table-backed vocabulary, so the format is a scheme
+name: `fips:state` (2), `fips:county` (5), `fips:county3` (the 3-digit
+component), `fips:tract` (11), `metro:cbsa`, `postal:zip5` / `postal:zip9`,
+`usps:state` (`CA`), `name:state` (`California`). A numeric suffix atomizes a
+component; the default is the full GEOID.
+
+## Booleans: presets, unioned
+
+A boolean format is one or more preset encodings joined by `|`, plus a `blank=`
+policy (case-insensitive, trimmed). The IRS-990 mixed case:
+
+```
+boolean.binary.mixed
+  raw     yes ;; 0 ;; t ;; x ;; (blank)
+  format  {{ tf|yn|10|check blank=false }}
+  stable  TRUE ;; FALSE ;; TRUE ;; TRUE ;; FALSE
+```
+
+`boolean.binary.presence` is the checkbox case, `{{ check blank=false }}`. The
+`blank=` policy is the one part that can't be defaulted (a blank is *missing* in
+a survey, *FALSE* in a checkbox).
+
+## Categoricals: shape + the level dictionary
+
+The format is the encoding *shape*; the code->label mapping lives in
+`dd_f_levels`.
+
+| row | `data_format` | note |
+|---|---|---|
+| `mutually_exclusive.unordered` | `{{ code }}` | `M ;; F` --- labels in `dd_f_levels` |
+| `scale.likert` | `{{ code=label }}` | `1=Strongly disagree` --- split code from label |
+| `multiselect.tags` | `{{ label [delim:;] }}` | `Volunteer;Donor;Board` |
+| `mutually_exclusive.geographic` | `{{ usps:state ;; fips:county }}` | defers to the geo tokens |
+
+Categoricals import with `{{ as_factor }}` / `{{ as_ordered }}`; ordered levels
+get their order from the `order` field in `dd_f_levels`.
+
+## Text, and the literal escape
+
+Most text is `{{ none }}` -> `{{ default:character }}`. Some has a scheme:
+`web.url` (`{{ url }}` -> `as_url` adds scheme, lowercases host),
+`name.handle` (`{{ handle:twitter }}` -> `as_handle` strips `@`, lowercases).
+
+The **literal escape hatch** protects a value from *any* coercion
+(`text.text.literal`): format `{{ literal }}`, transform `{{ none }}`, import
+`{{ as_text }}`, stable value unchanged. Use it when the raw representation *is*
+the data and must not be touched, whatever it looks like. (The `unknown` type
+reuses this as its fallback.)
+
+## Directives, escapes, and the format/validation line
+
+| directive | meaning |
+|---|---|
+| `{{ none }}` | no-op |
+| `{{ default:numeric }}` | a plain typed read yields this type; no rule needed |
+| `{{ derive }}` | derive the transform from `raw_format -> stable_format` |
+| `{{ split:[_lo][_hi] }}` | split one field into two suffixed variables |
+| `{{ collapse:[MN=Minnesota] }}` | merge levels (categorical) |
+| `{{ re:… }}` | the escape hatch --- full regex for what masks can't express |
+
+`re:` switches to full regex (alternation, lookaround):
+`{{ re:\d{3}-\d{2}-\d{4}|\d{2}-\d{7} }}` matches "an SSN or an EIN." A backslash
+makes a single character literal; comments live outside the braces.
+
+**Format and validation share the grammar** (a mask shorthand *is* a character
+class), so you can tighten a format where it matters:
+
+```
+{{ 9(2)-9(7) }}      # parse-sufficient
+{{ [0-8](2)-9(7) }}  # same grammar, first two digits constrained
+```
+
+Keep the *format* parse-sufficient and let *validation* carry what a mask can't
+reach --- a valid-prefix **list**, a checksum, a reference-table lookup. The
+nchar-range case (`X(8,10)`) is the interesting middle: both a parse fact and a
+constraint, served by one notation.
