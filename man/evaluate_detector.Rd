@@ -17,8 +17,8 @@ vector (the function the LLM wrote).}
 \item{seed}{Integer seed (match the drafting call for identical negatives).}
 }
 \value{
-The results table from [build_autotype_results()], invisibly, after
-  printing the error report via [generate_autotype_report()].
+The results table from [formex::build_autotype_results()], invisibly, after
+  printing the error report via [formex::generate_autotype_report()].
 }
 \description{
 Runs the (LLM-produced) detector over the positives and freshly generated

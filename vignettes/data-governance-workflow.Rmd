@@ -43,14 +43,15 @@ RAW CSV ──raw_to_stable_transform──▶ GOVERNED CSV ──desired_data_i
   file versions: `desired_data_type`, `desired_data_subtype`,
   `desired_data_class`.
 
-Between the stages sit two **rule** columns — each holds the *name* of an `as_*`
-function:
+Between the stages sit two **rule** columns, and each takes its own family of
+rule name:
 
 * **`raw_to_stable_transform`** — the lossless **reformat** (standardize weird
-  dates to ISO, strip thousands separators, zero-pad IDs). Its job is to produce
-  a *canonical* governed CSV that every tool reads correctly.
+  dates to ISO, strip thousands separators, restore a dropped leading zero). Its
+  job is to produce a *canonical* governed CSV that every tool reads correctly.
+  Takes a **`read_*`** rule: `read_mmddyyyy`, `read_ein`, `read_yyyymm`.
 * **`desired_data_import_rule`** — the **coercion** that reads the governed
-  column into the desired R type (`as_date`, `as_EIN`, ...).
+  column into the desired R type. Takes an **`as_*`** rule: `as_id`.
 
 ## Which bridge closes the gap? A mechanical rule
 
@@ -68,16 +69,26 @@ The design goal is to push as much as possible into the *reformat* (it is
 lossless and every downstream tool benefits), leaving import rules only for the
 genuinely schema-dependent distinctions.
 
-## `as_*` rules and their `is_*` guards
+## `read_*` and `as_*` rules, and their `is_*` guards
 
-Every rule is an `as_*` coercion, and every `as_*` has a matching **`is_*`
-guard** — and the guards are the detector library documented in the
-*Data-Type Detector Guide*. Before `as_ddmmyyyy` runs, `is_ddmmyyyy` checks that
-the column actually looks like `dd/mm/yyyy`; if it does not, the rule does not
-match the data and you get an error instead of silent corruption. That single
-idea ties the whole system together:
+A rule name tells you which stage it belongs to:
 
-* **governance** — drop an `as_*` name in a cell and it is applied;
+* **`read_<format>()`** *ingests* a value written in that format — the name
+  states the **input**. These go in `raw_to_stable_transform`.
+* **`as_<type>()`** *coerces* a value into a target type — the name states the
+  **output**. These go in `desired_data_import_rule`.
+
+So `read_ddmmyyyy()` reads `15/03/2019` and returns a `Date`; it does not
+*produce* `dd/mm/yyyy`. A rule sitting in the wrong column is visible without
+running it.
+
+Every rule has a matching **`is_*` guard** from the detector library, which
+lives in the [formex](https://lecy.github.io/formex/) package. Before
+`read_ddmmyyyy` runs, `formex::is_date()` checks that the column actually looks
+like a date; if it does not, the rule does not match the data and you get a
+warning instead of silent corruption. That single idea ties the system together:
+
+* **governance** — drop a rule name in a cell and it is applied;
 * **safety** — its `is_*` guard validates the precondition;
 * **iteration** — `update_dgf()` re-runs the guards against the *current* data
   and flags rules that no longer fit (because you cleaned the file).
@@ -88,7 +99,7 @@ idea ties the whole system together:
 library(datagoodr)
 
 # 1. create_dgf() launches the guessers and populates the pipeline.
-#    It profiles each column, runs the detector library over it (guess_data_type
+#    It profiles each column, runs formex over it (formex::guess_data_type
 #    with the variable name as a hint), and fills in a first pass at every column
 #    of the DGF -- storage, a semantic desired_data_type/subtype/class, factor
 #    levels, near-unique key flags, and the rg_ profile used to render.
@@ -111,7 +122,7 @@ where you encode meaning the CSV alone cannot carry.
 
 ```{r curate}
 # Edit the DGF in Excel, or programmatically:
-dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "as_mmddyyyy"  # -> ISO
+dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "read_mmddyyyy"  # -> ISO
 dgf$desired_data_type[dgf$var_name == "grade_level"]   <- "categorical"
 dgf$desired_data_subtype[dgf$var_name == "grade_level"] <- "ordinal"
 
@@ -136,7 +147,13 @@ dgf <- update_dgf(dgf, raw_data)   # re-runs guards, recomputes rg_* for changed
 * **No hidden magic.** Every transformation is a named rule you can read, and
   every rule has a guard that refuses to run on data it does not fit.
 
-See also *The Data-Type Ontology* vignette for a field-by-field catalog of the
-`type` / `subtype` / `class` / `format` / `unit` coordinates, and the *Data-Type
-Detector Guide* for the `is_*` detectors that power both `guess_data_type()` and
-the rule guards.
+## Where detection lives
+
+Type detection is not part of datagoodr. It lives in the
+[formex](https://lecy.github.io/formex/) package, which owns the type ontology,
+the `is_*` detector library, `guess_data_type()`, and `fx_stabilize()`.
+datagoodr calls it once per column and turns the answer into DGF coordinates.
+
+For the vocabulary and the detectors, see formex's own vignettes — *The
+Data-Type Ontology*, *Data-Type Detectors*, *Guessing a Data Type*, and
+*Formex* — at <https://lecy.github.io/formex/>.

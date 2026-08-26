@@ -23,7 +23,7 @@ test_that("draft_detector_prompt rejects too-few examples", {
 
 test_that("evaluate_detector reports recall and precision", {
   # a correct detector: exactly the ISO set
-  good <- is_currency_code
+  good <- formex::is_currency_code   # detectors live in formex now
   res <- evaluate_detector(good, c("USD","EUR","JPY","GBP","CAD"),
                            "iso_currency")
   expect_true(all(res$f_predict[res$type == "valid"]))      # recall = 1

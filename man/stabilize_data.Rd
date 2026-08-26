@@ -29,7 +29,7 @@ of the data - what a downstream program should consume.
 \details{
 Rules name a function reachable in `env` and are applied
   element-wise; a blank rule is a pass-through. This is the same dispatch
-  [create_dgf()] uses, so the built-in helpers ([as_EIN()], [as_mm()], ...)
+  [create_dgf()] uses, so the built-in helpers ([read_ein()], [read_mm()], ...)
   and any user function work identically here.
 }
 \seealso{

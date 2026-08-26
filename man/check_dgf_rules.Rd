@@ -26,7 +26,7 @@ For every variable carrying a `raw_to_stable_transform` or
 and measures the share of *present* values it turns into `NA` --- the same
 signal the rule's `is_*` guard would give. A high miss rate means the rule no
 longer matches the data (e.g. you cleaned a date column, so the old
-`as_mmddyyyy` no longer applies).
+`read_mmddyyyy` no longer applies).
 }
 \examples{
 \dontrun{

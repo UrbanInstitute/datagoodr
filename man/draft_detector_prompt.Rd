@@ -44,5 +44,5 @@ examples and machine-generated hard negatives. Paste or attach the result
 into any LLM; feed the function it returns to [evaluate_detector()].
 }
 \seealso{
-[evaluate_detector()], [guess_data_type()]
+[evaluate_detector()], [formex::guess_data_type()]
 }

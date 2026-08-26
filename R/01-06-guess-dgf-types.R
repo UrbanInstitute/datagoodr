@@ -1,8 +1,12 @@
 ##############################
 ### Guess-based DGF type enrichment
 ###############################
-## Runs guess_data_type() over each column of the raw data and refines the
-## coarse R-storage typing that create_dgf() starts from:
+## THE FORMEX SEAM. Detection lives in the formex package; this file is
+## datagoodr's adapter over it. Everything here is workflow --- how a column
+## prediction becomes DGF coordinates --- and nothing here is detection.
+##
+## Runs formex::guess_data_type() over each column of the raw data and refines
+## the coarse R-storage typing that create_dgf() starts from:
 ##   * fills the (blank) desired_data_class with the ontology role, written as
 ##     `class.subclass` (dotted), when a detector confidently matches;
 ##   * refines desired_data_type for coarse ("text") columns and for strong
@@ -10,16 +14,58 @@
 ##   * promotes a geographic CATEGORICAL to an IDENTIFIER when the column is
 ##     near-unique (a key, not a grouping var), and flags dd_is_join_key.
 ##
-## The detector-library crosswalk (.data_type_ontology) still speaks the legacy
-## (type, subtype, class, format) vocabulary; .to_class_subclass() translates a
-## detector's (subtype, class, format) into the v4 ontology's `class.subclass`
-## so the DGF carries the new coordinates without re-authoring the crosswalk.
+## formex's legacy crosswalk still speaks the (type, subtype, class, format)
+## vocabulary and is returned as `$ontology`; .to_class_subclass() translates a
+## detector's (subtype, class, format) into the v4 `class.subclass` the DGF
+## currently carries. Both are read from the PUBLIC return value --- this file
+## touches no formex internals.
+##
+## NOTE: formex now also returns a v6 `$route` record (a 4-level path plus
+## semantic_type_id / variant_id / depth / confidence). Consuming it, and
+## retiring .to_class_subclass(), is the next phase of the reintegration --- see
+## dev/formex-reintegration-plan.md. Measured, the route and the legacy $guess
+## are COMPLEMENTARY: the route resolves dates/states/years that the detectors
+## miss, and misroutes every zero-padded numeric key (FIPS, ZIP, EIN) to
+## number/quantity/count. The adapter must read both, with a storage-safety gate.
 ##
 ## It is intentionally conservative: it never overrides a number/categorical/
 ## boolean base type from a loose detector, so a count column that happens to
 ## look like a Unix timestamp stays a number. Columns with no confident match
 ## are left exactly as create_dgf() typed them.
 
+
+## Call formex's classifier, muffling ONE known-noisy upstream warning.
+##
+## formex's v6 verifier runs an `as_integer` coercion over every candidate
+## recipe, which emits "NAs introduced by coercion to integer range" on ordinary
+## large-numeric columns. It is diagnostic noise from a probe that is SUPPOSED to
+## fail for non-integer candidates, and profiling a wide frame emits it once per
+## column. Muffled narrowly, by message, so every other warning still surfaces.
+## Remove once fixed upstream (see dev/formex-reintegration-plan.md, Part 6).
+#' @keywords internal
+#' @noRd
+.formex_guess <- function(vals, name = NULL) {
+  withCallingHandlers(
+    formex::guess_data_type(vals, name = name),
+    warning = function(w) {
+      if (grepl("NAs introduced by coercion", conditionMessage(w), fixed = TRUE))
+        invokeRestart("muffleWarning")
+    }
+  )
+}
+
+## Is the winning detector a LOOSE one (fires broadly)? formex's candidate table
+## carries a `specific` flag per candidate; the winner is the first row. Reading
+## it here keeps datagoodr off formex's internal `.loose_detectors`.
+#' @keywords internal
+#' @noRd
+.guess_is_loose <- function(g) {
+  cand <- g$candidates
+  if (is.null(cand) || !nrow(cand) || !"specific" %in% names(cand)) return(FALSE)
+  hit <- which(cand$data_type == g$guess)
+  if (!length(hit)) return(FALSE)
+  !isTRUE(cand$specific[hit[1]])
+}
 
 ## ontology data_type -> the DGF's desired_data_type vocabulary. structured and
 ## unknown fall back to text, which the render engine handles via the character
@@ -133,7 +179,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
 
   for (i in seq_along(vars)) {
     vals <- as.character(df[[i]])
-    g <- guess_data_type(vals, name = vars[i])
+    g <- .formex_guess(vals, name = vars[i])
     if (is.na(g$guess)) next
 
     o     <- g$ontology
@@ -162,7 +208,10 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9) {
 
     ## only OVERRIDE the base type when it is coarse ("text") or the guess is
     ## a strong semantic signal (temporal/identifier) from a NON-loose detector
-    loose <- g$guess %in% .loose_detectors
+    ## "loose" = the winning detector fires broadly (phone, unix_time, bare
+    ## numeric codes). formex marks this per candidate as `specific`; read it
+    ## off the public candidate table rather than reaching for its internals.
+    loose <- .guess_is_loose(g)
     override <- (base_type[i] == "text") ||
                 (gtype %in% c("temporal", "identifier") && !loose)
 
