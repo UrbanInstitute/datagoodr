@@ -14,7 +14,8 @@ demo_dgf <- function(raw = demo_raw()) {
   suppressMessages(suppressWarnings(utils::capture.output(
     dgf <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)
   )))
-  dgf$desired_data_import_rule[dgf$var_name == "ein"] <- "as_EIN"
+  # a read_* rule ingests the raw written form -> raw_to_stable_transform
+  dgf$raw_to_stable_transform[dgf$var_name == "ein"] <- "read_ein"
   dgf
 }
 
@@ -24,7 +25,7 @@ demo_dgf <- function(raw = demo_raw()) {
 test_that("stabilize_data applies an import rule element-wise", {
   raw <- demo_raw(); dgf <- demo_dgf(raw)
   stable <- stabilize_data(raw, dgf)
-  expect_equal(stable$ein, c("001234567", "000000042", "999999999"))
+  expect_equal(stable$ein, c("00-1234567", "00-0000042", "99-9999999"))
 })
 
 test_that("a blank rule passes the column through unchanged", {
@@ -78,7 +79,7 @@ test_that("the portable DGF round-trips and rg_ is never embedded", {
   rec <- dgf_from_stable(back)
   expect_false(any(grepl("^rg_", names(rec))))                 # the whitelist
   expect_equal(rec$var_name, dgf$var_name)
-  expect_equal(rec$desired_data_import_rule[rec$var_name == "ein"], "as_EIN")
+  expect_equal(rec$raw_to_stable_transform[rec$var_name == "ein"], "read_ein")
 })
 
 test_that("dgf_from_stable accepts a path and returns NULL without a DGF payload", {

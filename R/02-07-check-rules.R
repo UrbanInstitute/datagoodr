@@ -1,7 +1,7 @@
 ##############################
 ### Rule guards: do the DGF's rules still fit the data?
 ###############################
-## The as_* rules in raw_to_stable_transform / desired_data_import_rule are
+## The read_*/as_* rules in raw_to_stable_transform / desired_data_import_rule are
 ## guarded by their is_* detectors: a rule only applies cleanly if the data
 ## looks like what it expects. check_dgf_rules() makes that explicit -- it
 ## applies each rule to the current data and reports how many present values it
@@ -16,7 +16,7 @@
 #' and measures the share of *present* values it turns into `NA` --- the same
 #' signal the rule's `is_*` guard would give. A high miss rate means the rule no
 #' longer matches the data (e.g. you cleaned a date column, so the old
-#' `as_mmddyyyy` no longer applies).
+#' `read_mmddyyyy` no longer applies).
 #'
 #' @param dgf A DGF data frame, or a path to a DGF `.xlsx`.
 #' @param data The data to test against: a data frame, or a path to a `.csv`.

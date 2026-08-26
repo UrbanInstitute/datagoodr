@@ -6,8 +6,10 @@
 # lineage travelling inside the CSV (no sidecar).
 #
 # Two rule columns drive the transform, applied in order:
-#   desired_data_import_rule    how to read the raw column correctly (as_mdy, as_EIN)
-#   raw_to_stable_transform   how to standardize it (dollarize, zero_pad, ...)
+#   raw_to_stable_transform   how to INGEST the raw written form
+#                             (read_mmddyyyy, read_ein, ...) -- a read_* rule
+#   desired_data_import_rule  how to COERCE the stable value into its type
+#                             (as_id, ...) -- an as_* rule
 # Both name a function reachable in the session; a blank rule leaves the column
 # as-is. This reuses the create_dgf() dispatch (exists()/get()).
 
@@ -39,7 +41,7 @@ apply_rule_col <- function( col, rule, env = parent.frame(), var = NULL ) {
     warning( "Rule ", fn, "() failed - column left unchanged.", call. = FALSE )
     return( col )
   }
-  # GUARD: an as_* rule that turns many *present* values into NA does not fit
+  # GUARD: a rule that turns many *present* values into NA does not fit
   # the data -- the same signal its is_* detector would give. Warn (keeping the
   # partly-NA result) so a misapplied rule is caught, not silent.
   present <- !is.na(col) & nzchar( trimws( as.character(col) ) )
@@ -75,7 +77,7 @@ apply_rule_col <- function( col, rule, env = parent.frame(), var = NULL ) {
 #'
 #' @details Rules name a function reachable in `env` and are applied
 #'   element-wise; a blank rule is a pass-through. This is the same dispatch
-#'   [create_dgf()] uses, so the built-in helpers ([as_EIN()], [as_mm()], ...)
+#'   [create_dgf()] uses, so the built-in helpers ([read_ein()], [read_mm()], ...)
 #'   and any user function work identically here.
 #'
 #' @seealso [write_stable_csv()], [create_dgf()]

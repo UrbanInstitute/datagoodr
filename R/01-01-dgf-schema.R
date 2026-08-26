@@ -11,8 +11,11 @@
 #   validate_  validation rules       portable, declarative
 #   prov_      provenance hashes      mirror the governed CSV's embedded payload
 #
-# The two bridges (raw_to_stable_transform, desired_data_import_rule) hold as_*
-# rule names; the is_* detectors are their guards. Unit and format describe the
+# The two bridges hold rule names, and the two families are distinguishable on
+# sight: raw_to_stable_transform takes a read_* (INGEST the raw written form),
+# desired_data_import_rule takes an as_* (COERCE into the target type). A rule
+# sitting in the wrong column is visible without running it. The is_* detectors
+# are their guards. Unit and format describe the
 # CURRENT (stable) data; the desired_ fields describe the intended type only.
 #
 # Two decisions worth stating at the top:
@@ -45,7 +48,7 @@
 #'   `categorical`, `logical` -> `boolean`, `character` -> `string`. Types the
 #'   engine cannot yet render (dates, identifiers, ...) fall through to
 #'   `unknown` and are handled gracefully at render rather than erroring.
-#' @seealso the type ontology in `data-types/research_data_type_ontology.csv`
+#' @seealso the type ontology, now owned by formex: `formex::fx_ontology()`
 #' @noRd
 dg_type_of <- function( storage ) {
   storage <- as.character( storage )
@@ -86,13 +89,13 @@ dgf_schema_cols <- function() {
     # raw_: the raw CSV as received (reader type + profiling, no semantic type)
     "raw_data_type", "raw_data_format", "raw_first5", "raw_duplicated",
 
-    # raw -> stable bridge: the lossless reformat rule (as_* transform)
+    # raw -> stable bridge: the lossless reformat rule (a read_* transform)
     "raw_to_stable_transform",
 
     # stable_: the governed/canonical CSV, current state
     "stable_data_type", "stable_data_format",
 
-    # stable -> desired bridge: the coercion-into-type rule (as_* import)
+    # stable -> desired bridge: the coercion-into-type rule (an as_* import)
     "desired_data_import_rule",
 
     # desired_: the intended interpretation (stage-invariant). Two ontology

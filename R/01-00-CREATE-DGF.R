@@ -33,7 +33,7 @@
 #'   metadata (name, short label, long description, type), each the same length
 #'   and order as the columns of `df`. Default to blank.
 #' @param desired_data_import_rule Optional character vector of type-conversion function names
-#'   (e.g. `"as_yyyy"`), one per column, applied to the data before profiling.
+#'   (e.g. `"read_yyyy"`), one per column, applied to the data before profiling.
 #' @param stable_data_format Optional character vector of display-formatting function names
 #'   (e.g. `"dollarize"`), one per column, applied to previews and graphics.
 #' @param dd_vname_alias Optional character vector of per-variable alternate
