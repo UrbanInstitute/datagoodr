@@ -3,11 +3,10 @@
 Written against the real `formex` package (`00-GITHUB/formex`,
 github.com/lecy/formex), reinstalled from source and measured on 2026-08-21.
 
-> **Progress.** Phase 1 (the `read_*` / `as_*` rename) and Phase 2 (delete the
-> duplicated detection layer, depend on formex) are **done**, on branch
-> `formex-reintegration`. Full test suite passes: 25 files, 0 failures,
-> 0 warnings. Next up is **Phase 3**, the dual-modality adapter — the judgement
-> call, spec'd by Part 2's table.
+> **Progress.** Phases 1–3 are **done**, on branch `formex-reintegration`
+> (`219213b`, `d1641ae`, `3178c2f`). Full suite: **472 passing, 0 failures**.
+> Next is **Phase 4**, v6 coordinates in the DGF schema — which needs open
+> decision #1 answered first.
 >
 > | | before | after |
 > |---|---|---|
@@ -16,6 +15,18 @@ github.com/lecy/formex), reinstalled from source and measured on 2026-08-21.
 > | exports | 219 | 115 |
 > | formex collisions | 87 | 4 (deliberate deprecated shims) |
 > | vignettes | 5 | 1 |
+>
+> **Two findings from Phase 3 that changed the design:**
+>
+> 1. **No v4→v6 translation table is needed.** 35 of the 38 dotted values the
+>    legacy shim emits are already valid v6 `semantic_family.semantic_type`
+>    coordinates — the v4 vocabulary is a *subset* of v6's. `desired_data_class`
+>    always spoke v6. This makes Phase 4 much smaller than Part 3.3 assumed.
+> 2. **Confidence is not a sufficient guard.** A column of `rnorm()` doubles
+>    routes to `text/web/domain` at **depth 4, confidence 1.0**, with a
+>    `variant_id` — `-0.6264538` parses as a domain name. The route therefore
+>    keeps the conservatism the legacy path always had. Part 2's storage-safety
+>    gate was necessary but not sufficient; this is the second guard.
 
 ---
 
