@@ -1,5 +1,39 @@
 # datagoodr (development version)
 
+## New
+
+### `create_dgf()` reads both of formex's predictions
+
+formex returns two answers per column — the v6 `$route` (a four-level ontology
+path that truncates gracefully) and the legacy `$guess` (a detector at a pass
+rate). They are **complementary**, so datagoodr now reads both:
+
+* The **route wins** when it resolves to a confident leaf. It reaches types no
+  detector emits — a bare four-digit year is `temporal/period/year` to the
+  router and nothing at all to the detectors, so year columns are now typed
+  `temporal` instead of falling through to `text`.
+* The **legacy guess wins** where the route truncates, which is every
+  zero-padded numeric key (FIPS, ZIP, EIN) and email address.
+
+`desired_data_class` now carries v6 coordinates directly. No translation was
+needed: the v4 dotted vocabulary turned out to be a *subset* of v6's
+`semantic_family.semantic_type`, so the column already spoke v6.
+
+Two guards keep a wrong prediction from corrupting a column:
+
+* **The storage-safety gate.** A `number/*` route may not re-type a column that
+  `.safe_numeric()` refuses to promote. The same rule that stops
+  `read_as_text = TRUE` turning `06037` into `6037` now stops the router doing
+  it. One predicate, both directions.
+* **Confidence is not sufficient.** A column of `rnorm()` doubles routes to
+  `text/web/domain` at depth 4 with confidence 1.0, because `-0.6264538` parses
+  as a domain name. So the route may refine a coarse `text` base type or supply
+  a strong semantic signal, but it may not overturn a type read from storage.
+
+When neither modality is confident the column keeps its base type, and the
+route's `depth` is recorded rather than discarded — a truncated path is a valid
+partial answer for a reviewer to deepen, not a failure.
+
 ## Breaking changes
 
 ### Type detection moved to the formex package
