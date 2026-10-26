@@ -587,7 +587,7 @@ ST PETERSBURG","character",NA,"character","character",NA,"[
 540354670 ;; 
 751627109 ;; 
 061636713 ;; 
-542015951","numeric","as.character","character","character","as_EIN","[ 
+542015951","numeric","as.character","character","character","read_ein","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24794""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Most Common Value""  ,  ""VAL"" :  ""020212092""  ,  ""PER"" :  ""(0%)""  }, 
@@ -2700,7 +2700,7 @@ OUT","character","as.factor","factor","logical",NA,"[
 2018-12 ;; 
 2017-12 ;; 
 2019-06 ;; 
-2019-05","numeric",NA,"character","factor","as_yyyymm","[ 
+2019-05","numeric",NA,"character","factor","read_yyyymm","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Most Common Value""  ,  ""VAL"" :  ""2019-12""  ,  ""PER"" :  ""(40%)""  }, 
@@ -2776,7 +2776,7 @@ OUT","character","as.factor","factor","logical",NA,"[
 2017-12 ;; 
 2018-06 ;; 
 2018-05 ;; 
-2018-09","numeric",NA,"character","factor","as_yyyymm","[ 
+2018-09","numeric",NA,"character","factor","read_yyyymm","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""47""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Most Common Value""  ,  ""VAL"" :  ""2018-12""  ,  ""PER"" :  ""(45%)""  }, 
@@ -2805,7 +2805,7 @@ OUT","character","as.factor","factor","logical",NA,"[
 2018-0 ;; 
 2017-0 ;; 
 2018-9 ;; 
-2019-9","numeric","as.character","character","character","as_yyyymm","[ 
+2019-9","numeric","as.character","character","character","read_yyyymm","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Most Common Value""  ,  ""VAL"" :  ""2019-0""  ,  ""PER"" :  ""(41%)""  }, 
@@ -2874,7 +2874,7 @@ OUT","character","as.factor","factor","logical",NA,"[
 06 ;; 
 05 ;; 
 09 ;; 
-11","numeric",NA,"character","factor","as_mm","[ 
+11","numeric",NA,"character","factor","read_mm","[ 
   {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""25000""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  """"  }, 
   {  ""STAT"" :  ""Most Common Value""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(60%)""  }, 

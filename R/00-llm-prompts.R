@@ -84,7 +84,7 @@ deliver_prompt <- function(text, slug, file = NULL, quiet = FALSE) {
 #' @return The prompt file path, invisibly. The prompt text is printed unless
 #'   `quiet = TRUE`.
 #'
-#' @seealso [evaluate_detector()], [guess_data_type()]
+#' @seealso [evaluate_detector()], [formex::guess_data_type()]
 #' @export
 draft_detector_prompt <- function(examples, type_name, n_negatives = 15,
                                   seed = 514, file = NULL,
@@ -97,7 +97,7 @@ draft_detector_prompt <- function(examples, type_name, n_negatives = 15,
   contract <- read_prompt_contract("detector-contract", contract_path)
 
   # build labelled test cases, then sample hard negatives (exclude S1)
-  tc <- generate_autotype_test_cases(examples, data_type = type_name, seed = seed)
+  tc <- formex::generate_autotype_test_cases(examples, data_type = type_name, seed = seed)
   hard <- tc[tc$label %in% c("S2", "S3", "SP"), ]
   take <- function(lbl) {
     v <- hard$case[hard$label == lbl]
@@ -131,8 +131,8 @@ draft_detector_prompt <- function(examples, type_name, n_negatives = 15,
 #' @param type_name Optional label for the report header.
 #' @param seed Integer seed (match the drafting call for identical negatives).
 #'
-#' @return The results table from [build_autotype_results()], invisibly, after
-#'   printing the error report via [generate_autotype_report()].
+#' @return The results table from [formex::build_autotype_results()], invisibly, after
+#'   printing the error report via [formex::generate_autotype_report()].
 #'
 #' @seealso [draft_detector_prompt()]
 #' @export
@@ -141,8 +141,8 @@ evaluate_detector <- function(detector, examples, type_name = "candidate",
   stopifnot(is.function(detector))
   examples <- unique(as.character(examples))
   examples <- examples[!is.na(examples) & nzchar(examples)]
-  res <- build_autotype_results(detector, examples, seed = seed)
-  generate_autotype_report(res, type_name)
+  res <- formex::build_autotype_results(detector, examples, seed = seed)
+  formex::generate_autotype_report(res, type_name)
   invisible(res)
 }
 

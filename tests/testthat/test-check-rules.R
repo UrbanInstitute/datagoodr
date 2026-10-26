@@ -7,14 +7,14 @@ test_that("check_dgf_rules confirms a fitting rule and flags a stale one", {
                     stringsAsFactors = FALSE)
   dgf <- suppressMessages(suppressWarnings(
     { utils::capture.output(d <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); d }))
-  dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "as_mmddyyyy"
+  dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "read_mmddyyyy"
 
   ok <- check_dgf_rules(dgf, raw)
-  expect_equal(ok$rule, "as_mmddyyyy")
+  expect_equal(ok$rule, "read_mmddyyyy")
   expect_equal(ok$stage, "reformat")
   expect_true(all(ok$fits))                       # rule parses the mm/dd/yyyy data
 
-  # same rule, but the data is now ISO -> as_mmddyyyy no longer parses -> flagged
+  # same rule, but the data is now ISO -> read_mmddyyyy no longer parses -> flagged
   iso <- data.frame(founded = c("2020-03-15", "2019-01-02", "2021-12-31"),
                     stringsAsFactors = FALSE)
   bad <- check_dgf_rules(dgf, iso)
@@ -25,7 +25,7 @@ test_that("check_dgf_rules confirms a fitting rule and flags a stale one", {
 test_that("apply_rule_col warns when a rule does not fit the column", {
   expect_warning(
     datagoodr:::apply_rule_col(c("apple", "banana", "cherry"),
-                               "as_mmddyyyy", var = "fruit"),
+                               "read_mmddyyyy", var = "fruit"),
     "did not fit")
 })
 
@@ -34,7 +34,7 @@ test_that("update_dgf attaches stale_rules for curated rules that no longer fit"
                     stringsAsFactors = FALSE)
   dgf <- suppressMessages(suppressWarnings(
     { utils::capture.output(d <- create_dgf(raw, file = tempfile("dgf"), open = FALSE)); d }))
-  dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "as_mmddyyyy"
+  dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "read_mmddyyyy"
 
   iso <- data.frame(founded = c("2020-03-15", "2019-01-02", "2021-12-31"),
                     stringsAsFactors = FALSE)

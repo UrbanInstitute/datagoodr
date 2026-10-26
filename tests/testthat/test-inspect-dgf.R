@@ -38,9 +38,9 @@ test_that("inspect_dgf flags missing required columns", {
 })
 
 test_that("built-in format functions round-trip through the namespace", {
-  expect_equal(as_EIN("542015951"), "542015951")
-  expect_equal(as_EIN(12345), "000012345")
-  expect_equal(as_mm(8), "08")
-  expect_equal(as_yyyymm("201905"), "2019-05")
-  expect_true(is.na(as_mm(NA)))
+  expect_equal(read_ein("542015951"), "54-2015951")
+  expect_equal(read_ein(12345), "00-0012345")
+  expect_equal(read_mm(8), "08")
+  expect_equal(read_yyyymm("201905"), "2019-05")
+  expect_true(is.na(read_mm(NA)))
 })

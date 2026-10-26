@@ -15,6 +15,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr,
+    formex,
     jsonlite,
     knitr,
     magrittr,
@@ -29,7 +30,6 @@ Imports:
 Suggests:
     DescTools,
     crosswalkr,
-    ISOcodes,
     fs,
     ggplot2,
     ggwordcloud,
@@ -38,7 +38,6 @@ Suggests:
     htmltools,
     kableExtra,
     lattice,
-    maps,
     psych,
     rmarkdown,
     scales,
@@ -54,3 +53,5 @@ Language: en-US
 Depends:
     R (>= 4.1)
 Config/testthat/edition: 3
+Remotes:
+    lecy/formex
