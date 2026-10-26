@@ -93,3 +93,48 @@ test_that("plan_stabilizer reports an unreachable transform honestly", {
   expect_match(p$stabilizer_status, "not-transformable")
   expect_equal(p$stabilizer, "")
 })
+
+# ---- stabilize_data executes the v7 plan when opted in ----------------------
+
+# A minimal v7 DGF: one variable, no legacy rule, the two-axis guess/desired set.
+v7_dgf <- function(var, g_st, g_style, d_style, g_unit = "", d_unit = "") {
+  data.frame(
+    var_name                 = var,
+    desired_data_import_rule = "",
+    raw_to_stable_transform  = "",
+    guess_semantic_type      = g_st,  guess_format_style   = g_style, guess_unit_type   = g_unit,
+    desired_semantic_type    = g_st,  desired_format_style = d_style, desired_unit_type = d_unit,
+    stringsAsFactors = FALSE)
+}
+
+test_that("stabilize_data runs the v7 plan only when use_v7 = TRUE", {
+  skip_if_not(datagoodr:::.formex_has_v7(), "installed formex lacks the v7 API")
+  raw <- data.frame(d = c("03/15/2019", "12/31/2020"), stringsAsFactors = FALSE)
+  dgf <- v7_dgf("d", "calendar", "mdy_slash", "ymd_dash")
+
+  # default (use_v7 = FALSE): blank legacy rule -> pass through unchanged
+  expect_equal(stabilize_data(raw, dgf)$d, raw$d)
+
+  # opted in: the read_mdy_slash :: write_ymd_dash plan runs
+  expect_equal(stabilize_data(raw, dgf, use_v7 = TRUE)$d,
+               c("2019-03-15", "2020-12-31"))
+})
+
+test_that("use_v7 converts units through a registered converter", {
+  skip_if_not(datagoodr:::.formex_has_v7(), "installed formex lacks the v7 API")
+  raw <- data.frame(temp = c("20 C", "0 C"), stringsAsFactors = FALSE)
+  dgf <- v7_dgf("temp", "temperature", "celsius", "fahrenheit", g_unit = "C", d_unit = "F")
+  out <- stabilize_data(raw, dgf, use_v7 = TRUE)$temp
+  expect_match(out[1], "68")   # 20 C -> 68 F
+  expect_match(out[2], "32")   # 0 C  -> 32 F
+})
+
+test_that("a legacy rule still wins over the v7 plan under use_v7 = TRUE", {
+  skip_if_not(datagoodr:::.formex_has_v7(), "installed formex lacks the v7 API")
+  raw <- data.frame(d = c("03/15/2019", "12/31/2020"), stringsAsFactors = FALSE)
+  dgf <- v7_dgf("d", "calendar", "mdy_slash", "ymd_dash")
+  tag <- function(x) paste0("L:", x)                 # a distinctive legacy rule
+  dgf$raw_to_stable_transform <- "tag"
+  out <- stabilize_data(raw, dgf, use_v7 = TRUE, env = environment())$d
+  expect_true(all(grepl("^L:", out)))                # legacy ran, not the v7 plan
+})

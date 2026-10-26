@@ -251,6 +251,37 @@ dgf_v7_stabilizer_columns <- function(guess, examples = NULL) {
 }
 
 
+#' Apply the v7 stabilizer plan to a full column (DRAFT)
+#'
+#' Rebuilds the `guess -> desired` transform plan from a DGF row's v7 axes and
+#' runs it over the whole column with [formex::fx_apply_plan()]. Used by
+#' [stabilize_data()] when v7 execution is requested.
+#'
+#' @param col The raw column values.
+#' @param guess,desired Lists with `semantic_type`/`format_style`/`unit_type`.
+#' @return `list(applied, value)`. `applied` is `FALSE` -- and `value` is `col`
+#'   unchanged -- when formex v7 is absent, the plan is identity or unreachable,
+#'   or applying it errors; the caller then falls back to the legacy rule path.
+#' @seealso [plan_stabilizer()], [stabilize_data()]
+#' @keywords internal
+#' @noRd
+stabilize_col_v7 <- function(col, guess, desired) {
+  if (!.formex_has_v7()) return(list(applied = FALSE, value = col))
+  st <- guess$semantic_type %||% ""
+  if (is.na(st) || !nzchar(st)) return(list(applied = FALSE, value = col))
+  from <- .dgf_fx_format(guess$semantic_type,   guess$format_style,   guess$unit_type)
+  to   <- .dgf_fx_format(desired$semantic_type, desired$format_style, desired$unit_type)
+  plan <- formex::fx_plan_transform(from, to)
+  ## identity (from == to) or unreachable -> let the legacy path / pass-through
+  ## decide; only a real, executable plan overrides.
+  if (!isTRUE(plan$transformable) || !length(plan$path))
+    return(list(applied = FALSE, value = col))
+  out <- tryCatch(formex::fx_apply_plan(col, plan), error = function(e) NULL)
+  if (is.null(out)) return(list(applied = FALSE, value = col))
+  list(applied = TRUE, value = out)
+}
+
+
 #' Column names of a v7 DGF, in order (DRAFT)
 #'
 #' The format-first schema: the type+class cluster collapses to a guessed leaf

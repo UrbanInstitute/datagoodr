@@ -70,19 +70,31 @@ apply_rule_col <- function( col, rule, env = parent.frame(), var = NULL ) {
 #'   [load_dgf()]).
 #' @param env Environment in which to find the rule functions named in the DGF
 #'   (e.g. project `dgf.R` helpers). Defaults to the caller's environment.
+#' @param use_v7 Logical; execute the v7 `stabilizer` plan (the
+#'   `read :: [convert] :: write` path from formex's transform-path search) for
+#'   columns that carry no legacy rule. Defaults to `FALSE`, so the legacy
+#'   behaviour is unchanged. When `TRUE`, a column whose `raw_to_stable_transform`
+#'   and `desired_data_import_rule` are both blank is transformed by its v7 plan
+#'   (via [formex::fx_apply_plan()]) when that plan is executable; a legacy rule,
+#'   where present, always takes precedence, and an identity or unreachable plan
+#'   leaves the column unchanged. Honours confirm-then-transform: the suggested
+#'   stabilizer runs only when the caller opts in.
 #'
 #' @return A data frame: the columns the DGF describes, in DGF order, with each
 #'   rule applied. Columns present in `raw` but absent from the DGF are dropped;
 #'   a DGF variable with no matching raw column is skipped with a warning.
 #'
-#' @details Rules name a function reachable in `env` and are applied
+#' @details Legacy rules name a function reachable in `env` and are applied
 #'   element-wise; a blank rule is a pass-through. This is the same dispatch
 #'   [create_dgf()] uses, so the built-in helpers ([read_ein()], [read_mm()], ...)
-#'   and any user function work identically here.
+#'   and any user function work identically here. With `use_v7 = TRUE`, a
+#'   rule-free column is instead handed to its v7 stabilizer plan, which is
+#'   vectorised and type-preserving (it does not stringify through a per-value
+#'   `as.character`).
 #'
-#' @seealso [write_stable_csv()], [create_dgf()]
+#' @seealso [write_stable_csv()], [create_dgf()], [stabilize_col_v7()]
 #' @export
-stabilize_data <- function( raw, dgf, env = parent.frame() ) {
+stabilize_data <- function( raw, dgf, env = parent.frame(), use_v7 = FALSE ) {
 
   if( is.character(raw) && length(raw) == 1 )
     raw <- as.data.frame( suppressMessages( readr::read_csv( raw ) ) )
@@ -90,6 +102,10 @@ stabilize_data <- function( raw, dgf, env = parent.frame() ) {
     dgf <- load_dgf( dgf )
 
   stopifnot( is.data.frame(raw), is.data.frame(dgf), "var_name" %in% names(dgf) )
+
+  # the v7 path needs the two-axis columns present and a formex that can run it
+  has_v7_cols <- all( c("guess_semantic_type", "desired_semantic_type") %in% names(dgf) )
+  do_v7 <- isTRUE(use_v7) && has_v7_cols
 
   out <- list()
   for( i in seq_len( nrow(dgf) ) ) {
@@ -99,8 +115,30 @@ stabilize_data <- function( raw, dgf, env = parent.frame() ) {
       next
     }
     col <- raw[[v]]
-    col <- apply_rule_col( col, dgf$desired_data_import_rule[i], env, var = dgf$var_name[i] )
-    col <- apply_rule_col( col, dgf$raw_to_stable_transform[i], env, var = dgf$var_name[i] )
+
+    ## A legacy rule, where set, always wins (confirm-then-transform, unchanged).
+    lg <- c( dgf$desired_data_import_rule[i] %||% "",
+             dgf$raw_to_stable_transform[i]  %||% "" )
+    lg[ is.na(lg) ] <- ""
+    has_legacy <- any( nzchar( trimws( lg ) ) )
+
+    applied_v7 <- FALSE
+    if( do_v7 && ! has_legacy ) {
+      res <- stabilize_col_v7(
+        col,
+        guess   = list( semantic_type = dgf$guess_semantic_type[i],
+                        format_style  = dgf$guess_format_style[i],
+                        unit_type     = dgf$guess_unit_type[i] ),
+        desired = list( semantic_type = dgf$desired_semantic_type[i],
+                        format_style  = dgf$desired_format_style[i],
+                        unit_type     = dgf$desired_unit_type[i] ) )
+      if( isTRUE(res$applied) ) { col <- res$value; applied_v7 <- TRUE }
+    }
+
+    if( ! applied_v7 ) {
+      col <- apply_rule_col( col, dgf$desired_data_import_rule[i], env, var = dgf$var_name[i] )
+      col <- apply_rule_col( col, dgf$raw_to_stable_transform[i], env, var = dgf$var_name[i] )
+    }
     out[[v]] <- col
   }
 
