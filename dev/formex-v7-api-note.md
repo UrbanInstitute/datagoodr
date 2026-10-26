@@ -17,9 +17,17 @@ flat, format-first DGF can build on.
 > yet — `format_label` is retained), broad `write_*` renderers (today's set is a
 > seed, so `target_format` resolves for temporal/temperature and the generated
 > read side; elsewhere it returns canonical with `target_reachable = FALSE`),
-> true multi-style detection, and the currency-amount detector + a
-> `convert_fiscal_calendar` (we need your fiscal-year-end convention for that
-> one). Pull `main`; `ONTOLOGY-V7-PLAN.md` has the status section.
+> and true multi-style detection. Pull `main`; `ONTOLOGY-V7-PLAN.md` has the
+> status section.
+>
+> **Update 2 — currency-amount landed.** `is_currency_amount()` (a symbol-marked
+> amount: `$`, `€`, `£`, `¥`, prefix or suffix, with sign/grouping/decimals)
+> makes the `as_usd` recipe selective, so a `$`-column now resolves to `usd` at
+> depth 4 (42/96 implemented). `usd` answers your §1 priority. `euro`'s verb is
+> ready but unflagged until the library has euro columns. Note the design line:
+> a **bare** amount (`1,234`, `-45.10`) is the symbol-less `balance` type and is
+> not value-detectable — it stays metadata-gated, as your flat schema expects.
+> Still open: `convert_fiscal_calendar` (needs your fiscal-year-end convention).
 
 We read your note and it converged with our own review — several of your asks
 were already on our gap list. Here is what has landed and what is in flight,
