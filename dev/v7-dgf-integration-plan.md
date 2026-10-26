@@ -103,6 +103,16 @@ guessing.
 categorical-vs-identifier, `mixed` boolean-vs-unknown) keep the cardinality
 tie-break the adapter already applies.
 
+> **Status — finalized 2026-10-26.** formex v7 (steps 2–5) is installed; the
+> gate is cleared. `guess_dgf_types()` now emits the `guess_*` axes,
+> `create_dgf()` builds the v7 schema (additively — the render/stabilize contract
+> columns are retained), and the stabilizer plan + `stable_first5` resolve against
+> the 108-edge ontology-derived registry. Full suite: **492 passing, 0 failures**.
+> The one deviation from the literal plan below: the v7 columns were *added*
+> rather than the legacy `desired_data_*` being *dropped*, because `desired_data_type`
+> drives the render engine across 20 files; porting rendering onto
+> `desired_semantic_type` is the remaining non-blocking follow-up.
+
 ## Build order (draft now; starred steps gated on formex v7)
 
 1. **Draft, committed now:** `R/01-08-stabilizer-plan.R` — `.route_axes()` shim,

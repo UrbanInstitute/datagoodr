@@ -315,6 +315,24 @@ create_dgf <- function(         # ----------------
   desired_data_class <- .enriched$desired_data_class
   dd_is_join_key     <- .enriched$dd_is_join_key
 
+  ## ---- v7: the machine proposal and the stabilizer plan --------------------
+  ## guess_* records what formex's route detected (the two-axis leaf + honesty);
+  ## the v7 helper defaults the human's desired target form and resolves the
+  ## read :: [convert] :: write stabilizer via formex's transform-path search,
+  ## previewing it into stable_first5. Inert when the installed formex predates
+  ## the v7 API (.formex_has_v7()); the v6 columns above are unaffected.
+  guess_label         <- .enriched$guess_label
+  guess_semantic_type <- .enriched$guess_semantic_type
+  guess_format_style  <- .enriched$guess_format_style
+  guess_unit_type     <- .enriched$guess_unit_type
+  guess_match_kind    <- .enriched$guess_match_kind
+  guess_variant_id    <- .enriched$guess_variant_id
+  guess_depth         <- .enriched$guess_depth
+  guess_confidence    <- .enriched$guess_confidence
+  .v7 <- dgf_v7_stabilizer_columns(
+           .enriched,
+           examples = lapply( df_fmt, function(x) utils::head( as.character(x), 5 ) ) )
+
   ## Reconcile the build-time profile class (vclass, which drives rg_stats/
   ## rg_graphics below) with the enriched type. The detector library is the
   ## single source of truth: a column it promoted to temporal or identifier -
@@ -378,7 +396,17 @@ create_dgf <- function(         # ----------------
       raw_first5,
       raw_duplicated,
 
-      # raw -> stable bridge
+      # guess_: the machine proposal from formex's route (v7 two-axis leaf)
+      guess_label,
+      guess_semantic_type,
+      guess_format_style,
+      guess_unit_type,
+      guess_match_kind,
+      guess_variant_id,
+      guess_depth,
+      guess_confidence,
+
+      # raw -> stable bridge (legacy; retained for stabilize_data)
       raw_to_stable_transform,
 
       # stable_: the governed CSV, current state
@@ -388,9 +416,23 @@ create_dgf <- function(         # ----------------
       # stable -> desired bridge
       desired_data_import_rule,
 
-      # desired_: the intended interpretation (type + class.subclass)
+      # desired_: the intended interpretation (type + class.subclass) -- the
+      # render-engine contract (kept) -- plus the v7 two-axis target form.
       desired_data_type,
       desired_data_class,
+      desired_semantic_type = .v7$desired_semantic_type,
+      desired_format_style  = .v7$desired_format_style,
+      desired_unit_type     = .v7$desired_unit_type,
+
+      # stabilizer: the v7 read :: [convert] :: write plan + its preview
+      stabilizer_needed = .v7$stabilizer_needed,
+      stabilizer        = .v7$stabilizer,
+      stabilizer_status = .v7$stabilizer_status,
+      stable_first5     = .v7$stable_first5,
+
+      # load rule: reading the governed CSV back into R (v7 import bridge)
+      load_rule_needed  = .v7$load_rule_needed,
+      load_rule         = .v7$load_rule,
 
       # rg_: research guide artifacts (JSON strings)
       rg_properties, rg_preview, rg_stats, rg_graphics, rg_max_chr,

@@ -60,7 +60,7 @@ test_that("the route wins where it resolves a leaf the detectors miss", {
                          base_type = "text")
   expect_equal(got$desired_data_type, "temporal")
   expect_equal(got$desired_data_class, "period.year")
-  expect_equal(got$route_depth, 4L)
+  expect_equal(got$guess_depth, 4L)
 })
 
 test_that("a depth-4 confidence-1.0 route cannot overturn a storage type", {
@@ -75,7 +75,7 @@ test_that("a depth-4 confidence-1.0 route cannot overturn a storage type", {
                           base_type = "number")
   expect_equal(got$desired_data_type, "number")
   expect_equal(got$desired_data_class, "")     # nothing stamped from a bad route
-  expect_equal(got$route_depth, 4L)            # but the disagreement is recorded
+  expect_equal(got$guess_depth, 4L)            # but the disagreement is recorded
 })
 
 test_that("a route that agrees with the base type still stamps its class", {
@@ -104,7 +104,7 @@ test_that("dates resolve through the route with a variant_id", {
                          base_type = "text")
   expect_equal(got$desired_data_type, "temporal")
   expect_equal(got$desired_data_class, "date.calendar")
-  expect_true(nzchar(got$route_variant_id))   # the recipe key for fx_stabilize()
+  expect_true(nzchar(got$guess_variant_id))   # the recipe key for fx_stabilize()
 })
 
 test_that("depth is recorded even when neither modality gives a type", {
@@ -113,7 +113,7 @@ test_that("depth is recorded even when neither modality gives a type", {
   x   <- c("wibble", "wobble", "flim", "flam", "zork")
   got <- guess_dgf_types(data.frame(mystery = x, stringsAsFactors = FALSE),
                          base_type = "text")
-  expect_true(is.na(got$route_depth) || got$route_depth <= 4L)
+  expect_true(is.na(got$guess_depth) || got$guess_depth <= 4L)
   expect_equal(nrow(got), 1L)
 })
 

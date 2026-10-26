@@ -249,11 +249,18 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
     desired_data_type  = base_type,
     desired_data_class = rep("", length(vars)),
     dd_is_join_key     = rep("", length(vars)),
-    ## v6 provenance for the decision. Carried here so Phase 4 can store it in
-    ## the DGF; create_dgf() reads only the three columns above today.
-    route_variant_id   = rep("", length(vars)),
-    route_depth        = rep(NA_integer_, length(vars)),
-    route_confidence   = rep(NA_real_, length(vars)),
+    ## v7 guess_* axes: what formex's route detected, recorded verbatim so the
+    ## DGF carries the machine proposal next to the human's desired_* answer.
+    ## The route is the natural source for these (the two-axis leaf lives there);
+    ## the legacy $guess still drives desired_data_type below where it wins.
+    guess_label        = rep("", length(vars)),
+    guess_semantic_type = rep("", length(vars)),
+    guess_format_style = rep("", length(vars)),
+    guess_unit_type    = rep("", length(vars)),
+    guess_match_kind   = rep("", length(vars)),
+    guess_variant_id   = rep("", length(vars)),
+    guess_depth        = rep(NA_integer_, length(vars)),
+    guess_confidence   = rep(NA_real_, length(vars)),
     stringsAsFactors = FALSE
   )
 
@@ -265,6 +272,18 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
     nn  <- vals[!is.na(vals) & nzchar(trimws(vals))]
     pct <- if (length(nn)) length(unique(nn)) / length(nn) else 0
     safe <- .route_is_storage_safe(r, vals)
+
+    ## Record the route's two-axis leaf once, regardless of which modality wins
+    ## the desired type. .route_axes() reads v7 format_style/unit_type when the
+    ## installed formex emits them, else derives them from v6 format_label/dd_unit.
+    if (!is.null(r)) {
+      ax <- .route_axes(r)
+      out$guess_semantic_type[i] <- if (is.na(r$semantic_type)) "" else r$semantic_type
+      out$guess_format_style[i]  <- if (is.na(ax$format_style)) "" else ax$format_style
+      out$guess_unit_type[i]     <- if (is.na(ax$unit_type)) "" else ax$unit_type
+      out$guess_match_kind[i]    <- if (is.null(r$match_kind) || is.na(r$match_kind)) "" else r$match_kind
+      out$guess_label[i]         <- .guess_label(r, ax)
+    }
 
     ## ---- MODALITY 1: a confident v6 leaf ---------------------------------
     ## Preferred when it resolves all the way down, because it carries the
@@ -288,17 +307,17 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
       if (override || identical(gtype, base_type[i])) {
         if (override) out$desired_data_type[i] <- gtype
         out$desired_data_class[i] <- cs
-        out$route_variant_id[i]   <- if (is.na(r$variant_id)) "" else r$variant_id
-        out$route_depth[i]        <- as.integer(r$depth)
-        out$route_confidence[i]   <- as.numeric(r$confidence)
+        out$guess_variant_id[i]   <- if (is.na(r$variant_id)) "" else r$variant_id
+        out$guess_depth[i]        <- as.integer(r$depth)
+        out$guess_confidence[i]   <- as.numeric(r$confidence)
         if (out$desired_data_type[i] == "identifier" && pct >= distinct_threshold)
           out$dd_is_join_key[i] <- "TRUE"
         next
       }
       ## the route contradicts a confident base type -> record how far it got,
       ## stamp nothing, and fall through to the detectors.
-      out$route_depth[i]      <- as.integer(r$depth)
-      out$route_confidence[i] <- as.numeric(r$confidence)
+      out$guess_depth[i]      <- as.integer(r$depth)
+      out$guess_confidence[i] <- as.numeric(r$confidence)
     }
 
     ## ---- MODALITY 2: the legacy detector guess ---------------------------
@@ -311,8 +330,8 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
       ## rather than a finished label. The base type is left as create_dgf()
       ## typed it; we only note how far detection actually got.
       if (!is.null(r) && !is.na(r$depth)) {
-        out$route_depth[i]      <- as.integer(r$depth)
-        out$route_confidence[i] <- as.numeric(r$confidence)
+        out$guess_depth[i]      <- as.integer(r$depth)
+        out$guess_confidence[i] <- as.numeric(r$confidence)
       }
       next
     }
@@ -328,8 +347,8 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
     ## the legacy detector answered, so record how far the route got alongside
     ## it --- the two modalities disagree often enough to be worth auditing.
     if (!is.null(r) && !is.na(r$depth)) {
-      out$route_depth[i]      <- as.integer(r$depth)
-      out$route_confidence[i] <- as.numeric(r$confidence)
+      out$guess_depth[i]      <- as.integer(r$depth)
+      out$guess_confidence[i] <- as.numeric(r$confidence)
     }
 
     ## cardinality promotion: a near-unique geographic categorical is a key

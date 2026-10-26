@@ -89,18 +89,39 @@ dgf_schema_cols <- function() {
     # raw_: the raw CSV as received (reader type + profiling, no semantic type)
     "raw_data_type", "raw_data_format", "raw_first5", "raw_duplicated",
 
-    # raw -> stable bridge: the lossless reformat rule (a read_* transform)
+    # guess_: the machine proposal from formex guess_data_type()$route (v7). The
+    # two-axis leaf (format_style + unit_type) plus the honesty/provenance that
+    # travels with it. Written by guess_dgf_types(); the human answers in the
+    # desired_ family below.
+    "guess_label", "guess_semantic_type", "guess_format_style", "guess_unit_type",
+    "guess_match_kind", "guess_variant_id", "guess_depth", "guess_confidence",
+
+    # raw -> stable bridge: the lossless reformat rule (a read_* transform).
+    # Retained for stabilize_data(); the v7 `stabilizer` plan below supersedes it.
     "raw_to_stable_transform",
 
     # stable_: the governed/canonical CSV, current state
     "stable_data_type", "stable_data_format",
 
-    # stable -> desired bridge: the coercion-into-type rule (an as_* import)
+    # stable -> desired bridge: the coercion-into-type rule (an as_* import).
+    # Retained for stabilize_data(); the v7 `load_rule` below supersedes it.
     "desired_data_import_rule",
 
-    # desired_: the intended interpretation (stage-invariant). Two ontology
-    # coordinates: the type, and the role as `class.subclass` (dotted).
+    # desired_: the intended interpretation (stage-invariant). The type +
+    # dotted class.subclass drive the render engine (kept); the v7 two-axis
+    # target form (semantic_type + format_style + unit_type) is what the
+    # stabilizer plan resolves against.
     "desired_data_type", "desired_data_class",
+    "desired_semantic_type", "desired_format_style", "desired_unit_type",
+
+    # stabilizer: the v7 read :: [convert] :: write plan from formex's
+    # transform-path search, whether one is needed, its status, and a preview
+    # of its effect on raw_first5.
+    "stabilizer_needed", "stabilizer", "stabilizer_status", "stable_first5",
+
+    # load rule: reading the governed CSV back into R (the v7 name for the
+    # import bridge).
+    "load_rule_needed", "load_rule",
 
     # rg_: research guide artifacts (JSON strings)
     "rg_properties", "rg_preview", "rg_stats", "rg_graphics", "rg_max_chr",

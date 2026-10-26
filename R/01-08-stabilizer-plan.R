@@ -57,6 +57,35 @@
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0L) b else a
 
 
+## The one-line human label for a route: the deepest resolved rung that has a
+## name, written `<leaf> {{ family :: data_type }}`. format_style (when it is a
+## real style, not a copy of semantic_type) is the most specific leaf, then
+## semantic_type, then family, then the bare data_type. The parenthetical
+## carries the implied coordinates, dropping any rung equal to the leaf. A route
+## that resolved nothing returns "".
+#' @keywords internal
+#' @noRd
+.guess_label <- function(r, ax = NULL) {
+  if (is.null(r)) return("")
+  if (is.null(ax)) ax <- .route_axes(r)
+  na0 <- function(x) { x <- x %||% NA_character_; if (is.na(x) || !nzchar(x)) NA_character_ else x }
+  dt    <- na0(r$data_type)
+  fam   <- na0(r$semantic_family)
+  st    <- na0(r$semantic_type)
+  style <- na0(ax$format_style)
+
+  leaf <- if (!is.na(style) && !identical(style, st)) style
+          else if (!is.na(st))  st
+          else if (!is.na(fam)) fam
+          else if (!is.na(dt))  dt
+          else return("")
+
+  implied <- c(fam, dt)
+  implied <- implied[!is.na(implied) & implied != leaf]
+  if (length(implied)) paste0(leaf, " {{ ", paste(implied, collapse = " :: "), " }}") else leaf
+}
+
+
 ## Build a formex v7 fx_format descriptor from three DGF cells. Blank strings are
 ## normalized to NA so an unresolved axis reads as "no constraint" in the search.
 #' @keywords internal
@@ -140,6 +169,85 @@ plan_stabilizer <- function(guess, desired, raw_first5 = NULL) {
   data.frame(stabilizer = cell, stabilizer_needed = needed,
              stabilizer_status = status, stable_first5 = first5,
              stringsAsFactors = FALSE)
+}
+
+
+## Resolve each variant's canonical desired format_style from the ontology's
+## desired_default_format column (e.g. calendar -> "yyyymmdd", a usd amount ->
+## "numeric"). Looked up by variant_id, falling back to the first row of the
+## semantic_type; "" when the ontology offers no default. fx_ontology() is read
+## once and cached.
+#' @keywords internal
+#' @noRd
+.fx_ont_cache <- new.env(parent = emptyenv())
+.desired_default_style <- function(variant_id, semantic_type) {
+  n <- length(variant_id)
+  if (!.formex_has_v7()) return(rep("", n))
+  if (is.null(.fx_ont_cache$ont))
+    .fx_ont_cache$ont <- tryCatch(formex::fx_ontology(), error = function(e) NULL)
+  ont <- .fx_ont_cache$ont
+  if (is.null(ont) || !"desired_default_format" %in% names(ont)) return(rep("", n))
+  by_var <- stats::setNames(ont$desired_default_format, ont$variant_id)
+  by_st  <- tapply(ont$desired_default_format, ont$semantic_type,
+                   function(x) { x <- x[nzchar(x)]; if (length(x)) x[1] else NA_character_ })
+  vapply(seq_len(n), function(i) {
+    v <- variant_id[i]; s <- semantic_type[i]
+    d <- if (nzchar(v) && v %in% names(by_var)) by_var[[v]] else NA_character_
+    if (is.na(d) || !nzchar(d)) d <- if (nzchar(s) && s %in% names(by_st)) by_st[[s]] else NA_character_
+    if (is.na(d)) "" else d
+  }, character(1))
+}
+
+
+#' Build the v7 desired-form + stabilizer columns for a DGF (DRAFT)
+#'
+#' Given the `guess_*` axes `guess_dgf_types()` detected, defaults the human's
+#' `desired_*` target form (the canonical `desired_default_format` from the
+#' ontology, else the detected style) and asks formex's transform-path search
+#' for the stabilizer plan from guess to desired. Honest by construction: a
+#' reformat the registry cannot reach comes back `not-transformable`, not a
+#' fabricated rule.
+#'
+#' @param guess The data frame `guess_dgf_types()` returns (its `guess_*` cols).
+#' @param examples Optional list of per-column raw example vectors, used to
+#'   preview the stabilizer into `stable_first5`.
+#' @return A data frame of `desired_semantic_type`, `desired_format_style`,
+#'   `desired_unit_type`, the four `stabilizer*`/`stable_first5` columns, and the
+#'   two `load_rule*` columns. Inert (all blank) on a formex without the v7 API.
+#' @keywords internal
+#' @noRd
+dgf_v7_stabilizer_columns <- function(guess, examples = NULL) {
+  n <- length(guess$guess_semantic_type)
+  b <- rep("", n)
+  res <- data.frame(
+    desired_semantic_type = guess$guess_semantic_type,
+    desired_format_style  = b,
+    desired_unit_type     = guess$guess_unit_type,
+    stabilizer_needed = b, stabilizer = b, stabilizer_status = b, stable_first5 = b,
+    load_rule_needed = b, load_rule = b,
+    stringsAsFactors = FALSE
+  )
+  if (!.formex_has_v7()) return(res)
+
+  defstyle <- .desired_default_style(guess$guess_variant_id, guess$guess_semantic_type)
+  res$desired_format_style <- ifelse(nzchar(defstyle), defstyle, guess$guess_format_style)
+
+  for (i in seq_len(n)) {
+    if (!nzchar(guess$guess_semantic_type[i])) next
+    g <- list(semantic_type = guess$guess_semantic_type[i],
+              format_style  = guess$guess_format_style[i],
+              unit_type     = guess$guess_unit_type[i])
+    d <- list(semantic_type = res$desired_semantic_type[i],
+              format_style  = res$desired_format_style[i],
+              unit_type     = res$desired_unit_type[i])
+    ex <- if (!is.null(examples)) examples[[i]] else NULL
+    p  <- plan_stabilizer(g, d, raw_first5 = ex)
+    res$stabilizer_needed[i] <- p$stabilizer_needed
+    res$stabilizer[i]        <- p$stabilizer
+    res$stabilizer_status[i] <- p$stabilizer_status
+    res$stable_first5[i]     <- p$stable_first5
+  }
+  res
 }
 
 

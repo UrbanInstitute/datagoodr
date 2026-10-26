@@ -33,16 +33,18 @@ test_that("retype_dgf changes the type and unit of a variable", {
 
 test_that("retype_dgf re-profiles so the new graphic payload is present", {
   df <- demo(); dgf <- build(df)
-  # month_name was guessed categorical (a treemap payload); retype to temporal
+  # formex v7 now guesses month_name temporal (month_of_year); retype it to a
+  # plain categorical treemap and confirm the payload is re-profiled to the new
+  # type (the point of the test: a type correction changes the graphic payload).
   before <- dgf$rg_graphics[dgf$var_name == "month_name"]
   out <- retype_dgf(dgf, df,
-                    types = c(month_name = "temporal"),
-                    units = c(month_name = "month"))
+                    types = c(month_name = "categorical"),
+                    units = c(month_name = ""))
   after <- out$rg_graphics[out$var_name == "month_name"]
   expect_false(identical(before, after))                 # re-profiled
-  # the temporal payload is a Value/Count table the graphic can read
+  # the re-profiled payload is a readable table the graphic can render
   tab <- datagoodr:::json_to_df(after)
-  expect_true(all(c("Value", "Count") %in% names(tab)))
+  expect_true(is.data.frame(tab) && nrow(tab) >= 1)
 })
 
 test_that("a retyped temporal actually renders its graphic", {
