@@ -4,7 +4,7 @@
 \alias{stabilize_data}
 \title{Standardize a raw dataset with a DGF's rules}
 \usage{
-stabilize_data(raw, dgf, env = parent.frame())
+stabilize_data(raw, dgf, env = parent.frame(), use_v7 = FALSE)
 }
 \arguments{
 \item{raw}{A data frame, or a path to a raw `.csv`.}
@@ -14,6 +14,16 @@ stabilize_data(raw, dgf, env = parent.frame())
 
 \item{env}{Environment in which to find the rule functions named in the DGF
 (e.g. project `dgf.R` helpers). Defaults to the caller's environment.}
+
+\item{use_v7}{Logical; execute the v7 `stabilizer` plan (the
+`read :: [convert] :: write` path from formex's transform-path search) for
+columns that carry no legacy rule. Defaults to `FALSE`, so the legacy
+behaviour is unchanged. When `TRUE`, a column whose `raw_to_stable_transform`
+and `desired_data_import_rule` are both blank is transformed by its v7 plan
+(via [formex::fx_apply_plan()]) when that plan is executable; a legacy rule,
+where present, always takes precedence, and an identity or unreachable plan
+leaves the column unchanged. Honours confirm-then-transform: the suggested
+stabilizer runs only when the caller opts in.}
 }
 \value{
 A data frame: the columns the DGF describes, in DGF order, with each
@@ -27,11 +37,14 @@ Applies a DGF's per-variable rules to a raw dataset: first the
 of the data - what a downstream program should consume.
 }
 \details{
-Rules name a function reachable in `env` and are applied
+Legacy rules name a function reachable in `env` and are applied
   element-wise; a blank rule is a pass-through. This is the same dispatch
   [create_dgf()] uses, so the built-in helpers ([read_ein()], [read_mm()], ...)
-  and any user function work identically here.
+  and any user function work identically here. With `use_v7 = TRUE`, a
+  rule-free column is instead handed to its v7 stabilizer plan, which is
+  vectorised and type-preserving (it does not stringify through a per-value
+  `as.character`).
 }
 \seealso{
-[write_stable_csv()], [create_dgf()]
+[write_stable_csv()], [create_dgf()], [stabilize_col_v7()]
 }

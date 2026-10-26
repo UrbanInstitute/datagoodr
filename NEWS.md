@@ -2,6 +2,31 @@
 
 ## New
 
+### The DGF carries a two-axis guess and a suggested stabilizer (formex v7)
+
+formex v7 models a value's format as `(semantic_type, format_style, unit_type)`
+and exposes stabilization as a transform-path search. datagoodr now records and
+acts on that:
+
+* **`guess_*` columns** capture formex's route leaf as two axes —
+  `guess_format_style` (the written rendering) and `guess_unit_type` (the
+  dimensional/categorical unit) — alongside a human `guess_label`
+  (`calendar {{ date :: temporal }}`), `guess_match_kind` (the honesty column),
+  and `guess_variant_id`/`guess_depth`/`guess_confidence`.
+* **`desired_*` gains the matching target form** (`desired_semantic_type`,
+  `desired_format_style`, `desired_unit_type`), and `create_dgf()` fills a
+  suggested **`stabilizer`** — a `read :: [convert] :: write` plan from
+  `formex::fx_plan_transform()` — previewing its effect in **`stable_first5`**.
+  A reformat the registry cannot reach is reported `not-transformable`, never
+  guessed.
+* **`stabilize_data(use_v7 = TRUE)`** executes those plans with
+  `formex::fx_apply_plan()` — vectorised and type-preserving. It is opt-in: the
+  default is unchanged, and a legacy `raw_to_stable_transform` /
+  `desired_data_import_rule`, where set, always takes precedence.
+
+The flip is additive: `desired_data_type`/`desired_data_class` remain the render
+engine's dispatch contract.
+
 ### `create_dgf()` reads both of formex's predictions
 
 formex returns two answers per column — the v6 `$route` (a four-level ontology
