@@ -28,6 +28,18 @@ flat, format-first DGF can build on.
 > a **bare** amount (`1,234`, `-45.10`) is the symbol-less `balance` type and is
 > not value-detectable — it stays metadata-gated, as your flat schema expects.
 > Still open: `convert_fiscal_calendar` (needs your fiscal-year-end convention).
+>
+> **Update 3 — detector coverage now 46/96.** Further test-backed detectors are
+> wired: `day_of_week`, `month_of_year`, `first_name`, `quarter`, `domain`,
+> `usd`, `place`, `min_max` range, and geometry `point`/`polygon`. Two engine
+> bugs fixed in passing (the transform-DSL `verb[arg]` parser dropped a trailing
+> `]`; `as_range` no longer claims nested arrays as ranges). One finding that
+> affects your §1 gating: a selective recipe is **necessary but not sufficient**
+> to route — the learned router never shortlists very rare `mask` leaves
+> (`array`, `version`, `reporting_period` confirm in isolation but never reach
+> the verifier), so they stay `implemented = no` on purpose. Known tie-break
+> still open: a city column routes to the `geographic` leaf rather than `place`
+> (your §5 collision); the `disambiguator` work is next.
 
 We read your note and it converged with our own review — several of your asks
 were already on our gap list. Here is what has landed and what is in flight,
