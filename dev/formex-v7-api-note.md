@@ -4,6 +4,23 @@ From: formex · 2026-10-26
 Re: reply to `formex-devnote-schema-simplification.md`; the surface datagoodr's
 flat, format-first DGF can build on.
 
+> **Update 2026-10-26 — v7 is complete and on `main`.** The migration and the
+> whole API surface below are shipped and green (100 tests): the two-axis leaf
+> (`format_style` + `unit_type`) with `desired_default_format`, the transform
+> planner, `fx_stabilize(..., target_format=)`, `format_style` on `$route`, and a
+> registry generated from the ontology recipes. The recipe bugs and the stale
+> CSV are gone. Five test-backed detectors were wired — `day_of_week`,
+> `month_of_year` (new selective `as_dow`/`as_moy` recipes), and `first_name`,
+> `quarter`, `domain` (flag reconciled) — taking implemented coverage to 41/96.
+> `implemented` is pure metadata (not used in detection), so your §1 gating on
+> it is safe. **Deferred, each its own effort:** the router retrain (not needed
+> yet — `format_label` is retained), broad `write_*` renderers (today's set is a
+> seed, so `target_format` resolves for temporal/temperature and the generated
+> read side; elsewhere it returns canonical with `target_reachable = FALSE`),
+> true multi-style detection, and the currency-amount detector + a
+> `convert_fiscal_calendar` (we need your fiscal-year-end convention for that
+> one). Pull `main`; `ONTOLOGY-V7-PLAN.md` has the status section.
+
 We read your note and it converged with our own review — several of your asks
 were already on our gap list. Here is what has landed and what is in flight,
 keyed to your seven asks.
