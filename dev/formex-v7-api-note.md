@@ -40,6 +40,19 @@ flat, format-first DGF can build on.
 > the verifier), so they stay `implemented = no` on purpose. Known tie-break
 > still open: a city column routes to the `geographic` leaf rather than `place`
 > (your §5 collision); the `disambiguator` work is next.
+>
+> **Update 4 — §5 collisions resolved.** The ontology now has a `disambiguator`
+> column (and `fx_validate_ontology()` fails on an undeclared collision). Both of
+> your §5 cases are handled, wired live into the verifier via the column's
+> uniqueness ratio: (1) `geographic` as a categorical grouping vs. an identifier
+> key — repeating → `categorical/geographic`, unique-per-row → `identifier/id/
+> geographic`; and (2) the cross-type place↔geographic case — a city column of
+> repeating values → the geographic grouping, mostly-unique → `text/name/place`.
+> The `mixed` collision is gone (the `unknown` leaf was renamed `heterogeneous`;
+> the boolean `mixed` keeps its name). So you can default to `format_label` for
+> the user-facing label without a leaf-only tie-break of your own, except where
+> you still prefer your cardinality call. `convert_fiscal_calendar` remains the
+> one open item (needs your fiscal-year-end convention).
 
 We read your note and it converged with our own review — several of your asks
 were already on our gap list. Here is what has landed and what is in flight,
