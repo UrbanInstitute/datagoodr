@@ -1,0 +1,83 @@
+---
+title: "Data Profiling"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data Profiling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, comment = "#>")
+```
+
+## Profiling makes data transparent and auditable
+
+A governed dataset should not ask you to take its quality on faith. **Profiling**
+is the measured description of every column — how complete it is, how it is
+distributed, where the surprises are — computed from the values themselves and
+stored in the DGF. Because the profile travels with the governance file, anyone
+can audit what the data actually looked like, without re-reading the raw file.
+
+`create_dgf()` profiles every column as it builds the DGF; `update_dgf()`
+recomputes the profile for any column whose data has changed.
+
+## Universal quality metrics — measured for every column
+
+Regardless of type, each column reports a small set of integrity counts, each as
+a count and a percentage, and — importantly — **only when it occurs**, so the
+profile never pads itself with zeros that would bury the real signal:
+
+- **Distinct** — how many unique values (the first clue to whether a column is an
+  identifier, a category, or a measurement).
+- **Missing / NA** and **Missing / Empty** — absent values, separating true `NA`
+  from empty strings, because the distinction often matters.
+- **Zero** — exact zeros (meaningful for counts, rates, and money).
+- **Infinite** — non-finite values that signal a computation or import problem.
+- **Duplicated** — repeated rows/values, surfaced rather than hidden.
+
+Read together these are a quick integrity check: a column that is 40% missing, or
+one that is all distinct, tells you something before you plot anything.
+
+## Type-specific indicators
+
+On top of the universal counts, each type adds the indicators that are
+meaningful for it:
+
+- **Numeric** — the quantile ladder (minimum, Q05, Q25, median, Q75, Q95,
+  maximum) plus mean, **skew**, and **kurtosis**, so a skewed or heavy-tailed
+  distribution is visible as a number, not just a picture.
+- **Categorical** — the level frequencies, ranked, with the long tail capped so
+  the table stays legible.
+- **Temporal** — the grain (year, month, day, …) and coverage of the range.
+- **Text** — length and sampled values.
+
+The point of type-specific profiling is that a quality problem looks different
+for each type: for a number it is an outlier or a skew; for a category it is a
+rare level or a near-constant column; for a date it is a gap in coverage.
+
+## How the DGF logs and stores profiles
+
+Each column's profile is written into the DGF's `rg_*` columns and kept as
+**JSON text**:
+
+- `rg_properties` — the universal counts and type indicators;
+- `rg_stats` — the statistics tables (quantiles, frequencies);
+- `rg_preview` — a sample of values;
+- `rg_graphics` — the data a type's visual is drawn from;
+- `rg_max_chr` — the widest value, for layout.
+
+Storing them as JSON (not nested R objects) is deliberate: it survives the
+`.xlsx` round trip that a nested column would not, so the profile is portable and
+the raw data is no longer needed to render the guide. When you re-profile with
+`update_dgf()`, only the changed columns' `rg_*` cells are rewritten; curated
+dictionary text is left untouched.
+
+> **Note.** Today's universal metrics are the integrity counts above. Richer
+> summaries of spread and balance — such as an entropy or concentration measure
+> for categoricals — are under consideration as additional universal indicators.
+
+## Next
+
+- **Profiles & Research Guides** — how these stored profiles become a rendered
+  report, with a different visual for each type.

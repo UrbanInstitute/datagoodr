@@ -11,7 +11,28 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, comment = "#>")
 ```
 
-## The problem: a CSV has no schema
+## What data governance is, and why it is hard
+
+**Data governance** is the work of protecting data assets, refining them, and
+making them available — to an organization, or to outside stakeholders. It has
+been a core concern of information systems for decades. But it has become acute
+in statistics and the social sciences, where the creation and sharing of new
+data sources has grown exponentially while governance *practice* has not kept
+pace.
+
+The usual answer is an enterprise data-governance system: a platform built around
+complex schemas and unfamiliar data-type ontologies, with a cost and staffing
+model that put it out of reach for most labs, analysts, and academics.
+Governance that demands all of that fails to meet the majority of researchers
+where they are. The result is predictable — most datasets are shared with little
+or no governance at all.
+
+datagoodr takes the opposite approach. It is organized around **familiar data
+types and CSV files** — the default currency of much of the scientific world and
+of organizational analysts — and around a single artifact anyone can edit in a
+spreadsheet. The command center for all of it is the **DGF**.
+
+## The problem it solves: a CSV has no schema
 
 A CSV is just text. Whether `47401` is a ZIP code, a county FIPS, or a count is
 invisible to the reader — every program that opens the file has to *guess*, and

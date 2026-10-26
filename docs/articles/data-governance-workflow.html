@@ -30,10 +30,18 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/data-governance-workflow.html">Rule-Based Data Governance</a></li>
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>User guide</h6></li>
+    <li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started with datagoodr</a></li>
+    <li><a class="dropdown-item" href="../articles/workflow-overview.html">The datagoodr Workflow</a></li>
+    <li><a class="dropdown-item" href="../articles/data-governance-workflow.html">Rule-Based Data Governance</a></li>
+    <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
+    <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
+    <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
 </li>
@@ -66,7 +74,14 @@
     
     
 <div class="section level2">
-<h2 id="the-problem-a-csv-has-no-schema">The problem: a CSV has no schema<a class="anchor" aria-label="anchor" href="#the-problem-a-csv-has-no-schema"></a>
+<h2 id="what-data-governance-is-and-why-it-is-hard">What data governance is, and why it is hard<a class="anchor" aria-label="anchor" href="#what-data-governance-is-and-why-it-is-hard"></a>
+</h2>
+<p><strong>Data governance</strong> is the work of protecting data assets, refining them, and making them available — to an organization, or to outside stakeholders. It has been a core concern of information systems for decades. But it has become acute in statistics and the social sciences, where the creation and sharing of new data sources has grown exponentially while governance <em>practice</em> has not kept pace.</p>
+<p>The usual answer is an enterprise data-governance system: a platform built around complex schemas and unfamiliar data-type ontologies, with a cost and staffing model that put it out of reach for most labs, analysts, and academics. Governance that demands all of that fails to meet the majority of researchers where they are. The result is predictable — most datasets are shared with little or no governance at all.</p>
+<p>datagoodr takes the opposite approach. It is organized around <strong>familiar data types and CSV files</strong> — the default currency of much of the scientific world and of organizational analysts — and around a single artifact anyone can edit in a spreadsheet. The command center for all of it is the <strong>DGF</strong>.</p>
+</div>
+<div class="section level2">
+<h2 id="the-problem-it-solves-a-csv-has-no-schema">The problem it solves: a CSV has no schema<a class="anchor" aria-label="anchor" href="#the-problem-it-solves-a-csv-has-no-schema"></a>
 </h2>
 <p>A CSV is just text. Whether <code>47401</code> is a ZIP code, a county FIPS, or a count is invisible to the reader — every program that opens the file has to <em>guess</em>, and they guess differently. <code>datagoodr</code> fixes this by pairing the data with a <strong>Data Governance File (DGF)</strong>: a small table, one row per variable, that records how the data is stored, how it should be read, and what it means. The DGF is a <strong>rule-based</strong> artifact — you write the <em>name</em> of a rule in a cell, and the package applies it — so governance is declarative, portable, and reproducible.</p>
 </div>

@@ -3,3 +3,16 @@ destination: docs
 template:
   bootstrap: 5
 
+articles:
+- title: User guide
+  navbar: User guide
+  contents:
+  - getting-started
+  - workflow-overview
+  - data-governance-workflow
+  - stabilizing-datasets
+  - data-profiling
+  - research-guides
+  - documenting-data
+  - guessing-data-types
+
