@@ -56,6 +56,27 @@ The point of type-specific profiling is that a quality problem looks different
 for each type: for a number it is an outlier or a skew; for a category it is a
 rare level or a near-constant column; for a date it is a gap in coverage.
 
+## A profile, measured
+
+Build a DGF from the demo dataset and read two real profiles back out — the
+universal quality counts for any column, and the numeric statistics table:
+
+```{r build, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
+library(datagoodr)
+dgf <- create_dgf(dg_demo, file = tempfile("dgf"), open = FALSE)
+```
+
+```{r props, eval=TRUE, results="asis"}
+dg_properties(dgf, "revenue")   # universal: distinct, missing, zeros, ...
+```
+
+```{r numstats, eval=TRUE, results="asis"}
+dg_stats(dgf, "revenue")        # type-specific: the numeric statistics
+```
+
+These tables are exactly what the Research Guide renders, read straight from the
+DGF's stored profile — no re-reading of the raw data.
+
 ## How the DGF logs and stores profiles
 
 Each column's profile is written into the DGF's `rg_*` columns and kept as

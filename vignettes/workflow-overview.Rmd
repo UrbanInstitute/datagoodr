@@ -50,37 +50,48 @@ and let the rest follow.
 
 ## A glimpse of the DGF
 
-A DGF is an ordinary table — here are a few columns for four variables, the kind
-of thing you would scan in a spreadsheet:
+A DGF is an ordinary table. Build one from the package's demo dataset — which
+carries one column of each type — and scan a few of its cells:
 
-```
- var_name     guess_label                     desired_data_type   stabilizer
- ----------   -----------------------------   -----------------   ---------------------------------
- founded      calendar {{ date :: temporal }} temporal            {{ read_mdy_slash :: write_yyyymmdd }}
- county_fips  us_state {{ ... :: identifier }} identifier          (protected as text)
- grade        number {{ quantity }}           categorical         (set by you — a grade is not a number)
- revenue      usd {{ currency :: number }}    number              {{ read_usd :: write_numeric }}
+```{r build, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
+library(datagoodr)
+dgf <- create_dgf(dg_demo, file = tempfile("dgf"), open = FALSE)
 ```
 
-The `guess_*` columns are the machine's first pass; the `desired_*` columns are
-your confirmed answer; the `stabilizer` is the rule that bridges them. Other
-columns (not shown) hold the profile and the dictionary text.
+```{r dgf-glimpse, eval=TRUE}
+knitr::kable(dgf[, c("var_name", "guess_label", "desired_data_type",
+                     "guess_match_kind")])
+```
+
+The `guess_*` cells are datagoodr's first pass (the `guess_label` reads the
+detected leaf; `guess_match_kind` says how it was recognized); the `desired_*`
+cells are the answer you confirm. Other columns (not shown) hold the stabilizer
+rule, the stored profile, and the dictionary text.
 
 ## A glimpse of the data profiles
 
 From each column's type and values, datagoodr computes a profile and renders it
-with a type-appropriate visual. Two examples:
+with a type-appropriate visual — the same functions the Research Guide uses. A
+**numeric** column (`revenue`) becomes a histogram and a statistics table:
 
-- **A numeric column** (`revenue`) renders as a **histogram** with a quantile
-  table — minimum, Q05/Q25/median/Q75/Q95, maximum, plus mean, skew, and
-  kurtosis — and the universal quality counts (missing, zeros, distinct).
-- **A categorical column** (`region`) renders as a **treemap** with a frequency
-  table, each level sized by its share, and the same universal quality counts.
+```{r profile-num-plot, eval=TRUE, fig.width=6, fig.height=2.6, fig.alt="Histogram of the revenue column"}
+dg_graphic(dgf, "revenue", label = "")
+```
+
+```{r profile-num-stats, eval=TRUE, results="asis"}
+dg_stats(dgf, "revenue")
+```
+
+A **categorical** column (`region`) becomes a treemap and a frequency table:
+
+```{r profile-cat-plot, eval=TRUE, fig.width=6, fig.height=2.6, fig.alt="Treemap of the region column"}
+dg_graphic(dgf, "region", label = "")
+```
 
 A date would render as a calendar heat-map, a boolean as a two-bar chart, free
 text as a word cloud. The profile is chosen *by type* — which is why getting the
 types right is the whole game. (*Data Profiling* and *Profiles & Research Guides*
-go into each of these.)
+show the rest, and *Data Reporting Functions* opens up the machinery.)
 
 ## The loop
 

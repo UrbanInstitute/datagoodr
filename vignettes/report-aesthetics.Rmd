@@ -1,0 +1,108 @@
+---
+title: "Report Aesthetics and Customization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Report Aesthetics and Customization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>")
+```
+
+The look of a Research Guide is not hard-coded — it is driven by a **design**: a
+setting that maps each data type to the sequence of reporting functions used to
+render it. Because the design is data, you can inspect it, and change it, without
+touching the package.
+
+## The design is a table of data type → reporting function
+
+`get_design()` returns the active design as a data frame. Each row places one
+piece of a variable's section:
+
+```{r lib, message=FALSE, warning=FALSE}
+library(datagoodr)
+d <- get_design()
+head(d)
+```
+
+The columns are the whole grammar:
+
+- **TYPE** — the data type the row applies to (`number`, `categorical`,
+  `boolean`, `temporal`, `text`, `identifier`).
+- **DIV** — the slot in the section grid the piece is drawn into.
+- **VNAME** — the DGF column the piece reads (`rg_stats`, `rg_graphics`,
+  `dd_vdesc`, …).
+- **LABEL** — the heading shown above it.
+- **FUNCTION** — the **name of the reporting function** that renders that column.
+
+Here is the full recipe for a **numeric** variable — the mapping that produced
+the histogram and tables you saw in the other vignettes:
+
+```{r number-design}
+d[d$TYPE == "number", c("DIV", "VNAME", "LABEL", "FUNCTION")]
+```
+
+Read the last two rows: in slot `div8`, the `rg_graphics` column is rendered by
+`paste_histogram`; in `div9`, `rg_stats` is rendered by `paste_stats_horizontal`.
+Swap the type and the functions change — a `categorical` row sends `rg_graphics`
+to `paste_treemap`, a `text` row to `v_to_wordcloud`.
+
+## How the mapping is parsed and applied
+
+Internally each layout is written as a compact string,
+`"div ;; column ;; LABEL ;; function"`, and two helpers turn it into action:
+
+- `parse_design()` splits those strings into the `DIV / VNAME / LABEL / FUNCTION`
+  data frame above;
+- at render time the **FUNCTION name is looked up and called** on the named DGF
+  column (`parse_functions()` first checks every name resolves, so a typo fails
+  loudly instead of rendering nothing).
+
+So "aesthetics" reduces to a lookup: *for this type, draw this column, with this
+function.* Change the lookup and you change the report.
+
+## Customizing: change the functions, or change the mapping
+
+**1. Override a reporting function.** Because the design stores a function *name*,
+defining your own function of that name makes the guide call yours — no change to
+the mapping. This is the usual way to restyle: redefine a renderer (or a
+formatter such as `dollarize`) in your project's `DG.R`.
+
+```{r override, eval=FALSE}
+# in DG.R — restyle the numeric graphic without touching the design:
+paste_histogram <- function(VNAME, LABEL = "HISTOGRAM") {
+  # ... your own plot from the rg_graphics payload ...
+}
+```
+
+**2. Change the mapping itself.** Pass a replacement layout to `get_design()`
+(the same hook `create_rg()`'s scaffold uses). Here is a slimmed numeric section —
+label, properties, and stats only, no histogram:
+
+```{r custom-layout}
+custom_number <- c(
+  "div2 ;; dd_vlabel     ;;            ;; v_to_txt",
+  "div7 ;; rg_properties ;; PROPERTIES ;; paste_properties",
+  "div9 ;; rg_stats      ;; STATS      ;; paste_stats_horizontal"
+)
+d2 <- get_design(layouts = list(number = custom_number))
+d2[d2$TYPE == "number", c("DIV", "VNAME", "LABEL", "FUNCTION")]
+```
+
+The numeric section is now three rows instead of nine, and the histogram is gone.
+You can drop sections, reorder them, relabel them, or point a slot at a different
+function — all by editing the character vector.
+
+**3. Shadow a layout globally.** Defining `layout.numeric` (or
+`layout.character`, `layout.logical`, …) in your session or `DG.R` shadows the
+package default for that type, so every guide you render picks it up without
+passing `layouts` each time.
+
+## Where this fits
+
+`create_rg()` scaffolds a project with a `DG.R` precisely so these overrides live
+*beside* your data, not in the package — the design travels with the project and
+the package stays untouched. For the functions a design points at, see *Data
+Reporting Functions*.

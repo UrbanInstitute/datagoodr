@@ -49,6 +49,40 @@ So the *same* guide, built from the *same* DGF, presents an income column, a
 region column, and a founding-date column each in the form that reads best —
 without you choosing any of it.
 
+### The styles, rendered from the demo dataset
+
+Build a DGF from the package's demo data (one column per type) and render each
+column's graphic with `dg_graphic()` — the very function the guide calls:
+
+```{r build, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
+library(datagoodr)
+dgf <- create_dgf(dg_demo, file = tempfile("dgf"), open = FALSE)
+```
+
+```{r g-number, eval=TRUE, fig.width=6, fig.height=2.4, fig.alt="Histogram of revenue"}
+dg_graphic(dgf, "revenue", label = "")      # number -> histogram
+```
+
+```{r g-cat, eval=TRUE, fig.width=6, fig.height=2.4, fig.alt="Treemap of region"}
+dg_graphic(dgf, "region", label = "")       # categorical -> treemap
+```
+
+```{r g-bool, eval=TRUE, fig.width=6, fig.height=2.0, fig.alt="Boolean bar for is_active"}
+dg_graphic(dgf, "is_active", label = "")    # boolean -> two-bar chart
+```
+
+```{r g-temporal, eval=TRUE, fig.width=6, fig.height=2.6, fig.alt="Calendar heat-map of event_date"}
+dg_graphic(dgf, "event_date", label = "")   # temporal -> calendar heat-map
+```
+
+```{r g-text, eval=TRUE, fig.width=6, fig.height=2.6, fig.alt="Word cloud of notes"}
+dg_graphic(dgf, "notes", label = "")        # text -> word cloud
+```
+
+Five columns, five styles, one line each — and all chosen automatically from the
+type. (An identifier such as `county_fips` has no graphic by design; it is
+summarized in its profile table instead.)
+
 ## Typing quality drives guide quality
 
 Because the style follows the type, the guide is only as good as the typing. A
