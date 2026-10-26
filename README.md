@@ -1,112 +1,107 @@
 # datagoodr
-R package for documenting and profiling research datasets. Gooder data means gooder research.
 
+> Rule-based data governance for the CSV world. Gooder data means gooder research.
 
-## Acronyms 
+`datagoodr` documents, types, and profiles research datasets — turning a bare
+CSV into a governed, self-describing data asset and a readable Research Guide.
 
-- RG = Research Guide
-- DGF = Data Governance File/Framework
+## The problem: ungoverned data corrupts science and analytics
 
-## Current file structure; 
+A CSV carries no schema. Whether `47401` is a ZIP code, a county FIPS, or a count
+is invisible — so every tool that opens the file guesses, and they guess
+differently. A leading zero is dropped, a date is parsed in the wrong order, a
+coded category is averaged as if it were a number. These are not edge cases; they
+are the daily reality of applied research and organizational analytics, and they
+quietly corrupt findings long before anyone notices.
 
-- data-dev/ contains all the data for testing purposes
-  - DEMO-DATA-SMALL.CSV is the small data set used for testing
-  - DGF-CORE-CO-2019-V1.xlsx is a template of what the DGF should looks like that was created by hand to serve as an example.
-  - DGF-CORE-CO-2019-blank.xlsx is used in the datagoodr pipeline for examples of adding meta data to each variable. 
-  - DGF.csv and DGF.xlsx are examples of generated DGF from Step 01 (see below)
-  
+The discipline that prevents this — **data governance**: protecting, refining,
+and responsibly sharing data assets — has been a core concern of information
+systems for decades. But it has become urgent in statistics and the social
+sciences, where the creation and sharing of new data sources has grown
+exponentially while governance practice has not kept pace. The usual answer is an
+enterprise data-governance system: a heavyweight platform with complex schemas,
+unfamiliar data-type ontologies, and a price tag and staffing model that put it
+out of reach for most labs, analysts, and academics. Governance that demands all
+of that simply fails to meet most people where they are.
 
+**datagoodr is a feasible alternative.** It is organized around familiar data
+types and **CSV files** — the default currency of the scientific world and
+organizational analysts — and around a single, legible artifact anyone can edit
+in a spreadsheet. Governance becomes a set of named rules attached to your data,
+not a platform you have to adopt.
 
-- dev/ contains some documentation of the work flow and tasks that still need to be done 
-  - 03-work-flow.md describes the workflow for Step 3 (see below)
-  - data-type-funcs.md describes the functions and their locations for each data type in Steps 1 and 3 below 
-  - TO-DO.md is a list of things that still need to be addressed 
-  
-  
-- DRAFT/ is all the draft scripts 
+## How it works
 
+<img src="man/figures/workflow.svg" alt="datagoodr workflow" width="100%">
 
--  pptx/ are various powerpoints describing the overall goals of the datagoodr package
+At the center is the **Data Governance File (DGF)**: a table with one row per
+variable that is both a *governed data dictionary* and the *control center* for
+the whole workflow. `create_dgf()` profiles every column and types it (using the
+[formex](https://lecy.github.io/formex/) detection engine); you curate the result
+in a spreadsheet — adding labels, definitions, and corrected types; and the DGF
+then drives two outputs:
 
-- qmd-templates contains quarto documents templates for the final research guide 
-  - qmd-templates-DRAFT/ contains all the draft files 
-  - test-render/ contains testing scripts 
-  - RG_files contains meta data that is updated with RG.md is rendered 
-  - RG.qmd is the script to generate the research guide from Step 3 below 
-  - RG.html, .html.md, .md, .pdf are the rendered RG
-  
-- R/ contains all the R scripts used in the datagoodr pipeline
-  - 01*.R scripts are scripts used for Step 1
-  - 02*.R scripts are scripts used for Step 2
-  - 03*.R scripts are scripts used for Step 3
-  - 04*.R scripts are scripts used for Step 4
-  - 05*.R scripts are scripts used for Step 5
-  
-- working-example/ contains scripts and instructions for a working example of the datagoodr package. 
+- **a stabilized Governed CSV** (`stabilize_data()`) that imports to the correct
+  type where possible, and *safely* — without data loss — where not; and
+- **a Research Guide** (`create_rg()`): a rendered data profile with a visual
+  tuned to each column's type.
 
+As the data changes, `update_dgf()` re-profiles it while preserving everything
+you curated.
 
+> **Acronyms.** **DGF** = Data Governance File · **RG** = Research Guide.
 
-## Workflow
+## Installation
 
-The datagoodr general work flow is listed below. See working-example/README.md for instructions on how to execute this workflow in the current set up. 
+```r
+# datagoodr depends on the formex detection engine
+remotes::install_github("lecy/formex")
+remotes::install_github("UrbanInstitute/datagoodr")
+```
 
+## Documentation
 
-### Step 0: Save data file in data-dev/ directory. 
+The user guide is being built out as a set of vignettes (Getting Started, the
+workflow, rule-based governance, stabilizing datasets, data profiling, research
+guides, and documentation). Start with **Rule-Based Data Governance** and
+**Guessing Data Types** in the Articles section of the package website, pending
+the full set.
 
-Currently data-dev/DEMO-DATA-SMALL.csv is a good example. 
+## Development plan and current state
 
-### Step 1: Create the DGF
+datagoodr is under active development. The current cycle **reintegrated the
+type-detection layer into [formex](https://github.com/lecy/formex)** and adopted
+formex's v7 ontology, so datagoodr is now cleanly *the workflow* and formex is
+*the engine*.
 
-This step inputs a data file from Step 0 then outputs 
-the DGF as an excel and csv file. These files can then be manually (or iteratively)
-updated until they have all the information you want.  
+**Implemented**
 
-The goal of the DGF is to store the "minimum" amount of information to render the 
-research guide without needed to read the raw data into the quarto document in
-step 3. Once the DGF is generated, the raw data is no longer needed to generate the RG. 
+- **Detection extracted to formex.** The ~80 `is_*` detectors, the ontology, and
+  `guess_data_type()` now live in formex, which datagoodr imports. datagoodr
+  keeps profiling, the DGF, review/override, stabilization, and rendering.
+- **A clearer rule vocabulary.** Ingest rules were renamed `as_*` → `read_*` (the
+  name now states the format a rule *reads*), with deprecated shims.
+- **Dual-modality typing.** `create_dgf()` reads both of formex's predictions
+  (the ontology route and the legacy detectors) with a storage-safety gate that
+  protects zero-padded keys (FIPS, ZIP, EIN) from being coerced to numbers.
+- **The v7 two-axis DGF.** Each column carries a machine `guess_*` leaf
+  (`format_style` + `unit_type`), a human-editable `desired_*` target form, and a
+  suggested **`stabilizer`** — a `read :: [convert] :: write` plan — previewed in
+  `stable_first5`.
+- **Executable stabilization.** `stabilize_data(use_v7 = TRUE)` runs those plans
+  to produce the governed CSV; legacy rules still take precedence.
+- **Profiling + rendering.** Universal quality metrics (distinct, missingness,
+  zeros, infinities, duplication) plus type-specific profiles, rendered as a
+  Research Guide with per-type visuals (histogram, treemap, calendar heat-map,
+  boolean bar, word cloud).
 
-Data inside each cell of the DGF is generally stored in JSON format. 
+**In progress / planned**
 
+- The full user-guide vignette set (see `dev/vignette-user-guide-plan.md`).
+- Porting the render engine off the legacy `desired_data_type`/`desired_data_class`
+  columns onto the v7 axes.
+- Additional profile metrics (e.g. entropy / categorical balance) under
+  consideration.
 
-### Step 2: Validate the DGF
-
-This step validates the DGF with `inspect_dgf()` before it is rendered, to make
-sure each column is in a format Step 3 can process correctly: required columns
-present, renderable `vtype_class` values, valid JSON in the JSON columns,
-defined `vconvert`/`vformat` functions, and a populated `rg_hash`. See
-`working-example/STEP2.R`.
-
-### Step 3: Render the RG
-
-This step inputs the DGF you made in step 1 (and validated in step 2) then makes the 
- research guide in PDF  and HTML file types. 
-
-If you are only generating documentation for this data set one time, you can stop 
-here. Step 4 and 5 are for when you need to regularly update the data, and thus 
-regularly update the associated RG. 
-
-
-## Step 4: Refresh the DGF
-
-When the data set is updated, `update_dgf()` compares the new data to the old
-DGF through the `rg_hash` column. For each variable it regenerates the hash:
-if it matches the old DGF, that variable is unchanged and its curated row is
-kept; if it differs, that variable's `rg_[preview/properties/stats/graphics/hash]`
-are refreshed. Curated fields and hand-edited factor level labels are
-preserved, and added / removed variables are reported. See
-`working-example/STEP4.R`.
-
-
-## Step 5: Customize
-
-`create_rg()` and `create_dd()` scaffold a self-contained project - a Quarto
-document (research guide with full data profiles, or data dictionary with
-descriptors only) pointed at your DGF, plus a starter `DG.R`. Customize without
-editing the package by:
-
-- editing `DG.R` to override formatting/graphic functions or a layout object
-  (e.g. drop a section, or redefine `dollarize` for monetary values);
-- editing the `<style>` block in the `.qmd` for the page grid, fonts, colors;
-- adding long-form narrative around the automatically generated sections.
-
-See `working-example/STEP5.R`.
+Planning notes and design rationale live in `dev/` (`formex-reintegration-plan.md`,
+`schema-simplification-plan.md`, `v7-dgf-integration-plan.md`).

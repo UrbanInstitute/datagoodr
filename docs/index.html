@@ -55,104 +55,68 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="datagoodr">datagoodr<a class="anchor" aria-label="anchor" href="#datagoodr"></a>
 </h1></div>
-<p>R package for documenting and profiling research datasets. Gooder data means gooder research.</p>
+<blockquote><p>Rule-based data governance for the CSV world. Gooder data means gooder research.</p></blockquote>
+<p><code>datagoodr</code> documents, types, and profiles research datasets — turning a bare CSV into a governed, self-describing data asset and a readable Research Guide.</p>
 <div class="section level2">
-<h2 id="acronyms">Acronyms<a class="anchor" aria-label="anchor" href="#acronyms"></a>
+<h2 id="the-problem-ungoverned-data-corrupts-science-and-analytics">The problem: ungoverned data corrupts science and analytics<a class="anchor" aria-label="anchor" href="#the-problem-ungoverned-data-corrupts-science-and-analytics"></a>
 </h2>
-<ul>
-<li>RG = Research Guide</li>
-<li>DGF = Data Governance File/Framework</li>
-</ul>
+<p>A CSV carries no schema. Whether <code>47401</code> is a ZIP code, a county FIPS, or a count is invisible — so every tool that opens the file guesses, and they guess differently. A leading zero is dropped, a date is parsed in the wrong order, a coded category is averaged as if it were a number. These are not edge cases; they are the daily reality of applied research and organizational analytics, and they quietly corrupt findings long before anyone notices.</p>
+<p>The discipline that prevents this — <strong>data governance</strong>: protecting, refining, and responsibly sharing data assets — has been a core concern of information systems for decades. But it has become urgent in statistics and the social sciences, where the creation and sharing of new data sources has grown exponentially while governance practice has not kept pace. The usual answer is an enterprise data-governance system: a heavyweight platform with complex schemas, unfamiliar data-type ontologies, and a price tag and staffing model that put it out of reach for most labs, analysts, and academics. Governance that demands all of that simply fails to meet most people where they are.</p>
+<p><strong>datagoodr is a feasible alternative.</strong> It is organized around familiar data types and <strong>CSV files</strong> — the default currency of the scientific world and organizational analysts — and around a single, legible artifact anyone can edit in a spreadsheet. Governance becomes a set of named rules attached to your data, not a platform you have to adopt.</p>
 </div>
 <div class="section level2">
-<h2 id="current-file-structure">Current file structure;<a class="anchor" aria-label="anchor" href="#current-file-structure"></a>
+<h2 id="how-it-works">How it works<a class="anchor" aria-label="anchor" href="#how-it-works"></a>
 </h2>
+<p><img src="reference/figures/workflow.svg" alt="datagoodr workflow" width="100%"></p>
+<p>At the center is the <strong>Data Governance File (DGF)</strong>: a table with one row per variable that is both a <em>governed data dictionary</em> and the <em>control center</em> for the whole workflow. <code><a href="reference/create_dgf.html">create_dgf()</a></code> profiles every column and types it (using the <a href="https://lecy.github.io/formex/" class="external-link">formex</a> detection engine); you curate the result in a spreadsheet — adding labels, definitions, and corrected types; and the DGF then drives two outputs:</p>
 <ul>
 <li>
-<p>data-dev/ contains all the data for testing purposes</p>
-<ul>
-<li>DEMO-DATA-SMALL.CSV is the small data set used for testing</li>
-<li>DGF-CORE-CO-2019-V1.xlsx is a template of what the DGF should looks like that was created by hand to serve as an example.</li>
-<li>DGF-CORE-CO-2019-blank.xlsx is used in the datagoodr pipeline for examples of adding meta data to each variable.</li>
-<li>DGF.csv and DGF.xlsx are examples of generated DGF from Step 01 (see below)</li>
-</ul>
-</li>
+<strong>a stabilized Governed CSV</strong> (<code><a href="reference/stabilize_data.html">stabilize_data()</a></code>) that imports to the correct type where possible, and <em>safely</em> — without data loss — where not; and</li>
 <li>
-<p>dev/ contains some documentation of the work flow and tasks that still need to be done</p>
-<ul>
-<li>03-work-flow.md describes the workflow for Step 3 (see below)</li>
-<li>data-type-funcs.md describes the functions and their locations for each data type in Steps 1 and 3 below</li>
-<li>TO-DO.md is a list of things that still need to be addressed</li>
+<strong>a Research Guide</strong> (<code><a href="reference/create_rg.html">create_rg()</a></code>): a rendered data profile with a visual tuned to each column’s type.</li>
 </ul>
-</li>
-<li><p>DRAFT/ is all the draft scripts</p></li>
-<li><p>pptx/ are various powerpoints describing the overall goals of the datagoodr package</p></li>
-<li>
-<p>qmd-templates contains quarto documents templates for the final research guide</p>
-<ul>
-<li>qmd-templates-DRAFT/ contains all the draft files</li>
-<li>test-render/ contains testing scripts</li>
-<li>RG_files contains meta data that is updated with RG.md is rendered</li>
-<li>RG.qmd is the script to generate the research guide from Step 3 below</li>
-<li>RG.html, .html.md, .md, .pdf are the rendered RG</li>
-</ul>
-</li>
-<li>
-<p>R/ contains all the R scripts used in the datagoodr pipeline</p>
-<ul>
-<li>01*.R scripts are scripts used for Step 1</li>
-<li>02*.R scripts are scripts used for Step 2</li>
-<li>03*.R scripts are scripts used for Step 3</li>
-<li>04*.R scripts are scripts used for Step 4</li>
-<li>05*.R scripts are scripts used for Step 5</li>
-</ul>
-</li>
-<li><p>working-example/ contains scripts and instructions for a working example of the datagoodr package.</p></li>
-</ul>
+<p>As the data changes, <code><a href="reference/update_dgf.html">update_dgf()</a></code> re-profiles it while preserving everything you curated.</p>
+<blockquote><p><strong>Acronyms.</strong> <strong>DGF</strong> = Data Governance File · <strong>RG</strong> = Research Guide.</p></blockquote>
 </div>
 <div class="section level2">
-<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The datagoodr general work flow is listed below. See working-example/README.md for instructions on how to execute this workflow in the current set up.</p>
-<div class="section level3">
-<h3 id="step-0-save-data-file-in-data-dev-directory">Step 0: Save data file in data-dev/ directory.<a class="anchor" aria-label="anchor" href="#step-0-save-data-file-in-data-dev-directory"></a>
-</h3>
-<p>Currently data-dev/DEMO-DATA-SMALL.csv is a good example.</p>
-</div>
-<div class="section level3">
-<h3 id="step-1-create-the-dgf">Step 1: Create the DGF<a class="anchor" aria-label="anchor" href="#step-1-create-the-dgf"></a>
-</h3>
-<p>This step inputs a data file from Step 0 then outputs the DGF as an excel and csv file. These files can then be manually (or iteratively) updated until they have all the information you want.</p>
-<p>The goal of the DGF is to store the “minimum” amount of information to render the research guide without needed to read the raw data into the quarto document in step 3. Once the DGF is generated, the raw data is no longer needed to generate the RG.</p>
-<p>Data inside each cell of the DGF is generally stored in JSON format.</p>
-</div>
-<div class="section level3">
-<h3 id="step-2-validate-the-dgf">Step 2: Validate the DGF<a class="anchor" aria-label="anchor" href="#step-2-validate-the-dgf"></a>
-</h3>
-<p>This step validates the DGF with <code><a href="reference/inspect_dgf.html">inspect_dgf()</a></code> before it is rendered, to make sure each column is in a format Step 3 can process correctly: required columns present, renderable <code>vtype_class</code> values, valid JSON in the JSON columns, defined <code>vconvert</code>/<code>vformat</code> functions, and a populated <code>rg_hash</code>. See <code>working-example/STEP2.R</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="step-3-render-the-rg">Step 3: Render the RG<a class="anchor" aria-label="anchor" href="#step-3-render-the-rg"></a>
-</h3>
-<p>This step inputs the DGF you made in step 1 (and validated in step 2) then makes the research guide in PDF and HTML file types.</p>
-<p>If you are only generating documentation for this data set one time, you can stop here. Step 4 and 5 are for when you need to regularly update the data, and thus regularly update the associated RG.</p>
-</div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># datagoodr depends on the formex detection engine</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"lecy/formex"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"UrbanInstitute/datagoodr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="step-4-refresh-the-dgf">Step 4: Refresh the DGF<a class="anchor" aria-label="anchor" href="#step-4-refresh-the-dgf"></a>
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>When the data set is updated, <code><a href="reference/update_dgf.html">update_dgf()</a></code> compares the new data to the old DGF through the <code>rg_hash</code> column. For each variable it regenerates the hash: if it matches the old DGF, that variable is unchanged and its curated row is kept; if it differs, that variable’s <code>rg_[preview/properties/stats/graphics/hash]</code> are refreshed. Curated fields and hand-edited factor level labels are preserved, and added / removed variables are reported. See <code>working-example/STEP4.R</code>.</p>
+<p>The user guide is being built out as a set of vignettes (Getting Started, the workflow, rule-based governance, stabilizing datasets, data profiling, research guides, and documentation). Start with <strong>Rule-Based Data Governance</strong> and <strong>Guessing Data Types</strong> in the Articles section of the package website, pending the full set.</p>
 </div>
 <div class="section level2">
-<h2 id="step-5-customize">Step 5: Customize<a class="anchor" aria-label="anchor" href="#step-5-customize"></a>
+<h2 id="development-plan-and-current-state">Development plan and current state<a class="anchor" aria-label="anchor" href="#development-plan-and-current-state"></a>
 </h2>
-<p><code><a href="reference/create_rg.html">create_rg()</a></code> and <code><a href="reference/create_dd.html">create_dd()</a></code> scaffold a self-contained project - a Quarto document (research guide with full data profiles, or data dictionary with descriptors only) pointed at your DGF, plus a starter <code>DG.R</code>. Customize without editing the package by:</p>
+<p>datagoodr is under active development. The current cycle <strong>reintegrated the type-detection layer into <a href="https://github.com/lecy/formex" class="external-link">formex</a></strong> and adopted formex’s v7 ontology, so datagoodr is now cleanly <em>the workflow</em> and formex is <em>the engine</em>.</p>
+<p><strong>Implemented</strong></p>
 <ul>
-<li>editing <code>DG.R</code> to override formatting/graphic functions or a layout object (e.g. drop a section, or redefine <code>dollarize</code> for monetary values);</li>
-<li>editing the <code>&lt;style&gt;</code> block in the <code>.qmd</code> for the page grid, fonts, colors;</li>
-<li>adding long-form narrative around the automatically generated sections.</li>
+<li>
+<strong>Detection extracted to formex.</strong> The ~80 <code>is_*</code> detectors, the ontology, and <code>guess_data_type()</code> now live in formex, which datagoodr imports. datagoodr keeps profiling, the DGF, review/override, stabilization, and rendering.</li>
+<li>
+<strong>A clearer rule vocabulary.</strong> Ingest rules were renamed <code>as_*</code> → <code>read_*</code> (the name now states the format a rule <em>reads</em>), with deprecated shims.</li>
+<li>
+<strong>Dual-modality typing.</strong> <code><a href="reference/create_dgf.html">create_dgf()</a></code> reads both of formex’s predictions (the ontology route and the legacy detectors) with a storage-safety gate that protects zero-padded keys (FIPS, ZIP, EIN) from being coerced to numbers.</li>
+<li>
+<strong>The v7 two-axis DGF.</strong> Each column carries a machine <code>guess_*</code> leaf (<code>format_style</code> + <code>unit_type</code>), a human-editable <code>desired_*</code> target form, and a suggested <strong><code>stabilizer</code></strong> — a <code>read :: [convert] :: write</code> plan — previewed in <code>stable_first5</code>.</li>
+<li>
+<strong>Executable stabilization.</strong> <code>stabilize_data(use_v7 = TRUE)</code> runs those plans to produce the governed CSV; legacy rules still take precedence.</li>
+<li>
+<strong>Profiling + rendering.</strong> Universal quality metrics (distinct, missingness, zeros, infinities, duplication) plus type-specific profiles, rendered as a Research Guide with per-type visuals (histogram, treemap, calendar heat-map, boolean bar, word cloud).</li>
 </ul>
-<p>See <code>working-example/STEP5.R</code>.</p>
+<p><strong>In progress / planned</strong></p>
+<ul>
+<li>The full user-guide vignette set (see <code>dev/vignette-user-guide-plan.md</code>).</li>
+<li>Porting the render engine off the legacy <code>desired_data_type</code>/<code>desired_data_class</code> columns onto the v7 axes.</li>
+<li>Additional profile metrics (e.g. entropy / categorical balance) under consideration.</li>
+</ul>
+<p>Planning notes and design rationale live in <code>dev/</code> (<code>formex-reintegration-plan.md</code>, <code>schema-simplification-plan.md</code>, <code>v7-dgf-integration-plan.md</code>).</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">

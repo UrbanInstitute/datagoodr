@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="datagoodr workflow: a raw CSV is profiled and typed into a Data Governance File, which the analyst curates, and which produces a stabilized governed CSV and a rendered Research Guide.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-end">
+      <path d="M0 0 L10 5 L0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-end">
+      <path d="M0 0 L10 5 L0 10 z" fill="#0d9488"/>
+    </marker>
+  </defs>
+
+  <style>
+    .box   { fill:#ffffff; stroke:#cbd5e1; stroke-width:1.5; rx:10; }
+    .hub   { fill:#ecfeff; stroke:#0d9488; stroke-width:2; rx:12; }
+    .engine{ fill:#f1f5f9; stroke:#94a3b8; stroke-width:1.5; stroke-dasharray:4 3; rx:10; }
+    .human { fill:#fffbeb; stroke:#d97706; stroke-width:1.5; rx:10; }
+    .out   { fill:#f8fafc; stroke:#64748b; stroke-width:1.5; rx:10; }
+    .edge  { stroke:#475569; stroke-width:1.75; fill:none; }
+    .loop  { stroke:#0d9488; stroke-width:1.5; fill:none; stroke-dasharray:5 4; }
+    .t     { fill:#0f172a; font-size:15px; }
+    .tb    { fill:#0f172a; font-size:16px; font-weight:700; }
+    .sub   { fill:#475569; font-size:12px; }
+    .lbl   { fill:#334155; font-size:12px; font-style:italic; }
+    .llab  { fill:#0d9488; font-size:12px; font-style:italic; }
+  </style>
+
+  <!-- Raw CSV -->
+  <rect class="box" x="24" y="176" width="120" height="58"/>
+  <text class="tb" x="84" y="200" text-anchor="middle">Raw CSV</text>
+  <text class="sub" x="84" y="219" text-anchor="middle">as received</text>
+
+  <!-- arrow -> create_dgf -->
+  <path class="edge" d="M146 205 H196" marker-end="url(#arrow)"/>
+  <text class="lbl" x="171" y="196" text-anchor="middle">profile</text>
+
+  <!-- create_dgf -->
+  <rect class="box" x="198" y="170" width="150" height="70"/>
+  <text class="tb" x="273" y="198" text-anchor="middle">create_dgf()</text>
+  <text class="sub" x="273" y="217" text-anchor="middle">profile + type</text>
+  <text class="sub" x="273" y="232" text-anchor="middle">every column</text>
+
+  <!-- formex engine feeding type detection -->
+  <rect class="engine" x="198" y="312" width="150" height="60"/>
+  <text class="tb" x="273" y="337" text-anchor="middle" font-size="15">formex</text>
+  <text class="sub" x="273" y="355" text-anchor="middle">type detection engine</text>
+  <path class="edge" d="M273 312 V242" marker-end="url(#arrow)"/>
+  <text class="lbl" x="283" y="280" text-anchor="start">guess_data_type()</text>
+
+  <!-- arrow -> DGF hub -->
+  <path class="edge" d="M348 205 H404" marker-end="url(#arrow)"/>
+
+  <!-- DGF hub -->
+  <rect class="hub" x="406" y="150" width="190" height="110"/>
+  <text class="tb" x="501" y="183" text-anchor="middle" font-size="20">DGF</text>
+  <text class="sub" x="501" y="205" text-anchor="middle">Data Governance File</text>
+  <text class="sub" x="501" y="223" text-anchor="middle">a governed data dictionary</text>
+  <text class="sub" x="501" y="240" text-anchor="middle">&amp; the workflow's control center</text>
+
+  <!-- human curation -->
+  <rect class="human" x="406" y="40" width="190" height="62"/>
+  <text class="tb" x="501" y="65" text-anchor="middle" font-size="15">You curate</text>
+  <text class="sub" x="501" y="84" text-anchor="middle">labels, definitions,</text>
+  <text class="sub" x="501" y="98" text-anchor="middle">desired types — in a spreadsheet</text>
+  <path class="edge" d="M501 102 V148" marker-end="url(#arrow)"/>
+
+  <!-- DGF -> stabilize -> Governed CSV -->
+  <path class="edge" d="M596 185 H668" marker-end="url(#arrow)"/>
+  <text class="lbl" x="632" y="176" text-anchor="middle">stabilize_data()</text>
+  <rect class="out" x="670" y="150" width="206" height="66"/>
+  <text class="tb" x="773" y="178" text-anchor="middle" font-size="15">Governed CSV</text>
+  <text class="sub" x="773" y="197" text-anchor="middle">stable: imports correctly,</text>
+  <text class="sub" x="773" y="210" text-anchor="middle">or at least safely (no loss)</text>
+
+  <!-- DGF -> render -> Research Guide -->
+  <path class="edge" d="M596 230 H668" marker-end="url(#arrow)"/>
+  <text class="lbl" x="632" y="252" text-anchor="middle">create_rg()</text>
+  <rect class="out" x="670" y="250" width="206" height="66"/>
+  <text class="tb" x="773" y="278" text-anchor="middle" font-size="15">Research Guide</text>
+  <text class="sub" x="773" y="297" text-anchor="middle">rendered data profiles,</text>
+  <text class="sub" x="773" y="310" text-anchor="middle">one visual per data type</text>
+
+  <!-- update loop: governed CSV / new data back to DGF -->
+  <path class="loop" d="M773 216 V340 H501 V262" marker-end="url(#arrowLoop)"/>
+  <text class="llab" x="585" y="356" text-anchor="middle">update_dgf() — re-profile as the data changes</text>
+</svg>
