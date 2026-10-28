@@ -505,14 +505,15 @@ paste_stats_horizontal <- function( VNAME, LABEL = "STATS" ){
 
   # source stat name -> short display label, in display order. Skew and Kurtosis
   # are NOT shown here - they are drawn above the histogram by paste_histogram().
+  # Ordered low to high, with MEAN beside the median for easy comparison.
   relabel <- c( "Minimum"  = "MIN",
-                "Maximum"  = "MAX",
-                "Mean"     = "MEAN",
                 "Q - 05"   = "Q05",
                 "Q - 25"   = "Q25",
                 "Median"   = "Q50",
+                "Mean"     = "MEAN",
                 "Q - 75"   = "Q75",
-                "Q - 95"   = "Q95" )
+                "Q - 95"   = "Q95",
+                "Maximum"  = "MAX" )
   idx  <- match( names(relabel), tab$STAT )
   keep <- ! is.na(idx)
 
@@ -835,6 +836,28 @@ wrap_preview <- function( x, size = 80, sep = " ;; " ) {
 }
 
 
+#' Round long decimals in preview values (internal)
+#'
+#' Shortens plain decimal numbers with more than `digits` decimal places
+#' (`"0.3333333333"` -> `"0.333"`), dropping trailing zeros. Anything else -
+#' integers, short decimals, `"$851,950"`, text - is returned unchanged.
+#'
+#' @param x Character vector of preview values.
+#' @param digits Decimal places to keep.
+#' @return Character vector the same length as `x`.
+#' @noRd
+round_preview <- function( x, digits = 3 ) {
+  long <- grepl( paste0( "^-?[0-9]*\\.[0-9]{", digits + 1, ",}$" ), x )
+  if( any(long) ) {
+    r <- formatC( round( as.numeric( x[long] ), digits ), format = "f", digits = digits )
+    r <- sub( "\\.?0+$", "", r )              # 0.250 -> 0.25, 1.000 -> 1
+    r[ r == "-0" ] <- "0"
+    x[long] <- r
+  }
+  x
+}
+
+
 #' Render preview values as a wrapped monospace block (internal)
 #'
 #' Shared body of [paste_preview_num()] and [paste_preview_chr()]: reads the
@@ -848,6 +871,8 @@ wrap_preview <- function( x, size = 80, sep = " ;; " ) {
 #' @param max.vals Maximum number of distinct values to consider.
 #' @param max.lines Maximum wrapped rows to print, which is what keeps the
 #'   preview to a 3-4 line strip.
+#' @param digits Decimal places for [round_preview()]; `NULL` (the default)
+#'   leaves values as stored. Only numeric previews pass it.
 #'
 #' @return No return value; prints markdown/HTML. Call inside a
 #'   `results = "asis"` chunk.
@@ -857,11 +882,12 @@ wrap_preview <- function( x, size = 80, sep = " ;; " ) {
 #'   safely inside `<pre>`.
 #' @noRd
 paste_preview_block <- function( VNAME, LABEL = "PREVIEW", size = 68,
-                                 max.vals = 200, max.lines = 4 ) {
+                                 max.vals = 200, max.lines = 4, digits = NULL ) {
 
   info <- get_xx()[[VNAME]]
   vals <- unique( trimws( stringr::str_split( info, ";;" )[[1]] ) )
   vals <- vals[ nzchar(vals) ]
+  if( ! is.null(digits) ) vals <- unique( round_preview( vals, digits ) )
   if( length(vals) > max.vals ) vals <- vals[ seq_len(max.vals) ]
 
   # values are stored ";;"-delimited but displayed separated by a middle dot
@@ -907,7 +933,10 @@ paste_label <- function( VNAME, LABEL = "PREVIEW" ){
 #'   passes `"rg_preview"`).
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"PREVIEW"`.
-#' @param size Maximum line width, in characters. Defaults to `80`.
+#' @param size Maximum line width, in characters. Defaults to `68`.
+#' @param digits Decimal places kept for long decimals, so `0.3333333333`
+#'   shows as `0.333`. Shorter numbers are shown as stored. `NULL` turns
+#'   rounding off. Defaults to `3`.
 #'
 #' @return No return value; prints the preview block to the RG.
 #'
@@ -915,8 +944,8 @@ paste_label <- function( VNAME, LABEL = "PREVIEW" ){
 #' Internal to `create_div` in R/03-01-create-sections.R.
 #'
 #' @export
-paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68 ){
-  paste_preview_block( VNAME, LABEL, size = size )
+paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68, digits = 3 ){
+  paste_preview_block( VNAME, LABEL, size = size, digits = digits )
 }
 
 

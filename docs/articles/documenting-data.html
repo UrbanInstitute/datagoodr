@@ -41,12 +41,14 @@
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -77,27 +79,43 @@
 <div class="section level2">
 <h2 id="documentation-as-filling-in-the-blanks">Documentation as filling in the blanks<a class="anchor" aria-label="anchor" href="#documentation-as-filling-in-the-blanks"></a>
 </h2>
-<p>Machines can measure and type a column, but they cannot know that <code>grade</code> is coded <code>1 = Freshman … 4 = Senior</code>, or that <code>rev</code> means net revenue in thousands of dollars. That meaning has to come from a person. datagoodr’s approach is to make supplying it as light as possible: <code><a href="../reference/create_dgf.html">create_dgf()</a></code> pre-builds the <strong>template fields</strong> for documentation, and you fill them in — in a spreadsheet.</p>
-<p>The division of labor is clean: the machine measures and types; the human supplies the meaning the data cannot carry on its own.</p>
+<p>Machines can measure and type a column, but they cannot know that
+<code>grade</code> is coded <code>1 = Freshman … 4 = Senior</code>, or
+that <code>rev</code> means net revenue in thousands of dollars. That
+meaning has to come from a person. datagoodr’s approach is to make
+supplying it as light as possible: <code><a href="../reference/create_dgf.html">create_dgf()</a></code> pre-builds
+the <strong>template fields</strong> for documentation, and you fill
+them in — in a spreadsheet.</p>
+<p>The division of labor is clean: the machine measures and types; the
+human supplies the meaning the data cannot carry on its own.</p>
 </div>
 <div class="section level2">
 <h2 id="the-dictionary-fields">The dictionary fields<a class="anchor" aria-label="anchor" href="#the-dictionary-fields"></a>
 </h2>
-<p>Every variable’s row carries data-dictionary cells waiting for text:</p>
+<p>Every variable’s row carries data-dictionary cells waiting for
+text:</p>
 <ul>
 <li>
 <code>dd_vlabel</code> — a short human label,</li>
 <li>
 <code>dd_vdesc</code> — a longer description,</li>
 <li>
-<code>dd_vname_alias</code> — an alternate name, if the source uses one.</li>
+<code>dd_vname_alias</code> — an alternate name, if the source uses
+one.</li>
 </ul>
-<p>You edit them where the DGF lives — in Excel, or programmatically — and they belong to the variable from then on.</p>
+<p>You edit them where the DGF lives — in Excel, or programmatically —
+and they belong to the variable from then on.</p>
 </div>
 <div class="section level2">
 <h2 id="the-factor-template-the-real-time-saver">The factor template: the real time-saver<a class="anchor" aria-label="anchor" href="#the-factor-template-the-real-time-saver"></a>
 </h2>
-<p>The field that saves the most work is the one for <strong>factors</strong>. When a column is categorical, <code><a href="../reference/create_dgf.html">create_dgf()</a></code> does not just note “categorical” — it enumerates the levels into <code>dd_f_levels</code> as a template, one entry per level, each waiting for a human-readable label and definition. A coded column arrives in the DGF already expanded into the rows you need to annotate:</p>
+<p>The field that saves the most work is the one for
+<strong>factors</strong>. When a column is categorical,
+<code><a href="../reference/create_dgf.html">create_dgf()</a></code> does not just note “categorical” — it
+enumerates the levels into <code>dd_f_levels</code> as a template, one
+entry per level, each waiting for a human-readable label and definition.
+A coded column arrives in the DGF already expanded into the rows you
+need to annotate:</p>
 <pre><code># dd_f_levels for `grade`, as created — a template to fill in:
   level   label        definition
   1       ___          ___
@@ -111,29 +129,55 @@
   2       Sophomore    second-year undergraduate
   3       Junior       third-year undergraduate
   4       Senior       fourth-year undergraduate</code></pre>
-<p>You never have to discover the levels yourself or build the table — you only supply the words.</p>
+<p>You never have to discover the levels yourself or build the table —
+you only supply the words.</p>
 </div>
 <div class="section level2">
 <h2 id="how-the-entries-become-documentation">How the entries become documentation<a class="anchor" aria-label="anchor" href="#how-the-entries-become-documentation"></a>
 </h2>
-<p>The text you add in these fields is not inert; it flows into both outputs:</p>
+<p>The text you add in these fields is not inert; it flows into both
+outputs:</p>
 <ul>
 <li>
-<strong>The rendered Research Guide.</strong> The labels and descriptions become the headings and prose of the profile, and the factor level labels replace the raw codes in the category table and treemap — so <code>1</code>/<code>2</code>/<code>3</code>/<code>4</code> reads as <code>Freshman</code>/<code>Sophomore</code>/<code>Junior</code>/<code>Senior</code> in the published guide.</li>
+<strong>The rendered Research Guide.</strong> The labels and
+descriptions become the headings and prose of the profile, and the
+factor level labels replace the raw codes in the category table and
+treemap — so <code>1</code>/<code>2</code>/<code>3</code>/<code>4</code>
+reads as
+<code>Freshman</code>/<code>Sophomore</code>/<code>Junior</code>/<code>Senior</code>
+in the published guide.</li>
 <li>
-<strong>The governed CSV.</strong> The portable families of the DGF — the <code>dd_</code> dictionary, the <code>stable_</code> descriptors, and the <code>validate_</code> rules — are <strong>embedded in the governed CSV</strong> written by <code><a href="../reference/write_stable_csv.html">write_stable_csv()</a></code>. So the labels and definitions travel <em>with the data</em> to the next tool or repository, not as a detachable sidecar, and map cleanly toward archival standards (such as DDI) for deposit.</li>
+<strong>The governed CSV.</strong> The portable families of the DGF
+— the <code>dd_</code> dictionary, the <code>stable_</code> descriptors,
+and the <code>validate_</code> rules — are <strong>embedded in the
+governed CSV</strong> written by <code><a href="../reference/write_stable_csv.html">write_stable_csv()</a></code>. So the
+labels and definitions travel <em>with the data</em> to the next tool or
+repository, not as a detachable sidecar, and map cleanly toward archival
+standards (such as DDI) for deposit.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="why-edit-in-a-spreadsheet">Why edit in a spreadsheet<a class="anchor" aria-label="anchor" href="#why-edit-in-a-spreadsheet"></a>
 </h2>
-<p>Keeping documentation in the DGF — a table you open in Excel — is deliberate. It is where analysts already work, it needs no new tool or query language, and a colleague who does not use R can still read, review, and contribute. That is the whole premise: governance and documentation that meet people where they are.</p>
-<p>Re-profiling with <code><a href="../reference/update_dgf.html">update_dgf()</a></code> preserves every hand-edited label and definition, so documentation accumulates as the data evolves rather than being redone each cycle.</p>
+<p>Keeping documentation in the DGF — a table you open in Excel — is
+deliberate. It is where analysts already work, it needs no new tool or
+query language, and a colleague who does not use R can still read,
+review, and contribute. That is the whole premise: governance and
+documentation that meet people where they are.</p>
+<p>Re-profiling with <code><a href="../reference/update_dgf.html">update_dgf()</a></code> preserves every
+hand-edited label and definition, so documentation accumulates as the
+data evolves rather than being redone each cycle.</p>
 </div>
 <div class="section level2">
 <h2 id="where-this-fits">Where this fits<a class="anchor" aria-label="anchor" href="#where-this-fits"></a>
 </h2>
-<p>This closes the loop the guide has walked through: <strong>Getting Started</strong> and <strong>The datagoodr Workflow</strong> for the shape of it; <strong>Rule-Based Data Governance</strong> for the why; <strong>Stabilizing Datasets</strong>, <strong>Data Profiling</strong>, and <strong>Profiles &amp; Research Guides</strong> for the machine-produced half; and this vignette for the human half that turns a profiled dataset into finished, shareable documentation.</p>
+<p>This closes the loop the guide has walked through: <strong>Getting
+Started</strong> and <strong>The datagoodr Workflow</strong> for the
+shape of it; <strong>Rule-Based Data Governance</strong> for the why;
+<strong>Stabilizing Datasets</strong>, <strong>Data Profiling</strong>,
+and <strong>Profiles &amp; Research Guides</strong> for the
+machine-produced half; and this vignette for the human half that turns a
+profiled dataset into finished, shareable documentation.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -146,7 +190,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -52,11 +52,25 @@ paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
 
 
   if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
+  # Quiet palette: white and near-white gray boxes (alternating, so neighbours
+  # stay distinct), a slightly darker gray for the "other" catch-all, outlined
+  # in the same slate blue as the histogram bars.
+  fills <- rep( c( "#ffffff", "#f4f5f7", "#eaecef" ), length.out = nrow(tab.keep) )
+  fills[ tab.keep$x == "other" ] <- "#dfe2e6"
+  tab.keep$fill <- fills
+
   treemap::treemap(tab.keep,
           index="x",
           vSize="Freq",
-          type="index",
+          vColor="fill",
+          type="color",
           title = "",          # suppress the default "Freq" title
+          border.col = "#465A6F",
+          border.lwds = 1.2,
+          fontcolor.labels = "#1f2429",
+          fontface.labels = 1,
+          fontsize.labels = 10,
+          force.print.labels = FALSE,
           draw = TRUE)
   cat( "\n\n" )
 

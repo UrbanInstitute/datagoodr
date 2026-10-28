@@ -1,0 +1,62 @@
+# Standardize a raw dataset with a DGF's rules
+
+Applies a DGF's per-variable rules to a raw dataset: first the
+\`desired_data_import_rule\` (read the column correctly), then the
+\`raw_to_stable_transform\` (standardize it). The result is the "stable"
+version of the data - what a downstream program should consume.
+
+## Usage
+
+``` r
+stabilize_data(raw, dgf, env = parent.frame(), use_v7 = FALSE)
+```
+
+## Arguments
+
+- raw:
+
+  A data frame, or a path to a raw \`.csv\`.
+
+- dgf:
+
+  A DGF data frame, or a path to a DGF \`.xlsx\` (read with
+  \[load_dgf()\]).
+
+- env:
+
+  Environment in which to find the rule functions named in the DGF (e.g.
+  project \`dgf.R\` helpers). Defaults to the caller's environment.
+
+- use_v7:
+
+  Logical; execute the v7 \`stabilizer\` plan (the \`read :: \[convert\]
+  :: write\` path from formex's transform-path search) for columns that
+  carry no legacy rule. Defaults to \`FALSE\`, so the legacy behaviour
+  is unchanged. When \`TRUE\`, a column whose
+  \`raw_to_stable_transform\` and \`desired_data_import_rule\` are both
+  blank is transformed by its v7 plan (via \[formex::fx_apply_plan()\])
+  when that plan is executable; a legacy rule, where present, always
+  takes precedence, and an identity or unreachable plan leaves the
+  column unchanged. Honours confirm-then-transform: the suggested
+  stabilizer runs only when the caller opts in.
+
+## Value
+
+A data frame: the columns the DGF describes, in DGF order, with each
+rule applied. Columns present in \`raw\` but absent from the DGF are
+dropped; a DGF variable with no matching raw column is skipped with a
+warning.
+
+## Details
+
+Legacy rules name a function reachable in \`env\` and are applied
+element-wise; a blank rule is a pass-through. This is the same dispatch
+\[create_dgf()\] uses, so the built-in helpers (\[read_ein()\],
+\[read_mm()\], ...) and any user function work identically here. With
+\`use_v7 = TRUE\`, a rule-free column is instead handed to its v7
+stabilizer plan, which is vectorised and type-preserving (it does not
+stringify through a per-value \`as.character\`).
+
+## See also
+
+\[write_stable_csv()\], \[create_dgf()\], \[stabilize_col_v7()\]

@@ -2557,4 +2557,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-10-28T07:00:16Z","r":"4.5.3","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"003a92e5391503f4831dc1b412a8042e","dgf_variables":19} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-10-28T07:04:39Z","r":"4.5.3","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"003a92e5391503f4831dc1b412a8042e","dgf_variables":19} -->

@@ -9,7 +9,8 @@ use_datagoodr_template(
   flavor = c("rg", "dd"),
   dg = TRUE,
   overwrite = FALSE,
-  file = NULL
+  file = NULL,
+  style = c("rail", "vintage")
 )
 }
 \arguments{
@@ -29,6 +30,10 @@ Defaults to `FALSE`.}
 standard name (`research-guide.qmd` / `data-dictionary.qmd`). The template
 is written straight to this name, so the overwrite guard applies to the
 file you actually asked for --- naming one report never touches another.}
+
+\item{style}{Research guide style: `"rail"` (the default) or `"vintage"`
+(the original three-column grid). Ignored for the data dictionary, which
+always uses the vintage grid.}
 }
 \value{
 Invisibly, the path to the copied template.

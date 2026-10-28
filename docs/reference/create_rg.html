@@ -28,11 +28,13 @@ DGF, plus a starter `DG.R`, ready to customize and render."></head><body>
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
       </ul></div>
@@ -62,7 +64,8 @@ DGF, plus a starter `DG.R`, ready to customize and render.</p>
 <span>  file <span class="op">=</span> <span class="st">"research-guide.qmd"</span>,</span>
 <span>  embed_css <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  render <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rail"</span>, <span class="st">"vintage"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -107,6 +110,13 @@ packaged stylesheet.</p></dd>
 <dd><p>Logical; overwrite an existing document. Defaults to
 `FALSE`.</p></dd>
 
+
+<dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
+<dd><p>Layout style. `"rail"` (the default) gives each variable a
+left rail (data type, label, name, description, properties) beside its
+graphic, preview and stats, grouped by data type under a numbered contents
+list. `"vintage"` is the original three-column grid.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -118,6 +128,8 @@ packaged stylesheet.</p></dd>
   own from RStudio/Positron. To re-render against a different DGF later,
   use [update_rg()] rather than re-scaffolding: it overrides at render time
   and leaves your edits to the document intact.</p>
+<p>Each style ships its own stylesheet next to the document:
+  `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -133,7 +145,7 @@ packaged stylesheet.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

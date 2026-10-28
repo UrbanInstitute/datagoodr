@@ -28,11 +28,13 @@ variable name for all variable types."></head><body>
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
       </ul></div>
@@ -55,7 +57,7 @@ variable name for all variable types.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_div1</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"var_name"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_div1</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"var_name"</span>, label <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -63,8 +65,13 @@ variable name for all variable types.</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>Character string, the label or variable name to include
-in the header. Defaults to `"var_name"`.</p></dd>
+<dd><p>Character string, the variable name shown as the header.
+Defaults to `"var_name"`.</p></dd>
+
+
+<dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
+<dd><p>Optional plain-language variable label, printed on the same
+line as the name. Left out when blank or identical to the name.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -81,7 +88,7 @@ in the header. Defaults to `"var_name"`.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

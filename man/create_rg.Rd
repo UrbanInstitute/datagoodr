@@ -11,7 +11,8 @@ create_rg(
   file = "research-guide.qmd",
   embed_css = FALSE,
   render = FALSE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  style = c("rail", "vintage")
 )
 }
 \arguments{
@@ -38,6 +39,11 @@ packaged stylesheet.}
 
 \item{overwrite}{Logical; overwrite an existing document. Defaults to
 `FALSE`.}
+
+\item{style}{Layout style. `"rail"` (the default) gives each variable a
+left rail (data type, label, name, description, properties) beside its
+graphic, preview and stats, grouped by data type under a numbered contents
+list. `"vintage"` is the original three-column grid.}
 }
 \value{
 Invisibly, the path to the scaffolded (or rendered) document.
@@ -51,6 +57,9 @@ The DGF path is baked into the document's YAML, so it renders on its
   own from RStudio/Positron. To re-render against a different DGF later,
   use [update_rg()] rather than re-scaffolding: it overrides at render time
   and leaves your edits to the document intact.
+
+  Each style ships its own stylesheet next to the document:
+  `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage.
 }
 \seealso{
 [create_dd()], [update_rg()], [use_datagoodr_template()]

@@ -1,0 +1,1372 @@
+"var_name","dd_vname_alias","dd_vlabel","dd_vdesc","dd_data_unit","dd_f_levels","dd_is_join_key","raw_data_type","raw_data_format","raw_first5","raw_duplicated","guess_label","guess_semantic_type","guess_format_style","guess_unit_type","guess_match_kind","guess_variant_id","guess_depth","guess_confidence","raw_to_stable_transform","stable_data_type","stable_data_format","desired_data_import_rule","desired_data_type","desired_data_class","desired_semantic_type","desired_format_style","desired_unit_type","stabilizer_needed","stabilizer","stabilizer_status","stable_first5","load_rule_needed","load_rule","rg_properties","rg_preview","rg_stats","rg_graphics","rg_max_chr","validate_rules","validate_format","prov_start_hash","prov_current_hash"
+"name","","name","","","","","character","","Luke Skywalker ;; 
+C-3PO ;; 
+R2-D2 ;; 
+Darth Vader ;; 
+Leia Organa",FALSE,"organization {{ name :: text }}","text:name:organization","","","","",3,0.6488,"","character","","","text","","text:name:organization","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  ""(100.0%)""  }
+]","Ackbar ;; Adi Gallia ;; Anakin Skywalker ;; Arvel Crynyd ;; Ayla Secura ;; Bail Prestor Organa ;; Barriss Offee ;; BB8 ;; Ben Quadinaros ;; Beru Whitesun Lars ;; Bib Fortuna ;; Biggs Darklighter ;; Boba Fett ;; Bossk ;; C-3PO ;; Captain Phasma ;; Chewbacca ;; Cliegg Lars ;; Cordé ;; Darth Maul ;; Darth Vader ;; Dexter Jettster ;; Dooku ;; Dormé ;; Dud Bolt ;; Eeth Koth ;; Finis Valorum ;; Finn","{
+  ""STATS"": [
+    {
+      ""STAT"": ""Minimum"",
+      ""CHARACTERS"": 3,
+      ""WORDS"": 1
+    },
+    {
+      ""STAT"": ""Median"",
+      ""CHARACTERS"": 10,
+      ""WORDS"": 2
+    },
+    {
+      ""STAT"": ""Mean"",
+      ""CHARACTERS"": 10.29,
+      ""WORDS"": 1.8
+    },
+    {
+      ""STAT"": ""Max"",
+      ""CHARACTERS"": 21,
+      ""WORDS"": 3
+    },
+    {
+      ""STAT"": ""Skew"",
+      ""CHARACTERS"": 0.4,
+      ""WORDS"": -0.01
+    }
+  ],
+  ""HIST"": [
+    ""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n<svg xmlns=\""http://www.w3.org/2000/svg\"" xmlns:xlink=\""http://www.w3.org/1999/xlink\"" width=\""48.00pt\"" height=\""12.00pt\"" viewBox=\""0 0 48.00 12.00\"">\n  <g class=\""svglite\"">\n    <defs>\n      <style type=\""text/css\""><![CDATA[\n    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {\n      fill: none;\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-miterlimit: 10.00;\n    }\n    .svglite text {\n      white-space: pre;\n    }\n    .svglite g.glyphgroup path {\n      fill: inherit;\n      stroke: none;\n    }\n  ]]><\/style>\n    <\/defs>\n    <rect width=\""100%\"" height=\""100%\"" style=\""stroke: none; fill: none;\""/>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""0.00\"" width=\""48.00\"" height=\""12.00\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw)\"">\n<\/g>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""2.88\"" width=\""48.00\"" height=\""9.12\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw)\"">\n      <rect x=\""-0.69\"" y=\""9.88\"" width=\""4.94\"" height=\""1.78\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""4.25\"" y=\""5.88\"" width=\""4.94\"" height=\""5.78\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""9.19\"" y=\""6.33\"" width=\""4.94\"" height=\""5.33\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""14.12\"" y=\""3.22\"" width=\""4.94\"" height=\""8.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""19.06\"" y=\""5.00\"" width=\""4.94\"" height=\""6.67\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""24.00\"" y=\""6.33\"" width=\""4.94\"" height=\""5.33\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""28.94\"" y=\""9.00\"" width=\""4.94\"" height=\""2.67\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""33.88\"" y=\""10.33\"" width=\""4.94\"" height=\""1.33\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""38.81\"" y=\""11.22\"" width=\""4.94\"" height=\""0.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""43.75\"" y=\""10.77\"" width=\""4.94\"" height=\""0.89\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n    <\/g>\n  <\/g>\n<\/svg>\n"",
+    ""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n<svg xmlns=\""http://www.w3.org/2000/svg\"" xmlns:xlink=\""http://www.w3.org/1999/xlink\"" width=\""48.00pt\"" height=\""12.00pt\"" viewBox=\""0 0 48.00 12.00\"">\n  <g class=\""svglite\"">\n    <defs>\n      <style type=\""text/css\""><![CDATA[\n    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {\n      fill: none;\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-miterlimit: 10.00;\n    }\n    .svglite text {\n      white-space: pre;\n    }\n    .svglite g.glyphgroup path {\n      fill: inherit;\n      stroke: none;\n    }\n  ]]><\/style>\n    <\/defs>\n    <rect width=\""100%\"" height=\""100%\"" style=\""stroke: none; fill: none;\""/>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""0.00\"" width=\""48.00\"" height=\""12.00\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw)\"">\n<\/g>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""2.88\"" width=\""48.00\"" height=\""9.12\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw)\"">\n      <rect x=\""1.78\"" y=\""8.04\"" width=\""4.44\"" height=\""3.62\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""6.22\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""10.67\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""15.11\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""19.56\"" y=\""3.22\"" width=\""4.44\"" height=\""8.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""24.00\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""28.44\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""32.89\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""37.33\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""41.78\"" y=\""10.61\"" width=\""4.44\"" height=\""1.06\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n    <\/g>\n  <\/g>\n<\/svg>\n""
+  ],
+  ""COMMON"": [
+    {
+      ""Value"": ""Ackbar"",
+      ""Frequency"": 1
+    },
+    {
+      ""Value"": ""Adi Gallia"",
+      ""Frequency"": 1
+    },
+    {
+      ""Value"": ""Anakin Skywalker"",
+      ""Frequency"": 1
+    },
+    {
+      ""Value"": ""Arvel Crynyd"",
+      ""Frequency"": 1
+    },
+    {
+      ""Value"": ""Ayla Secura"",
+      ""Frequency"": 1
+    },
+    {
+      ""Value"": ""Bail Prestor Organa"",
+      ""Frequency"": 1
+    }
+  ]
+}","[ 
+  {  ""ww"" :  ""Lars""  ,  ""Freq"" :  3  }, 
+  {  ""ww"" :  ""Skywalker""  ,  ""Freq"" :  3  }, 
+  {  ""ww"" :  ""Antilles""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Darth""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Fett""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Jar""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Organa""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Ackbar""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Adi""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Amedda""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Amidala""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Anakin""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Arvel""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Ayla""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Bail""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Barriss""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""BB8""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Ben""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Beru""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Bib""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Biggs""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Binks""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Boba""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Bolt""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Bossk""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""C3PO""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Calrissian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Captain""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Chewbacca""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Cliegg""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Cordé""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Crynyd""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dameron""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Darklighter""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Desilijic""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dexter""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dooku""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dormé""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dud""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Eeth""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Finis""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Finn""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Fisto""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Fortuna""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Gallia""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Gasgano""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Greedo""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Gregar""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Grievous""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Gunray""  ,  ""Freq"" :  1  }
+]",21,"","","","8b894490f8912c396118fd72e3cf739d"
+"height","","height","","","","","character","","172 ;; 
+167 ;; 
+96 ;; 
+202 ;; 
+150",FALSE,"number","number","","","","",1,0.4385,"","numeric","","","number","","number","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""46""  ,  ""PER"" :  ""(52.9%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""6""  ,  ""PER"" :  ""(6.9%)""  }
+]","183 ;; 180 ;; 188 ;; 170 ;; 178 ;; 175 ;; 191 ;; 193 ;; 196 ;; 96 ;; 150 ;; 163 ;; 165 ;; 167 ;; 185 ;; 198 ;; 206 ;; 66 ;; 79 ;; 88 ;; 94 ;; 97 ;; 112 ;; 122 ;; 137 ;; 157 ;; 160 ;; 166 ;; 168 ;; 171 ;; 172 ;; 173 ;; 177 ;; 182 ;; 184 ;; 190 ;; 200 ;; 202 ;; 213 ;; 216 ;; 224 ;; 228 ;; 229 ;; 234 ;; 264","[ 
+  {  ""STAT"" :  ""Minimum""  ,  ""VAL"" :  ""66""  }, 
+  {  ""STAT"" :  ""Q - 05""  ,  ""VAL"" :  ""96""  }, 
+  {  ""STAT"" :  ""Q - 25""  ,  ""VAL"" :  ""167""  }, 
+  {  ""STAT"" :  ""Median""  ,  ""VAL"" :  ""180""  }, 
+  {  ""STAT"" :  ""Mean""  ,  ""VAL"" :  ""174.6""  }, 
+  {  ""STAT"" :  ""Q - 75""  ,  ""VAL"" :  ""191""  }, 
+  {  ""STAT"" :  ""Q - 95""  ,  ""VAL"" :  ""224""  }, 
+  {  ""STAT"" :  ""Maximum""  ,  ""VAL"" :  ""264""  }, 
+  {  ""STAT"" :  ""Skew""  ,  ""VAL"" :  ""-1.05""  }, 
+  {  ""STAT"" :  ""Kurtosis""  ,  ""VAL"" :  ""1.8""  }
+]","  { 
+    ""breaks""  :  [ 
+96, 
+    99, 
+    102, 
+    105, 
+    108, 
+    111, 
+    114, 
+    117, 
+    120, 
+    123, 
+    126, 
+    129, 
+    132, 
+    135, 
+    138, 
+    141, 
+    144, 
+    147, 
+    150, 
+    153, 
+    156, 
+    159, 
+    162, 
+    165, 
+    168, 
+    171, 
+    174, 
+    177, 
+    180, 
+    183, 
+    186, 
+    189, 
+    192, 
+    195, 
+    198, 
+    201, 
+    204, 
+    207, 
+    210, 
+    213, 
+    216, 
+    219, 
+    222, 
+    225
+], 
+    ""density""  :  [ 
+0.0411, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0137, 
+    0, 
+    0, 
+    0.0137, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0137, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0274, 
+    0, 
+    0.0137, 
+    0.0137, 
+    0.0274, 
+    0.0685, 
+    0.0685, 
+    0.0411, 
+    0.0411, 
+    0.0685, 
+    0.0822, 
+    0.137, 
+    0.0685, 
+    0.0548, 
+    0.0411, 
+    0.0411, 
+    0.0411, 
+    0.0137, 
+    0.0274, 
+    0, 
+    0, 
+    0.0137, 
+    0.0137, 
+    0, 
+    0.0137
+], 
+    ""y""  :  [ 
+3, 
+    0, 
+    0, 
+    0, 
+    0, 
+    1, 
+    0, 
+    0, 
+    1, 
+    0, 
+    0, 
+    0, 
+    0, 
+    1, 
+    0, 
+    0, 
+    0, 
+    0, 
+    2, 
+    0, 
+    1, 
+    1, 
+    2, 
+    5, 
+    5, 
+    3, 
+    3, 
+    5, 
+    6, 
+    10, 
+    5, 
+    4, 
+    3, 
+    3, 
+    3, 
+    1, 
+    2, 
+    0, 
+    0, 
+    1, 
+    1, 
+    0, 
+    1
+], 
+    ""mids""  :  [ 
+97.5, 
+    100.5, 
+    103.5, 
+    106.5, 
+    109.5, 
+    112.5, 
+    115.5, 
+    118.5, 
+    121.5, 
+    124.5, 
+    127.5, 
+    130.5, 
+    133.5, 
+    136.5, 
+    139.5, 
+    142.5, 
+    145.5, 
+    148.5, 
+    151.5, 
+    154.5, 
+    157.5, 
+    160.5, 
+    163.5, 
+    166.5, 
+    169.5, 
+    172.5, 
+    175.5, 
+    178.5, 
+    181.5, 
+    184.5, 
+    187.5, 
+    190.5, 
+    193.5, 
+    196.5, 
+    199.5, 
+    202.5, 
+    205.5, 
+    208.5, 
+    211.5, 
+    214.5, 
+    217.5, 
+    220.5, 
+    223.5
+], 
+    ""mean""  :  [ 
+174.6049
+], 
+    ""median""  :  [ 
+180
+], 
+    ""min""  :  [ 
+66
+], 
+    ""max""  :  [ 
+264
+]
+  }",3,"","","","530269d9b6f523660317f3a4f145847d"
+"mass","","mass","","","","","character","","77 ;; 
+75 ;; 
+32 ;; 
+136 ;; 
+49",FALSE,"measurement {{ quantity :: number }}","number:quantity:measurement","","","","",3,0.6648,"","numeric","","","number","","number:quantity:measurement","numeric","","yes","{{ write_numeric }}","ready","77 ;; 75 ;; 32 ;; 136 ;; 49","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""39""  ,  ""PER"" :  ""(44.8%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""28""  ,  ""PER"" :  ""(32.2%)""  }
+]","80 ;; 79 ;; 75 ;; 77 ;; 84 ;; 32 ;; 45 ;; 48 ;; 50 ;; 55 ;; 82 ;; 136 ;; 15 ;; 17 ;; 20 ;; 40 ;; 49 ;; 56.2 ;; 57 ;; 65 ;; 66 ;; 68 ;; 74 ;; 78.2 ;; 83 ;; 85 ;; 87 ;; 88 ;; 89 ;; 90 ;; 102 ;; 110 ;; 112 ;; 113 ;; 120 ;; 140 ;; 159 ;; 1358","[ 
+  {  ""STAT"" :  ""Minimum""  ,  ""VAL"" :  ""15""  }, 
+  {  ""STAT"" :  ""Q - 05""  ,  ""VAL"" :  ""30.8""  }, 
+  {  ""STAT"" :  ""Q - 25""  ,  ""VAL"" :  ""55.6""  }, 
+  {  ""STAT"" :  ""Median""  ,  ""VAL"" :  ""79""  }, 
+  {  ""STAT"" :  ""Mean""  ,  ""VAL"" :  ""97.31""  }, 
+  {  ""STAT"" :  ""Q - 75""  ,  ""VAL"" :  ""84.5""  }, 
+  {  ""STAT"" :  ""Q - 95""  ,  ""VAL"" :  ""136.4""  }, 
+  {  ""STAT"" :  ""Maximum""  ,  ""VAL"" :  ""1,358""  }, 
+  {  ""STAT"" :  ""Skew""  ,  ""VAL"" :  ""6.97""  }, 
+  {  ""STAT"" :  ""Kurtosis""  ,  ""VAL"" :  ""48.93""  }
+]","  { 
+    ""breaks""  :  [ 
+30, 
+    33, 
+    36, 
+    39, 
+    42, 
+    45, 
+    48, 
+    51, 
+    54, 
+    57, 
+    60, 
+    63, 
+    66, 
+    69, 
+    72, 
+    75, 
+    78, 
+    81, 
+    84, 
+    87, 
+    90, 
+    93, 
+    96, 
+    99, 
+    102, 
+    105, 
+    108, 
+    111, 
+    114, 
+    117, 
+    120, 
+    123, 
+    126, 
+    129, 
+    132, 
+    135, 
+    138
+], 
+    ""density""  :  [ 
+0.0377, 
+    0, 
+    0, 
+    0.0189, 
+    0, 
+    0.0377, 
+    0.0943, 
+    0, 
+    0.0566, 
+    0.0189, 
+    0, 
+    0.0189, 
+    0.0377, 
+    0, 
+    0.0189, 
+    0.1132, 
+    0.2075, 
+    0.0566, 
+    0.0755, 
+    0.0566, 
+    0.0189, 
+    0, 
+    0, 
+    0, 
+    0.0189, 
+    0, 
+    0.0189, 
+    0.0377, 
+    0, 
+    0, 
+    0.0189, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0377
+], 
+    ""y""  :  [ 
+2, 
+    0, 
+    0, 
+    1, 
+    0, 
+    2, 
+    5, 
+    0, 
+    3, 
+    1, 
+    0, 
+    1, 
+    2, 
+    0, 
+    1, 
+    6, 
+    11, 
+    3, 
+    4, 
+    3, 
+    1, 
+    0, 
+    0, 
+    0, 
+    1, 
+    0, 
+    1, 
+    2, 
+    0, 
+    0, 
+    1, 
+    0, 
+    0, 
+    0, 
+    0, 
+    2
+], 
+    ""mids""  :  [ 
+31.5, 
+    34.5, 
+    37.5, 
+    40.5, 
+    43.5, 
+    46.5, 
+    49.5, 
+    52.5, 
+    55.5, 
+    58.5, 
+    61.5, 
+    64.5, 
+    67.5, 
+    70.5, 
+    73.5, 
+    76.5, 
+    79.5, 
+    82.5, 
+    85.5, 
+    88.5, 
+    91.5, 
+    94.5, 
+    97.5, 
+    100.5, 
+    103.5, 
+    106.5, 
+    109.5, 
+    112.5, 
+    115.5, 
+    118.5, 
+    121.5, 
+    124.5, 
+    127.5, 
+    130.5, 
+    133.5, 
+    136.5
+], 
+    ""mean""  :  [ 
+97.3119
+], 
+    ""median""  :  [ 
+79
+], 
+    ""min""  :  [ 
+15
+], 
+    ""max""  :  [ 
+1358
+]
+  }",4,"","","","f791b07294afa747e6f26b980aa6ab2b"
+"hair_color","","hair_color","","","[ 
+  {  ""level"" :  ""auburn""  ,  ""label"" :  ""auburn""  }, 
+  {  ""level"" :  ""auburn, grey""  ,  ""label"" :  ""auburn, grey""  }, 
+  {  ""level"" :  ""auburn, white""  ,  ""label"" :  ""auburn, white""  }, 
+  {  ""level"" :  ""black""  ,  ""label"" :  ""black""  }, 
+  {  ""level"" :  ""blond""  ,  ""label"" :  ""blond""  }, 
+  {  ""level"" :  ""blonde""  ,  ""label"" :  ""blonde""  }, 
+  {  ""level"" :  ""brown""  ,  ""label"" :  ""brown""  }, 
+  {  ""level"" :  ""brown, grey""  ,  ""label"" :  ""brown, grey""  }, 
+  {  ""level"" :  ""grey""  ,  ""label"" :  ""grey""  }, 
+  {  ""level"" :  ""none""  ,  ""label"" :  ""none""  }, 
+  {  ""level"" :  ""white""  ,  ""label"" :  ""white""  }
+]","","character","","blond ;; 
+none ;; 
+brown ;; 
+brown, grey ;; 
+black",FALSE,"geographic {{ mutually_exclusive :: categorical }}","categorical:mutually_exclusive:geographic","","","","",3,0.6822,"","factor","","","categorical","","categorical:mutually_exclusive:geographic","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""12""  ,  ""PER"" :  ""(13.8%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(5.7%)""  }
+]","none ;; brown ;; black ;; white ;; blond ;; auburn ;; auburn, grey ;; auburn, white ;; blonde ;; brown, grey ;; grey","[ 
+  {  ""Value"" :  ""none""  ,  ""Frequency"" :  38  }, 
+  {  ""Value"" :  ""brown""  ,  ""Frequency"" :  18  }, 
+  {  ""Value"" :  ""black""  ,  ""Frequency"" :  13  }, 
+  {  ""Value"" :  ""white""  ,  ""Frequency"" :  4  }, 
+  {  ""Value"" :  ""blond""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""auburn""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""auburn, grey""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""auburn, white""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""blonde""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""brown, grey""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""grey""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""none""  ,  ""Freq"" :  38  }, 
+  {  ""x"" :  ""brown""  ,  ""Freq"" :  18  }, 
+  {  ""x"" :  ""black""  ,  ""Freq"" :  13  }, 
+  {  ""x"" :  ""white""  ,  ""Freq"" :  4  }, 
+  {  ""x"" :  ""blond""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  6  }
+]",13,"","","","9e27a665406a56a457cc0ef137e543b2"
+"skin_color","","skin_color","","","","","character","","fair ;; 
+gold ;; 
+white, blue ;; 
+white ;; 
+light",FALSE,"categorical","categorical","","","","",1,0.494,"","character","","","text","","text","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""31""  ,  ""PER"" :  ""(35.6%)""  }
+]","fair ;; light ;; dark ;; green ;; grey ;; pale ;; brown ;; blue ;; blue, grey ;; none ;; orange ;; tan ;; white ;; white, blue ;; yellow ;; brown mottle ;; brown, white ;; fair, green, yellow ;; gold ;; green-tan, brown ;; green, grey ;; grey, blue ;; grey, green, yellow ;; grey, red ;; metal ;; mottled green ;; red ;; red, blue, white ;; silver, red ;; unknown ;; white, red","{
+  ""STATS"": [
+    {
+      ""STAT"": ""Minimum"",
+      ""CHARACTERS"": 3,
+      ""WORDS"": 1
+    },
+    {
+      ""STAT"": ""Median"",
+      ""CHARACTERS"": 5,
+      ""WORDS"": 1
+    },
+    {
+      ""STAT"": ""Mean"",
+      ""CHARACTERS"": 5.93,
+      ""WORDS"": 1.22
+    },
+    {
+      ""STAT"": ""Max"",
+      ""CHARACTERS"": 19,
+      ""WORDS"": 3
+    },
+    {
+      ""STAT"": ""Skew"",
+      ""CHARACTERS"": 2.12,
+      ""WORDS"": 2.16
+    }
+  ],
+  ""HIST"": [
+    ""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n<svg xmlns=\""http://www.w3.org/2000/svg\"" xmlns:xlink=\""http://www.w3.org/1999/xlink\"" width=\""48.00pt\"" height=\""12.00pt\"" viewBox=\""0 0 48.00 12.00\"">\n  <g class=\""svglite\"">\n    <defs>\n      <style type=\""text/css\""><![CDATA[\n    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {\n      fill: none;\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-miterlimit: 10.00;\n    }\n    .svglite text {\n      white-space: pre;\n    }\n    .svglite g.glyphgroup path {\n      fill: inherit;\n      stroke: none;\n    }\n  ]]><\/style>\n    <\/defs>\n    <rect width=\""100%\"" height=\""100%\"" style=\""stroke: none; fill: none;\""/>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""0.00\"" width=\""48.00\"" height=\""12.00\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw)\"">\n<\/g>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""2.88\"" width=\""48.00\"" height=\""9.12\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw)\"">\n      <rect x=\""-1.00\"" y=\""3.22\"" width=\""5.56\"" height=\""8.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""4.56\"" y=\""6.03\"" width=\""5.56\"" height=\""5.63\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""10.11\"" y=\""11.46\"" width=\""5.56\"" height=\""0.20\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""15.67\"" y=\""10.66\"" width=\""5.56\"" height=\""1.01\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""21.22\"" y=\""10.46\"" width=\""5.56\"" height=\""1.21\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""26.78\"" y=\""11.46\"" width=\""5.56\"" height=\""0.20\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""32.33\"" y=\""11.26\"" width=\""5.56\"" height=\""0.40\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""37.89\"" y=\""11.66\"" width=\""5.56\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""43.44\"" y=\""11.26\"" width=\""5.56\"" height=\""0.40\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n    <\/g>\n  <\/g>\n<\/svg>\n"",
+    ""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n<svg xmlns=\""http://www.w3.org/2000/svg\"" xmlns:xlink=\""http://www.w3.org/1999/xlink\"" width=\""48.00pt\"" height=\""12.00pt\"" viewBox=\""0 0 48.00 12.00\"">\n  <g class=\""svglite\"">\n    <defs>\n      <style type=\""text/css\""><![CDATA[\n    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {\n      fill: none;\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-miterlimit: 10.00;\n    }\n    .svglite text {\n      white-space: pre;\n    }\n    .svglite g.glyphgroup path {\n      fill: inherit;\n      stroke: none;\n    }\n  ]]><\/style>\n    <\/defs>\n    <rect width=\""100%\"" height=\""100%\"" style=\""stroke: none; fill: none;\""/>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""0.00\"" width=\""48.00\"" height=\""12.00\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw)\"">\n<\/g>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""2.88\"" width=\""48.00\"" height=\""9.12\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw)\"">\n      <rect x=\""1.78\"" y=\""3.22\"" width=\""4.44\"" height=\""8.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""6.22\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""10.67\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""15.11\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""19.56\"" y=\""10.12\"" width=\""4.44\"" height=\""1.55\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""24.00\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""28.44\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""32.89\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""37.33\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""41.78\"" y=\""11.31\"" width=\""4.44\"" height=\""0.36\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n    <\/g>\n  <\/g>\n<\/svg>\n""
+  ],
+  ""COMMON"": [
+    {
+      ""Value"": ""fair"",
+      ""Frequency"": 17
+    },
+    {
+      ""Value"": ""light"",
+      ""Frequency"": 11
+    },
+    {
+      ""Value"": ""dark"",
+      ""Frequency"": 6
+    },
+    {
+      ""Value"": ""green"",
+      ""Frequency"": 6
+    },
+    {
+      ""Value"": ""grey"",
+      ""Frequency"": 6
+    },
+    {
+      ""Value"": ""pale"",
+      ""Frequency"": 5
+    }
+  ]
+}","[ 
+  {  ""ww"" :  ""fair""  ,  ""Freq"" :  18  }, 
+  {  ""ww"" :  ""grey""  ,  ""Freq"" :  12  }, 
+  {  ""ww"" :  ""light""  ,  ""Freq"" :  11  }, 
+  {  ""ww"" :  ""green""  ,  ""Freq"" :  10  }, 
+  {  ""ww"" :  ""blue""  ,  ""Freq"" :  8  }, 
+  {  ""ww"" :  ""brown""  ,  ""Freq"" :  7  }, 
+  {  ""ww"" :  ""white""  ,  ""Freq"" :  7  }, 
+  {  ""ww"" :  ""dark""  ,  ""Freq"" :  6  }, 
+  {  ""ww"" :  ""pale""  ,  ""Freq"" :  5  }, 
+  {  ""ww"" :  ""red""  ,  ""Freq"" :  5  }, 
+  {  ""ww"" :  ""yellow""  ,  ""Freq"" :  4  }, 
+  {  ""ww"" :  ""none""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""orange""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""tan""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""gold""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""greentan""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""metal""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""mottle""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""mottled""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""silver""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""unknown""  ,  ""Freq"" :  1  }
+]",19,"","","","2e31b6d69289308fd52aadcbeb97a311"
+"eye_color","","eye_color","","","[ 
+  {  ""level"" :  ""black""  ,  ""label"" :  ""black""  }, 
+  {  ""level"" :  ""blue""  ,  ""label"" :  ""blue""  }, 
+  {  ""level"" :  ""blue-gray""  ,  ""label"" :  ""blue-gray""  }, 
+  {  ""level"" :  ""brown""  ,  ""label"" :  ""brown""  }, 
+  {  ""level"" :  ""dark""  ,  ""label"" :  ""dark""  }, 
+  {  ""level"" :  ""gold""  ,  ""label"" :  ""gold""  }, 
+  {  ""level"" :  ""green, yellow""  ,  ""label"" :  ""green, yellow""  }, 
+  {  ""level"" :  ""hazel""  ,  ""label"" :  ""hazel""  }, 
+  {  ""level"" :  ""orange""  ,  ""label"" :  ""orange""  }, 
+  {  ""level"" :  ""pink""  ,  ""label"" :  ""pink""  }, 
+  {  ""level"" :  ""red""  ,  ""label"" :  ""red""  }, 
+  {  ""level"" :  ""red, blue""  ,  ""label"" :  ""red, blue""  }, 
+  {  ""level"" :  ""unknown""  ,  ""label"" :  ""unknown""  }, 
+  {  ""level"" :  ""white""  ,  ""label"" :  ""white""  }, 
+  {  ""level"" :  ""yellow""  ,  ""label"" :  ""yellow""  }
+]","","character","","blue ;; 
+yellow ;; 
+red ;; 
+brown ;; 
+blue-gray",FALSE,"geographic {{ mutually_exclusive :: categorical }}","categorical:mutually_exclusive:geographic","","","","",3,0.7196,"","factor","","","categorical","","categorical:mutually_exclusive:geographic","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""15""  ,  ""PER"" :  ""(17.2%)""  }
+]","brown ;; blue ;; yellow ;; black ;; orange ;; red ;; hazel ;; unknown ;; blue-gray ;; dark ;; gold ;; green, yellow ;; pink ;; red, blue ;; white","[ 
+  {  ""Value"" :  ""brown""  ,  ""Frequency"" :  21  }, 
+  {  ""Value"" :  ""blue""  ,  ""Frequency"" :  19  }, 
+  {  ""Value"" :  ""yellow""  ,  ""Frequency"" :  11  }, 
+  {  ""Value"" :  ""black""  ,  ""Frequency"" :  10  }, 
+  {  ""Value"" :  ""orange""  ,  ""Frequency"" :  8  }, 
+  {  ""Value"" :  ""red""  ,  ""Frequency"" :  5  }, 
+  {  ""Value"" :  ""hazel""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""unknown""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""blue-gray""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""dark""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""gold""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""green, yellow""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""pink""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""red, blue""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""white""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""brown""  ,  ""Freq"" :  21  }, 
+  {  ""x"" :  ""blue""  ,  ""Freq"" :  19  }, 
+  {  ""x"" :  ""yellow""  ,  ""Freq"" :  11  }, 
+  {  ""x"" :  ""black""  ,  ""Freq"" :  10  }, 
+  {  ""x"" :  ""orange""  ,  ""Freq"" :  8  }, 
+  {  ""x"" :  ""red""  ,  ""Freq"" :  5  }, 
+  {  ""x"" :  ""hazel""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""unknown""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  7  }
+]",13,"","","","2708954e607cbfd3c95a8812cb09e992"
+"birth_year","","birth_year","","","","","character","","19 ;; 
+112 ;; 
+33 ;; 
+41.9 ;; 
+52",FALSE,"number","number","","","","",1,0.4233,"","numeric","","","number","","number","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""37""  ,  ""PER"" :  ""(42.5%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""44""  ,  ""PER"" :  ""(50.6%)""  }
+]","19 ;; 41.9 ;; 48 ;; 52 ;; 72 ;; 82 ;; 92 ;; 8 ;; 15 ;; 21 ;; 22 ;; 24 ;; 29 ;; 31 ;; 31.5 ;; 33 ;; 37 ;; 40 ;; 41 ;; 44 ;; 46 ;; 47 ;; 53 ;; 54 ;; 57 ;; 58 ;; 62 ;; 64 ;; 66 ;; 67 ;; 91 ;; 102 ;; 112 ;; 200 ;; 600 ;; 896","[ 
+  {  ""STAT"" :  ""Minimum""  ,  ""VAL"" :  ""8""  }, 
+  {  ""STAT"" :  ""Q - 05""  ,  ""VAL"" :  ""19""  }, 
+  {  ""STAT"" :  ""Q - 25""  ,  ""VAL"" :  ""35""  }, 
+  {  ""STAT"" :  ""Median""  ,  ""VAL"" :  ""52""  }, 
+  {  ""STAT"" :  ""Mean""  ,  ""VAL"" :  ""87.57""  }, 
+  {  ""STAT"" :  ""Q - 75""  ,  ""VAL"" :  ""72""  }, 
+  {  ""STAT"" :  ""Q - 95""  ,  ""VAL"" :  ""191.2""  }, 
+  {  ""STAT"" :  ""Maximum""  ,  ""VAL"" :  ""896""  }, 
+  {  ""STAT"" :  ""Skew""  ,  ""VAL"" :  ""4.15""  }, 
+  {  ""STAT"" :  ""Kurtosis""  ,  ""VAL"" :  ""17.17""  }
+]","  { 
+    ""breaks""  :  [ 
+18, 
+    20, 
+    22, 
+    24, 
+    26, 
+    28, 
+    30, 
+    32, 
+    34, 
+    36, 
+    38, 
+    40, 
+    42, 
+    44, 
+    46, 
+    48, 
+    50, 
+    52, 
+    54, 
+    56, 
+    58, 
+    60, 
+    62, 
+    64, 
+    66, 
+    68, 
+    70, 
+    72, 
+    74, 
+    76, 
+    78, 
+    80, 
+    82, 
+    84, 
+    86, 
+    88, 
+    90, 
+    92, 
+    94, 
+    96, 
+    98, 
+    100, 
+    102, 
+    104, 
+    106, 
+    108, 
+    110, 
+    112, 
+    114
+], 
+    ""density""  :  [ 
+0.0526, 
+    0.0263, 
+    0.0263, 
+    0.0263, 
+    0, 
+    0.0263, 
+    0.0526, 
+    0.0263, 
+    0, 
+    0.0263, 
+    0, 
+    0.1053, 
+    0, 
+    0.0263, 
+    0.0526, 
+    0.0526, 
+    0, 
+    0.0789, 
+    0.0263, 
+    0.0263, 
+    0.0263, 
+    0, 
+    0.0263, 
+    0.0263, 
+    0.0526, 
+    0, 
+    0, 
+    0.0526, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0526, 
+    0, 
+    0, 
+    0, 
+    0.0263, 
+    0.0526, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0263, 
+    0, 
+    0, 
+    0, 
+    0, 
+    0.0263
+], 
+    ""y""  :  [ 
+2, 
+    1, 
+    1, 
+    1, 
+    0, 
+    1, 
+    2, 
+    1, 
+    0, 
+    1, 
+    0, 
+    4, 
+    0, 
+    1, 
+    2, 
+    2, 
+    0, 
+    3, 
+    1, 
+    1, 
+    1, 
+    0, 
+    1, 
+    1, 
+    2, 
+    0, 
+    0, 
+    2, 
+    0, 
+    0, 
+    0, 
+    0, 
+    2, 
+    0, 
+    0, 
+    0, 
+    1, 
+    2, 
+    0, 
+    0, 
+    0, 
+    0, 
+    1, 
+    0, 
+    0, 
+    0, 
+    0, 
+    1
+], 
+    ""mids""  :  [ 
+19, 
+    21, 
+    23, 
+    25, 
+    27, 
+    29, 
+    31, 
+    33, 
+    35, 
+    37, 
+    39, 
+    41, 
+    43, 
+    45, 
+    47, 
+    49, 
+    51, 
+    53, 
+    55, 
+    57, 
+    59, 
+    61, 
+    63, 
+    65, 
+    67, 
+    69, 
+    71, 
+    73, 
+    75, 
+    77, 
+    79, 
+    81, 
+    83, 
+    85, 
+    87, 
+    89, 
+    91, 
+    93, 
+    95, 
+    97, 
+    99, 
+    101, 
+    103, 
+    105, 
+    107, 
+    109, 
+    111, 
+    113
+], 
+    ""mean""  :  [ 
+87.5651
+], 
+    ""median""  :  [ 
+52
+], 
+    ""min""  :  [ 
+8
+], 
+    ""max""  :  [ 
+896
+]
+  }",4,"","","","020e47fc57ae9e8d40b361e4b197f5c9"
+"sex","","sex","","","[ 
+  {  ""level"" :  ""female""  ,  ""label"" :  ""female""  }, 
+  {  ""level"" :  ""hermaphroditic""  ,  ""label"" :  ""hermaphroditic""  }, 
+  {  ""level"" :  ""male""  ,  ""label"" :  ""male""  }, 
+  {  ""level"" :  ""none""  ,  ""label"" :  ""none""  }
+]","","character","","male ;; 
+none ;; 
+female ;; 
+hermaphroditic",FALSE,"unordered {{ mutually_exclusive :: categorical }}","categorical:mutually_exclusive:unordered","","","","",3,0.9705,"","factor","","","categorical","mutually_exclusive.unordered","categorical:mutually_exclusive:unordered","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""5""  ,  ""PER"" :  ""(5.7%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4""  ,  ""PER"" :  ""(4.6%)""  }
+]","male ;; female ;; none ;; hermaphroditic","[ 
+  {  ""Value"" :  ""male""  ,  ""Frequency"" :  60  }, 
+  {  ""Value"" :  ""female""  ,  ""Frequency"" :  16  }, 
+  {  ""Value"" :  ""none""  ,  ""Frequency"" :  6  }, 
+  {  ""Value"" :  ""hermaphroditic""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""male""  ,  ""Freq"" :  60  }, 
+  {  ""x"" :  ""female""  ,  ""Freq"" :  16  }, 
+  {  ""x"" :  ""none""  ,  ""Freq"" :  6  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  1  }
+]",14,"","","","f5c0f652b8b2bf3b1681a68a2ee29fbe"
+"gender","","gender","","","[ 
+  {  ""level"" :  ""feminine""  ,  ""label"" :  ""feminine""  }, 
+  {  ""level"" :  ""masculine""  ,  ""label"" :  ""masculine""  }
+]","","character","","masculine ;; 
+feminine",FALSE,"unordered {{ mutually_exclusive :: categorical }}","categorical:mutually_exclusive:unordered","","","","",3,0.9141,"","factor","","","categorical","","categorical:mutually_exclusive:unordered","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""3""  ,  ""PER"" :  ""(3.4%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4""  ,  ""PER"" :  ""(4.6%)""  }
+]","masculine ;; feminine","[ 
+  {  ""Value"" :  ""masculine""  ,  ""Frequency"" :  66  }, 
+  {  ""Value"" :  ""feminine""  ,  ""Frequency"" :  17  }
+]","[ 
+  {  ""x"" :  ""masculine""  ,  ""Freq"" :  66  }, 
+  {  ""x"" :  ""feminine""  ,  ""Freq"" :  17  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
+]",9,"","","","57dabad9ecb4dcaaadafa0a7838cc172"
+"homeworld","","homeworld","","","[ 
+  {  ""level"" :  ""Alderaan""  ,  ""label"" :  ""Alderaan""  }, 
+  {  ""level"" :  ""Aleen Minor""  ,  ""label"" :  ""Aleen Minor""  }, 
+  {  ""level"" :  ""Bespin""  ,  ""label"" :  ""Bespin""  }, 
+  {  ""level"" :  ""Bestine IV""  ,  ""label"" :  ""Bestine IV""  }, 
+  {  ""level"" :  ""Cato Neimoidia""  ,  ""label"" :  ""Cato Neimoidia""  }, 
+  {  ""level"" :  ""Cerea""  ,  ""label"" :  ""Cerea""  }, 
+  {  ""level"" :  ""Champala""  ,  ""label"" :  ""Champala""  }, 
+  {  ""level"" :  ""Chandrila""  ,  ""label"" :  ""Chandrila""  }, 
+  {  ""level"" :  ""Concord Dawn""  ,  ""label"" :  ""Concord Dawn""  }, 
+  {  ""level"" :  ""Corellia""  ,  ""label"" :  ""Corellia""  }, 
+  {  ""level"" :  ""Coruscant""  ,  ""label"" :  ""Coruscant""  }, 
+  {  ""level"" :  ""Dathomir""  ,  ""label"" :  ""Dathomir""  }, 
+  {  ""level"" :  ""Dorin""  ,  ""label"" :  ""Dorin""  }, 
+  {  ""level"" :  ""Endor""  ,  ""label"" :  ""Endor""  }, 
+  {  ""level"" :  ""Eriadu""  ,  ""label"" :  ""Eriadu""  }, 
+  {  ""level"" :  ""Geonosis""  ,  ""label"" :  ""Geonosis""  }, 
+  {  ""level"" :  ""Glee Anselm""  ,  ""label"" :  ""Glee Anselm""  }, 
+  {  ""level"" :  ""Haruun Kal""  ,  ""label"" :  ""Haruun Kal""  }, 
+  {  ""level"" :  ""Iktotch""  ,  ""label"" :  ""Iktotch""  }, 
+  {  ""level"" :  ""Iridonia""  ,  ""label"" :  ""Iridonia""  }, 
+  {  ""level"" :  ""Kalee""  ,  ""label"" :  ""Kalee""  }, 
+  {  ""level"" :  ""Kamino""  ,  ""label"" :  ""Kamino""  }, 
+  {  ""level"" :  ""Kashyyyk""  ,  ""label"" :  ""Kashyyyk""  }, 
+  {  ""level"" :  ""Malastare""  ,  ""label"" :  ""Malastare""  }, 
+  {  ""level"" :  ""Mirial""  ,  ""label"" :  ""Mirial""  }, 
+  {  ""level"" :  ""Mon Cala""  ,  ""label"" :  ""Mon Cala""  }, 
+  {  ""level"" :  ""Muunilinst""  ,  ""label"" :  ""Muunilinst""  }, 
+  {  ""level"" :  ""Naboo""  ,  ""label"" :  ""Naboo""  }, 
+  {  ""level"" :  ""Nal Hutta""  ,  ""label"" :  ""Nal Hutta""  }, 
+  {  ""level"" :  ""Ojom""  ,  ""label"" :  ""Ojom""  }, 
+  {  ""level"" :  ""Quermia""  ,  ""label"" :  ""Quermia""  }, 
+  {  ""level"" :  ""Rodia""  ,  ""label"" :  ""Rodia""  }, 
+  {  ""level"" :  ""Ryloth""  ,  ""label"" :  ""Ryloth""  }, 
+  {  ""level"" :  ""Serenno""  ,  ""label"" :  ""Serenno""  }, 
+  {  ""level"" :  ""Shili""  ,  ""label"" :  ""Shili""  }, 
+  {  ""level"" :  ""Skako""  ,  ""label"" :  ""Skako""  }, 
+  {  ""level"" :  ""Socorro""  ,  ""label"" :  ""Socorro""  }, 
+  {  ""level"" :  ""Stewjon""  ,  ""label"" :  ""Stewjon""  }, 
+  {  ""level"" :  ""Sullust""  ,  ""label"" :  ""Sullust""  }, 
+  {  ""level"" :  ""Tatooine""  ,  ""label"" :  ""Tatooine""  }, 
+  {  ""level"" :  ""Toydaria""  ,  ""label"" :  ""Toydaria""  }, 
+  {  ""level"" :  ""Trandosha""  ,  ""label"" :  ""Trandosha""  }, 
+  {  ""level"" :  ""Troiken""  ,  ""label"" :  ""Troiken""  }, 
+  {  ""level"" :  ""Tund""  ,  ""label"" :  ""Tund""  }, 
+  {  ""level"" :  ""Umbara""  ,  ""label"" :  ""Umbara""  }, 
+  {  ""level"" :  ""Utapau""  ,  ""label"" :  ""Utapau""  }, 
+  {  ""level"" :  ""Vulpter""  ,  ""label"" :  ""Vulpter""  }, 
+  {  ""level"" :  ""Zolan""  ,  ""label"" :  ""Zolan""  }
+]","","character","","Tatooine ;; 
+Naboo ;; 
+Alderaan ;; 
+Stewjon ;; 
+Eriadu",FALSE,"geographic {{ mutually_exclusive :: categorical }}","categorical:mutually_exclusive:geographic","","","","",3,0.9914,"","character","","","categorical","mutually_exclusive.geographic","categorical:mutually_exclusive:geographic","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""49""  ,  ""PER"" :  ""(56.3%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""10""  ,  ""PER"" :  ""(11.5%)""  }
+]","Naboo ;; Tatooine ;; Alderaan ;; Coruscant ;; Kamino ;; Corellia ;; Kashyyyk ;; Mirial ;; Ryloth ;; Aleen Minor ;; Bespin ;; Bestine IV ;; Cato Neimoidia ;; Cerea ;; Champala ;; Chandrila ;; Concord Dawn ;; Dathomir ;; Dorin ;; Endor ;; Eriadu ;; Geonosis ;; Glee Anselm ;; Haruun Kal ;; Iktotch ;; Iridonia ;; Kalee ;; Malastare ;; Mon Cala ;; Muunilinst ;; Nal Hutta ;; Ojom ;; Quermia ;; Rodia","[ 
+  {  ""Value"" :  ""Naboo""  ,  ""Frequency"" :  11  }, 
+  {  ""Value"" :  ""Tatooine""  ,  ""Frequency"" :  10  }, 
+  {  ""Value"" :  ""Alderaan""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""Coruscant""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""Kamino""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""Corellia""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""Kashyyyk""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""Mirial""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""Ryloth""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""Aleen Minor""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Bespin""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Bestine IV""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Cato Neimoidia""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Cerea""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Champala""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Chandrila""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Concord Dawn""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Dathomir""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Dorin""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Endor""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Eriadu""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Geonosis""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Glee Anselm""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Haruun Kal""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Iktotch""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Iridonia""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Kalee""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Malastare""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Mon Cala""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Muunilinst""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Nal Hutta""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Ojom""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Quermia""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Rodia""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Serenno""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Shili""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Skako""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Socorro""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Stewjon""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Sullust""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Toydaria""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Trandosha""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Troiken""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Tund""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Umbara""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Utapau""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Vulpter""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Zolan""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""Naboo""  ,  ""Freq"" :  11  }, 
+  {  ""x"" :  ""Tatooine""  ,  ""Freq"" :  10  }, 
+  {  ""x"" :  ""Alderaan""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""Coruscant""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""Kamino""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""Corellia""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""Kashyyyk""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""Mirial""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""Ryloth""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  39  }
+]",14,"","","","05202c7786997abb54bc07c4c8117fdf"
+"species","","species","","","","","character","","Human ;; 
+Droid ;; 
+Wookiee ;; 
+Rodian ;; 
+Hutt",FALSE,"categorical","categorical","","","","",1,0.4996,"","character","","","text","","text","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""38""  ,  ""PER"" :  ""(43.7%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""4""  ,  ""PER"" :  ""(4.6%)""  }
+]","Human ;; Droid ;; Gungan ;; Kaminoan ;; Mirialan ;; Twi'lek ;; Wookiee ;; Zabrak ;; Aleena ;; Besalisk ;; Cerean ;; Chagrian ;; Clawdite ;; Dug ;; Ewok ;; Geonosian ;; Hutt ;; Iktotchi ;; Kaleesh ;; Kel Dor ;; Mon Calamari ;; Muun ;; Nautolan ;; Neimodian ;; Pau'an ;; Quermian ;; Rodian ;; Skakoan ;; Sullustan ;; Tholothian ;; Togruta ;; Toong ;; Toydarian ;; Trandoshan ;; Vulptereen ;; Xexto ;; Y","{
+  ""STATS"": [
+    {
+      ""STAT"": ""Minimum"",
+      ""CHARACTERS"": 3,
+      ""WORDS"": 1
+    },
+    {
+      ""STAT"": ""Median"",
+      ""CHARACTERS"": 5,
+      ""WORDS"": 1
+    },
+    {
+      ""STAT"": ""Mean"",
+      ""CHARACTERS"": 6.17,
+      ""WORDS"": 1.04
+    },
+    {
+      ""STAT"": ""Max"",
+      ""CHARACTERS"": 14,
+      ""WORDS"": 2
+    },
+    {
+      ""STAT"": ""Skew"",
+      ""CHARACTERS"": 1.55,
+      ""WORDS"": 4.88
+    }
+  ],
+  ""HIST"": [
+    ""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n<svg xmlns=\""http://www.w3.org/2000/svg\"" xmlns:xlink=\""http://www.w3.org/1999/xlink\"" width=\""48.00pt\"" height=\""12.00pt\"" viewBox=\""0 0 48.00 12.00\"">\n  <g class=\""svglite\"">\n    <defs>\n      <style type=\""text/css\""><![CDATA[\n    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {\n      fill: none;\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-miterlimit: 10.00;\n    }\n    .svglite text {\n      white-space: pre;\n    }\n    .svglite g.glyphgroup path {\n      fill: inherit;\n      stroke: none;\n    }\n  ]]><\/style>\n    <\/defs>\n    <rect width=\""100%\"" height=\""100%\"" style=\""stroke: none; fill: none;\""/>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""0.00\"" width=\""48.00\"" height=\""12.00\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw)\"">\n<\/g>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""2.88\"" width=\""48.00\"" height=\""9.12\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw)\"">\n      <rect x=\""1.78\"" y=\""10.88\"" width=\""4.04\"" height=\""0.79\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""5.82\"" y=\""3.22\"" width=\""4.04\"" height=\""8.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""9.86\"" y=\""9.89\"" width=\""4.04\"" height=\""1.77\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""13.90\"" y=\""10.09\"" width=\""4.04\"" height=\""1.57\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""17.94\"" y=\""9.70\"" width=\""4.04\"" height=\""1.96\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""21.98\"" y=\""10.88\"" width=\""4.04\"" height=\""0.79\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""26.02\"" y=\""11.07\"" width=\""4.04\"" height=\""0.59\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""30.06\"" y=\""11.66\"" width=\""4.04\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""34.10\"" y=\""11.47\"" width=\""4.04\"" height=\""0.20\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""38.14\"" y=\""11.66\"" width=\""4.04\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""42.18\"" y=\""11.47\"" width=\""4.04\"" height=\""0.20\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n    <\/g>\n  <\/g>\n<\/svg>\n"",
+    ""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n<svg xmlns=\""http://www.w3.org/2000/svg\"" xmlns:xlink=\""http://www.w3.org/1999/xlink\"" width=\""48.00pt\"" height=\""12.00pt\"" viewBox=\""0 0 48.00 12.00\"">\n  <g class=\""svglite\"">\n    <defs>\n      <style type=\""text/css\""><![CDATA[\n    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {\n      fill: none;\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-miterlimit: 10.00;\n    }\n    .svglite text {\n      white-space: pre;\n    }\n    .svglite g.glyphgroup path {\n      fill: inherit;\n      stroke: none;\n    }\n  ]]><\/style>\n    <\/defs>\n    <rect width=\""100%\"" height=\""100%\"" style=\""stroke: none; fill: none;\""/>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""0.00\"" width=\""48.00\"" height=\""12.00\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwwLjAwfDEyLjAw)\"">\n<\/g>\n    <defs>\n      <clipPath id=\""cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw\"">\n        <rect x=\""0.00\"" y=\""2.88\"" width=\""48.00\"" height=\""9.12\""/>\n      <\/clipPath>\n    <\/defs>\n    <g clip-path=\""url(#cpMC4wMHw0OC4wMHwyLjg4fDEyLjAw)\"">\n      <rect x=\""1.78\"" y=\""3.22\"" width=\""4.44\"" height=\""8.44\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""6.22\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""10.67\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""15.11\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""19.56\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""24.00\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""28.44\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""32.89\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""37.33\"" y=\""11.66\"" width=\""4.44\"" height=\""0.00\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n      <rect x=\""41.78\"" y=\""11.35\"" width=\""4.44\"" height=\""0.32\"" style=\""stroke-width: 0.38; fill: #D3D3D3;\""/>\n    <\/g>\n  <\/g>\n<\/svg>\n""
+  ],
+  ""COMMON"": [
+    {
+      ""Value"": ""Human"",
+      ""Frequency"": 35
+    },
+    {
+      ""Value"": ""Droid"",
+      ""Frequency"": 6
+    },
+    {
+      ""Value"": ""Gungan"",
+      ""Frequency"": 3
+    },
+    {
+      ""Value"": ""Kaminoan"",
+      ""Frequency"": 2
+    },
+    {
+      ""Value"": ""Mirialan"",
+      ""Frequency"": 2
+    },
+    {
+      ""Value"": ""Twi'lek"",
+      ""Frequency"": 2
+    }
+  ]
+}","[ 
+  {  ""ww"" :  ""Human""  ,  ""Freq"" :  35  }, 
+  {  ""ww"" :  ""Droid""  ,  ""Freq"" :  6  }, 
+  {  ""ww"" :  ""Gungan""  ,  ""Freq"" :  3  }, 
+  {  ""ww"" :  ""Kaminoan""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Mirialan""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Twilek""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Wookiee""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Zabrak""  ,  ""Freq"" :  2  }, 
+  {  ""ww"" :  ""Aleena""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Besalisk""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Calamari""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Cerean""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Chagrian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Clawdite""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dor""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Dug""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Ewok""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Geonosian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Hutt""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Iktotchi""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Kaleesh""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Kel""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Mon""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Muun""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Nautolan""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Neimodian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Pauan""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Quermian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Rodian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Skakoan""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""species""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Sullustan""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Tholothian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Togruta""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Toong""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Toydarian""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Trandoshan""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Vulptereen""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Xexto""  ,  ""Freq"" :  1  }, 
+  {  ""ww"" :  ""Yodas""  ,  ""Freq"" :  1  }
+]",14,"","","","634cbd7014146c41925e6acaca3db1b4"
+"films","","films","","","[ 
+  {  ""level"" :  ""A New Hope""  ,  ""label"" :  ""A New Hope""  }, 
+  {  ""level"" :  ""A New Hope|Attack of the Clones|Revenge of the Sith""  ,  ""label"" :  ""A New Hope|Attack of the Clones|Revenge of the Sith""  }, 
+  {  ""level"" :  ""A New Hope|Return of the Jedi|The Phantom Menace""  ,  ""label"" :  ""A New Hope|Return of the Jedi|The Phantom Menace""  }, 
+  {  ""level"" :  ""A New Hope|Revenge of the Sith""  ,  ""label"" :  ""A New Hope|Revenge of the Sith""  }, 
+  {  ""level"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi""  ,  ""label"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi""  }, 
+  {  ""level"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith""  ,  ""label"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith""  }, 
+  {  ""level"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith|The Force Awakens""  ,  ""label"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith|The Force Awakens""  }, 
+  {  ""level"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Force Awakens""  ,  ""label"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Force Awakens""  }, 
+  {  ""level"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""label"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  }, 
+  {  ""level"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith|The Force Awakens""  ,  ""label"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith|The Force Awakens""  }, 
+  {  ""level"" :  ""Attack of the Clones""  ,  ""label"" :  ""Attack of the Clones""  }, 
+  {  ""level"" :  ""Attack of the Clones|Revenge of the Sith""  ,  ""label"" :  ""Attack of the Clones|Revenge of the Sith""  }, 
+  {  ""level"" :  ""Return of the Jedi""  ,  ""label"" :  ""Return of the Jedi""  }, 
+  {  ""level"" :  ""Return of the Jedi|The Force Awakens""  ,  ""label"" :  ""Return of the Jedi|The Force Awakens""  }, 
+  {  ""level"" :  ""Revenge of the Sith""  ,  ""label"" :  ""Revenge of the Sith""  }, 
+  {  ""level"" :  ""The Empire Strikes Back""  ,  ""label"" :  ""The Empire Strikes Back""  }, 
+  {  ""level"" :  ""The Empire Strikes Back|Return of the Jedi""  ,  ""label"" :  ""The Empire Strikes Back|Return of the Jedi""  }, 
+  {  ""level"" :  ""The Empire Strikes Back|Return of the Jedi|Attack of the Clones""  ,  ""label"" :  ""The Empire Strikes Back|Return of the Jedi|Attack of the Clones""  }, 
+  {  ""level"" :  ""The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""label"" :  ""The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  }, 
+  {  ""level"" :  ""The Force Awakens""  ,  ""label"" :  ""The Force Awakens""  }, 
+  {  ""level"" :  ""The Phantom Menace""  ,  ""label"" :  ""The Phantom Menace""  }, 
+  {  ""level"" :  ""The Phantom Menace|Attack of the Clones""  ,  ""label"" :  ""The Phantom Menace|Attack of the Clones""  }, 
+  {  ""level"" :  ""The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""label"" :  ""The Phantom Menace|Attack of the Clones|Revenge of the Sith""  }, 
+  {  ""level"" :  ""The Phantom Menace|Revenge of the Sith""  ,  ""label"" :  ""The Phantom Menace|Revenge of the Sith""  }
+]","","character","","A New Hope|The Em... ;; 
+A New Hope|The Em... ;; 
+A New Hope|The Em... ;; 
+A New Hope|The Em... ;; 
+A New Hope|Attack...",FALSE,"long {{ text :: text }}","text:text:long","","","","",3,0.5325,"","factor","","","categorical","","categorical","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""24""  ,  ""PER"" :  ""(27.6%)""  }
+]","Attack of the Clones ;; The Phantom Menace ;; A New Hope|The Empire Strikes Back|Return of the ;; The Phantom Menace|Attack of the Clones|Revenge  ;; Attack of the Clones|Revenge of the Sith ;; Return of the Jedi ;; The Force Awakens ;; A New Hope ;; The Phantom Menace|Attack of the Clones ;; Revenge of the Sith ;; The Empire Strikes Back ;; The Phantom Menace|Revenge of the Sith ;; A New Hope|Att","[ 
+  {  ""Value"" :  ""Attack of the Clones""  ,  ""Frequency"" :  13  }, 
+  {  ""Value"" :  ""The Phantom Menace""  ,  ""Frequency"" :  13  }, 
+  {  ""Value"" :  ""The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""Frequency"" :  8  }, 
+  {  ""Value"" :  ""Attack of the Clones|Revenge of the Sith""  ,  ""Frequency"" :  7  }, 
+  {  ""Value"" :  ""Return of the Jedi""  ,  ""Frequency"" :  5  }, 
+  {  ""Value"" :  ""The Force Awakens""  ,  ""Frequency"" :  5  }, 
+  {  ""Value"" :  ""A New Hope""  ,  ""Frequency"" :  4  }, 
+  {  ""Value"" :  ""The Phantom Menace|Attack of the Clones""  ,  ""Frequency"" :  4  }, 
+  {  ""Value"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith|The Force Awakens""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""Revenge of the Sith""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""The Empire Strikes Back""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""The Phantom Menace|Revenge of the Sith""  ,  ""Frequency"" :  3  }, 
+  {  ""Value"" :  ""A New Hope|Attack of the Clones|Revenge of the Sith""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""A New Hope|Revenge of the Sith""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""A New Hope|Return of the Jedi|The Phantom Menace""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Force Awakens""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith|The Force Awakens""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Return of the Jedi|The Force Awakens""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""The Empire Strikes Back|Return of the Jedi""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""The Empire Strikes Back|Return of the Jedi|Attack of the Clones""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""Attack of the Clones""  ,  ""Freq"" :  13  }, 
+  {  ""x"" :  ""The Phantom Menace""  ,  ""Freq"" :  13  }, 
+  {  ""x"" :  ""The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""Freq"" :  8  }, 
+  {  ""x"" :  ""Attack of the Clones|Revenge of the Sith""  ,  ""Freq"" :  7  }, 
+  {  ""x"" :  ""Return of the Jedi""  ,  ""Freq"" :  5  }, 
+  {  ""x"" :  ""The Force Awakens""  ,  ""Freq"" :  5  }, 
+  {  ""x"" :  ""A New Hope""  ,  ""Freq"" :  4  }, 
+  {  ""x"" :  ""The Phantom Menace|Attack of the Clones""  ,  ""Freq"" :  4  }, 
+  {  ""x"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|Revenge of the Sith|The Force Awakens""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""Revenge of the Sith""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""The Empire Strikes Back""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""The Phantom Menace|Revenge of the Sith""  ,  ""Freq"" :  3  }, 
+  {  ""x"" :  ""A New Hope|Attack of the Clones|Revenge of the Sith""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""A New Hope|Revenge of the Sith""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""A New Hope|The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""The Empire Strikes Back|Return of the Jedi|The Phantom Menace|Attack of the Clones|Revenge of the Sith""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  8  }
+]",131,"","","","69054832e8fa0bb4eedd85121a773999"
+"vehicles","","vehicles","","","[ 
+  {  ""level"" :  ""AT-ST""  ,  ""label"" :  ""AT-ST""  }, 
+  {  ""level"" :  ""Flitknot speeder""  ,  ""label"" :  ""Flitknot speeder""  }, 
+  {  ""level"" :  ""Imperial Speeder Bike""  ,  ""label"" :  ""Imperial Speeder Bike""  }, 
+  {  ""level"" :  ""Koro-2 Exodrive airspeeder""  ,  ""label"" :  ""Koro-2 Exodrive airspeeder""  }, 
+  {  ""level"" :  ""Sith speeder""  ,  ""label"" :  ""Sith speeder""  }, 
+  {  ""level"" :  ""Snowspeeder""  ,  ""label"" :  ""Snowspeeder""  }, 
+  {  ""level"" :  ""Snowspeeder|Imperial Speeder Bike""  ,  ""label"" :  ""Snowspeeder|Imperial Speeder Bike""  }, 
+  {  ""level"" :  ""Tribubble bongo""  ,  ""label"" :  ""Tribubble bongo""  }, 
+  {  ""level"" :  ""Tsmeu-6 personal wheel bike""  ,  ""label"" :  ""Tsmeu-6 personal wheel bike""  }, 
+  {  ""level"" :  ""Zephyr-G swoop bike|XJ-6 airspeeder""  ,  ""label"" :  ""Zephyr-G swoop bike|XJ-6 airspeeder""  }
+]","","character","","Snowspeeder|Imper... ;; 
+Imperial Speeder ... ;; 
+Tribubble bongo ;; 
+Zephyr-G swoop bi... ;; 
+AT-ST",FALSE,"text","text","","","","",1,0.3717,"","factor","","","categorical","","categorical","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""11""  ,  ""PER"" :  ""(12.6%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""76""  ,  ""PER"" :  ""(87.4%)""  }
+]","Tribubble bongo ;; AT-ST ;; Flitknot speeder ;; Imperial Speeder Bike ;; Koro-2 Exodrive airspeeder ;; Sith speeder ;; Snowspeeder ;; Snowspeeder|Imperial Speeder Bike ;; Tsmeu-6 personal wheel bike ;; Zephyr-G swoop bike|XJ-6 airspeeder","[ 
+  {  ""Value"" :  ""Tribubble bongo""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""AT-ST""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Flitknot speeder""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Imperial Speeder Bike""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Koro-2 Exodrive airspeeder""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Sith speeder""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Snowspeeder""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Snowspeeder|Imperial Speeder Bike""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Tsmeu-6 personal wheel bike""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Zephyr-G swoop bike|XJ-6 airspeeder""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""Tribubble bongo""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""AT-ST""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Flitknot speeder""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Imperial Speeder Bike""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Koro-2 Exodrive airspeeder""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Sith speeder""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Snowspeeder""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Snowspeeder|Imperial Speeder Bike""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Tsmeu-6 personal wheel bike""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Zephyr-G swoop bike|XJ-6 airspeeder""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
+]",35,"","","","d28254af6a3a5661a890f7855ffdca67"
+"starships","","starships","","","[ 
+  {  ""level"" :  ""A-wing""  ,  ""label"" :  ""A-wing""  }, 
+  {  ""level"" :  ""Belbullab-22 starfighter""  ,  ""label"" :  ""Belbullab-22 starfighter""  }, 
+  {  ""level"" :  ""Jedi starfighter""  ,  ""label"" :  ""Jedi starfighter""  }, 
+  {  ""level"" :  ""Jedi starfighter|Trade Federation cruiser|Naboo star skiff|Jedi Interceptor|Belbullab-22 starfighter""  ,  ""label"" :  ""Jedi starfighter|Trade Federation cruiser|Naboo star skiff|Jedi Interceptor|Belbullab-22 starfighter""  }, 
+  {  ""level"" :  ""Millennium Falcon""  ,  ""label"" :  ""Millennium Falcon""  }, 
+  {  ""level"" :  ""Millennium Falcon|Imperial shuttle""  ,  ""label"" :  ""Millennium Falcon|Imperial shuttle""  }, 
+  {  ""level"" :  ""Naboo fighter""  ,  ""label"" :  ""Naboo fighter""  }, 
+  {  ""level"" :  ""Naboo fighter|H-type Nubian yacht|Naboo star skiff""  ,  ""label"" :  ""Naboo fighter|H-type Nubian yacht|Naboo star skiff""  }, 
+  {  ""level"" :  ""Naboo fighter|Trade Federation cruiser|Jedi Interceptor""  ,  ""label"" :  ""Naboo fighter|Trade Federation cruiser|Jedi Interceptor""  }, 
+  {  ""level"" :  ""Naboo Royal Starship""  ,  ""label"" :  ""Naboo Royal Starship""  }, 
+  {  ""level"" :  ""Scimitar""  ,  ""label"" :  ""Scimitar""  }, 
+  {  ""level"" :  ""Slave 1""  ,  ""label"" :  ""Slave 1""  }, 
+  {  ""level"" :  ""TIE Advanced x1""  ,  ""label"" :  ""TIE Advanced x1""  }, 
+  {  ""level"" :  ""X-wing""  ,  ""label"" :  ""X-wing""  }, 
+  {  ""level"" :  ""X-wing|Imperial shuttle""  ,  ""label"" :  ""X-wing|Imperial shuttle""  }
+]","","character","","X-wing|Imperial s... ;; 
+TIE Advanced x1 ;; 
+X-wing ;; 
+Jedi starfighter|... ;; 
+Naboo fighter|Tra...",FALSE,"text","text","","","","",1,0.2926,"","factor","","","categorical","","categorical","","","no","","identity","","","","[ 
+  {  ""STAT"" :  ""Rows""  ,  ""VAL"" :  ""87""  ,  ""PER"" :  """"  }, 
+  {  ""STAT"" :  ""Distinct""  ,  ""VAL"" :  ""16""  ,  ""PER"" :  ""(18.4%)""  }, 
+  {  ""STAT"" :  ""Missing/NA""  ,  ""VAL"" :  ""67""  ,  ""PER"" :  ""(77.0%)""  }
+]","X-wing ;; Millennium Falcon ;; Millennium Falcon|Imperial shuttle ;; A-wing ;; Belbullab-22 starfighter ;; Jedi starfighter ;; Jedi starfighter|Trade Federation cruiser|Naboo  ;; Naboo fighter ;; Naboo fighter|H-type Nubian yacht|Naboo star ski ;; Naboo fighter|Trade Federation cruiser|Jedi Inte ;; Naboo Royal Starship ;; Scimitar ;; Slave 1 ;; TIE Advanced x1 ;; X-wing|Imperial shuttle","[ 
+  {  ""Value"" :  ""X-wing""  ,  ""Frequency"" :  4  }, 
+  {  ""Value"" :  ""Millennium Falcon""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""Millennium Falcon|Imperial shuttle""  ,  ""Frequency"" :  2  }, 
+  {  ""Value"" :  ""A-wing""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Belbullab-22 starfighter""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Jedi starfighter""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Jedi starfighter|Trade Federation cruiser|Naboo star skiff|Jedi Interceptor|Belbullab-22 starfighter""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Naboo fighter""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Naboo fighter|H-type Nubian yacht|Naboo star skiff""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Naboo fighter|Trade Federation cruiser|Jedi Interceptor""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Naboo Royal Starship""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Scimitar""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""Slave 1""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""TIE Advanced x1""  ,  ""Frequency"" :  1  }, 
+  {  ""Value"" :  ""X-wing|Imperial shuttle""  ,  ""Frequency"" :  1  }
+]","[ 
+  {  ""x"" :  ""X-wing""  ,  ""Freq"" :  4  }, 
+  {  ""x"" :  ""Millennium Falcon""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""Millennium Falcon|Imperial shuttle""  ,  ""Freq"" :  2  }, 
+  {  ""x"" :  ""A-wing""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Belbullab-22 starfighter""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Jedi starfighter""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Jedi starfighter|Trade Federation cruiser|Naboo star skiff|Jedi Interceptor|Belbullab-22 starfighter""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Naboo fighter""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Naboo fighter|H-type Nubian yacht|Naboo star skiff""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Naboo fighter|Trade Federation cruiser|Jedi Interceptor""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Naboo Royal Starship""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Scimitar""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""Slave 1""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""TIE Advanced x1""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""X-wing|Imperial shuttle""  ,  ""Freq"" :  1  }, 
+  {  ""x"" :  ""other""  ,  ""Freq"" :  0  }
+]",100,"","","","a9c2713b16ca04f5cf58231ae5da43a6"

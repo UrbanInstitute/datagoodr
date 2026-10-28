@@ -21,7 +21,7 @@ params:
 
      Customize without editing the package:
        - DG.R           custom functions & layout overrides
-       - datagoodr.css  the page grid, fonts, and colors
+       - datagoodr-vintage.css  the page grid, fonts, and colors
      See vignette("customizing", package = "datagoodr").
 
      Render from the console with:  quarto::quarto_render("data-dictionary.qmd")
@@ -118,9 +118,9 @@ create_all_sections( dgf.time, style = "dd" )
 
 
 ```{r datagoodr-style, echo=FALSE, results="asis"}
-# The report stylesheet comes from a single source: datagoodr.css (a local
+# The report stylesheet comes from a single source: datagoodr-vintage.css (a local
 # copy overrides the packaged one). Edit that file to restyle the report.
-cat( "<style>\n", datagoodr_css(), "\n</style>\n" )
+cat( "<style>\n", datagoodr_css("vintage"), "\n</style>\n" )
 ```
 
 ```{r datagoodr-record, echo=FALSE, results="asis"}

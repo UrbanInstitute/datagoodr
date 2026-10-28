@@ -1,0 +1,137 @@
+# create DGF file
+
+Builds a Data Governance File (DGF) from a dataset: one row per
+variable, carrying the metadata, summary statistics, and graphics data
+needed to render a Research Guide. Writes a \`.csv\` and an \`.xlsx\`,
+and returns the DGF data frame.
+
+## Usage
+
+``` r
+create_dgf(
+  df,
+  vtypes = NULL,
+  use.df.types = FALSE,
+  read_as_text = TRUE,
+  guess.factors = TRUE,
+  guess.dates = FALSE,
+  max_factor_levels = 50,
+  dd = NULL,
+  var_name = NULL,
+  dd_vlabel = NULL,
+  dd_vdesc = NULL,
+  stable_data_type = NULL,
+  desired_data_import_rule = NULL,
+  stable_data_format = NULL,
+  dd_vname_alias = NULL,
+  keep.dd.cols = NULL,
+  preview_dd = F,
+  preview_dp = F,
+  dir = ".",
+  file = "DGF",
+  open = interactive()
+)
+```
+
+## Arguments
+
+- df:
+
+  A data frame to document, or a path to a \`.csv\` file to read.
+
+- vtypes, guess.dates, dd, keep.dd.cols, preview_dd, preview_dp:
+
+  Accepted but currently ignored; the features they were intended to
+  steer (explicit type overrides, date/time detection, and
+  data-dictionary merging) are not implemented yet. See
+  \`dev/TO-DO.md\`.
+
+- use.df.types:
+
+  Logical; keep the data frame's existing column types instead of
+  re-reading the data with \`readr\` to re-infer them. Defaults to
+  \`FALSE\`.
+
+- read_as_text:
+
+  Logical; read every column as character to preserve the source
+  representation exactly - avoiding \`readr\`'s inference dropping
+  leading zeros (\`06037\` -\> \`6037\`) or casting long-integer IDs to
+  lossy doubles - then promote only the columns that are safe to store
+  as numeric (see internal \`.safe_numeric\`). Defaults to \`TRUE\`. Set
+  \`FALSE\` for the legacy \`readr\`-inference behaviour.
+
+- guess.factors:
+
+  Logical; treat low-cardinality columns as factors. Defaults to
+  \`TRUE\`.
+
+- max_factor_levels:
+
+  Integer; the maximum number of factor/logical levels stored in the
+  \`dd_f_levels\` dictionary. High-cardinality factors are capped to the
+  most frequent \`max_factor_levels\` levels, matching the
+  frequency-ranked FACTOR LEVELS table in the Research Guide (and
+  keeping the cell under Excel's 32,767-character limit). Defaults to
+  \`50\`.
+
+- var_name, stable_data_type:
+
+  Accepted but ignored: \`var_name\` is always the column names of
+  \`df\`, and \`stable_data_type\` is computed from the data. Both are
+  legacy arguments slated for removal (see \`dev/TO-DO.md\`).
+
+- dd_vlabel, dd_vdesc:
+
+  Optional character vectors of per-variable short labels and long
+  descriptions, each the same length and order as the columns of \`df\`.
+  \`dd_vlabel\` defaults to the column names, \`dd_vdesc\` to blank.
+
+- desired_data_import_rule:
+
+  Optional character vector of type-conversion function names (e.g.
+  \`"read_yyyy"\`), one per column, applied to the data before
+  profiling.
+
+- stable_data_format:
+
+  Optional character vector of display-formatting function names (e.g.
+  \`"dollarize"\`), one per column, applied to previews and graphics.
+
+- dd_vname_alias:
+
+  Optional character vector of per-variable alternate names. Defaults to
+  blank.
+
+- dir:
+
+  Directory to write the DGF into. Created if it does not exist.
+  Defaults to \`"."\`. Ignored when \`file\` is an absolute path.
+
+- file:
+
+  Output path stem (without extension) for the written \`.csv\` and
+  \`.xlsx\`. Defaults to \`"DGF"\`. Resolved relative to \`dir\` unless
+  absolute.
+
+- open:
+
+  Logical; open the new DGF in Excel once created. Defaults to
+  \[interactive()\] — on at the console, off in scripts, tests, and CI.
+
+## Value
+
+The DGF as a data frame, one row per variable. Also writes
+\`\<file\>.csv\` and \`\<file\>.xlsx\` as a side effect.
+
+## Details
+
+Column types are inferred from the data (see \`vtypes\` /
+\`use.df.types\` / \`guess.factors\` to steer that), then each variable
+is profiled into the \`rg\_\*\` columns. The result is meant to be
+curated by hand - in Excel or via the \`v\*\` arguments - and fed to
+\[create_rg()\].
+
+## See also
+
+\[create_rg()\], \[update_dgf()\], \[inspect_dgf()\]

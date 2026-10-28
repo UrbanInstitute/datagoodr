@@ -5,7 +5,8 @@
 # workflow.
 
 test_that("packaged templates resolve by name", {
-  for (f in c("RG.qmd", "DD.qmd", "DG.R", "datagoodr.css")) {
+  for (f in c("RG.qmd", "RG-vintage.qmd", "DD.qmd", "DG.R",
+             "datagoodr.css", "datagoodr-vintage.css")) {
     p <- system.file("templates", f, package = "datagoodr")
     expect_true(nzchar(p), info = paste("templates/", f, " did not resolve", sep = ""))
     expect_true(file.exists(p))
@@ -43,6 +44,6 @@ test_that("datagoodr() runs the whole workflow and names output after rg.name", 
   html <- file.path(proj, "research-guide", "my-guide.html")
   expect_true(file.exists(html))
 
-  # and the report is styled, i.e. datagoodr.css made it into the page
-  expect_true(any(grepl("dg-serif", readLines(html, warn = FALSE))))
+  # and the report is styled, i.e. the rail stylesheet made it into the page
+  expect_true(any(grepl("dg-unit", readLines(html, warn = FALSE))))
 })
