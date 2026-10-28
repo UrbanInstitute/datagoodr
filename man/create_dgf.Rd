@@ -28,7 +28,7 @@ create_dgf(
   open = interactive(),
   workers = getOption("datagoodr.workers", 1L),
   guess_seed = getOption("datagoodr.guess_seed", 1L),
-  guess_n_sample = getOption("datagoodr.guess_n_sample", NULL)
+  guess_n_sample = getOption("datagoodr.guess_n_sample", 300L)
 )
 }
 \arguments{
@@ -102,15 +102,20 @@ guessed types genuinely vary between runs. `NULL` restores that older
 behaviour. Also settable with `options( datagoodr.guess_seed = )`.}
 
 \item{guess_n_sample}{Integer or `NULL`; how many values per column
-`formex::guess_data_type()` samples when guessing its type. `NULL` (the
-default) leaves formex's own default of 100. That default is smaller than
-the distinct-value count of many real columns, so a column whose route
-confidence lands near the acceptance threshold is decided by the sample:
-measured on `bb.csv`'s `birthState`, confidence spans 0.631-0.905 at 100
-and is a flat 0.813 at 300, where the column correctly resolves to a
-geographic categorical instead of falling back to text. Raising it costs
-extra time on high-cardinality columns. Also settable with
-`options( datagoodr.guess_n_sample = )`.}
+  `formex::guess_data_type()` samples when guessing its type. Defaults to
+  `300`; `NULL` hands control back to formex, whose own default is 100.
+
+  formex samples from a column's **distinct** values, so its reported
+  confidence is stable exactly when `guess_n_sample >= n_distinct` — below
+  that line it is a sample statistic, and a column whose confidence lands
+  near the acceptance threshold is decided by which values were drawn.
+  Measured on `bb.csv`'s `birthState` (210 distinct), confidence spans
+  0.631-0.905 at 100 and is a flat 0.813 at 300, where the column resolves
+  to a geographic categorical instead of falling back to text. 300
+  exhaustively covers most real columns; raising it further costs time on
+  high-cardinality ones, where the draw is merely reproducible (see
+  `guess_seed`) rather than complete. Also settable with
+  `options( datagoodr.guess_n_sample = )`.}
 }
 \value{
 The DGF as a data frame, one row per variable. Also writes

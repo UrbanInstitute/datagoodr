@@ -96,10 +96,15 @@
 ##
 ## Raising it is therefore both a determinism fix and a better answer --- at
 ## 300 the column resolves to mutually_exclusive.geographic instead of falling
-## back to text. It is left to the caller rather than defaulted up, because it
-## shifts guessed types for every existing DGF; the cost is modest but real
-## (`birthState` 0.50s -> 0.82s, and a high-cardinality column like `AB` rises
-## to ~1.4s, since the sample stops being a shortcut).
+## back to text, and `AVG` stops carrying a spurious text:web:domain class.
+## create_dgf() now defaults it to 300: that covers most real columns
+## exhaustively, and the formex-side speedup (lecy/formex@3d812d2) paid for the
+## extra work. The cost is real but bounded, and falls on high-cardinality
+## columns, where a larger sample is doing more actual checking --- `birthState`
+## 0.50s -> 0.82s, `AB` up to ~1.4s, since the sample stops being a shortcut.
+## Above the distinct count the draw is merely reproducible (see `seed`), not
+## complete; an adaptive min(n_distinct, cap) would be better still, but that
+## belongs in formex.
 #' @keywords internal
 #' @noRd
 .formex_guess_all <- function(df, workers = 1L, seed = NULL, n_sample = NULL) {
@@ -353,8 +358,9 @@
 #'   its internal 100-value sample - and therefore the whole DGF - is
 #'   reproducible. `NULL` restores the old session-RNG behaviour.
 #' @param n_sample Integer or `NULL`; how many values formex samples per column.
-#'   `NULL` leaves formex's own default (100). Raising it stabilises the
-#'   confidences of columns near `route_threshold` - see `.formex_guess_all()`.
+#'   Defaults to `300`; `NULL` leaves formex's own default (100). The sample is
+#'   drawn from the distinct values, so confidence is stable exactly when
+#'   `n_sample >= n_distinct` - see `.formex_guess_all()`.
 #'
 #' @return A data frame, one row per column: `desired_data_type`,
 #'   `desired_data_class` (dotted `class.subclass`), `dd_is_join_key`, and the
@@ -370,7 +376,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
                             route_threshold = 0.8,
                             workers  = getOption("datagoodr.workers", 1L),
                             seed     = getOption("datagoodr.guess_seed", 1L),
-                            n_sample = getOption("datagoodr.guess_n_sample", NULL)) {
+                            n_sample = getOption("datagoodr.guess_n_sample", 300L)) {
   vars <- names(df)
 
   ## every column's formex answer, fetched up front (see .formex_guess_all())

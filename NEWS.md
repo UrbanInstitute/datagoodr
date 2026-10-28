@@ -59,6 +59,34 @@ When neither modality is confident the column keeps its base type, and the
 route's `depth` is recorded rather than discarded — a truncated path is a valid
 partial answer for a reviewer to deepen, not a failure.
 
+### `create_dgf()` is reproducible, and guesses from a larger sample
+
+`formex::guess_data_type()` draws its sample from the session RNG, so the same
+data produced different types on different runs — across three builds of the
+baseball dataset `nameLast` moved text -> categorical and `AB` categorical ->
+text. `create_dgf()` now seeds it (`guess_seed`, default `1`), so repeated
+builds of the same data produce an identical DGF.
+
+Seeding makes the draw repeatable, not correct. formex samples from a column's
+**distinct** values and its confidence is stable only when the sample covers
+them all, so `create_dgf()` also raises `guess_n_sample` to **300** (formex's
+own default is 100). On the baseball dataset that fixes `birthState`, which now
+resolves to `mutually_exclusive.geographic` instead of falling back to `text`,
+and clears a spurious `text:web:domain` class on `AVG`.
+
+* Both are arguments and options: `guess_seed = NULL` restores the old
+  session-RNG behaviour, and `guess_n_sample = NULL` hands the sample size back
+  to formex. `options(datagoodr.guess_seed = )` /
+  `options(datagoodr.guess_n_sample = )` set them project-wide.
+* **Guessed types can differ from a DGF built before this change** — that is the
+  point, but re-check any curated DGF you regenerate.
+* The larger sample costs roughly what the formex speedup above saves, so a
+  build is about level on time while being reproducible and better typed.
+
+`create_dgf(workers = )` additionally spreads the per-column guess over a
+process pool. It defaults to `1`; with the formex fix in place it is only worth
+raising on wide frames.
+
 ## Breaking changes
 
 ### Type detection moved to the formex package

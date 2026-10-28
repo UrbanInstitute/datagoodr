@@ -122,9 +122,11 @@ identical to the verbose path.
    returns, so replacing it with a cheap base-R numeric probe risks silently
    changing typing decisions. Needs a deliberate decision plus a before/after
    type comparison over several datasets, not a perf patch.
-2. **Decide the `guess_n_sample` default** (see §3). Currently left at formex's
-   100, which is knowingly unstable for any column with more than 100 distinct
-   values.
+2. ~~Decide the `guess_n_sample` default.~~ **Done 2026-10-28: set to 300**
+   (§3). Columns with more than 300 distinct values are still sampled, so their
+   confidence is reproducible rather than complete; the adaptive
+   `min(n_distinct, cap)` form remains the better answer and belongs in formex
+   (§2.4).
 3. **Cache the guess across rebuilds.** formex has no internal memoisation — the
    same column guessed twice costs 0.380s both times. `refresh_dgf()` /
    `update_dgf()` re-guess columns whose values have not changed, and
@@ -271,13 +273,19 @@ default `n_sample` to something adaptive like `min(n_distinct, cap)` so a column
 is either exhaustively checked or honestly flagged as sampled. A fixed 100 is
 the worst of both.
 
+**datagoodr's interim answer (2026-10-28):** `guess_n_sample` now defaults to
+300 (§3), which converts most columns from sampled to exhaustive. This is a
+blunt instrument — it pays the full cost on every column, including the
+high-cardinality ones it still cannot cover — so the adaptive form above remains
+the right fix and the ask stands.
+
 
 ## 3. Better default settings
 
 | Setting | Current default | Recommendation | Evidence | Risk if changed |
 |---|---|---|---|---|
 | `guess_seed` | `1` (**changed**) | keep `1` | builds were not reproducible; §1.1 | shifts guessed types vs. whatever the last unseeded run happened to roll |
-| `guess_n_sample` | `NULL` → formex's 100 | **raise, probably to 300** | confidence unstable whenever `n_sample < n_distinct`; §2.4 | changes guessed types in every existing DGF; +1.2s on bb.csv, more on high-cardinality columns |
+| `guess_n_sample` | `300` (**changed**) | keep `300` | confidence unstable whenever `n_sample < n_distinct`; §2.4 | shifts guessed types in DGFs written before the change; costs ~2.9s on bb.csv |
 | `workers` | `1` | **keep `1`** once the formex fix ships; raise only for wide frames | see table below | none — results are identical with a fixed seed |
 | `route_threshold` | `0.8` | leave until §2.4 is settled | the threshold is fine; the *confidence* feeding it is the unstable part | — |
 | `is_factor(verbose)` | `TRUE` | `TRUE` (public API unchanged) | `is_factor_df()` passes `FALSE`; §1.1 | none |
@@ -303,13 +311,39 @@ default; it is now only worth raising on genuinely wide frames, and even there
 the margin has shrunk. **Do not drop the `workers` plumbing** — it is what makes
 a 200-column frame tolerable, and it cost nothing to keep.
 
-**On `guess_n_sample`, the recommendation is to raise it but the call is not
-mine to make**: it is a quality-for-time trade that shifts types in every DGF
-already written. 300 covers the great majority of real columns exhaustively
-(bb.csv: 15 of 19), and the two columns it changes here both change for the
-better. The adaptive form — `min(n_distinct, cap)` — is better still but belongs
-in formex (§2.4). Note the formex speedup buys headroom for exactly this: the
-time it frees is roughly what raising `n_sample` to 300 costs.
+### `guess_n_sample = 300` — decided 2026-10-28
+
+Raised from formex's 100. 300 covers most real columns exhaustively (bb.csv: 15
+of 19 distinct counts fall under it), which is the point: below `n_distinct` the
+confidence is a sample statistic and the answer is a lottery.
+
+What it changed on bb.csv, holding `guess_seed = 1`:
+
+| Column | at 100 | at 300 |
+|---|---|---|
+| `birthState` | `text`, no class | **`categorical` / `mutually_exclusive.geographic`** |
+| `AVG` guess | **`text:web:domain`** (the known misroute) | `number:quantity:measurement` |
+| `AB` guess | `identifier` | `number` |
+| `G` guess | `number:quantity:rank` | `number` |
+
+All four move in the right direction, and 26 of 43 DGF columns are untouched.
+
+**It costs most of the formex speedup**, which is worth stating plainly:
+
+| | median |
+|---|---|
+| formex default (100) | 6.37s [5.41-6.95] |
+| **`n_sample = 300`** | **9.30s** [9.06-10.54] |
+| `n_sample = 1000` | 23.17s [19.78-23.61] |
+
+So a bb.csv build lands at ~9.3s against the ~9.9s it took before any of this
+work — net roughly flat on time, but now reproducible and with four columns
+typed better. That is the trade that was taken. 1000 is not worth it: it nearly
+triples the build to fix columns a human should be labelling anyway.
+
+`workers` still does not rescue it at this width (`workers = 7` measured 9.37s
+against 9.61s at `workers = 1`, inside the noise band) — the per-worker formex
+warm-up eats the gain on 19 columns. Wide frames remain the case for it.
 
 ## 4. Measured and rejected
 
@@ -447,7 +481,7 @@ A pristine `git archive HEAD` tree plus the before/after snapshots used for the
 1. ~~Install the formex fix.~~ **Done 2026-10-28** (§6). Still to do:
    **commit the five formex files** — the installed build is ahead of formex's
    git HEAD, so a clean reinstall would silently revert the speedup.
-2. **Decide `guess_n_sample`** (§2.4, §3). The quality question, now affordable.
+2. ~~Decide `guess_n_sample`.~~ **Done 2026-10-28** — set to 300 (§3).
 3. **Guess cache keyed on `prov_current_hash`** (§1.2 item 3) — makes
    `refresh_dgf()` / `update_dgf()` near-free. Only sound because the guess is
    now deterministic.
