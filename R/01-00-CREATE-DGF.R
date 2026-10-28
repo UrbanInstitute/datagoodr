@@ -33,9 +33,15 @@
 .align_profile_types <- function( df_stats, df, target_type, legacy_type,
                                   storage_type, guess = NULL, desired = NULL ) {
 
+  ## A column is boolean only when it has <=2 states AND those states are
+  ## boolean-LIKE (TRUE/FALSE, yes/no, 0/1, t/f, on/off). A 2-level code that is
+  ## not a flag (throws = R/L, sex = M/F) is categorical, not boolean.
+  .bool_vocab <- c("true","false","t","f","yes","no","y","n","1","0","on","off")
   can_carry <- function( type, x ) switch( type,
     number  = is.numeric( x ),
-    boolean = length( unique( x[ ! is.na(x) ] ) ) <= 2,
+    boolean = { nn <- x[ ! is.na(x) ]
+                length(nn) > 0 && length(unique(nn)) <= 2 &&
+                  all( tolower(trimws(as.character(nn))) %in% .bool_vocab ) },
     TRUE )
 
   n <- ncol( df_stats )

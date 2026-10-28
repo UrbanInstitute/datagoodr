@@ -86,9 +86,16 @@
 ## measurably better on those.
 #' @keywords internal
 #' @noRd
+## TRUE when the route resolved a semantic TYPE confidently (depth >= 3), even
+## if it stopped short of a format leaf (depth 4). A confident categorical/
+## geographic at depth 3 (e.g. a birthCity column) still carries a usable
+## data_type + class, so it should be adopted rather than discarded to text; the
+## format_label/variant is simply left blank. The confidence bar still applies,
+## so a genuinely low-confidence path (a non-US-heavy place column at 0.77) is
+## not forced.
 .route_is_leaf <- function(route, threshold = 0.8) {
   !is.null(route) &&
-    isTRUE(as.integer(route$depth) >= 4L) &&
+    isTRUE(as.integer(route$depth) >= 3L) &&
     !is.na(route$confidence) && route$confidence >= threshold &&
     !is.na(route$semantic_family) && !is.na(route$semantic_type)
 }
