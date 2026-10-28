@@ -253,10 +253,10 @@ What this means for the work above:
 * **`dev/performance-notes.md` §2.3.3** floats "per-recipe applicability gates (skip the date genome
   when a column has no digits at all)". That would avoid `strptime` on most free text, but it is a
   detection-logic change, not a length guard: a long value that contains digits would still reach it.
-* **`guess_seed` (your uncommitted work)** makes the guess deterministic. It does not interact with
+* **`guess_seed` (your `v7-stabilization-workflow` commits)** makes the guess deterministic. It does not interact with
   this branch: the equivalence runs fixed the seed themselves, and the pre-flight smoke test only
   needs the session's RNG state restored, which `.with_seed()` does.
-* **Not tested:** the parallel `workers` path (it is in your uncommitted code; see §7), and formex's
+* **Not tested:** the parallel `workers` path (it is in your `v7-stabilization-workflow` commits; see §7), and formex's
   own test suite (its notes report 883 passing; not re-run here).
 
 ---
@@ -279,18 +279,27 @@ What this means for the work above:
 
 ## 7. Merging this branch
 
-Your working copy of `v7-stabilization-workflow` is two commits behind `origin/main` and has
-**uncommitted edits in files this branch also changes**; none were touched (this branch lives in a
-separate worktree). Expect mechanical conflicts in:
+This branch is cut from `origin/main` (`f5cd312`), so it fast-forwards onto `origin/main` cleanly
+[verified with `git merge-tree`]. Nothing was pushed, and this branch lives in its own worktree, so
+the working copy of `v7-stabilization-workflow` was not touched.
+
+`v7-stabilization-workflow` has since gained four commits (`c3e11cf` .. `e7d936b`: reproducible and
+parallel type guessing, `guess_n_sample = 300`, `is_factor()` arguments, the performance notes).
+Merging this branch into it **conflicts in four files** [verified with `git merge-tree`, which
+writes nothing]; each is a mechanical, additive conflict:
 
 * `R/01-00-CREATE-DGF.R` — your `workers` / `guess_seed` / `guess_n_sample` arguments and this
   branch's `preflight` argument both extend the signature and the `@param` block.
 * `R/01-06-guess-dgf-types.R` — this branch adds `.cap_bytes()` and calls it at the top of
-  `.formex_guess()`. In your uncommitted version, `.formex_guess_all()` (line ~138) calls
+  `.formex_guess()`. In your version, `.formex_guess_all()` (line ~138) calls
   `formex::guess_data_type` **directly inside the parallel worker**, bypassing `.formex_guess()`, so
   with `workers > 1` the long-text crash (B2) would return. Apply `.cap_bytes()` to the values once,
-  in `.formex_guess_all()`, before they are dispatched to either path.
-* `NEWS.md`, `NAMESPACE`, `man/create_dgf.Rd` — additive.
+  in `.formex_guess_all()`, before they are dispatched to either path. (Not tested: the parallel path
+  was not run.)
+* `NEWS.md`, `man/create_dgf.Rd` — both sides add text in the same places.
+
+`NAMESPACE`, `R/00-utils.R`, `R/01-03-*.R`, `R/01-05-retype-dgf.R`, `R/05-build-functions.R` and the
+new files merge without conflict.
 
 `.with_seed()` in the smoke test is independent of `guess_seed`. Files in this repo use CRLF in the
 working tree (`core.autocrlf = true`); the diffs are small and clean.
