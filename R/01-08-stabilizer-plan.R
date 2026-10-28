@@ -286,9 +286,15 @@ stabilize_col_v7 <- function(col, guess, desired) {
 #'
 #' The format-first schema: the type+class cluster collapses to a guessed leaf
 #' label split across the `format_style` / `unit_type` axes, the stabilizer is a
-#' `read :: [convert] :: write` plan, and `stable_first5` shows its effect. Not
-#' yet the schema `create_dgf()` builds -- see the testing gate in
-#' dev/v7-dgf-integration-plan.md.
+#' `read :: [convert] :: write` plan, and `stable_first5` shows its effect.
+#'
+#' Drops the legacy v2 rule/type columns (`raw_to_stable_transform`,
+#' `stable_data_type`, `stable_data_format`, `desired_data_import_rule`,
+#' `desired_data_type`, `desired_data_class`): the `guess_*` and `desired_*`
+#' axes plus `stabilizer` / `load_rule` replace them. Not yet the schema
+#' `create_dgf()` builds -- the functions listed in dev/TO-DO.md ("Port off the
+#' legacy columns") still read the dropped columns. The workflow is described
+#' in dev/stabilization-workflow.md.
 #'
 #' @return A character vector of column names.
 #' @keywords internal
@@ -298,8 +304,9 @@ dgf_schema_cols_v7 <- function() {
     # variable key
     "var_name",
 
-    # dd_: data dictionary (user-authored)
-    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_is_join_key",
+    # dd_: data dictionary (user-authored). dd_f_levels is the level/label
+    # table a factor load rule (as_factor) reads its levels and labels from.
+    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_f_levels", "dd_is_join_key",
 
     # raw_: as received
     "raw_first5", "raw_data_mode", "raw_duplicated",

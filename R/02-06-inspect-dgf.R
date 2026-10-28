@@ -82,6 +82,19 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
     } else {
       say( "[ ok ] all desired_data_type values are renderable\n" )
     }
+  } else if( "desired_semantic_type" %in% names(dgf) ) {
+    # v7 DGF: no legacy type column, so the template comes from the semantic
+    # type. Unknown values still render (as text), so this is a note, not a FAIL.
+    sem   <- trimws( as.character( dgf$desired_semantic_type ) )
+    sem[ is.na(sem) ] <- ""
+    lk    <- .semantic_lookup()
+    known <- sem %in% .render_types | ( ! is.null(lk) & sem %in% names(lk$by_type) )
+    unk   <- nzchar(sem) & ! known
+    if( any(unk) )
+      say( "[note] desired_semantic_type not in the formex ontology (rendered as text): ",
+           paste( dgf$var_name[unk], collapse=", " ), "\n" )
+    else
+      say( "[ ok ] all desired_semantic_type values route to a template\n" )
   }
 
   ## 3. JSON columns ---------------------------------------------------------

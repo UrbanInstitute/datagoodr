@@ -56,9 +56,14 @@ to the most frequent `max_factor_levels` levels, matching the
 frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
 cell under Excel's 32,767-character limit). Defaults to `50`.}
 
-\item{var_name, dd_vlabel, dd_vdesc, stable_data_type}{Optional character vectors of per-variable
-metadata (name, short label, long description, type), each the same length
-and order as the columns of `df`. Default to blank.}
+\item{var_name, stable_data_type}{Accepted but ignored: `var_name` is always
+the column names of `df`, and `stable_data_type` is computed from the data.
+Both are legacy arguments slated for removal (see `dev/TO-DO.md`).}
+
+\item{dd_vlabel, dd_vdesc}{Optional character vectors of per-variable short
+labels and long descriptions, each the same length and order as the
+columns of `df`. `dd_vlabel` defaults to the column names, `dd_vdesc` to
+blank.}
 
 \item{desired_data_import_rule}{Optional character vector of type-conversion function names
 (e.g. `"read_yyyy"`), one per column, applied to the data before profiling.}

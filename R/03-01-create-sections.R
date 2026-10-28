@@ -145,7 +145,7 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
         defaults[[ key ]]
     }
     # List keys are the ontology data_type that create_div matches against
-    # desired_data_type; the resolve() keys are the R-flavoured layout names
+    # dg_render_type(); the resolve() keys are the R-flavoured layout names
     # (numeric/character/factor/logical) users override by.
     layouts <- list(
       number      = resolve("numeric"),
@@ -252,7 +252,7 @@ create_div <- function( div.num="div2", all.layouts ) {
   if( grepl("^blank", div.num) )
   { cat( paste0( "::: {.", div.num, "} \n\n::: \n\n" ) ); return( invisible(NULL) ) }
 
-  DATA_TYPE <- get_xx()[["desired_data_type"]]
+  DATA_TYPE <- dg_render_type( get_xx() )
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
 
   # skip div if not included in design
@@ -304,7 +304,7 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   xx[["VNAME"]] <- VNAME
   set_xx( xx )                         # publish to the render context
 
-  DATA_TYPE <- xx[["desired_data_type"]]
+  DATA_TYPE <- dg_render_type( xx )
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]

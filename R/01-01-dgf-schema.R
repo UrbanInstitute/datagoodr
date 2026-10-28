@@ -70,6 +70,104 @@ dg_type_of <- function( storage ) {
 }
 
 
+## The six data types the Research Guide has templates (layouts) for.
+.render_types <- c("number", "text", "categorical", "boolean",
+                   "identifier", "temporal")
+
+
+## semantic_type -> ontology data_type, read once from formex's ontology. A
+## semantic type listed under two data types (geographic: categorical and
+## identifier) maps to the first; a variant_id, when known, settles it exactly.
+#' @noRd
+.semantic_lookup <- function() {
+  if (is.null(.fx_ont_cache$sem)) {
+    ont <- tryCatch(formex::fx_ontology(), error = function(e) NULL)
+    if (is.null(ont)) return(NULL)
+    first <- !duplicated(ont$semantic_type)
+    .fx_ont_cache$sem <- list(
+      by_type     = stats::setNames(ont$data_type[first], ont$semantic_type[first]),
+      by_variant  = stats::setNames(ont$data_type, ont$variant_id),
+      variant_sem = stats::setNames(ont$semantic_type, ont$variant_id))
+  }
+  .fx_ont_cache$sem
+}
+
+
+#' Pick the Research Guide template for each variable
+#'
+#' Returns the data type whose template (layout) renders each variable: one of
+#' `number`, `text`, `categorical`, `boolean`, `identifier`, `temporal`.
+#'
+#' @param dgf A DGF data frame, or a one-variable list (a row from
+#'   [dgf_to_list()]).
+#'
+#' @return A character vector, one value per variable.
+#'
+#' @details Resolved in this order:
+#'
+#' 1. the legacy `desired_data_type` column, when present and filled with a
+#'    renderable type (`"string"` is read as `"text"`). This keeps existing DGFs
+#'    rendering exactly as before;
+#' 2. the ontology data type of `desired_semantic_type` (looked up in
+#'    `formex::fx_ontology()`, using `guess_variant_id` to settle a semantic type
+#'    that sits under two data types). A data type name typed directly into
+#'    `desired_semantic_type` (e.g. `"number"`) is accepted as is;
+#' 3. `"text"`, the fallback for structured and unknown types, blanks, and
+#'    anything the ontology does not know.
+#'
+#' @seealso [create_all_sections()], `dev/stabilization-workflow.md`
+#' @export
+dg_render_type <- function( dgf ) {
+
+  col <- function( nm ) {
+    # check names first: `[[` on a missing name errors for an atomic row
+    if( ! nm %in% names(dgf) ) return( NULL )
+    v <- dgf[[ nm ]]
+    if( is.null(v) ) return( NULL )
+    v <- as.character( v )
+    v[ is.na(v) ] <- ""
+    trimws( v )
+  }
+  n <- if( is.data.frame(dgf) ) nrow(dgf) else 1L
+  if( n == 0 ) return( character(0) )
+
+  out <- rep( NA_character_, n )
+
+  ## 1. legacy desired_data_type
+  legacy <- col( "desired_data_type" )
+  if( ! is.null(legacy) ) {
+    legacy[ legacy == "string" ] <- "text"
+    ok <- legacy %in% .render_types
+    out[ ok ] <- legacy[ ok ]
+  }
+
+  ## 2. desired_semantic_type -> ontology data_type
+  sem <- col( "desired_semantic_type" )
+  todo <- is.na(out)
+  if( ! is.null(sem) && any(todo) ) {
+    direct <- todo & sem %in% .render_types
+    out[ direct ] <- sem[ direct ]
+    lk <- .semantic_lookup()
+    if( ! is.null(lk) ) {
+      vid <- col( "guess_variant_id" )
+      if( is.null(vid) ) vid <- rep( "", n )
+      for( i in which( is.na(out) & nzchar(sem) ) ) {
+        # the guessed variant settles it only if the user kept its semantic type
+        dt <- if( nzchar(vid[i]) && vid[i] %in% names(lk$by_variant) &&
+                  identical( lk$variant_sem[[ vid[i] ]], sem[i] ) )
+                lk$by_variant[[ vid[i] ]] else NA_character_
+        if( is.na(dt) && sem[i] %in% names(lk$by_type) ) dt <- lk$by_type[[ sem[i] ]]
+        if( ! is.na(dt) ) out[i] <- dt
+      }
+    }
+  }
+
+  ## 3. fallback: structured, unknown, blank, unrecognised -> text
+  out[ is.na(out) | ! out %in% .render_types ] <- "text"
+  out
+}
+
+
 #' Column names of a v2 DGF, in order (internal)
 #'
 #' The single source of truth for the schema. `create_dgf_skeleton()` builds

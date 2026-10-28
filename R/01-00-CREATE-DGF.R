@@ -1,3 +1,20 @@
+## Collapse list columns to "|"-delimited strings: c("a","b") -> "a|b", an
+## empty element -> NA. Non-list columns are untouched.
+#' @noRd
+.collapse_list_cols <- function( df, sep = "|" ) {
+  is.list.col <- vapply( df, is.list, logical(1) )
+  if( ! any(is.list.col) ) return( df )
+  df[ is.list.col ] <- lapply( df[ is.list.col ], function( col ) {
+    vapply( col, function( x ) {
+      x <- unlist( x, use.names = FALSE )
+      if( length(x) == 0 ) NA_character_
+      else paste( as.character(x), collapse = sep )
+    }, character(1) )
+  })
+  df
+}
+
+
 #' @title create DGF file
 #'
 #' @description
@@ -29,9 +46,13 @@
 #'   to the most frequent `max_factor_levels` levels, matching the
 #'   frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
 #'   cell under Excel's 32,767-character limit). Defaults to `50`.
-#' @param var_name,dd_vlabel,dd_vdesc,stable_data_type Optional character vectors of per-variable
-#'   metadata (name, short label, long description, type), each the same length
-#'   and order as the columns of `df`. Default to blank.
+#' @param dd_vlabel,dd_vdesc Optional character vectors of per-variable short
+#'   labels and long descriptions, each the same length and order as the
+#'   columns of `df`. `dd_vlabel` defaults to the column names, `dd_vdesc` to
+#'   blank.
+#' @param var_name,stable_data_type Accepted but ignored: `var_name` is always
+#'   the column names of `df`, and `stable_data_type` is computed from the data.
+#'   Both are legacy arguments slated for removal (see `dev/TO-DO.md`).
 #' @param desired_data_import_rule Optional character vector of type-conversion function names
 #'   (e.g. `"read_yyyy"`), one per column, applied to the data before profiling.
 #' @param stable_data_format Optional character vector of display-formatting function names
@@ -105,6 +126,12 @@ create_dgf <- function(         # ----------------
           else
             suppressMessages( readr::read_csv( df ) ) }
 
+  ## LIST COLUMNS (e.g. dplyr::starwars$films) cannot be written to a CSV or
+  ## profiled cell by cell. as.character() would turn each into R source text
+  ## ('c("A New Hope", ...)'), so collapse each cell to "a|b|c" instead - the
+  ## multi-select form formex can recognise as tags.
+  if( is.df ) df <- .collapse_list_cols( df )
+
   ## RELOAD DATA WITH READR TO RESET DATA TYPES?
 
   if( is.df & ! use.df.types )
@@ -133,7 +160,7 @@ create_dgf <- function(         # ----------------
   ## VAR NAMES AND LABELS
 
   var_name        <- names(df)
-  dd_vlabel       <- names(df)
+  if( is.null(dd_vlabel) || length(dd_vlabel) != N_col ) dd_vlabel <- names(df)
   if(is.null(dd_vdesc)){dd_vdesc <- rep("", N_col)}
   if(is.null(dd_vname_alias)){dd_vname_alias<-rep("", N_col)}
   # class(x)[1]: a column can be multi-class (an ordered factor, or a POSIXct
@@ -162,7 +189,9 @@ create_dgf <- function(         # ----------------
   { df <- recast_factors( df ) }
   guess_type <- primary_class( df )
 
-  correct.guess <- substr(desired_data_import_rule, 4,nchar(desired_data_import_rule)) == guess_type
+  # A rule already satisfied by the guessed type is skipped: "as_factor" on a
+  # column that is already a factor. Strip either rule prefix (as_ or read_).
+  correct.guess <- sub( "^(as|read)_", "", desired_data_import_rule ) == guess_type
 
   ## Set up data classes
   if(!is.null(desired_data_import_rule)){
@@ -296,7 +325,6 @@ create_dgf <- function(         # ----------------
 
   raw_first5    <- sapply( df_fmt, first_n ) %>% as.character()
   if(is.null(desired_data_import_rule)){desired_data_import_rule<- rep( "", N_col )}
-  if(is.null(format)){stable_data_format<- rep( "", N_col )}
   stable_data_type <- sapply( df_fmt, class ) %>% as.character()
 
   # desired_data_type is what the render engine dispatches on. dg_type_of()
@@ -332,6 +360,12 @@ create_dgf <- function(         # ----------------
   .v7 <- dgf_v7_stabilizer_columns(
            .enriched,
            examples = lapply( df_fmt, function(x) utils::head( as.character(x), 5 ) ) )
+  ## Where formex's route found no semantic type (e.g. a plain integer column),
+  ## seed the target with the base data type (number, text, ...), so the
+  ## variable still routes to the right template once the legacy
+  ## desired_data_type column is dropped. The user can refine it.
+  no.sem <- is.na( .v7$desired_semantic_type ) | ! nzchar( .v7$desired_semantic_type )
+  .v7$desired_semantic_type[ no.sem ] <- desired_data_type[ no.sem ]
 
   ## Reconcile the build-time profile class (vclass, which drives rg_stats/
   ## rg_graphics below) with the enriched type. The detector library is the
