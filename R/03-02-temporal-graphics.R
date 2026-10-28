@@ -3,7 +3,8 @@
 # is chosen HERE, at render, from stable_data_unit. So a user can retype the
 # unit in the DGF and re-render without rebuilding:
 #
-#   date         -> calendar heatmap        (calendar_heat)
+#   date         -> calendar heatmap        (calendar_heat; spans <= 3 years,
+#                   one row per year; longer spans folded onto one calendar)
 #   hour / week  -> connected scatterplot   (the crash-by-hour / by-week form)
 #   dow / month  -> barchart
 #   year         -> histogram if the span is wide (> 25), else a barchart
@@ -53,19 +54,27 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   if( nzchar( trimws(LABEL) ) ) cat( "**", LABEL, "**:\n\n", sep = "" )
 
   # --- date: calendar heatmap (falls back to a bar if values aren't dates) ---
+  # Up to 3 calendar years: the daily calendar heatmap, one row per year.
+  # Longer spans: fold every year onto one calendar - each cell is the total
+  # for that month and day across all years (on leap year 2000, so Feb 29
+  # has a cell). Weekdays differ from year to year, so the weekday names are
+  # hidden and the panel is titled with the year range instead.
   if( unit == "date" ) {
     d <- parse_dates( val )
     if( mean( !is.na(d) ) >= 0.8 ) {
       ok <- !is.na(d)
       dd <- d[ok]; cc <- cnt[ok]
-      # Keep only the two calendar years holding the most observations so the
-      # heatmap fills its space instead of stretching across many sparse years.
-      yr    <- as.integer( format( dd, "%Y" ) )
-      by.yr <- tapply( cc, yr, sum )
-      top2  <- as.integer( names( sort( by.yr, decreasing = TRUE ) ) )
-      top2  <- top2[ seq_len( min(2, length(top2)) ) ]
-      keep2 <- yr %in% top2
-      calendar_heat( dd[keep2], cc[keep2], varname = "" )
+      yr <- as.integer( format( dd, "%Y" ) )
+      if( diff( range(yr) ) + 1 <= 3 ) {
+        calendar_heat( dd, cc, varname = "", color = "w2g2b" )
+      } else {
+        md  <- format( dd, "%m-%d" )
+        agg <- tapply( cc, md, sum )
+        calendar_heat( as.Date( paste0( "2000-", names(agg) ) ), as.numeric(agg),
+                       varname = "", color = "w2g2b", weekday.labels = FALSE,
+                       year.label = paste0( min(yr), "-", max(yr),
+                                            ", all years by month and day" ) )
+      }
       return( invisible(NULL) )
     }
     # not real dates -> fall through to the default bar
@@ -161,6 +170,9 @@ parse_dates <- function( val ) {
   val <- as.character( val )
   formats <- c( "%Y-%m-%d", "%Y/%m/%d",
                 "%m-%d-%Y", "%d-%m-%Y", "%m/%d/%Y", "%d/%m/%Y",
+                # written-out months: "Dec 27, 1981", "December 27, 1981",
+                # "27 Dec 1981", "27-Dec-1981"
+                "%b %d, %Y", "%B %d, %Y", "%b %d %Y", "%d %b %Y", "%d-%b-%Y",
                 "%m-%d-%y", "%d-%m-%y", "%m/%d/%y", "%d/%m/%y" )
   out <- rep( as.Date(NA), length(val) )
   for( fmt in formats ) {

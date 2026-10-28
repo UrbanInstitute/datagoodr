@@ -32,3 +32,36 @@ test_that("the attribution and licence notice are preserved in the source", {
   expect_match(txt, "Humedica")
   expect_match(txt, "GNU General Public License")
 })
+
+
+# --- date graphic: one image per variable (fixed 2026-10-27) ----------------
+# A daily calendar for spans of up to 3 years, one calendar folding all years
+# that, and always exactly one image.
+
+test_that("parse_dates reads written-out month names", {
+  d <- datagoodr:::parse_dates(c("Dec 27, 1981", "December 27, 1981",
+                                 "27 Dec 1981", "27-Dec-1981", "1981-12-27"))
+  expect_true(all(d == as.Date("1981-12-27")))
+})
+
+# draw the date graphic for dates in [from, to]; return the number of images
+images_for_span <- function(from, to) {
+  set.seed(1)
+  d <- sample(seq(as.Date(from), as.Date(to), by = "day"), 500, replace = TRUE)
+  tab <- as.data.frame(table(Value = format(d, "%b %d, %Y")), stringsAsFactors = FALSE)
+  names(tab)[2] <- "Count"
+  datagoodr:::set_xx(list(rg_graphics = as.character(jsonlite::toJSON(tab)),
+                          desired_semantic_type = "temporal:date:calendar"))
+  dir <- tempfile("cal"); dir.create(dir)
+  grDevices::png(file.path(dir, "p%03d.png"))
+  datagoodr:::paste_temporal_graphic("rg_graphics")
+  grDevices::dev.off()
+  length(list.files(dir, pattern = "\\.png$"))
+}
+
+test_that("one image for a single year, a 3-year span, and a long span", {
+  skip_if_not_installed("lattice")
+  expect_equal(images_for_span("2021-01-01", "2021-12-31"), 1)   # daily calendar
+  expect_equal(images_for_span("2020-03-01", "2022-11-30"), 1)   # daily calendar
+  expect_equal(images_for_span("1960-01-01", "2005-12-31"), 1)   # folded calendar
+})
