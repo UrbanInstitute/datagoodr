@@ -29,7 +29,9 @@
 #    - `weekday.labels` and `year.label` arguments, so a multi-year series
 #      folded onto one calendar year can hide the (meaningless) weekday names
 #      and title its panel with the year range;
-#    - a `w2g2b` colour ramp (white to gray to dark blue).
+#    - a `w2g2b` colour ramp (white to gray to dark blue);
+#    - a `years` argument to draw only chosen (possibly non-adjacent) years;
+#    - a `winsor` argument to cap both tails before colouring (off by default).
 #  The algorithm is otherwise verbatim.
 # ---------------------------------------------------------------------------
 
@@ -55,6 +57,13 @@
 #'   longer stands for one weekday.
 #' @param year.label Optional panel title replacing the year (e.g.
 #'   `"1939-1994, all years"` for a folded calendar). Use with a single year.
+#' @param years Optional vector of years to draw (one panel each, in order).
+#'   By default every year from the first date to the last is drawn; pass the
+#'   years to skip the ones in between.
+#' @param winsor Optional pair of quantiles, e.g. `c(0.05, 0.95)`: values are
+#'   capped at those quantiles of the plotted (non-empty) days before colouring,
+#'   so one extreme day cannot set the whole scale. `NULL` (default) draws the
+#'   raw values, as the original did.
 #' @param ... Unused; accepted for compatibility.
 #'
 #' @return No return value; draws the plot on the current device.
@@ -74,7 +83,9 @@ calendar_heat <-
             varname = "Values",
             date.form = "%Y-%m-%d",
             weekday.labels = TRUE,
-            year.label = NULL, ... ) {
+            year.label = NULL,
+            years = NULL,
+            winsor = NULL, ... ) {
 
   need_pkg( "lattice", "grid" )
 
@@ -103,6 +114,24 @@ calendar_heat <-
     d.loc    <- c( d.loc, sub.seq )
   }
   caldat <- cbind( caldat, seq = d.loc )
+
+  # draw only the requested years (e.g. three non-adjacent years), not every
+  # year between the first and the last
+  if( ! is.null(years) ) {
+    caldat <- caldat[ as.character(caldat$yr) %in% as.character(years), ]
+    caldat$yr <- droplevels( caldat$yr )
+  }
+
+  # The colour scale spans the min..max of the values drawn (lattice cuts that
+  # range evenly), so it already re-fits to the chosen years. Winsorizing caps
+  # both tails at the given quantiles of those values, so a single extreme day
+  # (opening day, the last game of a season) cannot push every other day into
+  # the palest colour. Empty days stay NA (blank).
+  if( length(winsor) == 2 ) {
+    q <- stats::quantile( caldat$value, winsor, na.rm = TRUE, names = FALSE )
+    if( all( is.finite(q) ) && q[2] > q[1] )
+      caldat$value <- pmin( pmax( caldat$value, q[1] ), q[2] )
+  }
 
   # colour styles
   r2w <- grDevices::colorRampPalette( c("gray40", "firebrick") )(5)

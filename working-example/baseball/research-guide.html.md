@@ -43,9 +43,9 @@ params:
 
 ::: {.div1} 
 
-#### birthState
+#### nameLast
 
-<p class="dg-vlabel">state of birth</p>
+<p class="dg-vlabel">last name</p>
 
 ::: 
 
@@ -63,7 +63,7 @@ params:
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">22</span></div>
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">14</span></div>
 
 
 
@@ -73,7 +73,7 @@ params:
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">State or province where the player was born: a two-letter postal code for US states, a region name elsewhere (e.g. La Romana); blank if unknown</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Player's last name</span></div>
 
 
 
@@ -92,10 +92,10 @@ params:
 ::: {.div6} 
 
 <pre class="dg-preview">
-CA · TX · FL · NY · IL · OH · PA · GA · Distrito Nacional · MI · VA
-LA · NJ · NC · IN · MO · TN · AL · WA · MA · San Pedro de Macoris
-KY · OK · MS · SC · OR · MD · AZ · San Cristobal · Carabobo · CT
-MN · Distrito Federal · IA · KS · WI · Zulia · CO · HI · ON
+Johnson · Perez · Martinez · Jones · Davis · Wilson · Hernandez
+Rodriguez · Smith · Williams · Gonzalez · Ramirez · Young · Anderson
+Brown · Miller · Garcia · Sanchez · Castillo · Cruz · Jackson
+Lopez · Thompson · Walker · Pena · Bell · Cabrera · Clark · Hill
 
 </pre>
 
@@ -108,11 +108,10 @@ MN · Distrito Federal · IA · KS · WI · Zulia · CO · HI · ON
 
 **PROPERTIES**: 
 
-|STAT       |   VAL|    PER| 
- |:----------|-----:|------:| 
- |Rows       | 4,620|       | 
- |Distinct   |   210| (4.5%)| 
- |Missing/NA |   167| (3.6%)| 
+|STAT     |   VAL|     PER| 
+ |:--------|-----:|-------:| 
+ |Rows     | 4,620|        | 
+ |Distinct | 3,099| (67.1%)| 
 
 
 
@@ -133,58 +132,58 @@ MN · Distrito Federal · IA · KS · WI · Zulia · CO · HI · ON
 
 **FACTOR LEVELS**:
 
-| Frequency|     (%)|Label                | 
- |---------:|-------:|:--------------------| 
- |       826| (17.9%)|CA                   | 
- |       293|  (6.3%)|TX                   | 
- |       260|  (5.6%)|FL                   | 
- |       155|  (3.4%)|NY                   | 
- |       154|  (3.3%)|IL                   | 
- |       150|  (3.2%)|OH                   | 
- |       124|  (2.7%)|PA                   | 
- |       115|  (2.5%)|GA                   | 
- |        92|  (2.0%)|Distrito Nacional    | 
- |        88|  (1.9%)|MI                   | 
- |        76|  (1.6%)|VA                   | 
- |        75|  (1.6%)|LA                   | 
- |        75|  (1.6%)|NJ                   | 
- |        71|  (1.5%)|NC                   | 
- |        70|  (1.5%)|IN                   | 
- |        68|  (1.5%)|MO                   | 
- |        62|  (1.3%)|TN                   | 
- |        60|  (1.3%)|AL                   | 
- |        59|  (1.3%)|WA                   | 
- |        58|  (1.3%)|MA                   | 
- |        58|  (1.3%)|San Pedro de Macoris | 
- |        57|  (1.2%)|KY                   | 
- |        55|  (1.2%)|OK                   | 
- |        54|  (1.2%)|MS                   | 
- |        48|  (1.0%)|SC                   | 
- |        45|  (1.0%)|OR                   | 
- |        42|  (0.9%)|MD                   | 
- |        41|  (0.9%)|AZ                   | 
- |        40|  (0.9%)|San Cristobal        | 
- |        36|  (0.8%)|Carabobo             | 
- |        34|  (0.7%)|CT                   | 
- |        33|  (0.7%)|MN                   | 
- |        32|  (0.7%)|Distrito Federal     | 
- |        31|  (0.7%)|IA                   | 
- |        29|  (0.6%)|KS                   | 
- |        28|  (0.6%)|WI                   | 
- |        26|  (0.6%)|Zulia                | 
- |        24|  (0.5%)|CO                   | 
- |        23|  (0.5%)|HI                   | 
- |        23|  (0.5%)|ON                   | 
- |        22|  (0.5%)|Peravia              | 
- |        22|  (0.5%)|Santiago             | 
- |        21|  (0.5%)|NV                   | 
- |        20|  (0.4%)|BC                   | 
- |        20|  (0.4%)|La Habana            | 
- |        19|  (0.4%)|Anzoategui           | 
- |        19|  (0.4%)|AR                   | 
- |        19|  (0.4%)|Aragua               | 
- |        17|  (0.4%)|NE                   | 
- |        16|  (0.3%)|Bolivar              | 
+| Frequency|    (%)|Label     | 
+ |---------:|------:|:---------| 
+ |        28| (0.6%)|Johnson   | 
+ |        28| (0.6%)|Perez     | 
+ |        26| (0.6%)|Martinez  | 
+ |        25| (0.5%)|Jones     | 
+ |        24| (0.5%)|Davis     | 
+ |        24| (0.5%)|Wilson    | 
+ |        21| (0.5%)|Hernandez | 
+ |        19| (0.4%)|Rodriguez | 
+ |        19| (0.4%)|Smith     | 
+ |        19| (0.4%)|Williams  | 
+ |        18| (0.4%)|Gonzalez  | 
+ |        18| (0.4%)|Ramirez   | 
+ |        17| (0.4%)|Young     | 
+ |        16| (0.3%)|Anderson  | 
+ |        16| (0.3%)|Brown     | 
+ |        16| (0.3%)|Miller    | 
+ |        15| (0.3%)|Garcia    | 
+ |        14| (0.3%)|Sanchez   | 
+ |        12| (0.3%)|Castillo  | 
+ |        12| (0.3%)|Cruz      | 
+ |        12| (0.3%)|Jackson   | 
+ |        12| (0.3%)|Lopez     | 
+ |        12| (0.3%)|Thompson  | 
+ |        12| (0.3%)|Walker    | 
+ |        11| (0.2%)|Pena      | 
+ |        10| (0.2%)|Bell      | 
+ |        10| (0.2%)|Cabrera   | 
+ |        10| (0.2%)|Clark     | 
+ |        10| (0.2%)|Hill      | 
+ |        10| (0.2%)|Reed      | 
+ |         9| (0.2%)|Diaz      | 
+ |         9| (0.2%)|Harris    | 
+ |         9| (0.2%)|Moore     | 
+ |         9| (0.2%)|Ortiz     | 
+ |         9| (0.2%)|Rivera    | 
+ |         9| (0.2%)|White     | 
+ |         9| (0.2%)|Wright    | 
+ |         8| (0.2%)|Alvarez   | 
+ |         8| (0.2%)|Green     | 
+ |         8| (0.2%)|Lee       | 
+ |         8| (0.2%)|Murphy    | 
+ |         8| (0.2%)|Wood      | 
+ |         7| (0.2%)|Adams     | 
+ |         7| (0.2%)|Hall      | 
+ |         7| (0.2%)|Lewis     | 
+ |         7| (0.2%)|Morris    | 
+ |         7| (0.2%)|Myers     | 
+ |         7| (0.2%)|Patterson | 
+ |         7| (0.2%)|Powell    | 
+ |         7| (0.2%)|Reyes     | 
 
 
 
@@ -828,9 +827,6 @@ R · L
 
 
 
-<div class="dg-field"><span class="dg-k">DATA TYPE</span><span class="dg-v">rank</span></div>
-
-
 
 
 <div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v"> 3</span></div>
@@ -1224,10 +1220,9 @@ R · L
 ::: {.div6} 
 
 <pre class="dg-preview">
-0 · 0.25 · 0.166666666666667 · 0.333333333333333
-0.0833333333333333 · 0.2 · 0.5 · 1 · 0.111111111111111 · 0.125
-0.142857142857143 · 0.0625 · 0.133333333333333 · 0.0666666666666667
-0.1 · 0.0714285714285714 · 0.05 · 0.208333333333333
+0 · 0.25 · 0.167 · 0.333 · 0.083 · 0.2 · 0.5 · 1 · 0.111 · 0.125
+0.143 · 0.062 · 0.133 · 0.067 · 0.1 · 0.071 · 0.05 · 0.208 · 0.222
+0.154 · 0.182 · 0.042 · 0.048 · 0.056 · 0.214
 
 </pre>
 
@@ -1348,10 +1343,9 @@ R · L
 ::: {.div6} 
 
 <pre class="dg-preview">
-0 · 0.333333333333333 · 0.25 · 0.5 · 0.0833333333333333 · 0.2
-0.166666666666667 · 1 · 0.111111111111111 · 0.142857142857143
-0.0714285714285714 · 0.1 · 0.133333333333333 · 0.0625
-0.0666666666666667 · 0.125 · 0.4 · 0.666666666666667
+0 · 0.333 · 0.25 · 0.5 · 0.083 · 0.2 · 0.167 · 1 · 0.111 · 0.143
+0.071 · 0.1 · 0.133 · 0.062 · 0.067 · 0.125 · 0.4 · 0.667 · 0.222
+0.05 · 0.042 · 0.3 · 0.048 · 0.056 · 0.059 · 0.188 · 0.192
 
 </pre>
 
@@ -1655,9 +1649,9 @@ Brandon · Brad · Rick · Alex · Michael · Juan · Paul · Todd · Doug
 
 ::: {.div1} 
 
-#### nameLast
+#### birthState
 
-<p class="dg-vlabel">last name</p>
+<p class="dg-vlabel">state of birth</p>
 
 ::: 
 
@@ -1672,7 +1666,7 @@ Brandon · Brad · Rick · Alex · Michael · Juan · Paul · Todd · Doug
 
 
 
-<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">14</span></div>
+<div class="dg-field"><span class="dg-k">MAX NCHAR</span><span class="dg-v">22</span></div>
 
 
 
@@ -1682,7 +1676,7 @@ Brandon · Brad · Rick · Alex · Michael · Juan · Paul · Todd · Doug
 ::: {.div4} 
 
 
-<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">Player's last name</span></div>
+<div class="dg-field"><span class="dg-k">DESCRIPTION</span><span class="dg-v">State or province where the player was born: a two-letter postal code for US states, a region name elsewhere (e.g. La Romana); blank if unknown</span></div>
 
 
 
@@ -1701,10 +1695,10 @@ Brandon · Brad · Rick · Alex · Michael · Juan · Paul · Todd · Doug
 ::: {.div6} 
 
 <pre class="dg-preview">
-Johnson · Perez · Martinez · Jones · Davis · Wilson · Hernandez
-Rodriguez · Smith · Williams · Gonzalez · Ramirez · Young · Anderson
-Brown · Miller · Garcia · Sanchez · Castillo · Cruz · Jackson
-Lopez · Thompson · Walker · Pena · Bell · Cabrera · Clark · Hill
+CA · TX · FL · NY · IL · OH · PA · GA · Distrito Nacional · MI · VA
+LA · NJ · NC · IN · MO · TN · AL · WA · MA · San Pedro de Macoris
+KY · OK · MS · SC · OR · MD · AZ · San Cristobal · Carabobo · CT
+MN · Distrito Federal · IA · KS · WI · Zulia · CO · HI · ON
 
 </pre>
 
@@ -1717,10 +1711,11 @@ Lopez · Thompson · Walker · Pena · Bell · Cabrera · Clark · Hill
 
 **PROPERTIES**: 
 
-|STAT     |   VAL|     PER| 
- |:--------|-----:|-------:| 
- |Rows     | 4,620|        | 
- |Distinct | 3,099| (67.1%)| 
+|STAT       |   VAL|    PER| 
+ |:----------|-----:|------:| 
+ |Rows       | 4,620|       | 
+ |Distinct   |   210| (4.5%)| 
+ |Missing/NA |   167| (3.6%)| 
 
 
 
@@ -1741,14 +1736,14 @@ Lopez · Thompson · Walker · Pena · Bell · Cabrera · Clark · Hill
 
 **MOST COMMON VALUES**: 
 
-|Value    | Frequency|    (%)| 
- |:--------|---------:|------:| 
- |Johnson  |        28| (0.6%)| 
- |Perez    |        28| (0.6%)| 
- |Martinez |        26| (0.6%)| 
- |Jones    |        25| (0.5%)| 
- |Davis    |        24| (0.5%)| 
- |Wilson   |        24| (0.5%)| 
+|Value | Frequency|     (%)| 
+ |:-----|---------:|-------:| 
+ |CA    |       826| (17.9%)| 
+ |TX    |       293|  (6.3%)| 
+ |FL    |       260|  (5.6%)| 
+ |NY    |       155|  (3.4%)| 
+ |IL    |       154|  (3.3%)| 
+ |OH    |       150|  (3.2%)| 
 
 
 
@@ -2562,4 +2557,4 @@ tbody, tfoot, tr, td, th {
 </style>
 
 
-<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-10-28T06:48:34Z","r":"4.5.3","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"df82b31447aff84018e9584a83b990d7","dgf_variables":19} -->
+<!-- datagoodr-render-record {"datagoodr":"0.1.0","rendered_utc":"2026-10-28T07:00:16Z","r":"4.5.3","quarto":"1.8.25","dgf_file":"DGF.xlsx","dgf_hash":"003a92e5391503f4831dc1b412a8042e","dgf_variables":19} -->
