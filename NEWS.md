@@ -165,3 +165,19 @@ formex-stabilized EIN are now the same string.
 
 * `R/01-06-guess-dgf-types.R` is now the documented **formex seam**. It reads
   only formex's public return value and touches no internals.
+
+* **DGF builds are roughly a third faster, via formex.** Profiling
+  `create_dgf()` showed type guessing was 63% of a build and the `rg_*` data
+  profiles under 7% — so the work went into `formex::guess_data_type()`, which
+  cost ~130ms per column even for a ten-value input. Most of that floor was
+  input-independent work recomputed on every call (the verifier's foil-leak
+  loop, the ontology's own example signatures) plus a 730-format `strptime`
+  sweep that non-date columns paid in full. Fixed upstream in
+  `lecy/formex@3d812d2`; with it installed, `create_dgf()` on the 4,620 x 19
+  baseball dataset goes 9.92s -> 6.86s and the guess itself 6.20s -> 3.59s.
+  **The written DGF is byte-identical** — this is purely caching and
+  short-circuiting, with no change to any detection verdict. One visible side
+  effect: formex's `as_integer` "NAs introduced by coercion" warning now fires
+  about once per session instead of once per candidate per column (datagoodr
+  already muffled it). Requires the updated formex; older versions still work,
+  just slower. Full measurements and method in `dev/performance-notes.md`.
