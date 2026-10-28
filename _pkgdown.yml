@@ -3,6 +3,27 @@ destination: docs
 template:
   bootstrap: 5
 
+# An "Examples" menu of finished research guides. The guides are self-contained
+# pages built by data-raw/example-guides.R into pkgdown/assets/examples/, which
+# pkgdown copies to <site>/examples/.
+navbar:
+  structure:
+    left: [intro, reference, articles, examples, tutorials, news]
+  components:
+    examples:
+      text: Examples
+      menu:
+      - text: How the examples are built
+        href: articles/example-guides.html
+      - text: -------
+      - text: "Research guide demos"
+      - text: Baseball players
+        href: examples/baseball.html
+      - text: Star Wars characters
+        href: examples/starwars.html
+      - text: Motor Trend cars
+        href: examples/mtcars.html
+
 articles:
 - title: User guide
   navbar: User guide
