@@ -37,10 +37,11 @@
 #'   `desired_data_type` (`"temporal"`, `"identifier"`, `"number"`,
 #'   `"categorical"`, `"boolean"`, `"text"`).
 #' @param units A named character vector mapping variable name to a temporal
-#'   grain (e.g. `c(founded = "year")`), written into `desired_data_class` as
-#'   `period.year` / `phase.day_of_week` / ... - the coordinate the render engine
-#'   reads to pick the graphic. Temporal only; may name variables already the
-#'   right type but needing a grain.
+#'   grain (e.g. `c(founded = "year")`), written into `desired_semantic_type` as
+#'   the matching temporal semantic type (`year`, `month`, `day_of_week`,
+#'   `calendar`, ...) - what the render engine reads to pick the graphic - and
+#'   into the legacy `desired_data_class` when present. Temporal only; may name
+#'   variables already the right type but needing a grain.
 #' @param env Environment for any rule functions (unused today; reserved).
 #'
 #' @return The DGF with the named variables re-typed, re-united, and re-profiled.
@@ -100,9 +101,20 @@ retype_dgf <- function( dgf, data, types = NULL, units = NULL,
     date = "date.calendar", datetime = "date.timestamp", timestamp = "date.timestamp",
     hour = "phase.hour_of_day", dow = "phase.day_of_week",
     week = "phase.week_of_year", period = "period.reporting_period", u )
+  ## The render reads the grain from desired_semantic_type (the v7 temporal
+  ## semantic types); the legacy desired_data_class is kept in step for DGFs
+  ## that still carry it.
+  .grain_semantic <- function( u ) switch( u,
+    date = "calendar", datetime = "timestamp", timestamp = "timestamp",
+    hour = "hour_of_day", dow = "day_of_week", week = "week_of_year",
+    period = "reporting_period", u )
   for( v in names(units) ) {
     i <- match( v, dgf$var_name )
-    if( ! is.na(i) ) dgf$desired_data_class[i] <- .grain_class( units[[v]] )
+    if( is.na(i) ) next
+    if( "desired_semantic_type" %in% names(dgf) )
+      dgf$desired_semantic_type[i] <- .grain_semantic( units[[v]] )
+    if( "desired_data_class" %in% names(dgf) )
+      dgf$desired_data_class[i] <- .grain_class( units[[v]] )
   }
 
   dgf

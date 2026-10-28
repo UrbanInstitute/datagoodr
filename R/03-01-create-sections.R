@@ -252,7 +252,9 @@ create_div <- function( div.num="div2", all.layouts ) {
   if( grepl("^blank", div.num) )
   { cat( paste0( "::: {.", div.num, "} \n\n::: \n\n" ) ); return( invisible(NULL) ) }
 
-  DATA_TYPE <- dg_render_type( get_xx() )
+  xx <- get_xx()
+  DATA_TYPE <- if( "dg_render_type" %in% names(xx) ) xx[["dg_render_type"]]
+               else dg_render_type( xx )
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
 
   # skip div if not included in design
@@ -274,6 +276,24 @@ create_div <- function( div.num="div2", all.layouts ) {
      } )
 
   cat( "\n\n::: \n\n" )
+}
+
+
+## Add the two derived fields the attribute block displays to one variable's
+## render context: dg_render_type (the template type, shown as DATA TYPE) and
+## dg_semantic_type (desired_semantic_type, shown only when it is more specific
+## than the data type - "usd", not "number").
+#' @noRd
+.add_render_fields <- function( xx ) {
+  rt  <- dg_render_type( xx )
+  sem <- if( "desired_semantic_type" %in% names(xx) )
+           trimws( as.character( xx[["desired_semantic_type"]] ) ) else ""
+  if( ! length(sem) || is.na(sem) ) sem <- ""
+  sem <- .sem_leaf( sem )              # a formex path displays as its leaf
+  if( sem %in% c(.render_types, "string") ) sem <- ""
+  xx[["dg_render_type"]]   <- rt
+  xx[["dg_semantic_type"]] <- sem
+  xx
 }
 
 
@@ -302,9 +322,10 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
 
   xx <- L[[ VNAME ]]
   xx[["VNAME"]] <- VNAME
+  xx <- .add_render_fields( xx )
   set_xx( xx )                         # publish to the render context
 
-  DATA_TYPE <- dg_render_type( xx )
+  DATA_TYPE <- xx[["dg_render_type"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]

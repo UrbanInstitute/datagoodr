@@ -28,8 +28,9 @@ set_dg_context <- function( dgf, var_name ) {
   xx <- as.list( dgf[ i, , drop = FALSE ] )
   xx <- lapply( xx, function(v) v[[1]] )   # scalars, not length-1 vectors
   xx[["VNAME"]] <- var_name
+  xx <- .add_render_fields( xx )
   set_xx( xx )
-  dg_render_type( xx )
+  xx[["dg_render_type"]]
 }
 
 

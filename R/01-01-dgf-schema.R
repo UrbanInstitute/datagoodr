@@ -75,6 +75,16 @@ dg_type_of <- function( storage ) {
                    "identifier", "temporal")
 
 
+## A semantic type may be written as a bare leaf ("geographic") or as a formex
+## path ("identifier:id:geographic", truncated where the route stopped).
+## .sem_leaf() returns the last segment; .sem_head() the first (the data type
+## when a path was given, else the leaf itself).
+#' @noRd
+.sem_leaf <- function( x ) sub( ".*:", "", as.character(x) )
+#' @noRd
+.sem_head <- function( x ) sub( ":.*", "", as.character(x) )
+
+
 ## semantic_type -> ontology data_type, read once from formex's ontology. A
 ## semantic type listed under two data types (geographic: categorical and
 ## identifier) maps to the first; a variant_id, when known, settles it exactly.
@@ -84,7 +94,12 @@ dg_type_of <- function( storage ) {
     ont <- tryCatch(formex::fx_ontology(), error = function(e) NULL)
     if (is.null(ont)) return(NULL)
     first <- !duplicated(ont$semantic_type)
+    pairs <- unique(ont[, c("semantic_type", "data_type")])
     .fx_ont_cache$sem <- list(
+      # semantic types listed under more than one data type (e.g. geographic:
+      # categorical and identifier) - routed to text unless a path or the
+      # guessed variant settles which one is meant
+      conflicted  = unique(pairs$semantic_type[duplicated(pairs$semantic_type)]),
       by_type     = stats::setNames(ont$data_type[first], ont$semantic_type[first]),
       by_variant  = stats::setNames(ont$data_type, ont$variant_id),
       variant_sem = stats::setNames(ont$semantic_type, ont$variant_id))
@@ -105,13 +120,17 @@ dg_type_of <- function( storage ) {
 #'
 #' @details Resolved in this order:
 #'
-#' 1. the legacy `desired_data_type` column, when present and filled with a
-#'    renderable type (`"string"` is read as `"text"`). This keeps existing DGFs
-#'    rendering exactly as before;
-#' 2. the ontology data type of `desired_semantic_type` (looked up in
+#' 1. the ontology data type of `desired_semantic_type` (looked up in
 #'    `formex::fx_ontology()`, using `guess_variant_id` to settle a semantic type
 #'    that sits under two data types). A data type name typed directly into
-#'    `desired_semantic_type` (e.g. `"number"`) is accepted as is;
+#'    `desired_semantic_type` (e.g. `"number"`) is accepted as is, and so is a
+#'    formex path (`"identifier:id:geographic"`), whose first segment names the
+#'    data type. A semantic type listed under two data types (`geographic`)
+#'    that neither a path nor `guess_variant_id` settles routes to `"text"` for
+#'    now. This is the column to edit to move a variable to another template;
+#' 2. the legacy `desired_data_type` column (`"string"` is read as `"text"`),
+#'    for DGFs built before the v7 columns or rows with a blank or unknown
+#'    semantic type;
 #' 3. `"text"`, the fallback for structured and unknown types, blanks, and
 #'    anything the ontology does not know.
 #'
@@ -133,20 +152,16 @@ dg_render_type <- function( dgf ) {
 
   out <- rep( NA_character_, n )
 
-  ## 1. legacy desired_data_type
-  legacy <- col( "desired_data_type" )
-  if( ! is.null(legacy) ) {
-    legacy[ legacy == "string" ] <- "text"
-    ok <- legacy %in% .render_types
-    out[ ok ] <- legacy[ ok ]
-  }
-
-  ## 2. desired_semantic_type -> ontology data_type
+  ## 1. desired_semantic_type -> ontology data_type. A formex path
+  ##    ("identifier:id:geographic") names its data type in the first segment,
+  ##    which settles semantic types listed under two data types.
   sem <- col( "desired_semantic_type" )
-  todo <- is.na(out)
-  if( ! is.null(sem) && any(todo) ) {
-    direct <- todo & sem %in% .render_types
-    out[ direct ] <- sem[ direct ]
+  if( ! is.null(sem) ) {
+    head <- .sem_head( sem )
+    head[ head == "string" ] <- "text"
+    direct <- head %in% .render_types
+    out[ direct ] <- head[ direct ]
+    sem <- .sem_leaf( sem )
     lk <- .semantic_lookup()
     if( ! is.null(lk) ) {
       vid <- col( "guess_variant_id" )
@@ -156,10 +171,22 @@ dg_render_type <- function( dgf ) {
         dt <- if( nzchar(vid[i]) && vid[i] %in% names(lk$by_variant) &&
                   identical( lk$variant_sem[[ vid[i] ]], sem[i] ) )
                 lk$by_variant[[ vid[i] ]] else NA_character_
+        # a conflicted semantic type nothing settles routes to text for now
+        if( is.na(dt) && sem[i] %in% lk$conflicted ) dt <- "text"
         if( is.na(dt) && sem[i] %in% names(lk$by_type) ) dt <- lk$by_type[[ sem[i] ]]
         if( ! is.na(dt) ) out[i] <- dt
       }
     }
+  }
+
+  ## 2. legacy desired_data_type, for DGFs built before the v7 columns (or a
+  ##    row whose semantic type is blank or unknown)
+  legacy <- col( "desired_data_type" )
+  todo <- is.na(out)
+  if( ! is.null(legacy) && any(todo) ) {
+    legacy[ legacy == "string" ] <- "text"
+    ok <- todo & legacy %in% .render_types
+    out[ ok ] <- legacy[ ok ]
   }
 
   ## 3. fallback: structured, unknown, blank, unrecognised -> text

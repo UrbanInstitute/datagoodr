@@ -465,6 +465,12 @@ create_dgf <- function(         # ----------------
   need_class <- desired_data_type == "temporal" & ! nzchar( desired_data_class )
   desired_data_class[ need_class ] <- ifelse( is.time[ need_class ],
                                               "time.clock", "date.calendar" )
+  # the render reads the grain from desired_semantic_type: give a temporal that
+  # only carries the bare data type the same storage-class default
+  bare_temporal <- desired_data_type == "temporal" &
+                   .sem_leaf( .v7$desired_semantic_type ) %in% c( "", "temporal" )
+  .v7$desired_semantic_type[ bare_temporal ] <-
+    ifelse( is.time[ bare_temporal ], "clock", "calendar" )
   dd_data_unit <- rep( "", N_col )
 
   ## FIELD LENGTH (max character width of the underlying values)

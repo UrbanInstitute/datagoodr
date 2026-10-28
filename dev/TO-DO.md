@@ -27,6 +27,23 @@ workflow the v7 columns implement is described in
 5. **`raw_data_mode`:** record what a plain (inferring) read would produce, not
    the all-text read (today `raw_data_type` is always `character`).
 
+### Routing rules (2026-10-27)
+
+- Templates are chosen from `desired_semantic_type` first; the legacy
+  `desired_data_type` is used only when the semantic type is blank or unknown.
+- `desired_semantic_type` may be a bare leaf (`usd`), a bare data type
+  (`number`), or a formex path (`number:currency:usd`, truncated where the route
+  stopped). A path's first segment names the data type.
+- **Conflicted semantic types route to text for now.** `geographic` is listed
+  under both categorical and identifier. A bare `geographic` routes to text
+  unless `guess_variant_id` or a path (`identifier:id:geographic`) settles it.
+  Longer term: ask formex for distinct names (e.g. `geographic_id`).
+- Formex -> template crosswalk: number, categorical, boolean, temporal,
+  identifier and text map one to one; structured and unknown fall back to text.
+  Known gaps: `tags` (needs split-then-count), `min_max` /
+  `confidence_interval` / `lat_lon` (pairs, not single numbers), `date_range`,
+  and geometry (no map template).
+
 ### Done 2026-10-27
 
 - [x] `dgf_schema_cols_v7()` keeps `dd_f_levels` and documents the six dropped
@@ -119,15 +136,15 @@ before `create_dgf()` can flip to `dgf_schema_cols_v7()`.
 |---|---|---|---|
 | `create_dgf()` (01-00) | writes all six; `desired_data_import_rule` / `stable_data_format` / `stable_data_type` are also arguments | write the v7 set; replace the rule arguments with `desired_semantic_type` overrides (see "Arguments" below) | open |
 | `dgf_schema_cols()` (01-01) | defines them | becomes `dgf_schema_cols_v7()` | open (the flip) |
-| `dg_render_type()` (01-01) | reads `desired_data_type` first, for back-compat | drop the legacy branch after the flip | done (bridge) |
-| `retype_dgf()`, `.dgf_vclass_of()` (01-05) | writes `desired_data_type` / `desired_data_class`; units into class | write `desired_semantic_type` / `desired_unit_type`; profile via `dg_render_type()` | partial (writes `desired_semantic_type`; units still go to `desired_data_class`) |
+| `dg_render_type()` (01-01) | reads `desired_semantic_type` first; legacy `desired_data_type` only when the semantic type is blank or unknown | drop the legacy branch after the flip | done (bridge) |
+| `retype_dgf()`, `.dgf_vclass_of()` (01-05) | writes `desired_data_type` / `desired_data_class`; units into class | write `desired_semantic_type` / `desired_unit_type`; profile via `dg_render_type()` | done (types and units write `desired_semantic_type`; legacy columns kept in step when present) |
 | `guess_dgf_types()` (01-06) | returns `desired_data_type` / `desired_data_class` | return only `guess_*` + `dd_is_join_key`; desired_* defaulted in 01-08 | open |
 | `inspect_dgf()` (02-06) | validates `desired_data_type`; checks functions in `desired_data_import_rule` / `stable_data_format` | validates `desired_semantic_type` (added); check functions in `stabilizer` / `load_rule` | partial |
 | `check_dgf_rules()` (02-07) | runs `raw_to_stable_transform` / `desired_data_import_rule` | run `stabilizer` / `load_rule` | open |
-| `default_layouts()` (03-01) | displays `desired_data_type`, `desired_data_class`, `dd_data_unit` in the attributes block | show `guess_label` / `desired_semantic_type`, `desired_format_style`, `desired_unit_type` | open |
+| `default_layouts()` (03-01) | displayed `desired_data_type`, `desired_data_class`, `dd_data_unit` in the attributes block | DATA TYPE = template type, SEMANTIC TYPE = `desired_semantic_type` (done); UNIT still reads `dd_data_unit` -> `desired_unit_type` | partial |
 | `create_section()`, `create_div()` (03-01) | routed on `desired_data_type` | `dg_render_type()` | done |
 | `set_dg_context()` (03-03) | returned `desired_data_type` | `dg_render_type()` | done |
-| `paste_temporal_graphic()` (03-02) | reads the grain from `desired_data_class` (`period.month`, ...) | derive the grain from `desired_semantic_type` (`year`, `month`, `day_of_week`, ...) via `.temporal_grain()` | done (falls back to `desired_semantic_type`) |
+| `paste_temporal_graphic()` (03-02) | reads the grain from `desired_data_class` (`period.month`, ...) | derive the grain from `desired_semantic_type` (`year`, `month`, `day_of_week`, ...) via `.temporal_grain()` | done (semantic type first; legacy class only for pre-v7 DGFs) |
 | `update_dgf()` (04-00) | carries `desired_data_import_rule` / `stable_data_format` across; keys level carry-over on `desired_data_type` | carry `desired_*`, `stabilizer`, `load_rule`; key on `dg_render_type()` | open |
 | `stabilize_data()` (09) | runs `desired_data_import_rule` then `raw_to_stable_transform`; v7 plan opt-in | `stabilizer` only (formex plan or a bare `DG.R` function); then drop `use_v7` | open |
 | RG.qmd / DD.qmd templates | routed on `desired_data_type` | `dg_render_type()` | done |
@@ -279,12 +296,16 @@ Open:
       (`R`/`L`/`B`) is categorical. A 2-level code is not a yes/no flag; the
       boolean rule should require boolean-like values (`TRUE`/`FALSE`, `Y`/`N`,
       `0`/`1`), not just 2 levels.
+- [x] Dictionary file corrected (2026-10-27): removed `birthDay` (not in the
+      data); `finalGame` no longer repeats `debut`'s description or claims
+      blanks it doesn't have; `birthMonth` documented as `Mon` abbreviations,
+      not `MM`; blanks documented for `birthState`, `birthCity`, `AB`, `AVG`,
+      `SLUG`; date and salary formats stated; placeholder `weight` source
+      replaced; leading spaces trimmed.
 - [ ] Use the dictionary file directly: this is the `dd` / `keep.dd.cols`
-      argument of `create_dgf()`. The file also exercises dictionary checks
-      `inspect_dgf()` could run: `birthDay` is documented but not in the data;
-      `finalGame`'s description repeats `debut`'s ("first major league
-      appearance"); one `source` value is a placeholder joke; `verified = 0`
-      rows could be flagged in the Research Guide.
+      argument of `create_dgf()`. Dictionary checks `inspect_dgf()` could run:
+      documented-but-missing / undocumented variables, duplicate descriptions,
+      and `verified = 0` rows flagged in the Research Guide.
 
 ### Detection quality seen on `dplyr::starwars` (report to formex)
 

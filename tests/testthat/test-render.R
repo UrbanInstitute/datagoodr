@@ -58,11 +58,15 @@ test_that("ontology attribute rows render only when populated", {
   expect_false(any(grepl("SUBTYPE", plain)))
   expect_false(any(grepl("FORMAT", plain)))
 
-  # stamp the class.subclass coordinate on a column and it appears
+  # a bare data type in desired_semantic_type adds nothing to DATA TYPE ...
+  expect_false(any(grepl("SEMANTIC TYPE", plain)))
+
+  # ... but a specific semantic type appears, and routes the template
   i <- dgf$var_name == "cat"
-  dgf$desired_data_class[i] <- "mutually_exclusive.geographic"
+  dgf$desired_semantic_type[i] <- "unordered"
   filled <- suppressMessages(suppressWarnings(
     capture.output(create_all_sections(dgf[i, ]))))
-  expect_true(any(grepl("CLASS", filled)))
-  expect_true(any(grepl("mutually_exclusive.geographic", filled)))
+  expect_true(any(grepl("SEMANTIC TYPE", filled)))
+  expect_true(any(grepl("unordered", filled)))
+  expect_true(any(grepl("categorical", filled)))
 })

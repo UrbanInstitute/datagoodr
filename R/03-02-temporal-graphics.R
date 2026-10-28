@@ -33,19 +33,21 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   val <- as.character( tab$Value )
   cnt <- suppressWarnings( as.numeric( as.character( tab$Count ) ) )
 
-  # The render grain (date/hour/week/dow/month/year) comes from the legacy
-  # desired_data_class (period.month, phase.day_of_week, ...) when present,
-  # else from the v7 desired_semantic_type (month, day_of_week, ...).
+  # The render grain (date/hour/week/dow/month/year) comes from
+  # desired_semantic_type (year, month, day_of_week, calendar, ...). A bare data
+  # type there ("temporal") names no grain, so a DGF built before the v7 columns
+  # falls back to its legacy desired_data_class (period.month, ...).
   xx  <- get_xx()
   pick <- function( nm ) {
     if( ! nm %in% names(xx) ) return( "" )
     v <- as.character( xx[[nm]] )
     if( ! length(v) || is.na(v) ) "" else trimws(v)
   }
+  sem  <- .sem_leaf( pick( "desired_semantic_type" ) )   # path -> leaf
   cs   <- pick( "desired_data_class" )
-  sem  <- pick( "desired_semantic_type" )
-  unit <- if( nzchar(cs) ) .temporal_grain( cs )
-          else if( nzchar(sem) ) .temporal_grain( paste0( "x.", sem ) )
+  unit <- if( nzchar(sem) && ! sem %in% c(.render_types, "string") )
+            .temporal_grain( paste0( "x.", sem ) )
+          else if( nzchar(cs) ) .temporal_grain( cs )
           else ""
 
   if( nzchar( trimws(LABEL) ) ) cat( "**", LABEL, "**:\n\n", sep = "" )

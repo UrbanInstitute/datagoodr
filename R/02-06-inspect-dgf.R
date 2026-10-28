@@ -87,6 +87,7 @@ inspect_dgf <- function( dgf, convert_env = parent.frame(), verbose = TRUE ) {
     # type. Unknown values still render (as text), so this is a note, not a FAIL.
     sem   <- trimws( as.character( dgf$desired_semantic_type ) )
     sem[ is.na(sem) ] <- ""
+    sem   <- ifelse( .sem_head(sem) %in% .render_types, .sem_head(sem), .sem_leaf(sem) )
     lk    <- .semantic_lookup()
     known <- sem %in% .render_types | ( ! is.null(lk) & sem %in% names(lk$by_type) )
     unk   <- nzchar(sem) & ! known
