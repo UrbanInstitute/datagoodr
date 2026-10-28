@@ -37,17 +37,20 @@ test_that("the storage-safety gate keys off the same rule as read-as-text", {
   expect_true(datagoodr:::.route_is_storage_safe(txt_route, zero_padded))
 })
 
-test_that("only a confident depth-4 leaf counts as a route answer", {
-  leaf    <- list(depth = 4L, confidence = 1.0, semantic_family = "date",
-                  semantic_type = "calendar")
-  shallow <- list(depth = 3L, confidence = 0.97, semantic_family = "quantity",
-                  semantic_type = "count")
-  unsure  <- list(depth = 4L, confidence = 0.40, semantic_family = "date",
-                  semantic_type = "calendar")
+test_that("a confident route that resolved a semantic type (depth >= 3) counts", {
+  leaf     <- list(depth = 4L, confidence = 1.0, semantic_family = "date",
+                   semantic_type = "calendar")
+  resolved <- list(depth = 3L, confidence = 0.97, semantic_family = "quantity",
+                   semantic_type = "count")
+  family   <- list(depth = 2L, confidence = 0.97, semantic_family = "quantity",
+                   semantic_type = NA_character_)
+  unsure   <- list(depth = 4L, confidence = 0.40, semantic_family = "date",
+                   semantic_type = "calendar")
 
   expect_true(datagoodr:::.route_is_leaf(leaf))
-  expect_false(datagoodr:::.route_is_leaf(shallow))   # graceful truncation
-  expect_false(datagoodr:::.route_is_leaf(unsure))
+  expect_true(datagoodr:::.route_is_leaf(resolved))   # semantic type, no format leaf
+  expect_false(datagoodr:::.route_is_leaf(family))    # stopped at the family
+  expect_false(datagoodr:::.route_is_leaf(unsure))    # below the confidence bar
   expect_false(datagoodr:::.route_is_leaf(NULL))
 })
 

@@ -37,8 +37,8 @@ default_layouts <- function() {
   # (see .add_render_fields): the template type, and desired_semantic_type when
   # it is more specific than that type.
   attrs <- function( unit = FALSE ) c(
-    "div3 ;; dg_render_type     ;; DATA TYPE     ;; v_to_txt",
-    "div3 ;; dg_semantic_type   ;; SEMANTIC TYPE ;; v_to_txt",
+    "div3 ;; dg_render_type     ;; DATA MODE ;; v_to_txt",
+    "div3 ;; dg_semantic_type   ;; DATA TYPE ;; v_to_txt",
     "div3 ;; dd_data_unit       ;; UNIT      ;; v_to_txt",
     "div3 ;; rg_max_chr         ;; MAX NCHAR ;; v_to_txt" )
 

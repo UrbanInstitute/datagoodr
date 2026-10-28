@@ -249,9 +249,15 @@ RG/DD templates use `readxl::read_excel()` (tibble, empty columns as logical
 
 ### Small fixes: open
 
-- [ ] `.xlsx` 32,767-character cell limit: `save_to_excel()` silently truncates
-      large `rg_graphics` / `rg_stats` JSON. Chunk the cell (as the governed-CSV
-      writer does) or treat the `.csv` as authoritative for `rg_*`.
+- [x] `.xlsx` 32,767-character cell limit (fixed 2026-10-27, found on the
+      baseball data: `birthDate` / `debut` / `finalGame` graphics data ran
+      118k-210k characters). `save_to_excel()` moves any cell over the limit
+      (measured after XML escaping, which openxlsx counts) to a
+      `DGF_overflow` sheet in parts, leaving a `<<DGF_overflow>>` pointer;
+      `load_dgf()` joins them back (and warns if parts are missing). The RG/DD
+      templates now read through `load_dgf(reader = "readxl")`. Reports
+      scaffolded before this read with `readxl::read_excel()` directly and will
+      not join oversized cells: re-scaffold, or swap that line.
 - [ ] `get_dupes()`: the `df` argument is never read. Drop it or restore
       `if (missing(vhash)) vhash <- sapply(df, rlang::hash)`.
 - [ ] The `vformat` display formatting (now `stable_data_format`) is not used

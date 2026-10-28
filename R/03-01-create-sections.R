@@ -215,16 +215,23 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
 #' Writes a formatted `div1` block to the quarto document. `div1` is the
 #' variable name for all variable types.
 #'
-#' @param x Character string, the label or variable name to include
-#'   in the header. Defaults to `"var_name"`.
+#' @param x Character string, the variable name shown as the header.
+#'   Defaults to `"var_name"`.
+#' @param label Optional plain-language variable label, printed on the same
+#'   line as the name. Left out when blank or identical to the name.
 #'
 #' @return No return value, called for side effects (writes markdown text).
 #'
 #' @export
-create_div1 <- function( x="var_name" )
+create_div1 <- function( x="var_name", label="" )
 {
+  if( is.null(label) || length(label) == 0 || is.na(label) ) label <- ""
+  label <- trimws( as.character(label) )
   cat( "::: {.div1} \n\n" )
   cat( paste0( "#### ", x, "\n\n" ) )
+  # the label sits beside the heading, not in it, so the TOC lists only names
+  if( nzchar(label) && label != x )
+  { cat( paste0( "<p class=\"dg-vlabel\">", label, "</p>\n\n" ) ) }
   cat( "::: \n\n" )
 }
 
@@ -280,9 +287,9 @@ create_div <- function( div.num="div2", all.layouts ) {
 
 
 ## Add the two derived fields the attribute block displays to one variable's
-## render context: dg_render_type (the template type, shown as DATA TYPE) and
-## dg_semantic_type (desired_semantic_type, shown only when it is more specific
-## than the data type - "usd", not "number").
+## render context: dg_render_type (the template type, shown as DATA MODE) and
+## dg_semantic_type (desired_semantic_type, shown as DATA TYPE only when it is
+## more specific than the mode - "usd", not "number").
 #' @noRd
 .add_render_fields <- function( xx ) {
   rt  <- dg_render_type( xx )
@@ -330,11 +337,21 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]
 
+  # A layout that shows the variable label (div2 <- dd_vlabel) prints it on the
+  # title line instead of as its own row.
+  label <- ""
+  is.div2 <- trimws( layout.type$DIV ) == "div2"
+  if( any( is.div2 & trimws( layout.type$VNAME ) == "dd_vlabel" ) ) {
+    if( "dd_vlabel" %in% names(xx) ) label <- xx[["dd_vlabel"]]
+    if( all( trimws( layout.type$VNAME[ is.div2 ] ) == "dd_vlabel" ) )
+      all.divs <- all.divs[ ! all.divs == "div2" ]
+  }
+
   cat( "{{< pagebreak >}} \n\n")
 
   # The title sits OUTSIDE the grid so it stays flush-left (full-width rule)
   # while the grid content below is indented under it (see .parent in the CSS).
-  create_div1( VNAME )
+  create_div1( VNAME, label )
 
   cat( "::::: {.parent} \n\n" )
   purrr::walk( all.divs, create_div, layout.type )

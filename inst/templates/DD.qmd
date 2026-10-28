@@ -47,7 +47,7 @@ if( file.exists("DG.R") ) source("DG.R")
 # The DGF drives the whole report. The path comes from the `dgf_file` param, so
 # this document renders on its own - and update_rg() can point it at a
 # different DGF at render time without editing this file.
-dgf <- readxl::read_excel( params$dgf_file )
+dgf <- load_dgf( params$dgf_file, reader = "readxl" )
 
 # Optional raw dataset; see the research guide template. Not used by the
 # descriptor-only layouts, but available to DG.R and custom chunks.

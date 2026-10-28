@@ -101,17 +101,38 @@ h1.title { color: var(--dg-ink); font-family: var(--dg-serif); font-size: 2.3em;
 h2.anchored { color: #c9c9c9; }
 h3.anchored { color: var(--dg-muted); }
 
-h4 {
-  font-family: var(--dg-serif);
-  font-size: 2.5em;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--dg-ink);
-  border-bottom: 3px solid var(--dg-accent);
-  width: 100%;
+/* Title row: variable name + its plain-language label on one line, sharing
+   one full-width rule. Wraps the label under the name when space runs out. */
+.div1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.9em;
+  row-gap: 0.1em;
+  border-bottom: 2px solid var(--dg-accent);
   /* extra top margin sets each variable's title apart from the block above */
-  margin: 0.8em 0 0.2em 0;
-  padding-bottom: 2px;
+  margin: 2em 0 0.6em 0;
+  padding-bottom: 4px;
+}
+
+h4 {
+  font-family: var(--dg-mono);   /* a variable name is code: show it as code */
+  font-size: 1.55em;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--dg-ink);
+  margin: 0;
+  overflow-wrap: anywhere;       /* very long names wrap, never overflow */
+}
+
+/* L2 - the plain-language variable label, beside the name */
+.div1 .dg-vlabel {
+  font-family: var(--dg-serif);
+  font-size: 1.2em;
+  font-style: italic;
+  color: var(--dg-label);
+  line-height: 1.3;
+  margin: 0;
 }
 
 h5 { font-size: 0.9em; }
@@ -167,19 +188,25 @@ h5 { font-size: 0.9em; }
   font-weight: 700;
 }
 
+/* div3 is a 1/3 grid cell: min-width 0 lets it shrink to its track, and long
+   values (e.g. a semantic type like "percentage_change") wrap inside it rather
+   than bleeding into the DESCRIPTION column. */
+.div3 { min-width: 0; }
 .div3 .dg-field {
   display: grid;
-  grid-template-columns: 6.2em 1fr;
+  grid-template-columns: 6.6em minmax(0, 1fr);
   align-items: baseline;
   column-gap: 0.5em;
   margin: 0 0 0.32em 0;
 }
-.div3 .dg-k { color: var(--dg-ink); }
+.div3 .dg-k { color: var(--dg-label); white-space: nowrap; }
 .div3 .dg-v {
   font-family: var(--dg-mono);
   font-weight: 700;
   font-size: 0.92em;
   color: var(--dg-ink);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .div4 .dg-field { margin: 0 0 0.55em 0; line-height: 1.4; }
