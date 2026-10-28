@@ -34,6 +34,35 @@
 ## are left exactly as create_dgf() typed them.
 
 
+## Keep values under the length base R's strptime() accepts, FOR THE CALL INTO FORMEX ONLY.
+##
+## formex's date detector (is_date) runs strptime() over the values it is given, and strptime()
+## aborts on any input of 1000 bytes or more ("input string is too long"). Free-text fields
+## (a reasonable-cause narrative, a mission statement) routinely exceed that, and formex samples
+## its 100 values at random, so whether a build crashed depended on the draw. A 999-byte prefix
+## of a long string is as much "not a date" as the whole string. Only the copy handed to formex
+## is trimmed; the data, the profile and the storage-safety gate still see the original values.
+## Remove once formex guards the length itself.
+#' @param x Character vector.
+#' @param max_bytes Longest value, in bytes, to pass on.
+#' @return `x`, with any value over `max_bytes` trimmed to fit.
+#' @keywords internal
+#' @noRd
+.cap_bytes <- function(x, max_bytes = 999L) {
+  long <- which(!is.na(x) & nchar(x, type = "bytes") > max_bytes)
+  if (!length(long)) return(x)
+  s <- substr(x[long], 1L, max_bytes)                 # characters <= bytes, so this only starts the trim
+  repeat {                                            # multi-byte characters: trim until it fits in bytes
+    b    <- nchar(s, type = "bytes")
+    over <- b > max_bytes
+    if (!any(over)) break
+    s[over] <- substr(s[over], 1L, floor(nchar(s[over]) * max_bytes / b[over]) - 1L)
+  }
+  x[long] <- s
+  x
+}
+
+
 ## Call formex's classifier, muffling ONE known-noisy upstream warning.
 ##
 ## formex's v6 verifier runs an `as_integer` coercion over every candidate
@@ -44,14 +73,131 @@
 ## Remove once fixed upstream (see dev/formex-reintegration-plan.md, Part 6).
 #' @keywords internal
 #' @noRd
-.formex_guess <- function(vals, name = NULL) {
+.formex_guess <- function(vals, name = NULL, seed = NULL, n_sample = NULL) {
+  vals <- .cap_bytes(vals)       # strptime() in formex's date detector aborts on 1000+ byte values
+  ## n_sample is passed only when asked for, so the installed formex keeps
+  ## control of its own default.
+  args <- list(vals, name = name, seed = seed)
+  if (!is.null(n_sample)) args$n_sample <- n_sample
   withCallingHandlers(
-    formex::guess_data_type(vals, name = name),
+    do.call(formex::guess_data_type, args),
     warning = function(w) {
       if (grepl("NAs introduced by coercion", conditionMessage(w), fixed = TRUE))
         invokeRestart("muffleWarning")
     }
   )
+}
+
+
+## ---- why the formex call is hoisted out of the decision loop ---------------
+##
+## MEASURED (formex 0.0.0.9000, baseball 4,620 x 19): guess_data_type() is 63%
+## of create_dgf() -- far more than the rg_* profiles, which are under 7%. Two
+## properties of that cost shape the design here:
+##
+##   1. It is FLAT in nrow. formex samples `n_sample = 100` values internally,
+##      so 100 rows cost the same as 4,620 (~5.5s either way). Row subsampling
+##      on this side buys nothing; the cost is PER COLUMN (~0.29s, of which a
+##      ~0.126s floor is paid even by a 10-value vector) and the dominant term
+##      is the router -- `route = FALSE` drops 5.7s to 1.4s.
+##   2. It is independent per column. The decision logic in guess_dgf_types()
+##      below is pure bookkeeping on one column's answer, so the only part worth
+##      distributing is the guess itself.
+##
+## Hence: fetch every column's guess up front (optionally on a worker pool),
+## then run the unchanged decision loop over the results.
+##
+## `seed` exists because formex's internal sample is drawn from the session RNG.
+## Left to chance, create_dgf() is NOT REPRODUCIBLE: measured across four runs
+## of the same frame, `weight` moved between number/quantity/measurement and a
+## bare number, `AB` between identifier and number, and `AVG` landed on
+## text/web/domain once -- and those disagreements reach desired_data_type in
+## the written DGF. A fixed seed makes the build repeatable and is also what
+## lets the parallel path return results identical to the serial one.
+##
+## `n_sample` addresses the same instability at its source. formex's default of
+## 100 is smaller than the distinct-value count of many real columns, so the
+## confidence it reports is a sample statistic, and columns sitting near
+## `route_threshold` flip on it. MEASURED on bb.csv `birthState` (210 distinct
+## values), confidence over six seeds:
+##
+##   n_sample = 100  ->  0.631 - 0.905  (sd 0.108)  straddles the 0.8 threshold
+##   n_sample = 300  ->  0.813 - 0.813  (sd 0)      stable, and above it
+##
+## Raising it is therefore both a determinism fix and a better answer --- at
+## 300 the column resolves to mutually_exclusive.geographic instead of falling
+## back to text, and `AVG` stops carrying a spurious text:web:domain class.
+## create_dgf() now defaults it to 300: that covers most real columns
+## exhaustively, and the formex-side speedup (lecy/formex@3d812d2) paid for the
+## extra work. The cost is real but bounded, and falls on high-cardinality
+## columns, where a larger sample is doing more actual checking --- `birthState`
+## 0.50s -> 0.82s, `AB` up to ~1.4s, since the sample stops being a shortcut.
+## Above the distinct count the draw is merely reproducible (see `seed`), not
+## complete; an adaptive min(n_distinct, cap) would be better still, but that
+## belongs in formex.
+#' @keywords internal
+#' @noRd
+.formex_guess_all <- function(df, workers = 1L, seed = NULL, n_sample = NULL) {
+
+  vars <- names(df)
+  # Capped ONCE, here, so every path below gets it: the serial path, the fallbacks, and the
+  # parallel worker `fx` (which calls formex::guess_data_type() directly, not .formex_guess()).
+  # formex's date detector aborts on a value of 1000+ bytes. Only these copies are trimmed.
+  vals <- lapply(df, function(x) .cap_bytes(as.character(x)))
+  n    <- length(vars)
+
+  workers <- suppressWarnings(as.integer(workers))
+  if (length(workers) != 1L || is.na(workers)) workers <- 1L
+  workers <- min(workers, n)
+
+  if (workers <= 1L || n <= 1L)
+    return(lapply(seq_len(n), function(i) .formex_guess(vals[[i]], name = vars[i],
+                                                        seed = seed,
+                                                        n_sample = n_sample)))
+
+  if (!requireNamespace("parallel", quietly = TRUE))
+    return(lapply(seq_len(n), function(i) .formex_guess(vals[[i]], name = vars[i],
+                                                        seed = seed,
+                                                        n_sample = n_sample)))
+
+  ## Self-contained worker: reaches only for formex::, and its environment is
+  ## reset to globalenv() so serialising it to a PSOCK worker does not drag
+  ## datagoodr's namespace along (which may not be installed there under
+  ## pkgload::load_all()).
+  fx <- function(vals, name, seed, n_sample) {
+    args <- list(vals, name = name, seed = seed)
+    if (!is.null(n_sample)) args$n_sample <- n_sample
+    withCallingHandlers(
+      do.call(formex::guess_data_type, args),
+      warning = function(w) {
+        if (grepl("NAs introduced by coercion", conditionMessage(w), fixed = TRUE))
+          invokeRestart("muffleWarning")
+      }
+    )
+  }
+  environment(fx) <- globalenv()
+
+  cl <- try(parallel::makePSOCKcluster(workers), silent = TRUE)
+  if (inherits(cl, "try-error"))
+    return(lapply(seq_len(n), function(i) .formex_guess(vals[[i]], name = vars[i],
+                                                        seed = seed,
+                                                        n_sample = n_sample)))
+  on.exit(try(parallel::stopCluster(cl), silent = TRUE), add = TRUE)
+
+  ok <- unlist(parallel::clusterEvalQ(
+          cl, requireNamespace("formex", quietly = TRUE) ))
+  if (!all(ok)) {
+    warning("formex is not available on the worker processes; ",
+            "guessing column types sequentially.", call. = FALSE)
+    return(lapply(seq_len(n), function(i) .formex_guess(vals[[i]], name = vars[i],
+                                                        seed = seed,
+                                                        n_sample = n_sample)))
+  }
+
+  res <- parallel::clusterMap(cl, fx, vals, vars,
+                              MoreArgs = list(seed = seed, n_sample = n_sample),
+                              SIMPLIFY = FALSE, USE.NAMES = FALSE)
+  unname(res)
 }
 
 ## ---- the storage-safety gate ----------------------------------------------
@@ -238,6 +384,16 @@
 #'   geographic categorical is promoted to an identifier (a key).
 #' @param route_threshold Minimum route confidence for a depth-4 leaf to be
 #'   taken over the legacy guess.
+#' @param workers Integer; how many processes to spread the per-column formex
+#'   calls over. `1` (the default) stays in-process. See `.formex_guess_all()`
+#'   for why the guess, and not the profiling, is the part worth distributing.
+#' @param seed Integer or `NULL`; seed handed to `formex::guess_data_type()` so
+#'   its internal 100-value sample - and therefore the whole DGF - is
+#'   reproducible. `NULL` restores the old session-RNG behaviour.
+#' @param n_sample Integer or `NULL`; how many values formex samples per column.
+#'   Defaults to `300`; `NULL` leaves formex's own default (100). The sample is
+#'   drawn from the distinct values, so confidence is stable exactly when
+#'   `n_sample >= n_distinct` - see `.formex_guess_all()`.
 #'
 #' @return A data frame, one row per column: `desired_data_type`,
 #'   `desired_data_class` (dotted `class.subclass`), `dd_is_join_key`, and the
@@ -250,8 +406,16 @@
 #' @keywords internal
 #' @noRd
 guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
-                            route_threshold = 0.8) {
+                            route_threshold = 0.8,
+                            workers  = getOption("datagoodr.workers", 1L),
+                            seed     = getOption("datagoodr.guess_seed", 1L),
+                            n_sample = getOption("datagoodr.guess_n_sample", 300L)) {
   vars <- names(df)
+
+  ## every column's formex answer, fetched up front (see .formex_guess_all())
+  guesses <- .formex_guess_all(df, workers = workers, seed = seed,
+                               n_sample = n_sample)
+
   out <- data.frame(
     desired_data_type  = base_type,
     desired_data_class = rep("", length(vars)),
@@ -273,7 +437,7 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
 
   for (i in seq_along(vars)) {
     vals <- as.character(df[[i]])
-    g <- .formex_guess(vals, name = vars[i])
+    g <- guesses[[i]]
     r <- g$route
 
     nn  <- vals[!is.na(vals) & nzchar(trimws(vals))]

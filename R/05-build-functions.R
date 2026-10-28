@@ -145,15 +145,30 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
 #' @seealso [use_datagoodr_template()], which copies the template.
 #' @noRd
 # Reduce a path to be relative to `dir` for baking into a qmd that lives there.
-# A file directly inside `dir` becomes its basename; anything else is left as
-# given (the caller's responsibility to make it resolvable from the qmd).
+# A file directly inside `dir` becomes its basename. A file that exists somewhere
+# else becomes the relative path from `dir` to it ("../dgf/DGF.xlsx"), since quarto
+# resolves the path from the qmd's folder, not from where create_rg() was called --
+# baking "dgf/DGF.xlsx" as given made the first render fail with "path does not
+# exist". A path that cannot be resolved (missing, or on another drive) is left as
+# given, as before: the caller's responsibility.
 rel_to_dir <- function( path, dir ) {
   if( is.null(path) ) return( path )
   same_dir <- tryCatch(
     normalizePath( dirname(path), mustWork = FALSE ) ==
       normalizePath( dir, mustWork = FALSE ),
     error = function(e) FALSE )
-  if( isTRUE(same_dir) ) basename(path) else path
+  if( isTRUE(same_dir) ) return( basename(path) )
+  if( ! file.exists(path) ) return( path )
+
+  split <- function( p ) strsplit( normalizePath( p, winslash = "/", mustWork = FALSE ), "/",
+                                   fixed = TRUE )[[1]]
+  from <- split( dir ); to <- split( path )
+  if( length(from) == 0 || length(to) == 0 || ! identical( tolower(from[1]), tolower(to[1]) ) )
+    return( path )                                   # different drive/root: no relative form
+  n <- 0L
+  while( n < min( length(from), length(to) - 1L ) && identical( from[n + 1L], to[n + 1L] ) ) n <- n + 1L
+  if( n == 0L ) return( path )                       # nothing shared (e.g. drive letters differ in case)
+  paste( c( rep( "..", length(from) - n ), to[ -seq_len(n) ] ), collapse = "/" )
 }
 
 

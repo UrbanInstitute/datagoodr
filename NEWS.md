@@ -59,6 +59,57 @@ When neither modality is confident the column keeps its base type, and the
 route's `depth` is recorded rather than discarded — a truncated path is a valid
 partial answer for a reviewer to deepen, not a failure.
 
+### `create_dgf()` is reproducible, and guesses from a larger sample
+
+`formex::guess_data_type()` draws its sample from the session RNG, so the same
+data produced different types on different runs — across three builds of the
+baseball dataset `nameLast` moved text -> categorical and `AB` categorical ->
+text. `create_dgf()` now seeds it (`guess_seed`, default `1`), so repeated
+builds of the same data produce an identical DGF.
+
+Seeding makes the draw repeatable, not correct. formex samples from a column's
+**distinct** values and its confidence is stable only when the sample covers
+them all, so `create_dgf()` also raises `guess_n_sample` to **300** (formex's
+own default is 100). On the baseball dataset that fixes `birthState`, which now
+resolves to `mutually_exclusive.geographic` instead of falling back to `text`,
+and clears a spurious `text:web:domain` class on `AVG`.
+
+* Both are arguments and options: `guess_seed = NULL` restores the old
+  session-RNG behaviour, and `guess_n_sample = NULL` hands the sample size back
+  to formex. `options(datagoodr.guess_seed = )` /
+  `options(datagoodr.guess_n_sample = )` set them project-wide.
+* **Guessed types can differ from a DGF built before this change** — that is the
+  point, but re-check any curated DGF you regenerate.
+* The larger sample costs roughly what the formex speedup above saves, so a
+  build is about level on time while being reproducible and better typed.
+
+`create_dgf(workers = )` additionally spreads the per-column guess over a
+process pool. It defaults to `1`; with the formex fix in place it is only worth
+raising on wide frames.
+
+### Pre-flight check for degenerate columns
+
+`create_dgf()` profiles every column, which takes minutes on a large file, and a
+column the profilers could not handle used to surface as a crash partway through,
+with an error that named no column. A new pre-flight step finds those columns
+first, and reports all of them at once.
+
+* **`preflight_dgf(df)`** scans each column and returns one row per finding
+  (`var_name`, `rule`, `severity`, `detail`, `suggestion`). Rules: `constant`,
+  `single_value_with_blanks` (an `X`/blank checkbox), `all_missing`,
+  `duplicate_column`, `mixed_boolean_encoding` (`0`/`1`/`true`/`false`),
+  `non_finite`, `placeholder_value`, `long_values`, `leading_zero_code` and
+  `high_cardinality_temporal`. On a 568,000-row, 199-column file it takes about
+  40 seconds; the build took about 22 minutes there (with the formex release before
+  its 2026-10-28 speed-up). `smoke_n = 5000` also
+  builds a DGF from a random sample and reports a failure by variable.
+* **`create_dgf(preflight = )`** runs it automatically: `"warn"` (the default)
+  prints a one-line summary and continues, `"error"` stops before any profiling
+  if a column is flagged, `"off"` skips it. The findings are kept on the result as
+  `attr(dgf, "preflight")`.
+* **Errors now name the variable.** A failure while profiling is reported as
+  `create_dgf(): statistics (factor) failed for variable 'x': ...`.
+
 ## Breaking changes
 
 ### Type detection moved to the formex package
@@ -156,6 +207,45 @@ formex-stabilized EIN are now the same string.
 * **`read_yyyymm()` validates its input** rather than silently slicing any
   string, and accepts an already-hyphenated value.
 
+* **A column with one distinct value no longer aborts `create_dgf()`.** A constant
+  column, or one value plus blanks (an `X`/blank checkbox, which datagoodr reads as
+  one level), failed with `'names' attribute [2] must be the same length as the
+  vector [1]` (or `replacement has 0 rows, data has 1`). Subsetting a one-element
+  table dropped it to a bare vector, so the frequency table lost its `Freq` column.
+  The factor statistics, the treemap data and the word-cloud words now keep the
+  table intact; output for every other column is unchanged.
+
+* **Free text of 1,000 bytes or more no longer aborts type detection.** base R's
+  `strptime()` refuses such input, and both datagoodr's temporal detector and the
+  call into formex's date detector passed raw cell values to it. Whether a build
+  crashed depended on whether a long value fell in the first 50 rows (or in
+  formex's random sample of 100), so it could pass or fail on the same file.
+
+* **An all-missing column no longer aborts the build.** Its character statistics
+  failed with `invalid number of 'breaks'`, and its preview was `"NA"`. It now
+  profiles as empty and renders.
+
+* **`retype_dgf()` reads a `.csv` as text.** It used `readr`'s type inference, which
+  turned `"00"` into 0 and `"06037"` into 6037 before profiling the type you had
+  just chosen to protect them.
+
+* **`retype_dgf()` refreshes `dd_f_levels`.** After retyping a variable to
+  categorical or boolean the level dictionary kept the old spellings
+  (`0`/`1`/`false`/`true`) or stayed empty, so the guide printed stale or missing
+  category labels. Labels already edited for a level that still exists are kept;
+  a type with no levels is left untouched.
+
+* **A timestamp column no longer stores one graphic row per distinct value.** On a
+  568,000-row file two timestamp variables each stored a 39.7-million-character
+  cell, past Excel's cell limit. Above `getOption("datagoodr.temporal.max_values",
+  10000)` distinct values, ISO timestamps are stored at the finest of minute, hour
+  or day that fits. A column under the cap is stored exactly as before.
+
+* **`create_rg()` bakes a DGF path the render can resolve.** A DGF outside the
+  report's folder is now written relative to it (`../dgf/DGF.xlsx`); Quarto resolves
+  the path from the `.qmd`, so the old as-given path failed with `path does not
+  exist`.
+
 ## Internal
 
 * `.safe_numeric()` — the rule deciding which character columns
@@ -165,3 +255,19 @@ formex-stabilized EIN are now the same string.
 
 * `R/01-06-guess-dgf-types.R` is now the documented **formex seam**. It reads
   only formex's public return value and touches no internals.
+
+* **DGF builds are roughly a third faster, via formex.** Profiling
+  `create_dgf()` showed type guessing was 63% of a build and the `rg_*` data
+  profiles under 7% — so the work went into `formex::guess_data_type()`, which
+  cost ~130ms per column even for a ten-value input. Most of that floor was
+  input-independent work recomputed on every call (the verifier's foil-leak
+  loop, the ontology's own example signatures) plus a 730-format `strptime`
+  sweep that non-date columns paid in full. Fixed upstream in
+  `lecy/formex@3d812d2`; with it installed, `create_dgf()` on the 4,620 x 19
+  baseball dataset goes 9.92s -> 6.86s and the guess itself 6.20s -> 3.59s.
+  **The written DGF is byte-identical** — this is purely caching and
+  short-circuiting, with no change to any detection verdict. One visible side
+  effect: formex's `as_integer` "NAs introduced by coercion" warning now fires
+  about once per session instead of once per candidate per column (datagoodr
+  already muffled it). Requires the updated formex; older versions still work,
+  just slower. Full measurements and method in `dev/performance-notes.md`.

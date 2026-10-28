@@ -38,6 +38,7 @@ Suggests:
     htmltools,
     kableExtra,
     lattice,
+    parallel,
     psych,
     rmarkdown,
     scales,

@@ -26,6 +26,25 @@ workflow the v7 columns implement is described in
    `read_stable_csv()`.
 5. **`raw_data_mode`:** record what a plain (inferring) read would produce, not
    the all-text read (today `raw_data_type` is always `character`).
+6. ~~Settle `guess_n_sample`.~~ **Done 2026-10-28 — defaults to 300** (see
+   `dev/performance-notes.md`, §3). The type guess is also now seeded
+   (`guess_seed = 1`), so a build is reproducible. formex samples from a
+   column's distinct values, and confidence is stable only when
+   `n_sample >= n_distinct`; 300 covers 15 of `bb.csv`'s 19 columns
+   exhaustively, which fixes `birthState` (now
+   `mutually_exclusive.geographic`) and clears `AVG`'s spurious
+   `text:web:domain`. It costs ~2.9s on `bb.csv` — roughly what the formex
+   speedup bought — so a build is net flat on time but reproducible and better
+   typed. Still open: the adaptive `min(n_distinct, cap)` form, which belongs
+   in formex.
+7. ~~Speed up the formex type guess.~~ **Done 2026-10-28** — shipped as
+   `lecy/formex@3d812d2` on `main` (see `dev/performance-notes.md`, §2 and §6).
+   `create_dgf()` on `bb.csv` went 9.92s -> 6.86s and type guessing 6.20s ->
+   3.59s, with the written DGF byte-identical and both suites green (formex
+   883, datagoodr 554, 0 failures). Root cause: 86% of formex's per-call cost
+   was the router, most of it input-independent work recomputed on every call.
+   Remaining from that work: `guess_n_sample` (item 6 above), and the three
+   items formex deliberately left unfixed (§2.3).
 
 ### Routing rules (2026-10-27)
 

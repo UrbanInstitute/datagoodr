@@ -203,6 +203,29 @@ first_n <- function( x, n=5 )
 
 
 
+#' Frequency table, most frequent first, that survives 0 and 1 levels (internal)
+#'
+#' `sort(table(x), decreasing = TRUE)` is the idiom the profilers used, but
+#' subsetting a one-dimensional table down to a single element drops it to a bare
+#' named integer. `data.frame()` / `as.data.frame()` of that has one column and no
+#' `Freq`, so a column with exactly one distinct value (a constant, or one value
+#' plus blanks such as an `X`/blank checkbox) made `create_dgf()` abort with
+#' "'names' attribute [2] must be the same length as the vector [1]". Ordering
+#' with `drop = FALSE` keeps the table a table. Output is identical to
+#' `sort(table(x), decreasing = TRUE)` for every input that used to work.
+#'
+#' @param x A vector.
+#' @param dnn Name of the table's dimension, which becomes the first column when
+#'   the table is converted to a data frame. Defaults to the name of the argument
+#'   passed, as `table(x)` itself would, so callers see the same column name.
+#' @return A one-dimensional `table`, in decreasing order of frequency.
+#' @noRd
+.freq_table <- function( x, dnn = deparse( substitute(x) ) ) {
+  tab <- table( x, dnn = dnn )
+  tab[ order( tab, decreasing = TRUE ), drop = FALSE ]
+}
+
+
 #' Convert a factor's levels to a formatted JSON string
 #'
 #' Builds a level/label lookup table from a factor and serialises it to a
