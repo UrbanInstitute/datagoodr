@@ -34,6 +34,35 @@
 ## are left exactly as create_dgf() typed them.
 
 
+## Keep values under the length base R's strptime() accepts, FOR THE CALL INTO FORMEX ONLY.
+##
+## formex's date detector (is_date) runs strptime() over the values it is given, and strptime()
+## aborts on any input of 1000 bytes or more ("input string is too long"). Free-text fields
+## (a reasonable-cause narrative, a mission statement) routinely exceed that, and formex samples
+## its 100 values at random, so whether a build crashed depended on the draw. A 999-byte prefix
+## of a long string is as much "not a date" as the whole string. Only the copy handed to formex
+## is trimmed; the data, the profile and the storage-safety gate still see the original values.
+## Remove once formex guards the length itself.
+#' @param x Character vector.
+#' @param max_bytes Longest value, in bytes, to pass on.
+#' @return `x`, with any value over `max_bytes` trimmed to fit.
+#' @keywords internal
+#' @noRd
+.cap_bytes <- function(x, max_bytes = 999L) {
+  long <- which(!is.na(x) & nchar(x, type = "bytes") > max_bytes)
+  if (!length(long)) return(x)
+  s <- substr(x[long], 1L, max_bytes)                 # characters <= bytes, so this only starts the trim
+  repeat {                                            # multi-byte characters: trim until it fits in bytes
+    b    <- nchar(s, type = "bytes")
+    over <- b > max_bytes
+    if (!any(over)) break
+    s[over] <- substr(s[over], 1L, floor(nchar(s[over]) * max_bytes / b[over]) - 1L)
+  }
+  x[long] <- s
+  x
+}
+
+
 ## Call formex's classifier, muffling ONE known-noisy upstream warning.
 ##
 ## formex's v6 verifier runs an `as_integer` coercion over every candidate
@@ -45,6 +74,7 @@
 #' @keywords internal
 #' @noRd
 .formex_guess <- function(vals, name = NULL, seed = NULL, n_sample = NULL) {
+  vals <- .cap_bytes(vals)       # strptime() in formex's date detector aborts on 1000+ byte values
   ## n_sample is passed only when asked for, so the installed formex keeps
   ## control of its own default.
   args <- list(vals, name = name, seed = seed)
@@ -110,7 +140,10 @@
 .formex_guess_all <- function(df, workers = 1L, seed = NULL, n_sample = NULL) {
 
   vars <- names(df)
-  vals <- lapply(df, as.character)
+  # Capped ONCE, here, so every path below gets it: the serial path, the fallbacks, and the
+  # parallel worker `fx` (which calls formex::guess_data_type() directly, not .formex_guess()).
+  # formex's date detector aborts on a value of 1000+ bytes. Only these copies are trimmed.
+  vals <- lapply(df, function(x) .cap_bytes(as.character(x)))
   n    <- length(vars)
 
   workers <- suppressWarnings(as.integer(workers))

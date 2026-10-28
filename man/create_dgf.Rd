@@ -28,7 +28,8 @@ create_dgf(
   open = interactive(),
   workers = getOption("datagoodr.workers", 1L),
   guess_seed = getOption("datagoodr.guess_seed", 1L),
-  guess_n_sample = getOption("datagoodr.guess_n_sample", 300L)
+  guess_n_sample = getOption("datagoodr.guess_n_sample", 300L),
+  preflight = c("warn", "error", "off")
 )
 }
 \arguments{
@@ -116,10 +117,19 @@ behaviour. Also settable with `options( datagoodr.guess_seed = )`.}
   high-cardinality ones, where the draw is merely reproducible (see
   `guess_seed`) rather than complete. Also settable with
   `options( datagoodr.guess_n_sample = )`.}
+
+\item{preflight}{What to do with the findings of [preflight_dgf()], which runs
+(far faster than a build) *before* any profiling and looks for degenerate columns
+(single-valued, all-missing, over-long values, a flag spelled several ways,
+duplicate columns, ...). `"warn"` (the default) prints a summary and goes on;
+`"error"` stops if any column is flagged as a warning or an error, for
+pipelines that must not proceed on questionable data; `"off"` skips the
+check. The findings are kept on the result: `attr(dgf, "preflight")`.}
 }
 \value{
 The DGF as a data frame, one row per variable. Also writes
-  `<file>.csv` and `<file>.xlsx` as a side effect.
+  `<file>.csv` and `<file>.xlsx` as a side effect. The [preflight_dgf()]
+  findings are attached as `attr(, "preflight")` (`NULL` when `preflight = "off"`).
 }
 \description{
 Builds a Data Governance File (DGF) from a dataset: one row per variable,
@@ -132,7 +142,15 @@ Column types are inferred from the data (see `vtypes` / `use.df.types` /
 `guess.factors` to steer that), then each variable is profiled into the
 `rg_*` columns. The result is meant to be curated by hand - in Excel or via
 the `v*` arguments - and fed to [create_rg()].
+
+A timestamp column stores one graphic row per distinct value, which for
+  a column that is nearly unique would make the DGF enormous. Above
+  `getOption("datagoodr.temporal.max_values", 10000)` distinct values, ISO
+  timestamps are stored at the finest of minute, hour or day that fits (see
+  [preflight_dgf()], rule `high_cardinality_temporal`).
+
+  If profiling a variable fails, the error names the variable and the step.
 }
 \seealso{
-[create_rg()], [update_dgf()], [inspect_dgf()]
+[preflight_dgf()], [create_rg()], [update_dgf()], [inspect_dgf()]
 }

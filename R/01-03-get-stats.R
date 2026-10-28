@@ -156,6 +156,19 @@ get_stats_chr <-  function(VNAME, df){
   spaces <- stringr::str_count(x, "[:blank:]") + 1
   spaces <- spaces[!is.na(spaces)] #remove NA
 
+  # An all-missing column has nothing to measure: min()/max() of nothing warn and
+  # return Inf, psych::skew() and the histogram below fail on empty input
+  # ("invalid number of 'breaks'") and used to abort the whole build. Return the same
+  # shape with explicit "NA" cells, an empty HIST and an empty COMMON table, which the
+  # report renders (the identifier profile uses the same empty-HIST shape).
+  if( length(n) == 0L ) {
+    tab <- data.frame( STAT = c( "Minimum", "Median", "Mean", "Max", "Skew" ),
+                       CHARACTERS = "NA", WORDS = "NA", stringsAsFactors = FALSE )
+    return( jsonlite::toJSON( list( STATS = tab, HIST = list(),
+                                    COMMON = data.frame( Value = character(), Frequency = integer() ) ),
+                              pretty = TRUE, auto_unbox = TRUE ) )
+  }
+
   tab <-
     data.frame(STAT =  c( "Minimum", "Median",  "Mean", "Max", "Skew"),
                CHARACTERS = round(c(min(n, na.rm = TRUE),
@@ -251,7 +264,7 @@ get_stats_fact <-  function(VNAME, df){
 
   # Store the level frequencies (descending), capped at 50, so the render can
   # build the combined FACTOR LEVELS table (level | frequency | meaning).
-  tab <- sort( table(x), decreasing = TRUE )
+  tab <- .freq_table( x )
   if( length(tab) > 50 ) tab <- tab[ seq_len(50) ]
   tab <- data.frame(tab)
   colnames(tab) <- c("Value", "Frequency")
@@ -374,13 +387,19 @@ detect_temporal <- function( x ) {
   if( length(cx) < 1 ) return( FALSE )
   samp <- cx[ seq_len( min(50, length(cx)) ) ]
 
+  # strptime() (which as.Date(x, format=) calls) errors on any input of 1000 or
+  # more bytes, so one long free-text value among the first 50 aborted the whole
+  # build ("input string is too long"). Nothing that long is a date: keep it in
+  # the sample, as a non-match, but never hand it to the parser.
+  too_long <- nchar( samp, type = "bytes" ) >= 1000L
+
   # Parse per single format in a loop. as.Date(x, format=) returns NA for a
   # non-match; only the plural tryFormats= errors when nothing matches all
   # values, which would blow up on a plain-number column.
   formats <- c( "%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y", "%d-%m-%Y", "%m-%d-%Y" )
   parsed  <- rep( as.Date(NA), length(samp) )
   for( fmt in formats ) {
-    need <- is.na( parsed )
+    need <- is.na( parsed ) & ! too_long
     if( ! any(need) ) break
     got <- suppressWarnings( as.Date( samp[need], format = fmt ) )
     parsed[ which(need)[ !is.na(got) ] ] <- got[ !is.na(got) ]
@@ -510,7 +529,13 @@ get_examples <- function(VNAME, df){
 
   x <- df[[VNAME]] #this should be the input data set
 
-  if( max(nchar(as.character(x)),na.rm=T) > 48 )
+  # An all-missing column has nothing to show. (max() of nothing is -Inf with a
+  # warning, and t[1:0] below would index element 1 of an empty table: "NA".)
+  widths <- nchar( as.character(x) )
+  widths <- widths[ !is.na(widths) ]
+  if( length(widths) == 0 ) return( "" )
+
+  if( max(widths) > 48 )
   { x <- purrr::map_chr( x, function(x){ substr(x,1,48) } ) }
 
   t <- table( x ) |> sort( d=T )

@@ -182,7 +182,7 @@ simplify_char <- function(v) {
   ww <- gsub( "[[:punct:]]", "", ww )
   ww <- ww[ ww != "" ]
 
-  dd <- as.data.frame(sort(table(ww),decreasing=T))
+  dd <- as.data.frame(.freq_table(ww))
   n.row <- nrow(dd)
   if( n.row > 400 )
   { dd <- dd[1:400,] }

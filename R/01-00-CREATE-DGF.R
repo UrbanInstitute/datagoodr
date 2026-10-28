@@ -1,3 +1,30 @@
+## Run one per-variable step of create_dgf(), and if it fails say WHICH variable and
+## step. The profilers raise bare errors ("'names' attribute [2] must be the same
+## length as the vector [1]") that name no column, which on a wide file sent the
+## user looking through hundreds of variables after a multi-minute build.
+#' @noRd
+.profile_step <- function( step, var, expr ) {
+  tryCatch( expr, error = function( e )
+    stop( sprintf( "create_dgf(): %s failed for variable '%s': %s",
+                   step, var, conditionMessage(e) ), call. = FALSE ) )
+}
+
+
+## Level/label dictionary of a categorical or boolean variable as the JSON stored in
+## `dd_f_levels` (label seeded to the code; capped at the `max_levels` most frequent
+## levels). Shared by create_dgf() and retype_dgf() so the two cannot drift apart.
+## NB: key is "level" -- not the "f_level" that the exported jsonify_f() writes.
+#' @noRd
+.levels_json <- function( x, max_levels = 50L ) {
+  lv <- if( is.factor(x) ) levels(x) else sort( unique( as.character( x[ ! is.na(x) ] ) ) )
+  if( length(lv) > max_levels ) {
+    counts <- .freq_table( x )
+    lv <- names(counts)[ seq_len(max_levels) ]
+  }
+  jsonify_df( data.frame( level = lv, label = lv ) )
+}
+
+
 ## Collapse list columns to "|"-delimited strings: c("a","b") -> "a|b", an
 ## empty element -> NA. Non-list columns are untouched.
 #' @noRd
@@ -176,15 +203,31 @@
 #'   high-cardinality ones, where the draw is merely reproducible (see
 #'   `guess_seed`) rather than complete. Also settable with
 #'   `options( datagoodr.guess_n_sample = )`.
+#' @param preflight What to do with the findings of [preflight_dgf()], which runs
+#'   (far faster than a build) *before* any profiling and looks for degenerate columns
+#'   (single-valued, all-missing, over-long values, a flag spelled several ways,
+#'   duplicate columns, ...). `"warn"` (the default) prints a summary and goes on;
+#'   `"error"` stops if any column is flagged as a warning or an error, for
+#'   pipelines that must not proceed on questionable data; `"off"` skips the
+#'   check. The findings are kept on the result: `attr(dgf, "preflight")`.
 #' @param vtypes,guess.dates,dd,keep.dd.cols,preview_dd,preview_dp Accepted but
 #'   currently ignored; the features they were intended to steer (explicit type
 #'   overrides, date/time detection, and data-dictionary merging) are not
 #'   implemented yet. See `dev/TO-DO.md`.
 #'
-#' @return The DGF as a data frame, one row per variable. Also writes
-#'   `<file>.csv` and `<file>.xlsx` as a side effect.
+#' @details A timestamp column stores one graphic row per distinct value, which for
+#'   a column that is nearly unique would make the DGF enormous. Above
+#'   `getOption("datagoodr.temporal.max_values", 10000)` distinct values, ISO
+#'   timestamps are stored at the finest of minute, hour or day that fits (see
+#'   [preflight_dgf()], rule `high_cardinality_temporal`).
 #'
-#' @seealso [create_rg()], [update_dgf()], [inspect_dgf()]
+#'   If profiling a variable fails, the error names the variable and the step.
+#'
+#' @return The DGF as a data frame, one row per variable. Also writes
+#'   `<file>.csv` and `<file>.xlsx` as a side effect. The [preflight_dgf()]
+#'   findings are attached as `attr(, "preflight")` (`NULL` when `preflight = "off"`).
+#'
+#' @seealso [preflight_dgf()], [create_rg()], [update_dgf()], [inspect_dgf()]
 #' @export
 create_dgf <- function(         # ----------------
          df,
@@ -210,9 +253,12 @@ create_dgf <- function(         # ----------------
          open = interactive(),
          workers = getOption("datagoodr.workers", 1L),
          guess_seed = getOption("datagoodr.guess_seed", 1L),
-         guess_n_sample = getOption("datagoodr.guess_n_sample", 300L))
+         guess_n_sample = getOption("datagoodr.guess_n_sample", 300L),
+         preflight = c("warn", "error", "off"))
 
  {  # ---------------------------------------------
+
+  preflight <- match.arg( preflight )
 
   # Load data frame
   df.class <- class(df)
@@ -269,6 +315,15 @@ create_dgf <- function(         # ----------------
   cat( paste0(
     "\nThere are ", N_row, " rows and ",
     N_col, " columns in the dataset.\n\n"  ) )
+
+  ## PRE-FLIGHT: look for degenerate columns before spending minutes profiling.
+  ## Reports every problem at once, instead of the first one after a long run.
+  preflight_findings <- NULL
+  if( preflight != "off" )
+  {
+    preflight_findings <- preflight_dgf( df )
+    .report_preflight( preflight_findings, preflight )
+  }
 
 
   ## VAR NAMES AND LABELS
@@ -347,8 +402,12 @@ create_dgf <- function(         # ----------------
   ## R's date guessing is limited and id recognition is heuristic. Temporal is
   ## checked first, so a date column (which would otherwise look like a unique
   ## code) is not mistaken for an identifier.
-  is.temporal <- as.logical( sapply( df, detect_temporal ) )
-  is.id       <- mapply( detect_identifier, df, var_name ) & ! is.temporal
+  is.temporal <- vapply( seq_along(df), function(i)
+                   .profile_step( "temporal detection", var_name[i], detect_temporal( df[[i]] ) ),
+                   logical(1) )
+  is.id       <- mapply( function( x, nm )
+                   .profile_step( "identifier detection", nm, detect_identifier( x, nm ) ),
+                   df, var_name ) & ! is.temporal
   vclass[ is.temporal ] <- "temporal"
   vclass[ is.id ]       <- "identifier"
 
@@ -486,13 +545,7 @@ create_dgf <- function(         # ----------------
   ## levels, matching the FACTOR LEVELS table and Excel's cell limit.
   dd_f_levels <- vapply( seq_len(N_col), function(i) {
     if( ! desired_data_type[i] %in% c("categorical", "boolean") ) return( "" )
-    x  <- df_stats[[i]]
-    lv <- if( is.factor(x) ) levels(x) else sort( unique( as.character( x[ ! is.na(x) ] ) ) )
-    if( length(lv) > max_factor_levels ) {
-      counts <- sort( table( x ), decreasing = TRUE )
-      lv <- names(counts)[ seq_len(max_factor_levels) ]
-    }
-    jsonify_df( data.frame( level = lv, label = lv ) )
+    .levels_json( df_stats[[i]], max_factor_levels )
   }, character(1) )
 
   # Temporal grain now lives in desired_data_class (period.month, phase.*, ...),
@@ -524,10 +577,16 @@ create_dgf <- function(         # ----------------
   ## Preview and properties use the formatted values (df_fmt); stats and
   ## graphics use df_stats, which keeps numeric/logical columns unformatted.
 
-  rg_preview <- sapply(var_name, get_examples, df = df_fmt)
-  rg_properties <- mapply(get_properties, VNAME = var_name, MoreArgs = list(df = df_fmt))
-  rg_stats <- mapply(get_stats, VNAME = var_name,VCLASS=vclass, MoreArgs = list(df = df_stats) )
-  rg_graphics <- mapply(get_graphics, VNAME = var_name,VCLASS=vclass, MoreArgs = list(df = df_stats) )
+  rg_preview <- sapply(var_name, function(v)
+    .profile_step( "preview", v, get_examples( v, df = df_fmt ) ) )
+  rg_properties <- mapply(function(v)
+    .profile_step( "properties", v, get_properties( v, df = df_fmt ) ), var_name )
+  rg_stats <- mapply(function(v, vc)
+    .profile_step( paste0( "statistics (", vc, ")" ), v, get_stats( v, df_stats, vc ) ),
+    var_name, vclass )
+  rg_graphics <- mapply(function(v, vc)
+    .profile_step( paste0( "graphic (", vc, ")" ), v, get_graphics( v, df_stats, vc ) ),
+    var_name, vclass )
 
   ## BLANK COLUMNS
   # Declared now, populated by later work (subtype/class/unit descriptors, the
@@ -624,7 +683,7 @@ create_dgf <- function(         # ----------------
   cat( "\nAssigned variable types:" )
   print( knitr::kable( vt ) )
 
-
+  attr( dgf, "preflight" ) <- preflight_findings
   return(dgf)
 }
 

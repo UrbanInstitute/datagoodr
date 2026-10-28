@@ -55,16 +55,68 @@ get_graphics <- function(VNAME, df, VCLASS){
 #'
 #' @return A JSON string: a two-column Value/Count table, stored in the DGF's
 #'   `rg_graphics` column.
+#'
+#' @details A timestamp column can have as many distinct values as it has rows,
+#'   and one table row per distinct value made a 568,000-row file store a
+#'   39,700,000-character cell per timestamp variable (past Excel's cell limit,
+#'   and the bulk of the DGF). When there are more than
+#'   `getOption("datagoodr.temporal.max_values", 10000)` distinct values and they
+#'   open with an ISO date, they are stored at the finest of minute, hour or day
+#'   that fits the cap (see `.coarsen_timestamps()`). Nothing is lost for any grain
+#'   the renderer can draw from a timestamp (date, week, month, year), and a
+#'   column under the cap is stored exactly as before.
 #' @noRd
 get_graphics_temporal <- function(VNAME, df){
   x <- as.character( unlist( df[[VNAME]] ) )
   x <- x[ !is.na(x) & trimws(x) != "" & x != "." ]
   if( length(x) == 0 ) return("")
+  x   <- .coarsen_timestamps( x, getOption( "datagoodr.temporal.max_values", 10000L ) )
   tt  <- table( x )
   tab <- data.frame( Value = names(tt),
                      Count = as.integer(tt),
                      stringsAsFactors = FALSE )
   jsonify_df( tab )
+}
+
+
+#' Coarsen ISO timestamps to fit a cap on distinct values (internal)
+#'
+#' @param x Character timestamps (already stripped of missing values).
+#' @param max_values Most distinct values to keep. `NULL`, `NA` or a value below 1
+#'   turns coarsening off.
+#' @return `x`, unchanged unless it has more than `max_values` distinct values and
+#'   at least 95% of them open with `YYYY-MM-DD`. Then every ISO value is cut to
+#'   the first of 16 (minute), 13 (hour) or 10 (day) characters that brings the
+#'   distinct count to `max_values` or below, falling back to the day. A prefix is
+#'   kept, not a reformatted value, so the renderer's `parse_dates()` still reads it.
+#' @noRd
+.coarsen_timestamps <- function( x, max_values = 10000L ) {
+  n <- .timestamp_cut( unique( x ), max_values )
+  if( is.na(n) ) return( x )
+  iso <- grepl( "^[0-9]{4}-[0-9]{2}-[0-9]{2}", x )
+  x[ iso ] <- substr( x[ iso ], 1L, n )
+  x
+}
+
+#' How many leading characters of an ISO timestamp to keep (internal)
+#'
+#' The one place that decides whether, and how far, a timestamp column is coarsened,
+#' shared by the profiler (`.coarsen_timestamps()`) and the preflight check, so the
+#' check predicts exactly what the profiler will do.
+#'
+#' @param ux Distinct character values.
+#' @param max_values Cap on distinct values.
+#' @return `NA` when nothing should be cut (under the cap, cap off, or not
+#'   timestamps); otherwise 16 (minute), 13 (hour) or 10 (day).
+#' @noRd
+.timestamp_cut <- function( ux, max_values = 10000L ) {
+  if( !is.numeric(max_values) || length(max_values) != 1 || is.na(max_values) ||
+      max_values < 1 ) return( NA_integer_ )
+  if( length(ux) <= max_values ) return( NA_integer_ )
+  if( mean( grepl( "^[0-9]{4}-[0-9]{2}-[0-9]{2}", ux ) ) < 0.95 ) return( NA_integer_ )
+  for( n in c( 16L, 13L ) )
+    if( length( unique( substr( ux, 1L, n ) ) ) <= max_values ) return( n )
+  10L
 }
 
 
@@ -138,7 +190,7 @@ get_graphics_fact <- function(VNAME, df ){
   x <- df[[VNAME]] #this should be the input data set
   x <- as.character(x)
 
-  tab1 <- as.data.frame(sort(table(x), decreasing = TRUE))
+  tab1 <- as.data.frame(.freq_table(x))
   tab1$PER <- tab1$Freq / sum(tab1$Freq) * 100
   max.per <- tab1$PER[1]
 
