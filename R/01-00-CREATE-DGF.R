@@ -1,3 +1,103 @@
+## Collapse list columns to "|"-delimited strings: c("a","b") -> "a|b", an
+## empty element -> NA. Non-list columns are untouched.
+#' @noRd
+.collapse_list_cols <- function( df, sep = "|" ) {
+  is.list.col <- vapply( df, is.list, logical(1) )
+  if( ! any(is.list.col) ) return( df )
+  df[ is.list.col ] <- lapply( df[ is.list.col ], function( col ) {
+    vapply( col, function( x ) {
+      x <- unlist( x, use.names = FALSE )
+      if( length(x) == 0 ) NA_character_
+      else paste( as.character(x), collapse = sep )
+    }, character(1) )
+  })
+  df
+}
+
+
+## Choose each variable's profile type so the stored rg_* profile always fits
+## the template it renders with (see "PROFILE TYPE = RENDER TYPE" in
+## create_dgf()). For each column, the first candidate whose values can carry
+## the type wins: legacy guess -> target (the v7 desired type) -> storage, with
+## the target promoted to first when its stabilizer converted the values.
+##
+## A target that the raw values cannot carry yet (a number written "$1,234")
+## is tried again on the stabilized values when its v7 stabilizer is ready -
+## the confirm-before-profile idea in its smallest form.
+##
+## Returns the chosen `type` and `target_type` per column, plus df_stats / df
+## with columns cast to what each profile function expects: factors for
+## categorical and boolean, character for text, the stabilized values where a
+## stabilizer was applied.
+#' @noRd
+.align_profile_types <- function( df_stats, df, target_type, legacy_type,
+                                  storage_type, guess = NULL, desired = NULL ) {
+
+  ## A column is boolean only when it has <=2 states AND those states are
+  ## boolean-LIKE (TRUE/FALSE, yes/no, 0/1, t/f, on/off). A 2-level code that is
+  ## not a flag (throws = R/L, sex = M/F) is categorical, not boolean.
+  .bool_vocab <- c("true","false","t","f","yes","no","y","n","1","0","on","off")
+  can_carry <- function( type, x ) switch( type,
+    number  = is.numeric( x ),
+    boolean = { nn <- x[ ! is.na(x) ]
+                length(nn) > 0 && length(unique(nn)) <= 2 &&
+                  all( tolower(trimws(as.character(nn))) %in% .bool_vocab ) },
+    TRUE )
+
+  n <- ncol( df_stats )
+  type <- character( n )
+  for( i in seq_len(n) ) {
+
+    x <- df_stats[[i]]
+    stabilized <- FALSE
+    if( target_type[i] == "number" && ! is.numeric(x) && ! is.null(desired) &&
+        identical( desired$stabilizer_status[i], "ready" ) ) {
+      st <- stabilize_col_v7(
+              as.character( x ),
+              guess   = list( semantic_type = guess$guess_semantic_type[i],
+                              format_style  = guess$guess_format_style[i],
+                              unit_type     = guess$guess_unit_type[i] ),
+              desired = list( semantic_type = desired$desired_semantic_type[i],
+                              format_style  = desired$desired_format_style[i],
+                              unit_type     = desired$desired_unit_type[i] ) )
+      # formex's write_numeric returns number-like strings ("851950"); accept
+      # them when every non-missing value converts
+      val <- if( isTRUE(st$applied) ) suppressWarnings( as.numeric( st$value ) ) else NULL
+      if( ! is.null(val) && any( ! is.na(val) ) &&
+          all( is.na(st$value) == is.na(val) ) ) {
+        df_stats[[i]] <- val
+        df[[i]]       <- val
+        x <- val
+        stabilized <- TRUE
+      }
+    }
+
+    # The legacy guess comes first: it carries create_dgf()'s guards (the
+    # storage-safety gate, the cardinality tie-break, the identifier and
+    # temporal detectors) that a raw semantic route lacks - e.g. rnorm()
+    # doubles route to text/web/domain at confidence 1. The semantic target
+    # wins first only when its stabilizer has actually converted the values.
+    cand <- if( stabilized )
+              c( target_type[i], legacy_type[i], storage_type[i] )
+            else
+              c( legacy_type[i], target_type[i], storage_type[i] )
+    cand[ cand == "string" ] <- "text"
+    ok <- vapply( cand, function(ty) ty %in% .render_types && can_carry( ty, x ),
+                  logical(1) )
+    type[i] <- if( any(ok) ) cand[ ok ][1] else "text"
+
+    if( type[i] %in% c("categorical", "boolean") && ! is.factor(x) && ! is.logical(x) ) {
+      df_stats[[i]] <- factor( x )
+      df[[i]]       <- factor( df[[i]] )
+    } else if( type[i] == "text" && is.factor(x) ) {
+      df_stats[[i]] <- as.character( x )
+    }
+  }
+
+  list( type = type, target_type = target_type, df_stats = df_stats, df = df )
+}
+
+
 #' @title create DGF file
 #'
 #' @description
@@ -29,9 +129,13 @@
 #'   to the most frequent `max_factor_levels` levels, matching the
 #'   frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
 #'   cell under Excel's 32,767-character limit). Defaults to `50`.
-#' @param var_name,dd_vlabel,dd_vdesc,stable_data_type Optional character vectors of per-variable
-#'   metadata (name, short label, long description, type), each the same length
-#'   and order as the columns of `df`. Default to blank.
+#' @param dd_vlabel,dd_vdesc Optional character vectors of per-variable short
+#'   labels and long descriptions, each the same length and order as the
+#'   columns of `df`. `dd_vlabel` defaults to the column names, `dd_vdesc` to
+#'   blank.
+#' @param var_name,stable_data_type Accepted but ignored: `var_name` is always
+#'   the column names of `df`, and `stable_data_type` is computed from the data.
+#'   Both are legacy arguments slated for removal (see `dev/TO-DO.md`).
 #' @param desired_data_import_rule Optional character vector of type-conversion function names
 #'   (e.g. `"read_yyyy"`), one per column, applied to the data before profiling.
 #' @param stable_data_format Optional character vector of display-formatting function names
@@ -105,6 +209,12 @@ create_dgf <- function(         # ----------------
           else
             suppressMessages( readr::read_csv( df ) ) }
 
+  ## LIST COLUMNS (e.g. dplyr::starwars$films) cannot be written to a CSV or
+  ## profiled cell by cell. as.character() would turn each into R source text
+  ## ('c("A New Hope", ...)'), so collapse each cell to "a|b|c" instead - the
+  ## multi-select form formex can recognise as tags.
+  if( is.df ) df <- .collapse_list_cols( df )
+
   ## RELOAD DATA WITH READR TO RESET DATA TYPES?
 
   if( is.df & ! use.df.types )
@@ -133,7 +243,7 @@ create_dgf <- function(         # ----------------
   ## VAR NAMES AND LABELS
 
   var_name        <- names(df)
-  dd_vlabel       <- names(df)
+  if( is.null(dd_vlabel) || length(dd_vlabel) != N_col ) dd_vlabel <- names(df)
   if(is.null(dd_vdesc)){dd_vdesc <- rep("", N_col)}
   if(is.null(dd_vname_alias)){dd_vname_alias<-rep("", N_col)}
   # class(x)[1]: a column can be multi-class (an ordered factor, or a POSIXct
@@ -162,7 +272,9 @@ create_dgf <- function(         # ----------------
   { df <- recast_factors( df ) }
   guess_type <- primary_class( df )
 
-  correct.guess <- substr(desired_data_import_rule, 4,nchar(desired_data_import_rule)) == guess_type
+  # A rule already satisfied by the guessed type is skipped: "as_factor" on a
+  # column that is already a factor. Strip either rule prefix (as_ or read_).
+  correct.guess <- sub( "^(as|read)_", "", desired_data_import_rule ) == guess_type
 
   ## Set up data classes
   if(!is.null(desired_data_import_rule)){
@@ -188,38 +300,6 @@ create_dgf <- function(         # ----------------
     names(df ) <- var_name
   }
   data_type_converted <- primary_class( df )
-
-
-
-  dd_f_levels <- mapply(function(var_name, type, df, max_factor_levels){
-    # any(): a column can carry a multi-class class() - an ordered factor is
-    # c("ordered","factor"), and readr's type guess can hand back a POSIXct
-    # datetime as c("POSIXct","POSIXt"). A scalar `type %in% ...` errors on
-    # those ("condition has length > 1").
-    if(any(type %in% c("factor", "logical"))){
-      # Store a two-column dictionary: the level code and an editable label.
-      # The label is seeded to the code so users can add human-readable
-      # descriptions (e.g. "AR" -> "Arts") in Excel during Step 2.
-      # Use [[ ]] so a single column is returned as a vector even when df is a
-      # tibble (df[, var_name] on a tibble returns a 1-column tibble, whose
-      # levels() is NULL).
-      lv <- levels(df[[var_name]])
-      # Cap high-cardinality factors at the most frequent max_factor_levels
-      # levels. This matches the frequency-ranked FACTOR LEVELS table (see
-      # get_stats_fact) and keeps the cell under Excel's 32,767-char limit.
-      if( length(lv) > max_factor_levels ){
-        counts <- sort( table( df[[var_name]] ), decreasing = TRUE )
-        lv <- names(counts)[ seq_len(max_factor_levels) ]
-      }
-      tab <- data.frame(level = lv, label = lv)
-      tab <- jsonify_df(tab)
-      return(tab)
-      }else{
-        return("")
-      }
-    },
-    var_name = var_name, type=data_type_converted,
-    MoreArgs = list(df = df, max_factor_levels = max_factor_levels) )
 
 
   ## Need to guess factor it is logical, to make class
@@ -296,7 +376,6 @@ create_dgf <- function(         # ----------------
 
   raw_first5    <- sapply( df_fmt, first_n ) %>% as.character()
   if(is.null(desired_data_import_rule)){desired_data_import_rule<- rep( "", N_col )}
-  if(is.null(format)){stable_data_format<- rep( "", N_col )}
   stable_data_type <- sapply( df_fmt, class ) %>% as.character()
 
   # desired_data_type is what the render engine dispatches on. dg_type_of()
@@ -332,14 +411,56 @@ create_dgf <- function(         # ----------------
   .v7 <- dgf_v7_stabilizer_columns(
            .enriched,
            examples = lapply( df_fmt, function(x) utils::head( as.character(x), 5 ) ) )
+  ## Where formex's route found no semantic type (e.g. a plain integer column),
+  ## seed the target with the base data type (number, text, ...), so the
+  ## variable still routes to the right template once the legacy
+  ## desired_data_type column is dropped. The user can refine it.
+  no.sem <- is.na( .v7$desired_semantic_type ) | ! nzchar( .v7$desired_semantic_type )
+  .v7$desired_semantic_type[ no.sem ] <- desired_data_type[ no.sem ]
 
-  ## Reconcile the build-time profile class (vclass, which drives rg_stats/
-  ## rg_graphics below) with the enriched type. The detector library is the
-  ## single source of truth: a column it promoted to temporal or identifier -
-  ## e.g. a text-month date detect_temporal's numeric formats miss - must be
-  ## profiled as that type, not left on the character path.
-  vclass[ desired_data_type == "temporal"   & vclass != "temporal"   ] <- "temporal"
-  vclass[ desired_data_type == "identifier" & vclass != "identifier" ] <- "identifier"
+  ## ---- PROFILE TYPE = RENDER TYPE -------------------------------------------
+  ## The rg_* profile must fit the template the variable is rendered with, and
+  ## the template comes from dg_render_type(). Profile each variable on the
+  ## first of these types its values can carry:
+  ##   1. the enriched legacy guess (desired_data_type), which carries the
+  ##      storage gate and detector guards - unless the target's stabilizer
+  ##      converted the values, in which case the target comes first
+  ##   2. the v7 target's type (dg_render_type() of desired_semantic_type)
+  ##   3. the storage type
+  ## then write that type to desired_data_type, and to desired_semantic_type
+  ## when the target could not be honoured, so legacy and v7 routing both agree
+  ## with the stored profile. formex's suggestion stays in guess_semantic_type.
+  aligned <- .align_profile_types(
+    df_stats, df,
+    target_type  = dg_render_type( data.frame(
+                     desired_semantic_type = .v7$desired_semantic_type,
+                     guess_variant_id      = guess_variant_id,
+                     stringsAsFactors = FALSE ) ),
+    legacy_type  = desired_data_type,
+    storage_type = dg_type_of( vclass ),
+    guess = .enriched, desired = .v7 )
+  df_stats          <- aligned$df_stats
+  df                <- aligned$df
+  desired_data_type <- aligned$type
+  vclass            <- vapply( aligned$type, .dgf_vclass_of, character(1),
+                               USE.NAMES = FALSE )
+  moved <- aligned$type != aligned$target_type
+  .v7$desired_semantic_type[ moved ] <- aligned$type[ moved ]
+
+  ## FACTOR LEVEL DICTIONARY for every categorical / boolean variable: a
+  ## two-column level/label table (label seeded to the code so users can add
+  ## readable labels in Excel). Capped at the max_factor_levels most frequent
+  ## levels, matching the FACTOR LEVELS table and Excel's cell limit.
+  dd_f_levels <- vapply( seq_len(N_col), function(i) {
+    if( ! desired_data_type[i] %in% c("categorical", "boolean") ) return( "" )
+    x  <- df_stats[[i]]
+    lv <- if( is.factor(x) ) levels(x) else sort( unique( as.character( x[ ! is.na(x) ] ) ) )
+    if( length(lv) > max_factor_levels ) {
+      counts <- sort( table( x ), decreasing = TRUE )
+      lv <- names(counts)[ seq_len(max_factor_levels) ]
+    }
+    jsonify_df( data.frame( level = lv, label = lv ) )
+  }, character(1) )
 
   # Temporal grain now lives in desired_data_class (period.month, phase.*, ...),
   # which the render engine reads to pick the graphic - no separate unit column.
@@ -350,6 +471,12 @@ create_dgf <- function(         # ----------------
   need_class <- desired_data_type == "temporal" & ! nzchar( desired_data_class )
   desired_data_class[ need_class ] <- ifelse( is.time[ need_class ],
                                               "time.clock", "date.calendar" )
+  # the render reads the grain from desired_semantic_type: give a temporal that
+  # only carries the bare data type the same storage-class default
+  bare_temporal <- desired_data_type == "temporal" &
+                   .sem_leaf( .v7$desired_semantic_type ) %in% c( "", "temporal" )
+  .v7$desired_semantic_type[ bare_temporal ] <-
+    ifelse( is.time[ bare_temporal ], "clock", "calendar" )
   dd_data_unit <- rep( "", N_col )
 
   ## FIELD LENGTH (max character width of the underlying values)

@@ -32,11 +32,13 @@ data frame."></head><body>
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
       </ul></div>
@@ -129,10 +131,17 @@ frequency-ranked FACTOR LEVELS table in the Research Guide (and keeping the
 cell under Excel's 32,767-character limit). Defaults to `50`.</p></dd>
 
 
-<dt id="arg-var-name-dd-vlabel-dd-vdesc-stable-data-type">var_name, dd_vlabel, dd_vdesc, stable_data_type<a class="anchor" aria-label="anchor" href="#arg-var-name-dd-vlabel-dd-vdesc-stable-data-type"></a></dt>
-<dd><p>Optional character vectors of per-variable
-metadata (name, short label, long description, type), each the same length
-and order as the columns of `df`. Default to blank.</p></dd>
+<dt id="arg-var-name-stable-data-type">var_name, stable_data_type<a class="anchor" aria-label="anchor" href="#arg-var-name-stable-data-type"></a></dt>
+<dd><p>Accepted but ignored: `var_name` is always
+the column names of `df`, and `stable_data_type` is computed from the data.
+Both are legacy arguments slated for removal (see `dev/TO-DO.md`).</p></dd>
+
+
+<dt id="arg-dd-vlabel-dd-vdesc">dd_vlabel, dd_vdesc<a class="anchor" aria-label="anchor" href="#arg-dd-vlabel-dd-vdesc"></a></dt>
+<dd><p>Optional character vectors of per-variable short
+labels and long descriptions, each the same length and order as the
+columns of `df`. `dd_vlabel` defaults to the column names, `dd_vdesc` to
+blank.</p></dd>
 
 
 <dt id="arg-desired-data-import-rule">desired_data_import_rule<a class="anchor" aria-label="anchor" href="#arg-desired-data-import-rule"></a></dt>
@@ -191,7 +200,7 @@ the `v*` arguments - and fed to [create_rg()].</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

@@ -66,7 +66,7 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
   ycap <- if( length(srt) >= 2 && srt[1] > 2 * srt[2] ) srt[2] * 1.15 else max(dens)
 
   # draw the bins as solid rectangles, inset slightly so a thin gap separates them
-  par( mar = c(2, 0, 1.5, 0), xpd = NA )
+  par( mar = c(2.6, 0, 1.5, 0), xpd = NA )
   plot( range(brk), c(0, ycap), type = "n",
         axes = FALSE, xlab = "", ylab = "", xaxs = "i" )
   xl  <- brk[-length(brk)]; xr <- brk[-1]
@@ -80,30 +80,42 @@ paste_histogram <- function( VNAME, LABEL = "HISTOGRAM" ){
   # bins), not the true min/max - otherwise the axis would misrepresent where the
   # bars stop. The true min/max are shown in the STATS section (MIN / MAX).
   mtext( abbrev_num( min(brk) ), side = 1, at = usr[1], adj = 0, line = 0.1,
-         cex = 1.1, font = 2, col = "gray40" )
+         cex = 1.54, font = 2, col = "steelblue" )
   mtext( abbrev_num( max(brk) ), side = 1, at = usr[2], adj = 1, line = 0.1,
-         cex = 1.1, font = 2, col = "gray40" )
+         cex = 1.54, font = 2, col = "steelblue" )
 
-  # mean / median lines, clamped into the plot; labels on top
+  # mean / median lines, clamped into the plot; labels on top. Both use the
+  # report's orange accent - the labels say which is which.
+  accent   <- "#bd5416"
   clamp    <- function(v) max( min( v, usr[2] ), usr[1] )
   mean.pos <- clamp( avex )
   med.pos  <- clamp( medx )
 
-  abline( v = med.pos,  lty = 3, lwd = 2, col = "steelblue" )
-  abline( v = mean.pos, lty = 3, lwd = 2, col = "firebrick" )
-  # Label placement: near an edge, push the text inward so it stays on-chart
-  # (e.g. an outlier mean clamped to the right edge). In the middle, offset
-  # median left / mean right so the two never collide when they sit close.
-  lab_adj <- function( pos, side ) {
-    frac <- ( pos - usr[1] ) / ( usr[2] - usr[1] )
-    if( frac > 0.85 ) return( 1 )                 # near right: extend left
-    if( frac < 0.15 ) return( 0 )                 # near left:  extend right
-    if( side == "median" ) 1.10 else -0.10        # middle: split them
+  abline( v = med.pos,  lty = 3, lwd = 2, col = accent )
+  abline( v = mean.pos, lty = 3, lwd = 2, col = accent )
+  # Label placement. Whichever line is further left gets its label on its
+  # left side, the other on its right, so the labels point away from each
+  # other. (The mean is left of the median in left-skewed data, so a fixed
+  # "median left / mean right" rule made them collide.) A label that would run
+  # off the chart flips to the inside of its line; if the two still overlap,
+  # the second drops one line lower.
+  labs <- data.frame( txt = c("median", "mean"), at = c(med.pos, mean.pos),
+                      col = c(accent, accent), stringsAsFactors = FALSE )
+  labs$w   <- strwidth( labs$txt, cex = 1, font = 2 )
+  left     <- if( mean.pos < med.pos ) 2 else 1
+  labs$adj <- ifelse( seq_len(2) == left, 1.10, -0.10 )     # outward
+  span <- function( i, a ) c( labs$at[i] - a * labs$w[i], labs$at[i] + (1 - a) * labs$w[i] )
+  for( i in 1:2 ) {
+    s <- span( i, labs$adj[i] )
+    if( s[1] < usr[1] ) labs$adj[i] <- -0.10                # would cross left edge
+    if( s[2] > usr[2] ) labs$adj[i] <-  1.10                # would cross right edge
   }
-  mtext( "median", side = 3, at = med.pos,  line = -0.3, cex = 1,
-         font = 2, col = "steelblue", adj = lab_adj(med.pos,  "median") )
-  mtext( "mean",   side = 3, at = mean.pos, line = -0.3, cex = 1,
-         font = 2, col = "firebrick", adj = lab_adj(mean.pos, "mean") )
+  s1 <- span( 1, labs$adj[1] ); s2 <- span( 2, labs$adj[2] )
+  clash <- s1[1] < s2[2] && s2[1] < s1[2]
+  labs$line <- c( -0.3, if( clash ) -1.4 else -0.3 )
+  for( i in 1:2 )
+    mtext( labs$txt[i], side = 3, at = labs$at[i], line = labs$line[i], cex = 1,
+           font = 2, col = labs$col[i], adj = labs$adj[i] )
 
   cat( "\n\n" )
 }

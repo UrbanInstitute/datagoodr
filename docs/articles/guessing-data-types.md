@@ -1,0 +1,128 @@
+# Guessing Data Types
+
+## You should not have to type every column by hand
+
+A dataset can have hundreds of columns.
+[`create_dgf()`](../reference/create_dgf.md) does not ask you to
+classify each one from scratch — it **guesses**, by handing every column
+to [formex](https://lecy.github.io/formex/)
+([`formex::guess_data_type()`](https://rdrr.io/pkg/formex/man/guess_data_type.html),
+with the variable’s name as a hint), and records the guess in the DGF
+for you to confirm or override. This vignette is about *reading* those
+guesses: what the package wrote, how confident it is, and when to trust
+it.
+
+Detection itself — the ontology, the detectors, the router — lives in
+formex. datagoodr is the workflow around it: it turns one answer per
+column into DGF coordinates and leaves the final say to you.
+
+## Two answers per column, and why datagoodr keeps both
+
+formex returns two predictions, and they are **complementary** — neither
+dominates, so [`create_dgf()`](../reference/create_dgf.md) reads both:
+
+- The **route** (`$route`) walks a four-level ontology path
+  (`data_type / semantic_family / semantic_type / format_style`) and
+  truncates gracefully. It reaches types no single detector emits — a
+  bare four-digit `2019` is `temporal / period / year` to the router,
+  and nothing at all to the detectors.
+- The **legacy guess** (`$guess`) is a named detector firing at a pass
+  rate. It wins exactly where the route truncates — every zero-padded
+  numeric key (FIPS, ZIP, EIN) and email address.
+
+You never call these directly;
+[`create_dgf()`](../reference/create_dgf.md) resolves them into the
+DGF’s `guess_*` columns.
+
+## What the guess looks like in the DGF
+
+``` r
+library(datagoodr)
+dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)
+
+dgf[, c("var_name", "guess_label", "guess_format_style",
+        "guess_unit_type", "guess_match_kind",
+        "guess_depth", "guess_confidence")]
+```
+
+The leaf is recorded as **two axes** (formex v7):
+
+- **`guess_format_style`** — the *written rendering* that drives
+  parsing: date field-order and separators, a currency’s
+  grouping/suffix, abbreviated vs full. Usually detectable from the
+  values.
+- **`guess_unit_type`** — the *dimensional or categorical unit* that
+  carries meaning: `USD`/`EUR`, `C`/`F`, fiscal vs calendar year,
+  geographic level. Often **not** value-detectable, so frequently blank.
+
+and `guess_label` is the one-line human reading, deepest resolved rung
+first:
+
+    calendar {{ date :: temporal }}      a fully resolved calendar date
+    year {{ period :: temporal }}        a four-digit year the detectors miss
+    number {{ quantity }}                family only -- the values prove no more
+
+## The honesty columns: a shallow guess is a partial answer, not a failure
+
+Roughly a third of the ontology is **not resolvable from values alone**
+— a bare number or a bare category cannot be pinned to a leaf without
+the header or a dictionary. datagoodr records *how far* the guess got
+rather than pretending:
+
+- **`guess_match_kind`** — how the match was made, from strongest to
+  weakest: `genome` (the tolerant date/time parsers), `lexicon`
+  (gazetteer-backed), `mask` (shape-recognizable), `shape` (numeric
+  coercion only), `none` (needs metadata). A `shape` or `none` guess is
+  telling you the truth: *the values prove the coarse type and nothing
+  finer.*
+- **`guess_depth`** (0–4) and **`guess_confidence`** — how much of the
+  path resolved and how sure. Depth 4 means a leaf with a
+  `format_style`; anything shallower is a path prefix a reviewer can
+  deepen.
+
+Read together, `number {{ quantity }}` with `guess_match_kind = shape`
+is a *finished, honest* label — “it’s a number, and the values can say
+no more” — not an error to fix.
+
+## The one guess datagoodr refuses to act on
+
+A confident guess is not always a safe one. A column of ZIP or FIPS
+codes routes to `number / quantity / count` with high confidence — and
+acting on it would coerce `06037` to `6037`, the exact corruption
+`create_dgf(read_as_text = TRUE)` exists to prevent. So a
+**storage-safety gate** refuses to let any `number/*` guess re-type a
+column whose values carry leading zeros or exceed double precision. The
+column keeps its safe character storage, and the guess is recorded but
+not applied. One rule guards every FIPS, ZIP, EIN, and NAICS column.
+
+The same conservatism applies to a confident-but-nonsensical route: a
+column of [`rnorm()`](https://rdrr.io/r/stats/Normal.html) doubles can
+route to `text/web/domain` at full confidence (a negative decimal parses
+as a domain name), so the guess may *refine* a coarse `text` type or add
+a strong temporal/identifier signal, but it may not overturn a type read
+from storage.
+
+## From guess to decision
+
+The `guess_*` columns are the machine’s proposal. Your job is to confirm
+or correct them in the `desired_*` columns — `desired_data_type` (the
+render engine’s type), and the v7 target form `desired_semantic_type` /
+`desired_format_style` / `desired_unit_type`:
+
+``` r
+# accept the guess (nothing to do), or override where it is wrong:
+dgf$desired_data_type[dgf$var_name == "grade_level"]  <- "categorical"
+dgf$desired_format_style[dgf$var_name == "founded"]   <- "yyyymmdd"   # stabilize to ISO
+```
+
+Once the desired form differs from the guess,
+[`create_dgf()`](../reference/create_dgf.md) proposes a `stabilizer` to
+bridge them and previews it in `stable_first5` — see the *Rule-Based
+Data Governance* vignette for that half of the workflow.
+
+## Where detection lives
+
+The ontology, the detector library, `guess_data_type()`, and the router
+are all in formex. For the vocabulary and how a guess is actually made,
+see formex’s own *Guessing a Data Type* and *The Data-Type Ontology*
+vignettes at <https://lecy.github.io/formex/>.

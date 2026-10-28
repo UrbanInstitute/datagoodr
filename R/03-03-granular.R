@@ -17,8 +17,8 @@
 #' @param dgf A DGF data frame.
 #' @param var_name The variable name (a value of `dgf$var_name`).
 #'
-#' @return The variable's `desired_data_type`, used by the callers to pick a
-#'   type-appropriate render function. Errors if `var_name` is not in the DGF.
+#' @return The variable's template type ([dg_render_type()]), used by the
+#'   callers to pick a type-appropriate render function. Errors if `var_name` is not in the DGF.
 #' @seealso [set_xx()], [get_xx()]
 #' @noRd
 set_dg_context <- function( dgf, var_name ) {
@@ -28,8 +28,9 @@ set_dg_context <- function( dgf, var_name ) {
   xx <- as.list( dgf[ i, , drop = FALSE ] )
   xx <- lapply( xx, function(v) v[[1]] )   # scalars, not length-1 vectors
   xx[["VNAME"]] <- var_name
+  xx <- .add_render_fields( xx )
   set_xx( xx )
-  as.character( xx[["desired_data_type"]] )
+  xx[["dg_render_type"]]
 }
 
 

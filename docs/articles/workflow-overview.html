@@ -41,12 +41,14 @@
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -74,11 +76,16 @@
 
     
     
-<p>This is the mental model, without the mechanics. One artifact — the <strong>DGF</strong> — is the spine of everything datagoodr does.</p>
+<p>This is the mental model, without the mechanics. One artifact — the
+<strong>DGF</strong> — is the spine of everything datagoodr does.</p>
 <div class="section level2">
 <h2 id="one-artifact-at-the-center">One artifact at the center<a class="anchor" aria-label="anchor" href="#one-artifact-at-the-center"></a>
 </h2>
-<p>Most tools treat a data dictionary as a document you write <em>about</em> the data, off to the side. datagoodr treats it as the <strong>control center</strong>: a single table, one row per variable, that is at once a <em>governed data dictionary</em> and the thing that drives every downstream step.</p>
+<p>Most tools treat a data dictionary as a document you write
+<em>about</em> the data, off to the side. datagoodr treats it as the
+<strong>control center</strong>: a single table, one row per variable,
+that is at once a <em>governed data dictionary</em> and the thing that
+drives every downstream step.</p>
 <pre><code>                 ┌───────────────────────────────┐
   raw CSV  ─────▶│  DGF — one row per variable    │─────▶  governed CSV
                  │  • what it is  (type)          │        (stabilized)
@@ -86,23 +93,35 @@
                  │  • what it means (labels)      │─────▶  Research Guide
                  │  • how it looks  (profile)     │        (rendered profiles)
                  └───────────────────────────────┘</code></pre>
-<p>Everything flows through it: the raw data is profiled <em>into</em> it, you curate it, and both the stabilized dataset and the rendered guide are produced <em>from</em> it. Once the DGF exists, the raw data is no longer needed to render documentation.</p>
+<p>Everything flows through it: the raw data is profiled <em>into</em>
+it, you curate it, and both the stabilized dataset and the rendered
+guide are produced <em>from</em> it. Once the DGF exists, the raw data
+is no longer needed to render documentation.</p>
 </div>
 <div class="section level2">
 <h2 id="managing-data-types-is-the-hinge">Managing data types is the hinge<a class="anchor" aria-label="anchor" href="#managing-data-types-is-the-hinge"></a>
 </h2>
-<p>The reason one artifact can drive so much is that nearly everything follows from a column’s <strong>type</strong>. Settle whether a column is a date, a category, a count, or an identifier, and three things fall out automatically:</p>
+<p>The reason one artifact can drive so much is that nearly everything
+follows from a column’s <strong>type</strong>. Settle whether a column
+is a date, a category, a count, or an identifier, and three things fall
+out automatically:</p>
 <ul>
-<li>the <strong>stabilization rule</strong> that turns its raw form into a clean one,</li>
-<li>whether it can be imported to that type or must be protected as text, and</li>
-<li>the <strong>data profile</strong> and the visual used to render it.</li>
+<li>the <strong>stabilization rule</strong> that turns its raw form into
+a clean one,</li>
+<li>whether it can be imported to that type or must be protected as
+text, and</li>
+<li>the <strong>data profile</strong> and the visual used to render
+it.</li>
 </ul>
-<p>So the workflow is really: get the types right (datagoodr guesses, you confirm), and let the rest follow.</p>
+<p>So the workflow is really: get the types right (datagoodr guesses,
+you confirm), and let the rest follow.</p>
 </div>
 <div class="section level2">
 <h2 id="a-glimpse-of-the-dgf">A glimpse of the DGF<a class="anchor" aria-label="anchor" href="#a-glimpse-of-the-dgf"></a>
 </h2>
-<p>A DGF is an ordinary table. Build one from the package’s demo dataset — which carries one column of each type — and scan a few of its cells:</p>
+<p>A DGF is an ordinary table. Build one from the package’s demo dataset
+— which carries one column of each type — and scan a few of its
+cells:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datagoodr</span><span class="op">)</span></span>
 <span><span class="va">dgf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_dgf.html">create_dgf</a></span><span class="op">(</span><span class="va">dg_demo</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dgf"</span><span class="op">)</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
@@ -156,28 +175,37 @@
 <tr class="odd">
 <td align="left">county_fips</td>
 <td align="left">county_fips</td>
-<td align="left">count {{ quantity :: number }}</td>
+<td align="left">county_fips {{ mutually_exclusive :: categorical
+}}</td>
 <td align="left">identifier</td>
-<td align="left"></td>
+<td align="left">mask+lexicon</td>
 </tr>
 <tr class="even">
 <td align="left">notes</td>
 <td align="left">notes</td>
 <td align="left">unordered {{ mutually_exclusive :: categorical }}</td>
-<td align="left">text</td>
+<td align="left">categorical</td>
 <td align="left"></td>
 </tr>
 </tbody>
 </table>
-<p>The <code>guess_*</code> cells are datagoodr’s first pass (the <code>guess_label</code> reads the detected leaf; <code>guess_match_kind</code> says how it was recognized); the <code>desired_*</code> cells are the answer you confirm. Other columns (not shown) hold the stabilizer rule, the stored profile, and the dictionary text.</p>
+<p>The <code>guess_*</code> cells are datagoodr’s first pass (the
+<code>guess_label</code> reads the detected leaf;
+<code>guess_match_kind</code> says how it was recognized); the
+<code>desired_*</code> cells are the answer you confirm. Other columns
+(not shown) hold the stabilizer rule, the stored profile, and the
+dictionary text.</p>
 </div>
 <div class="section level2">
 <h2 id="a-glimpse-of-the-data-profiles">A glimpse of the data profiles<a class="anchor" aria-label="anchor" href="#a-glimpse-of-the-data-profiles"></a>
 </h2>
-<p>From each column’s type and values, datagoodr computes a profile and renders it with a type-appropriate visual — the same functions the Research Guide uses. A <strong>numeric</strong> column (<code>revenue</code>) becomes a histogram and a statistics table:</p>
+<p>From each column’s type and values, datagoodr computes a profile and
+renders it with a type-appropriate visual — the same functions the
+Research Guide uses. A <strong>numeric</strong> column
+(<code>revenue</code>) becomes a histogram and a statistics table:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dg_element.html">dg_graphic</a></span><span class="op">(</span><span class="va">dgf</span>, <span class="st">"revenue"</span>, label <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
-<p><img src="workflow-overview_files/figure-html/profile-num-plot-1.png" alt="Histogram of the revenue column" width="576"></p>
+<p><img src="workflow-overview_files/figure-html/profile-num-plot-1.png" class="r-plt" alt="Histogram of the revenue column" width="576"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dg_element.html">dg_stats</a></span><span class="op">(</span><span class="va">dgf</span>, <span class="st">"revenue"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>STATS</strong>:</p>
@@ -213,25 +241,38 @@
 </tr>
 </tbody>
 </table>
-<p>A <strong>categorical</strong> column (<code>region</code>) becomes a treemap and a frequency table:</p>
+<p>A <strong>categorical</strong> column (<code>region</code>) becomes a
+treemap and a frequency table:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dg_element.html">dg_graphic</a></span><span class="op">(</span><span class="va">dgf</span>, <span class="st">"region"</span>, label <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
-<p><img src="workflow-overview_files/figure-html/profile-cat-plot-1.png" alt="Treemap of the region column" width="576"></p>
-<p>A date would render as a calendar heat-map, a boolean as a two-bar chart, free text as a word cloud. The profile is chosen <em>by type</em> — which is why getting the types right is the whole game. (<em>Data Profiling</em> and <em>Profiles &amp; Research Guides</em> show the rest, and <em>Data Reporting Functions</em> opens up the machinery.)</p>
+<p><img src="workflow-overview_files/figure-html/profile-cat-plot-1.png" class="r-plt" alt="Treemap of the region column" width="576"></p>
+<p>A date would render as a calendar heat-map, a boolean as a two-bar
+chart, free text as a word cloud. The profile is chosen <em>by type</em>
+— which is why getting the types right is the whole game. (<em>Data
+Profiling</em> and <em>Profiles &amp; Research Guides</em> show the
+rest, and <em>Data Reporting Functions</em> opens up the machinery.)</p>
 </div>
 <div class="section level2">
 <h2 id="the-loop">The loop<a class="anchor" aria-label="anchor" href="#the-loop"></a>
 </h2>
-<p>Governance is not one-shot. You clean a column, correct a type, add a label; and <code><a href="../reference/update_dgf.html">update_dgf()</a></code> reconciles the DGF with the new data — recomputing the profile for what changed while preserving everything you curated. The DGF is a living document, not a snapshot.</p>
+<p>Governance is not one-shot. You clean a column, correct a type, add a
+label; and <code><a href="../reference/update_dgf.html">update_dgf()</a></code> reconciles the DGF with the new
+data — recomputing the profile for what changed while preserving
+everything you curated. The DGF is a living document, not a
+snapshot.</p>
 </div>
 <div class="section level2">
 <h2 id="next">Next<a class="anchor" aria-label="anchor" href="#next"></a>
 </h2>
 <ul>
 <li>
-<strong>Rule-Based Data Governance</strong> — the DGF as command center, and the philosophy behind it.</li>
+<strong>Rule-Based Data Governance</strong> — the DGF as command
+center, and the philosophy behind it.</li>
 <li>
-<strong>Stabilizing Datasets</strong>, <strong>Data Profiling</strong>, <strong>Profiles &amp; Research Guides</strong>, and <strong>Documenting Data</strong> take the four downstream capabilities in turn.</li>
+<strong>Stabilizing Datasets</strong>, <strong>Data
+Profiling</strong>, <strong>Profiles &amp; Research Guides</strong>, and
+<strong>Documenting Data</strong> take the four downstream capabilities
+in turn.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -245,7 +286,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

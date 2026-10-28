@@ -85,13 +85,33 @@ is_absolute_path <- function( path ) {
 #' This function reads DGF from an Excel file and returns the contents of the "DGF" sheet as a data frame.
 #'
 #' @param filename A character string specifying the name of the Excel file to read. Defaults to `"DGF.xlsx"`.
+#' @param reader `"openxlsx"` (default; a data frame) or `"readxl"` (a tibble,
+#'   which the Research Guide templates use). The two differ in how they type
+#'   all-empty columns; see `dev/TO-DO.md`.
 #'
-#' @return A data frame containing the data from the "DGF" sheet of the specified Excel file.
+#' @return A data frame containing the data from the "DGF" sheet of the
+#'   specified Excel file. Cells that [save_to_excel()] moved to the
+#'   `DGF_overflow` sheet (over Excel's 32,767-character limit) are joined back.
 #'
 #' @import openxlsx
 #' @export
-load_dgf <- function( filename="DGF.xlsx" ) {
-  dgf <- openxlsx::read.xlsx( xlsxFile=filename, sheet="DGF" )
+load_dgf <- function( filename="DGF.xlsx", reader = c("openxlsx", "readxl") ) {
+  reader <- match.arg( reader )
+  dgf <- if( reader == "readxl" )
+           readxl::read_excel( filename, sheet = "DGF" )
+         else
+           openxlsx::read.xlsx( xlsxFile=filename, sheet="DGF" )
+
+  if( DGF_OVERFLOW_SHEET %in% openxlsx::getSheetNames( filename ) ) {
+    ov <- openxlsx::read.xlsx( xlsxFile = filename, sheet = DGF_OVERFLOW_SHEET )
+    ov$var_name <- as.character( ov$var_name )
+    ov$text     <- as.character( ov$text )
+    dgf <- .dgf_join_overflow( dgf, ov )
+  } else if( any( vapply( dgf, function(x) is.character(x) &&
+                            any( x == DGF_OVERFLOW_MARKER, na.rm = TRUE ),
+                          logical(1) ) ) ) {
+    dgf <- .dgf_join_overflow( dgf, NULL )   # pointers without their sheet: warn
+  }
   return(dgf)
 }
 

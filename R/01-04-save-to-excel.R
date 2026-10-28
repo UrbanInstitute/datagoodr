@@ -1,8 +1,109 @@
+## ---- Excel's cell limit -----------------------------------------------------
+## An Excel cell holds at most 32,767 characters. Some DGF cells are larger: the
+## rg_graphics value/count table of a date column with thousands of distinct
+## dates runs to 100,000+ characters. Excel cuts such a cell off when the file is
+## opened and saved, which breaks the JSON. So save_to_excel() moves any cell
+## over the limit to a second sheet, DGF_overflow, split into parts (one row per
+## part), and leaves a short pointer in the main sheet. load_dgf() joins the
+## parts back. The .csv mirror has no limit and is written whole.
+
+DGF_OVERFLOW_SHEET  <- "DGF_overflow"
+DGF_OVERFLOW_MARKER <- "<<DGF_overflow>>"
+DGF_XLSX_CELL_LIMIT <- 32767L
+
+
+## Per-character width once XML-escaped (& -> &amp;, " -> &quot;, ...).
+## openxlsx checks the 32,767 limit on the escaped text, so a JSON cell full of
+## quotes counts several times its length. Measuring escaped width keeps every
+## written cell under the limit for both openxlsx and Excel.
+#' @noRd
+.xml_widths <- function( s ) {
+  ch <- strsplit( s, "", fixed = TRUE )[[1]]
+  1L + 4L * (ch == "&") + 3L * (ch %in% c("<", ">")) + 5L * (ch %in% c("\"", "'"))
+}
+
+
+## Move oversized cells out of a DGF. Returns the DGF with each oversized cell
+## replaced by DGF_OVERFLOW_MARKER, plus a long table of its parts
+## (var_name, column, part, n_parts, text), or NULL when nothing overflows.
+## Sizes are escaped widths (see .xml_widths); parts stay under `part_size`.
+#' @noRd
+.dgf_split_overflow <- function( df, limit = DGF_XLSX_CELL_LIMIT,
+                                 part_size = DGF_CHUNK_CHAR_LIMIT ) {
+  rows <- list()
+  key  <- if( "var_name" %in% names(df) ) as.character(df$var_name)
+          else as.character( seq_len(nrow(df)) )
+  for( cn in names(df) ) {
+    x <- df[[cn]]
+    if( ! is.character(x) ) next
+    # cheap pre-filter: escaping at most sextuples a character
+    cand <- which( ! is.na(x) & nchar(x) * 6L > limit )
+    big  <- cand[ vapply( cand, function(i) sum( .xml_widths( x[i] ) ) > limit,
+                          logical(1) ) ]
+    for( i in big ) {
+      s  <- x[i]
+      w  <- .xml_widths( s )
+      ch <- strsplit( s, "", fixed = TRUE )[[1]]
+      grp <- ( cumsum(w) - 1L ) %/% part_size     # part index per character
+      parts <- vapply( split( ch, grp ), paste, character(1), collapse = "" )
+      names(parts) <- NULL
+      rows[[ length(rows) + 1L ]] <- data.frame(
+        var_name = key[i], column = cn, part = seq_along(parts),
+        n_parts = length(parts), text = parts, stringsAsFactors = FALSE )
+      df[[cn]][i] <- DGF_OVERFLOW_MARKER
+    }
+  }
+  list( dgf = df,
+        overflow = if( length(rows) ) do.call( rbind, rows ) else NULL )
+}
+
+
+## Put overflowed cells back: each pointer cell gets its parts, in order. A
+## pointer whose parts are missing or incomplete becomes "" with a warning
+## (the profile for that variable is lost; re-run create_dgf() to rebuild it).
+#' @noRd
+.dgf_join_overflow <- function( dgf, overflow ) {
+  key <- if( "var_name" %in% names(dgf) ) as.character(dgf$var_name)
+         else as.character( seq_len(nrow(dgf)) )
+  lost <- character(0)
+  for( cn in names(dgf) ) {
+    x <- dgf[[cn]]
+    if( ! is.character(x) ) next
+    hit <- which( ! is.na(x) & x == DGF_OVERFLOW_MARKER )
+    for( i in hit ) {
+      p <- if( is.null(overflow) ) NULL
+           else overflow[ overflow$var_name == key[i] & overflow$column == cn, ]
+      ok <- ! is.null(p) && nrow(p) > 0 &&
+            setequal( p$part, seq_len( p$n_parts[1] ) )
+      if( ok ) {
+        p <- p[ order(p$part), ]
+        dgf[[cn]][i] <- paste( p$text, collapse = "" )
+      } else {
+        dgf[[cn]][i] <- ""
+        lost <- c( lost, paste0( key[i], "$", cn ) )
+      }
+    }
+  }
+  if( length(lost) )
+    warning( "DGF overflow parts missing or incomplete for: ",
+             paste( lost, collapse = ", " ),
+             ". Those cells were left blank; re-run create_dgf() to rebuild them.",
+             call. = FALSE )
+  dgf
+}
+
+
 #' @title Saves DGF to excel
 #'
 #' @description Write the DGF to excel.
 #'
-#' @details used inside of 01-00-CREATE-DGF.R
+#' @details Used by [create_dgf()], [update_dgf()] and [create_rg()]. Any cell
+#'   over Excel's 32,767-character limit (e.g. the graphics data of a date
+#'   column with thousands of distinct dates) is moved to a second sheet,
+#'   `DGF_overflow`, in parts, with a `<<DGF_overflow>>` pointer left in the
+#'   main sheet. [load_dgf()] joins the parts back, so the DGF survives being
+#'   opened and saved in Excel. Leave the `DGF_overflow` sheet and the pointer
+#'   cells as they are.
 #'
 #' @param df Data frame to write.
 #' @param filename Destination `.xlsx` path.
@@ -12,6 +113,9 @@
 #' @export
 save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
 {
+
+  split <- .dgf_split_overflow( df )
+  df    <- split$dgf
 
   wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet( wb, "DGF" )
@@ -123,6 +227,11 @@ save_to_excel <- function( df, filename="DGF.xlsx", open = interactive() )
   #   rows=1:nrow, cols=1, stack=T  )
   # openxlsx::addStyle( wb, sheet=1, unlocked,
   #   rows=1, cols=1:ncol, stack=T  )
+
+  if( ! is.null( split$overflow ) ) {
+    openxlsx::addWorksheet( wb, DGF_OVERFLOW_SHEET )
+    openxlsx::writeData( wb, sheet = DGF_OVERFLOW_SHEET, x = split$overflow )
+  }
 
   openxlsx::saveWorkbook( wb, filename, overwrite = TRUE )
   if( open ) openxlsx::openXL( filename )

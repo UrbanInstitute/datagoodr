@@ -1,0 +1,72 @@
+# Correct a variable's type in a DGF and re-profile it
+
+\`create_dgf()\` guesses types roughly; this applies your corrections
+and recomputes the affected variables' \`rg\_\*\` profile columns
+(stats, graphic, properties, preview) so the report renders them as the
+corrected type. Use it for the iterative Step-1 -\> Step-2 loop: build,
+correct, re-profile, render.
+
+## Usage
+
+``` r
+retype_dgf(dgf, data, types = NULL, units = NULL, env = parent.frame())
+```
+
+## Arguments
+
+- dgf:
+
+  A DGF data frame (or a path to a DGF \`.xlsx\`).
+
+- data:
+
+  The raw dataset the DGF was built from (a data frame, or a path to a
+  \`.csv\`). Needed to recompute the profile.
+
+- types:
+
+  A named character vector mapping variable name to the corrected
+  \`desired_data_type\` (\`"temporal"\`, \`"identifier"\`, \`"number"\`,
+  \`"categorical"\`, \`"boolean"\`, \`"text"\`).
+
+- units:
+
+  A named character vector mapping variable name to a temporal grain
+  (e.g. \`c(founded = "year")\`), written into \`desired_semantic_type\`
+  as the matching temporal semantic type (\`year\`, \`month\`,
+  \`day_of_week\`, \`calendar\`, ...) - what the render engine reads to
+  pick the graphic - and into the legacy \`desired_data_class\` when
+  present. Temporal only; may name variables already the right type but
+  needing a grain.
+
+- env:
+
+  Environment for any rule functions (unused today; reserved).
+
+## Value
+
+The DGF with the named variables re-typed, re-united, and re-profiled.
+
+## Details
+
+Only the named variables are touched; everything else is left verbatim,
+including any curation. The temporal graphic is chosen at render from
+\`desired_data_class\`, so a units-only change needs no re-profile - but
+a type change to \`temporal\` does, to store the value/count table its
+graphic reads.
+
+## See also
+
+\[create_dgf()\], \[inspect_dgf()\]
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+dgf <- create_dgf(raw, file = "DGF")
+dgf <- retype_dgf(dgf, raw,
+         types = c(founded = "temporal", county = "identifier"),
+         units = c(founded = "year"))
+create_rg(dgf, dir = ".")
+} # }
+```

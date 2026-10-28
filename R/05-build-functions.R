@@ -10,20 +10,50 @@
 
 #' Return the datagoodr report stylesheet
 #'
-#' Reads the package's report CSS (`inst/templates/datagoodr.css`). The RG and
-#' DD templates emit it inside a `<style>` block, so a single stylesheet drives
-#' every report. To restyle, edit that file (or add overriding rules in your
-#' project `.qmd`).
+#' Reads a report stylesheet from the package's templates. The report templates
+#' emit it inside a `<style>` block, so one file drives the look of every report
+#' of that style. To restyle, edit the project's local copy (or add overriding
+#' rules in your project `.qmd`).
 #'
-#' @details A project-local `datagoodr.css` (in the render directory) takes
-#'   precedence over the packaged one, so a scaffolded project can be restyled
-#'   by editing its own copy.
+#' @param style Which stylesheet:
+#'   * `"rail"` - the default research guide (`datagoodr.css`).
+#'   * `"vintage"` - the original three-column grid, used by
+#'     `create_rg(style = "vintage")` and by the data dictionary
+#'     (`datagoodr-vintage.css`).
+#'   * `NULL` (the default) - the behavior before styles existed: a local
+#'     `datagoodr.css` if there is one, else the vintage stylesheet. This keeps
+#'     report documents scaffolded by earlier versions, which call
+#'     `datagoodr_css()` with no argument, rendering as they always have.
+#'
+#' @details A project-local copy in the render directory takes precedence over
+#'   the packaged one, so a scaffolded project can be restyled by editing its
+#'   own copy: `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage. A
+#'   local `datagoodr.css` that is not a rail stylesheet (an older project's
+#'   copy of the vintage one) is skipped for `"rail"`, so it cannot break a new
+#'   rail guide, and still serves `"vintage"` when no `datagoodr-vintage.css`
+#'   exists.
 #'
 #' @return A single character string of CSS (empty if no stylesheet is found).
 #' @export
-datagoodr_css <- function() {
-  path <- if( file.exists("datagoodr.css") ) "datagoodr.css"
-          else system.file( "templates", "datagoodr.css", package = "datagoodr" )
+datagoodr_css <- function( style = NULL ) {
+
+  pkg <- function( f ) system.file( "templates", f, package = "datagoodr" )
+  is_rail <- function( f ) any( grepl( ".dg-unit", readLines( f, warn = FALSE ), fixed = TRUE ) )
+  local <- "datagoodr.css"
+
+  path <- if( is.null(style) ) {
+    if( file.exists(local) ) local else pkg( "datagoodr-vintage.css" )
+  } else {
+    style <- match.arg( style, c("rail", "vintage") )
+    if( style == "rail" ) {
+      if( file.exists(local) && is_rail(local) ) local else pkg( "datagoodr.css" )
+    } else {
+      if( file.exists("datagoodr-vintage.css") ) "datagoodr-vintage.css"
+      else if( file.exists(local) && ! is_rail(local) ) local
+      else pkg( "datagoodr-vintage.css" )
+    }
+  }
+
   if( path == "" || ! file.exists(path) ) return( "" )
   paste( readLines( path, warn = FALSE ), collapse = "\n" )
 }
@@ -47,16 +77,21 @@ datagoodr_css <- function() {
 #'   standard name (`research-guide.qmd` / `data-dictionary.qmd`). The template
 #'   is written straight to this name, so the overwrite guard applies to the
 #'   file you actually asked for --- naming one report never touches another.
+#' @param style Research guide style: `"rail"` (the default) or `"vintage"`
+#'   (the original three-column grid). Ignored for the data dictionary, which
+#'   always uses the vintage grid.
 #'
 #' @return Invisibly, the path to the copied template.
 #' @seealso [create_rg()], [create_dd()]
 #' @export
 use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
                                     dg = TRUE, overwrite = FALSE,
-                                    file = NULL ) {
+                                    file = NULL, style = c("rail", "vintage") ) {
 
   flavor   <- match.arg( flavor )
-  template <- if( flavor == "rg" ) "RG.qmd" else "DD.qmd"
+  style    <- if( flavor == "dd" ) "vintage" else match.arg( style )
+  template <- if( flavor == "dd" ) "DD.qmd"
+              else if( style == "vintage" ) "RG-vintage.qmd" else "RG.qmd"
   out.name <- if( ! is.null(file) && nzchar(file) ) file
               else if( flavor == "rg" ) "research-guide.qmd"
               else "data-dictionary.qmd"
@@ -79,10 +114,12 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
                  dg.dest ) }
   }
 
-  # ship a local copy of the stylesheet so the project can be restyled
-  css.dest <- file.path( dir, "datagoodr.css" )
+  # ship a local copy of the style's stylesheet so the project can be restyled
+  # (never overwriting one the user may have edited)
+  css.name <- if( style == "vintage" ) "datagoodr-vintage.css" else "datagoodr.css"
+  css.dest <- file.path( dir, css.name )
   if( ! file.exists(css.dest) )
-  { file.copy( system.file("templates", "datagoodr.css", package = "datagoodr"),
+  { file.copy( system.file("templates", css.name, package = "datagoodr"),
                css.dest ) }
 
   message( "Created ", dest )
@@ -121,7 +158,10 @@ rel_to_dir <- function( path, dir ) {
 
 
 build_report <- function( dgf, data, dir, file, flavor, embed_css,
-                          render, overwrite ) {
+                          render, overwrite, style = "rail" ) {
+
+  # the data dictionary has one style: the vintage grid
+  style <- if( flavor == "dd" ) "vintage" else style
 
   # allow a DGF data frame: write it out next to the report
   if( is.data.frame(dgf) ) {
@@ -140,7 +180,8 @@ build_report <- function( dgf, data, dir, file, flavor, embed_css,
   # unrelated report of that default name -- e.g. scaffolding
   # research-guide-temporal-demo.qmd must never touch research-guide.qmd.
   dest <- use_datagoodr_template( dir = dir, flavor = flavor,
-                                  dg = TRUE, overwrite = overwrite, file = file )
+                                  dg = TRUE, overwrite = overwrite, file = file,
+                                  style = style )
 
   # Bake the paths into the scaffolded document so it renders standalone from
   # RStudio/Positron. This is the only place the qmd is written: update_rg()
@@ -154,7 +195,7 @@ build_report <- function( dgf, data, dir, file, flavor, embed_css,
   set_qmd_param( dest, "dgf_file",  rel_to_dir(dgf,  dir) )
   if( ! is.null(data) ) set_qmd_param( dest, "data_file", rel_to_dir(data, dir) )
 
-  if( embed_css ) embed_css_block( dest )
+  if( embed_css ) embed_css_block( dest, style )
 
   # No execute_params here: the document's own YAML is the single source of
   # truth for its DGF. Passing it twice is how the two drifted apart before.
@@ -169,6 +210,8 @@ build_report <- function( dgf, data, dir, file, flavor, embed_css,
 #' Replace the runtime stylesheet chunk with the stylesheet itself (internal)
 #'
 #' @param path Path to a scaffolded report qmd.
+#' @param style The report's style (`"rail"` or `"vintage"`): which stylesheet
+#'   to embed.
 #'
 #' @return Invisibly, `path`.
 #'
@@ -182,9 +225,9 @@ build_report <- function( dgf, data, dir, file, flavor, embed_css,
 #'   Verifies both ends: errors if the chunk anchor is missing, and again if the
 #'   runtime call survives the rewrite.
 #' @noRd
-embed_css_block <- function( path ) {
+embed_css_block <- function( path, style = "rail" ) {
 
-  css <- datagoodr_css()
+  css <- datagoodr_css( style )
   if( ! nzchar(css) )
   { stop( "Cannot embed the stylesheet: datagoodr_css() found no CSS.",
           call. = FALSE ) }
@@ -207,7 +250,9 @@ embed_css_block <- function( path ) {
   # line: inside a css chunk the option comment must be CSS (`/*| ... */`), and
   # quarto rejects the R form outright.
   block <- c( "```{css echo=FALSE}",
-              "/* Embedded copy of datagoodr.css - edit freely. Because it is",
+              paste0( "/* Embedded copy of ",
+                      if( style == "vintage" ) "datagoodr-vintage.css" else "datagoodr.css",
+                      " - edit freely. Because it is" ),
               "   embedded, it no longer tracks the packaged stylesheet. */",
               strsplit( css, "\n", fixed = TRUE )[[1]],
               "```" )
@@ -252,6 +297,10 @@ embed_css_block <- function( path ) {
 #'   (scaffold only, so the user can annotate it first).
 #' @param overwrite Logical; overwrite an existing document. Defaults to
 #'   `FALSE`.
+#' @param style Layout style. `"rail"` (the default) gives each variable a
+#'   left rail (data type, label, name, description, properties) beside its
+#'   graphic, preview and stats, grouped by data type under a numbered contents
+#'   list. `"vintage"` is the original three-column grid.
 #'
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
 #'
@@ -260,13 +309,18 @@ embed_css_block <- function( path ) {
 #'   use [update_rg()] rather than re-scaffolding: it overrides at render time
 #'   and leaves your edits to the document intact.
 #'
+#'   Each style ships its own stylesheet next to the document:
+#'   `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage.
+#'
 #' @seealso [create_dd()], [update_rg()], [use_datagoodr_template()]
 #' @export
 create_rg <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
                        file = "research-guide.qmd", embed_css = FALSE,
-                       render = FALSE, overwrite = FALSE ) {
+                       render = FALSE, overwrite = FALSE,
+                       style = c("rail", "vintage") ) {
+  style <- match.arg( style )
   build_report( dgf, data, dir, file, flavor = "rg", embed_css = embed_css,
-                render = render, overwrite = overwrite )
+                render = render, overwrite = overwrite, style = style )
 }
 
 

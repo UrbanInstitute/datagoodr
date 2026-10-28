@@ -1,0 +1,68 @@
+# Re-render an existing report against a different DGF or dataset
+
+Renders a report document that already exists, optionally pointing it at
+a different DGF and/or raw dataset. The document itself is never
+modified, so any annotations, custom chunks, or layout edits in it are
+preserved.
+
+## Usage
+
+``` r
+update_rg(QMD, DGF = "in_qmd", CSV = "none", render = TRUE)
+```
+
+## Arguments
+
+- QMD:
+
+  Path to the report \`.qmd\` (as scaffolded by \[create_rg()\] or
+  \[create_dd()\]).
+
+- DGF:
+
+  Which DGF to render against. \`"in_qmd"\` (default) uses the path the
+  document declares; a file path renders against that DGF instead.
+  Errors if \`"in_qmd"\` but the document declares no \`dgf_file\`.
+
+- CSV:
+
+  Which raw dataset to supply. \`"none"\` (default) passes nothing, so
+  the document's own \`data_file\` default stands. \`"in_qmd"\` uses the
+  path the document declares (erroring if it declares none), and a file
+  path supplies that dataset.
+
+- render:
+
+  Logical; render the document. Defaults to \`TRUE\`. \`FALSE\`
+  validates the arguments and returns the overrides without rendering,
+  which is useful for checking what a call would do.
+
+## Value
+
+Invisibly, the list of \`execute_params\` used (empty when the
+document's own values were used unchanged).
+
+## Details
+
+The document is read but never written. Overrides are passed to Quarto
+as \`execute_params\`, which merges them over the YAML defaults - params
+that are not overridden keep the values declared in the file.
+
+## See also
+
+\[create_rg()\], \[create_dd()\]
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# re-render against an updated DGF, keeping every edit in the qmd
+update_rg( "research-guide.qmd", DGF = "DGF-V2.xlsx" )
+
+# supply the raw data too
+update_rg( "research-guide.qmd", DGF = "DGF-V2.xlsx", CSV = "data-2026.csv" )
+
+# just re-render what the document already points at
+update_rg( "research-guide.qmd" )
+} # }
+```

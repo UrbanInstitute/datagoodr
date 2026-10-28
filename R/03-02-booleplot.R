@@ -22,7 +22,7 @@
 #'   height. Defaults to `3`.
 #' @param gap_ratio Gap between bars as a fraction of bar height. Defaults to
 #'   `1/3`.
-#' @param bar_col Fill for ordinary bars. Defaults to `"steelblue"`.
+#' @param bar_col Fill for ordinary bars. Defaults to `"#465A6F"`, the slate of the histogram bars.
 #' @param na_col,na_border,na_lty,na_lwd Fill, border colour, line type and line
 #'   width for the missing (`NA`) bar.
 #' @param na_label The label treated as the missing category. Defaults to
@@ -45,9 +45,9 @@ booleplot <- function(
     x,
     bar_text_ratio     = 2,
     gap_ratio          = 1 / 3,
-    bar_col            = "steelblue",
+    bar_col            = "#465A6F",
     na_col             = "#d7e0e8",
-    na_border          = "steelblue",
+    na_border          = "#465A6F",
     na_lty             = 1,
     na_lwd             = 1.3,
     na_label           = "NA",

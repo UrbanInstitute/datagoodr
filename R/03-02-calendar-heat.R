@@ -24,6 +24,14 @@
 #    - replaced require() with a need_pkg() guard on lattice/grid;
 #    - fixed the fragile `class(x) == "character"` test to is.character/is.factor,
 #      which is correct for multi-class objects.
+#    - layout is one row per year on a single page (was `nyr %% 7`, which
+#      paged the years across several mostly-empty images);
+#    - `weekday.labels` and `year.label` arguments, so a multi-year series
+#      folded onto one calendar year can hide the (meaningless) weekday names
+#      and title its panel with the year range;
+#    - a `w2g2b` colour ramp (white to gray to dark blue);
+#    - a `years` argument to draw only chosen (possibly non-adjacent) years;
+#    - a `winsor` argument to cap both tails before colouring (off by default).
 #  The algorithm is otherwise verbatim.
 # ---------------------------------------------------------------------------
 
@@ -39,10 +47,23 @@
 #' @param values Numeric values, one per date.
 #' @param ncolors Number of colour steps. Defaults to 99.
 #' @param color A colour ramp name: `"r2g"`, `"r2b"`, `"b2r"`, `"w2b"`, `"b2w"`,
-#'   `"r2w"`. Defaults to `"r2g"`.
+#'   `"r2w"`, or `"w2g2b"` (white to gray to dark blue, which the Research
+#'   Guide uses). Defaults to `"r2g"`, the original.
 #' @param varname Title label for the plotted quantity.
 #' @param date.form `strptime` format for parsing character dates. Defaults to
 #'   `"%Y-%m-%d"`.
+#' @param weekday.labels Logical; label the rows with weekday names. Defaults
+#'   to `TRUE`. Set `FALSE` for a folded multi-year calendar, where a row no
+#'   longer stands for one weekday.
+#' @param year.label Optional panel title replacing the year (e.g.
+#'   `"1939-1994, all years"` for a folded calendar). Use with a single year.
+#' @param years Optional vector of years to draw (one panel each, in order).
+#'   By default every year from the first date to the last is drawn; pass the
+#'   years to skip the ones in between.
+#' @param winsor Optional pair of quantiles, e.g. `c(0.05, 0.95)`: values are
+#'   capped at those quantiles of the plotted (non-empty) days before colouring,
+#'   so one extreme day cannot set the whole scale. `NULL` (default) draws the
+#'   raw values, as the original did.
 #' @param ... Unused; accepted for compatibility.
 #'
 #' @return No return value; draws the plot on the current device.
@@ -60,7 +81,11 @@ calendar_heat <-
             ncolors = 99,
             color = "r2g",
             varname = "Values",
-            date.form = "%Y-%m-%d", ... ) {
+            date.form = "%Y-%m-%d",
+            weekday.labels = TRUE,
+            year.label = NULL,
+            years = NULL,
+            winsor = NULL, ... ) {
 
   need_pkg( "lattice", "grid" )
 
@@ -90,6 +115,24 @@ calendar_heat <-
   }
   caldat <- cbind( caldat, seq = d.loc )
 
+  # draw only the requested years (e.g. three non-adjacent years), not every
+  # year between the first and the last
+  if( ! is.null(years) ) {
+    caldat <- caldat[ as.character(caldat$yr) %in% as.character(years), ]
+    caldat$yr <- droplevels( caldat$yr )
+  }
+
+  # The colour scale spans the min..max of the values drawn (lattice cuts that
+  # range evenly), so it already re-fits to the chosen years. Winsorizing caps
+  # both tails at the given quantiles of those values, so a single extreme day
+  # (opening day, the last game of a season) cannot push every other day into
+  # the palest colour. Empty days stay NA (blank).
+  if( length(winsor) == 2 ) {
+    q <- stats::quantile( caldat$value, winsor, na.rm = TRUE, names = FALSE )
+    if( all( is.finite(q) ) && q[2] > q[1] )
+      caldat$value <- pmin( pmax( caldat$value, q[1] ), q[2] )
+  }
+
   # colour styles
   r2w <- grDevices::colorRampPalette( c("gray40", "firebrick") )(5)
   r2g <- c( "#D61818", "#FFAE63", "#FFFFBD", "#B5E384" )   # red to green
@@ -97,6 +140,9 @@ calendar_heat <-
   b2w <- c( "#B3B3B3", "#879CA9", "#5B86A0", "#2F7096", "#045A8D" )   # blue to white
   r2b <- grDevices::colorRampPalette( c("#045A8D", "gray70", "firebrick") )(5)
   b2r <- grDevices::colorRampPalette( c("firebrick", "gray70", "#045A8D") )(5)
+  # white to gray to dark blue (low to high). The low end is a near-white gray
+  # so a day with a few observations still reads differently from an empty day.
+  w2g2b <- c( "#F7F7F7", "#BDBDBD", "#6B7F99", "#08306B" )
 
   assign( "col.sty", get(color) )
   calendar.pal <- grDevices::colorRampPalette( (col.sty), space = "Lab" )
@@ -111,12 +157,18 @@ calendar_heat <-
           par.strip.text   = list( cex = 0.8 ) )
     }
   lattice::lattice.options( default.theme = cal.theme )
+  if( ! is.null(year.label) )
+    caldat$yr <- factor( rep( year.label, nrow(caldat) ) )
   yrs <- ( unique( caldat$yr ) )
   nyr <- length( yrs )
+  # One column, one row per year, all on a single page. (The original
+  # `nyr %% 7` gave 0 or 1 rows for many spans, so lattice paged the years
+  # across several mostly-empty images.) Callers keep the span short - see
+  # paste_temporal_graphic(), which folds spans beyond 3 years onto one year.
   print( cal.plot <- lattice::levelplot( value ~ woty * dotw | yr, data = caldat,
     as.table = TRUE,
     aspect   = .12,
-    layout   = c( 1, nyr %% 7 ),
+    layout   = c( 1, nyr ),
     between  = list( x = 0, y = c(1, 1) ),
     strip    = TRUE,
     main = NULL,
@@ -129,8 +181,10 @@ calendar_heat <-
         cex = 0.7 ),
       y = list(
         at = c( 0, 1, 2, 3, 4, 5, 6 ),
-        labels = c( "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-                    "Friday", "Saturday" ),
+        labels = if( weekday.labels )
+                   c( "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                      "Friday", "Saturday" )
+                 else rep( "", 7 ),
         alternating = 1,
         cex = 0.6,
         tck = 0 ) ),

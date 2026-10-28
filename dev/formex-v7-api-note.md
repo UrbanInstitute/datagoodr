@@ -153,3 +153,62 @@ unreachable rather than guessed.
 - `fx_dgf_fields()` depth-scale reconciliation.
 
 Full engine-side detail: `formex/ONTOLOGY-V7-PLAN.md`.
+
+> **Update 5 — 2026-10-27 — your v7-dgf-integration-plan gating items have shipped, and the starwars report is addressed.**
+>
+> Re `dev/v7-dgf-integration-plan.md` "Not landed yet (our testing gate)":
+> all three are now on formex `main`, so you can unfreeze that integration:
+> 1. The `format_style` + `unit_type` split is built (ONTOLOGY-V7-PLAN §5 steps 1–4).
+> 2. `guess_data_type()$route` now carries `format_style` (resolved from the variant).
+> 3. `fx_transforms()` is generated from the ontology recipes (a `read_<style>`
+>    edge per row), not just the seed — plus `write_numeric` for number types.
+>
+> Your `dplyr::starwars` detection-quality report, item by item:
+> - `name` → now `text/person` (was `organization`).
+> - `hair_color` / `eye_color` → now `text/color/color_name` (new `is_color_name()`
+>   + a curated color-word lexicon; the words "brown"/"auburn"/"orange" are also
+>   US places, which was the leak). No longer `geographic`.
+> - `mass` (`measurement` → `numeric`) → now reachable: a plain number has a
+>   `write_numeric` edge, so `fx_plan_transform(fx_format("measurement"),
+>   fx_format("measurement","numeric"))` returns a plan instead of "no path".
+> - list columns `a|b|c` → still unrecognized; a flat-delimited set is best modeled
+>   as `categorical/multiselect/tags` (not `structured`, which is for bracketed
+>   JSON/arrays). A delimiter-split `tags` detector is the recommended next step —
+>   not built yet.
+>
+> Also new and relevant to your audit / raw-stats TO-DO: `fx_stabilize()` now
+> returns a **`conversion_log`** (n present / stabilized / dropped / rate / reason
+> / examples) and **warns** when present values become NA, so a column losing
+> values is surfaced, not silent. Wire this into the governance file so a reviewer
+> sees drops before the cleaned CSV is written.
+>
+> Still open on our side: `convert_fiscal_calendar` (needs your fiscal-year-end
+> convention) and the `tags` detector above. Coverage is now 47/97 variants
+> implemented; 91 detectors.
+
+> **Update 6 — 2026-10-27 — baseball report: dates fixed; other items triaged.**
+>
+> On `data-dev/bb.csv`:
+> - **Dates recognize correctly** on formex `main` — `birthDate` ("Dec 27, 1981")
+>   and `debut`/`finalGame` (ISO) → `temporal/date/calendar`, `birthYear` →
+>   `temporal/period/year` (not a date). The real gap was the write side: a
+>   calendar's canonical value is already ISO, but there was no edge to the
+>   `yyyymmdd` default, so stabilizing returned "no path". **Fixed** (formex
+>   `886acc4`): the registry now generates an identity write edge to each row's
+>   `desired_default_format`, so a date → `yyyymmdd`, a number/measurement →
+>   `numeric`, a year → `yyyy` all stabilize. This also covers `SLUG` (`ratio`).
+> - **Still on formex:** `hair_color`/`eye_color` can still land on `geographic`
+>   because compound values (`"brown, grey"`, `"blue-gray"`) and fillers
+>   (`"none"`, `"unknown"`) drop the color pass rate below the router's
+>   threshold. A color-detector refinement (split compound values, ignore
+>   fillers) is the next formex item.
+> - **On datagoodr, not formex:** `throws` (`R`/`L`) → boolean is the
+>   "2 levels ⇒ boolean" rule here; formex's `is_boolean` keys on a yes/no/t/f/
+>   0/1 *vocabulary*, which `R`/`L` is not, so the fix is to require boolean-like
+>   values before collapsing a 2-level code. `birthState`/`birthCity` text-vs-
+>   `geographic` is the profiling-overwrites-guess item (your priority 1).
+>
+> Also, for development visibility: `guess_dgf_types()` now records
+> `guess_semantic_type` as the **full resolved path** (`temporal:date:calendar`),
+> truncated to the lowest level the route reached, instead of just the leaf. The
+> stabilizer takes the leaf, so behaviour is unchanged.

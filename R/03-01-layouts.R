@@ -32,10 +32,13 @@ default_layouts <- function() {
   # e.g. USD/kg), and the field width. `v_to_txt` renders blank for any
   # coordinate a variable does not carry, so a plain number shows fewer rows.
   # The `unit` arg is retained for back-compat but no longer changes the output
-  # (the temporal grain now lives in desired_data_class, read at render time).
+  # (the temporal grain comes from desired_semantic_type, read at render time).
+  # dg_render_type / dg_semantic_type are derived per variable at render time
+  # (see .add_render_fields): the template type, and desired_semantic_type when
+  # it is more specific than that type.
   attrs <- function( unit = FALSE ) c(
-    "div3 ;; desired_data_type  ;; DATA TYPE ;; v_to_txt",
-    "div3 ;; desired_data_class ;; CLASS     ;; v_to_txt",
+    "div3 ;; dg_render_type     ;; DATA MODE ;; v_to_txt",
+    "div3 ;; dg_semantic_type   ;; DATA TYPE ;; v_to_txt",
     "div3 ;; dd_data_unit       ;; UNIT      ;; v_to_txt",
     "div3 ;; rg_max_chr         ;; MAX NCHAR ;; v_to_txt" )
 

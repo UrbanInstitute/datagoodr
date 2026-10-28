@@ -92,6 +92,9 @@
 #' @noRd
 .dgf_fx_format <- function(semantic_type, format_style = NA, unit_type = NA) {
   if (!.formex_has_v7()) stop("formex v7 transform-path API not available")
+  ## accept a path (data_type:...:leaf) and use the leaf -- guess_semantic_type
+  ## may carry the full path for display; formex keys on the bare semantic_type.
+  semantic_type <- sub(".*:", "", as.character(semantic_type))
   na_if_blank <- function(x) if (is.na(x) || !nzchar(trimws(x))) NA_character_ else x
   formex::fx_format(semantic_type,
                     format_style = na_if_blank(as.character(format_style)),
@@ -191,7 +194,7 @@ plan_stabilizer <- function(guess, desired, raw_first5 = NULL) {
   by_st  <- tapply(ont$desired_default_format, ont$semantic_type,
                    function(x) { x <- x[nzchar(x)]; if (length(x)) x[1] else NA_character_ })
   vapply(seq_len(n), function(i) {
-    v <- variant_id[i]; s <- semantic_type[i]
+    v <- variant_id[i]; s <- sub(".*:", "", semantic_type[i])   # accept a path; match on the leaf
     d <- if (nzchar(v) && v %in% names(by_var)) by_var[[v]] else NA_character_
     if (is.na(d) || !nzchar(d)) d <- if (nzchar(s) && s %in% names(by_st)) by_st[[s]] else NA_character_
     if (is.na(d)) "" else d
@@ -286,9 +289,15 @@ stabilize_col_v7 <- function(col, guess, desired) {
 #'
 #' The format-first schema: the type+class cluster collapses to a guessed leaf
 #' label split across the `format_style` / `unit_type` axes, the stabilizer is a
-#' `read :: [convert] :: write` plan, and `stable_first5` shows its effect. Not
-#' yet the schema `create_dgf()` builds -- see the testing gate in
-#' dev/v7-dgf-integration-plan.md.
+#' `read :: [convert] :: write` plan, and `stable_first5` shows its effect.
+#'
+#' Drops the legacy v2 rule/type columns (`raw_to_stable_transform`,
+#' `stable_data_type`, `stable_data_format`, `desired_data_import_rule`,
+#' `desired_data_type`, `desired_data_class`): the `guess_*` and `desired_*`
+#' axes plus `stabilizer` / `load_rule` replace them. Not yet the schema
+#' `create_dgf()` builds -- the functions listed in dev/TO-DO.md ("Port off the
+#' legacy columns") still read the dropped columns. The workflow is described
+#' in dev/stabilization-workflow.md.
 #'
 #' @return A character vector of column names.
 #' @keywords internal
@@ -298,8 +307,9 @@ dgf_schema_cols_v7 <- function() {
     # variable key
     "var_name",
 
-    # dd_: data dictionary (user-authored)
-    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_is_join_key",
+    # dd_: data dictionary (user-authored). dd_f_levels is the level/label
+    # table a factor load rule (as_factor) reads its levels and labels from.
+    "dd_vname_alias", "dd_vlabel", "dd_vdesc", "dd_f_levels", "dd_is_join_key",
 
     # raw_: as received
     "raw_first5", "raw_data_mode", "raw_duplicated",

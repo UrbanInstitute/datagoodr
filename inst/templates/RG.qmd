@@ -3,10 +3,8 @@ title: "Research Guide"
 format:
   html:
     embed-resources: true
-    toc: true
-    toc-location: body
-    toc-depth: 5
-    toc-expand: true
+    page-layout: full
+    toc: false
 execute:
   keep-md: true
 params:
@@ -14,23 +12,23 @@ params:
   data_file: null
 ---
 
-<!-- datagoodr research guide template.
+<!-- datagoodr research guide template (default "rail" style).
+
+     Each variable is a unit: a left rail with its data type, label, name,
+     description and properties, and a right column with its graphic, data
+     preview and stats. Variables are grouped by data type under a contents
+     list. For the original three-column grid use create_rg(style = "vintage").
 
      Customize without editing the package:
        - DG.R           custom functions & layout overrides
-       - datagoodr.css  the page grid, fonts, and colors
-     See vignette("customizing", package = "datagoodr").
+       - datagoodr.css  fonts, colors and spacing
+     See vignette("report-aesthetics", package = "datagoodr").
 
      Render from the console with:  quarto::quarto_render("research-guide.qmd")
      or re-render against a different DGF/dataset without editing this file:
        datagoodr::update_rg("research-guide.qmd", DGF = "DGF-V2.xlsx") -->
 
-<br>
-
-
-<br><br>
-
-```{r setup, echo=F, message=FALSE, warning=FALSE, include=FALSE}
+```{r setup, include=FALSE}
 
 # datagoodr is the only package this report needs to attach. Everything it
 # renders is a datagoodr function, and those load what they need themselves.
@@ -40,11 +38,10 @@ library( datagoodr )
 # if it sits next to this document.
 if( file.exists("DG.R") ) source("DG.R")
 
-
 # The DGF drives the whole report. The path comes from the `dgf_file` param, so
 # this document renders on its own - and update_rg() can point it at a
 # different DGF at render time without editing this file.
-dgf <- readxl::read_excel( params$dgf_file )
+dgf <- load_dgf( params$dgf_file, reader = "readxl" )
 
 # Optional raw dataset. The report renders from the DGF alone - every statistic
 # and graphic is already stored in its rg_* columns - so this stays NULL unless
@@ -53,69 +50,43 @@ dgf <- readxl::read_excel( params$dgf_file )
 raw.data <- if( is.null( params$data_file ) ) NULL else
             suppressMessages( readr::read_csv( params$data_file ) )
 
-
-# Each variable type gets its own section because each plot type needs its own
-# fig width and height. To add a new variable type:
-# 1. add the new desired_data_type to the DGF
-# 2. add a layout for it (see R/03-01-layouts.R)
-# 3. add the functions that layout needs to read
-# 4. add a dgf.TYPE subset and a section below
-
-dgf.log  <-  dgf[ dgf$desired_data_type == "boolean",     ]
-dgf.fact <-  dgf[ dgf$desired_data_type == "categorical", ]
-dgf.chr  <-  dgf[ dgf$desired_data_type %in% c("text","string"), ]
-dgf.num  <-  dgf[ dgf$desired_data_type == "number",      ]
-dgf.id   <-  dgf[ dgf$desired_data_type == "identifier",  ]
-dgf.time <-  dgf[ dgf$desired_data_type == "temporal",    ]
-
-
+# One group per report template (dg_render_type), in display order. Each group
+# gets its own chunk below because each graphic needs its own fig size.
+groups <- rail_groups( dgf )
 ```
 
-
-## Logical
-
-```{r logical, results="asis", echo=FALSE}
-create_all_sections( dgf.log )
-
+```{r contents, echo=FALSE, results="asis"}
+rail_contents( groups )
 ```
 
-## Factor
-
-```{r factor, results="asis", echo=FALSE}
-create_all_sections( dgf.fact )
+```{r boolean, echo=FALSE, results="asis", fig.width=8, fig.height=2.6}
+rail_sections( groups$Boolean, "Boolean" )
 ```
 
-## Numeric 
-
-```{r numeric, results="asis", fig.width=8, fig.height=2, echo=FALSE}
-create_all_sections( dgf.num )
+```{r categorical, echo=FALSE, results="asis", fig.width=8, fig.height=3.5}
+rail_sections( groups$Categorical, "Categorical" )
 ```
 
-## Character
-
-```{r character, results="asis", fig.width=8, fig.height=4.5, echo=FALSE}
-create_all_sections( dgf.chr )
+```{r numeric, echo=FALSE, results="asis", fig.width=8, fig.height=2}
+rail_sections( groups$Numeric, "Numeric" )
 ```
 
-## Identifier
-
-```{r identifier, results="asis", echo=FALSE}
-create_all_sections( dgf.id )
+```{r text, echo=FALSE, results="asis", fig.width=8, fig.height=3.5}
+rail_sections( groups$Text, "Text" )
 ```
 
-## Temporal
-
-```{r temporal, results="asis", fig.width=8, fig.height=4, echo=FALSE}
-create_all_sections( dgf.time )
+```{r identifier, echo=FALSE, results="asis"}
+rail_sections( groups$Identifier, "Identifier" )
 ```
 
-
-
+```{r temporal, echo=FALSE, results="asis", fig.width=8, fig.height=4}
+rail_sections( groups$Temporal, "Temporal" )
+```
 
 ```{r datagoodr-style, echo=FALSE, results="asis"}
 # The report stylesheet comes from a single source: datagoodr.css (a local
 # copy overrides the packaged one). Edit that file to restyle the report.
-cat( "<style>\n", datagoodr_css(), "\n</style>\n" )
+cat( "<style>\n", datagoodr_css("rail"), "\n</style>\n" )
 ```
 
 ```{r datagoodr-record, echo=FALSE, results="asis"}

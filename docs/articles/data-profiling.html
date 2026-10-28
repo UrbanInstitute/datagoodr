@@ -41,12 +41,14 @@
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -77,47 +79,77 @@
 <div class="section level2">
 <h2 id="profiling-makes-data-transparent-and-auditable">Profiling makes data transparent and auditable<a class="anchor" aria-label="anchor" href="#profiling-makes-data-transparent-and-auditable"></a>
 </h2>
-<p>A governed dataset should not ask you to take its quality on faith. <strong>Profiling</strong> is the measured description of every column — how complete it is, how it is distributed, where the surprises are — computed from the values themselves and stored in the DGF. Because the profile travels with the governance file, anyone can audit what the data actually looked like, without re-reading the raw file.</p>
-<p><code><a href="../reference/create_dgf.html">create_dgf()</a></code> profiles every column as it builds the DGF; <code><a href="../reference/update_dgf.html">update_dgf()</a></code> recomputes the profile for any column whose data has changed.</p>
+<p>A governed dataset should not ask you to take its quality on faith.
+<strong>Profiling</strong> is the measured description of every column —
+how complete it is, how it is distributed, where the surprises are —
+computed from the values themselves and stored in the DGF. Because the
+profile travels with the governance file, anyone can audit what the data
+actually looked like, without re-reading the raw file.</p>
+<p><code><a href="../reference/create_dgf.html">create_dgf()</a></code> profiles every column as it builds the DGF;
+<code><a href="../reference/update_dgf.html">update_dgf()</a></code> recomputes the profile for any column whose
+data has changed.</p>
 </div>
 <div class="section level2">
 <h2 id="universal-quality-metrics-measured-for-every-column">Universal quality metrics — measured for every column<a class="anchor" aria-label="anchor" href="#universal-quality-metrics-measured-for-every-column"></a>
 </h2>
-<p>Regardless of type, each column reports a small set of integrity counts, each as a count and a percentage, and — importantly — <strong>only when it occurs</strong>, so the profile never pads itself with zeros that would bury the real signal:</p>
+<p>Regardless of type, each column reports a small set of integrity
+counts, each as a count and a percentage, and — importantly —
+<strong>only when it occurs</strong>, so the profile never pads itself
+with zeros that would bury the real signal:</p>
 <ul>
 <li>
-<strong>Distinct</strong> — how many unique values (the first clue to whether a column is an identifier, a category, or a measurement).</li>
+<strong>Distinct</strong> — how many unique values (the first clue
+to whether a column is an identifier, a category, or a
+measurement).</li>
 <li>
-<strong>Missing / NA</strong> and <strong>Missing / Empty</strong> — absent values, separating true <code>NA</code> from empty strings, because the distinction often matters.</li>
+<strong>Missing / NA</strong> and <strong>Missing / Empty</strong> —
+absent values, separating true <code>NA</code> from empty strings,
+because the distinction often matters.</li>
 <li>
-<strong>Zero</strong> — exact zeros (meaningful for counts, rates, and money).</li>
+<strong>Zero</strong> — exact zeros (meaningful for counts, rates,
+and money).</li>
 <li>
-<strong>Infinite</strong> — non-finite values that signal a computation or import problem.</li>
+<strong>Infinite</strong> — non-finite values that signal a
+computation or import problem.</li>
 <li>
-<strong>Duplicated</strong> — repeated rows/values, surfaced rather than hidden.</li>
+<strong>Duplicated</strong> — repeated rows/values, surfaced rather
+than hidden.</li>
 </ul>
-<p>Read together these are a quick integrity check: a column that is 40% missing, or one that is all distinct, tells you something before you plot anything.</p>
+<p>Read together these are a quick integrity check: a column that is 40%
+missing, or one that is all distinct, tells you something before you
+plot anything.</p>
 </div>
 <div class="section level2">
 <h2 id="type-specific-indicators">Type-specific indicators<a class="anchor" aria-label="anchor" href="#type-specific-indicators"></a>
 </h2>
-<p>On top of the universal counts, each type adds the indicators that are meaningful for it:</p>
+<p>On top of the universal counts, each type adds the indicators that
+are meaningful for it:</p>
 <ul>
 <li>
-<strong>Numeric</strong> — the quantile ladder (minimum, Q05, Q25, median, Q75, Q95, maximum) plus mean, <strong>skew</strong>, and <strong>kurtosis</strong>, so a skewed or heavy-tailed distribution is visible as a number, not just a picture.</li>
+<strong>Numeric</strong> — the quantile ladder (minimum, Q05, Q25,
+median, Q75, Q95, maximum) plus mean, <strong>skew</strong>, and
+<strong>kurtosis</strong>, so a skewed or heavy-tailed distribution is
+visible as a number, not just a picture.</li>
 <li>
-<strong>Categorical</strong> — the level frequencies, ranked, with the long tail capped so the table stays legible.</li>
+<strong>Categorical</strong> — the level frequencies, ranked, with
+the long tail capped so the table stays legible.</li>
 <li>
-<strong>Temporal</strong> — the grain (year, month, day, …) and coverage of the range.</li>
+<strong>Temporal</strong> — the grain (year, month, day, …) and
+coverage of the range.</li>
 <li>
 <strong>Text</strong> — length and sampled values.</li>
 </ul>
-<p>The point of type-specific profiling is that a quality problem looks different for each type: for a number it is an outlier or a skew; for a category it is a rare level or a near-constant column; for a date it is a gap in coverage.</p>
+<p>The point of type-specific profiling is that a quality problem looks
+different for each type: for a number it is an outlier or a skew; for a
+category it is a rare level or a near-constant column; for a date it is
+a gap in coverage.</p>
 </div>
 <div class="section level2">
 <h2 id="a-profile-measured">A profile, measured<a class="anchor" aria-label="anchor" href="#a-profile-measured"></a>
 </h2>
-<p>Build a DGF from the demo dataset and read two real profiles back out — the universal quality counts for any column, and the numeric statistics table:</p>
+<p>Build a DGF from the demo dataset and read two real profiles back out
+— the universal quality counts for any column, and the numeric
+statistics table:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datagoodr</span><span class="op">)</span></span>
 <span><span class="va">dgf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_dgf.html">create_dgf</a></span><span class="op">(</span><span class="va">dg_demo</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dgf"</span><span class="op">)</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
@@ -178,27 +210,41 @@
 </tr>
 </tbody>
 </table>
-<p>These tables are exactly what the Research Guide renders, read straight from the DGF’s stored profile — no re-reading of the raw data.</p>
+<p>These tables are exactly what the Research Guide renders, read
+straight from the DGF’s stored profile — no re-reading of the raw
+data.</p>
 </div>
 <div class="section level2">
 <h2 id="how-the-dgf-logs-and-stores-profiles">How the DGF logs and stores profiles<a class="anchor" aria-label="anchor" href="#how-the-dgf-logs-and-stores-profiles"></a>
 </h2>
-<p>Each column’s profile is written into the DGF’s <code>rg_*</code> columns and kept as <strong>JSON text</strong>:</p>
+<p>Each column’s profile is written into the DGF’s <code>rg_*</code>
+columns and kept as <strong>JSON text</strong>:</p>
 <ul>
 <li>
-<code>rg_properties</code> — the universal counts and type indicators;</li>
+<code>rg_properties</code> — the universal counts and type
+indicators;</li>
 <li>
-<code>rg_stats</code> — the statistics tables (quantiles, frequencies);</li>
+<code>rg_stats</code> — the statistics tables (quantiles,
+frequencies);</li>
 <li>
 <code>rg_preview</code> — a sample of values;</li>
 <li>
-<code>rg_graphics</code> — the data a type’s visual is drawn from;</li>
+<code>rg_graphics</code> — the data a type’s visual is drawn
+from;</li>
 <li>
 <code>rg_max_chr</code> — the widest value, for layout.</li>
 </ul>
-<p>Storing them as JSON (not nested R objects) is deliberate: it survives the <code>.xlsx</code> round trip that a nested column would not, so the profile is portable and the raw data is no longer needed to render the guide. When you re-profile with <code><a href="../reference/update_dgf.html">update_dgf()</a></code>, only the changed columns’ <code>rg_*</code> cells are rewritten; curated dictionary text is left untouched.</p>
+<p>Storing them as JSON (not nested R objects) is deliberate: it
+survives the <code>.xlsx</code> round trip that a nested column would
+not, so the profile is portable and the raw data is no longer needed to
+render the guide. When you re-profile with <code><a href="../reference/update_dgf.html">update_dgf()</a></code>,
+only the changed columns’ <code>rg_*</code> cells are rewritten; curated
+dictionary text is left untouched.</p>
 <blockquote>
-<p><strong>Note.</strong> Today’s universal metrics are the integrity counts above. Richer summaries of spread and balance — such as an entropy or concentration measure for categoricals — are under consideration as additional universal indicators.</p>
+<p><strong>Note.</strong> Today’s universal metrics are the integrity
+counts above. Richer summaries of spread and balance — such as an
+entropy or concentration measure for categoricals — are under
+consideration as additional universal indicators.</p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -206,7 +252,9 @@
 </h2>
 <ul>
 <li>
-<strong>Profiles &amp; Research Guides</strong> — how these stored profiles become a rendered report, with a different visual for each type.</li>
+<strong>Profiles &amp; Research Guides</strong> — how these stored
+profiles become a rendered report, with a different visual for each
+type.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -220,7 +268,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

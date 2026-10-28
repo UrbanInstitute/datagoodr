@@ -170,9 +170,67 @@ get_graphics_fact <- function(VNAME, df ){
 
 ### Numeric (histogram)---------------------------------------
 
+#' Detect the step values are rounded to (internal)
+#'
+#' Data are often "heaped": weights recorded to the nearest 5 lb, incomes to the
+#' nearest 1,000, counts as whole numbers. Returns the largest step from 1, 2,
+#' 5, 10, 25, 50, 100, ... (scaled to the data) that at least `share` of the
+#' non-zero values are multiples of, or `NA` when the values are not heaped.
+#' Zeros are left out: zero is a multiple of every step, so a pile of zeros
+#' would otherwise suggest a huge step.
+#'
+#' @param x Numeric vector (NAs dropped).
+#' @param share Minimum share of non-zero values that must sit on the step.
+#' @param min.bins The step must leave at least this many steps across the range.
+#' @return A single number, or `NA`.
+#' @noRd
+heap_step <- function( x, share = 0.8, min.bins = 4 ) {
+  x  <- x[ is.finite(x) ]
+  nz <- x[ x != 0 ]
+  if( length(nz) < 10 ) return( NA_real_ )
+  rng <- diff( range(x) )
+  if( rng <= 0 ) return( NA_real_ )
+  mags  <- 10^( seq( 0, max( 0, floor( log10( rng ) ) ) ) )
+  steps <- sort( unique( c( outer( c(1, 2, 2.5, 5), mags ) ) ), decreasing = TRUE )
+  steps <- steps[ steps <= rng / min.bins ]
+  for( s in steps ) {
+    on <- abs( nz / s - round( nz / s ) ) < 1e-8
+    if( mean(on) >= share ) return( s )
+  }
+  NA_real_
+}
+
+#' Histogram break points (internal)
+#'
+#' About 50 equal-width bins. When the values are heaped on a step (see
+#' [heap_step()]), the bin width is a whole multiple of that step and the
+#' breaks sit on multiples of it, so every bin holds the same number of
+#' possible values. Without this, 1.5-lb bins over weights rounded to 5 lb
+#' catch a round number in every third bin and the chart looks like a comb.
+#' Bins are left-closed (`right = FALSE`), so a value on a break counts in the
+#' bin that starts there.
+#'
+#' @param x Numeric vector (the winsorized values to bin).
+#' @param nbins Target number of bins.
+#' @return An increasing numeric vector of breaks.
+#' @noRd
+hist_breaks <- function( x, nbins = 50 ) {
+  rng <- range( x )
+  # exactly `nbins` equal-width bins (a bare `breaks = 50` is only a suggestion
+  # that hist() rounds to "pretty" limits, giving an inconsistent bin count)
+  even <- seq( rng[1], rng[2], length.out = nbins + 1 )
+  s <- heap_step( x )
+  if( is.na(s) ) return( even )
+  w <- s * max( 1, ceiling( diff(rng) / nbins / s ) )   # a whole number of steps
+  lo <- floor( rng[1] / w ) * w
+  hi <- ( floor( rng[2] / w ) + 1 ) * w                  # left-closed: max needs a bin
+  seq( lo, hi, by = w )
+}
+
 #' Histogram data for a numeric variable (internal)
 #'
-#' Bins the variable into 50 equal-width bins for plotting, and carries the
+#' Bins the variable into about 50 equal-width bins for plotting (snapped to
+#' the rounding step of heaped data - see [hist_breaks()]), and carries the
 #' true mean/median/min/max alongside so the chart can annotate them.
 #'
 #' @param VNAME Character; the variable name (a column of `df`).
@@ -210,11 +268,8 @@ get_graphics_num <- function(VNAME, df ){
   xw <- x[ x >= lo & x <= hi ]
   if( length( unique(xw) ) < 2 ) xw <- x     # degenerate clip -> use all
 
-  # exactly 50 equal-width bins (a bare `breaks = 50` is only a suggestion that
-  # hist() rounds to "pretty" limits, giving an inconsistent bin count)
-  rng <- range( xw )
-  h <- hist( xw, breaks = seq( rng[1], rng[2], length.out = 51 ),
-             include.lowest = TRUE, plot = FALSE )
+  h <- hist( xw, breaks = hist_breaks( xw ), include.lowest = TRUE,
+             right = FALSE, plot = FALSE )
   b <- h$breaks
   d <- h$density/sum(h$density)
   y <- h$counts

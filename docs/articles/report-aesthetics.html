@@ -41,12 +41,14 @@
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -74,74 +76,109 @@
 
     
     
-<p>The look of a Research Guide is not hard-coded — it is driven by a <strong>design</strong>: a setting that maps each data type to the sequence of reporting functions used to render it. Because the design is data, you can inspect it, and change it, without touching the package.</p>
+<p>The look of a Research Guide is not hard-coded — it is driven by a
+<strong>design</strong>: a setting that maps each data type to the
+sequence of reporting functions used to render it. Because the design is
+data, you can inspect it, and change it, without touching the
+package.</p>
 <div class="section level2">
 <h2 id="the-design-is-a-table-of-data-type-reporting-function">The design is a table of data type → reporting function<a class="anchor" aria-label="anchor" href="#the-design-is-a-table-of-data-type-reporting-function"></a>
 </h2>
-<p><code><a href="../reference/get_design.html">get_design()</a></code> returns the active design as a data frame. Each row places one piece of a variable’s section:</p>
+<p><code><a href="../reference/get_design.html">get_design()</a></code> returns the active design as a data frame.
+Each row places one piece of a variable’s section:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datagoodr</span><span class="op">)</span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_design.html">get_design</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;     TYPE  DIV              VNAME       LABEL FUNCTION</span></span>
-<span><span class="co">#&gt; 1 number div2          dd_vlabel             v_to_txt</span></span>
-<span><span class="co">#&gt; 2 number div3  desired_data_type   DATA TYPE v_to_txt</span></span>
-<span><span class="co">#&gt; 3 number div3 desired_data_class       CLASS v_to_txt</span></span>
-<span><span class="co">#&gt; 4 number div3       dd_data_unit        UNIT v_to_txt</span></span>
-<span><span class="co">#&gt; 5 number div3         rg_max_chr   MAX NCHAR v_to_txt</span></span>
-<span><span class="co">#&gt; 6 number div4           dd_vdesc DESCRIPTION v_to_txt</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;     TYPE  DIV            VNAME       LABEL FUNCTION</span></span>
+<span><span class="co">#&gt; 1 number div2        dd_vlabel             v_to_txt</span></span>
+<span><span class="co">#&gt; 2 number div3   dg_render_type   DATA MODE v_to_txt</span></span>
+<span><span class="co">#&gt; 3 number div3 dg_semantic_type   DATA TYPE v_to_txt</span></span>
+<span><span class="co">#&gt; 4 number div3     dd_data_unit        UNIT v_to_txt</span></span>
+<span><span class="co">#&gt; 5 number div3       rg_max_chr   MAX NCHAR v_to_txt</span></span>
+<span><span class="co">#&gt; 6 number div4         dd_vdesc DESCRIPTION v_to_txt</span></span></code></pre>
 <p>The columns are the whole grammar:</p>
 <ul>
 <li>
-<strong>TYPE</strong> — the data type the row applies to (<code>number</code>, <code>categorical</code>, <code>boolean</code>, <code>temporal</code>, <code>text</code>, <code>identifier</code>).</li>
+<strong>TYPE</strong> — the data type the row applies to
+(<code>number</code>, <code>categorical</code>, <code>boolean</code>,
+<code>temporal</code>, <code>text</code>, <code>identifier</code>).</li>
 <li>
-<strong>DIV</strong> — the slot in the section grid the piece is drawn into.</li>
+<strong>DIV</strong> — the slot in the section grid the piece is
+drawn into.</li>
 <li>
-<strong>VNAME</strong> — the DGF column the piece reads (<code>rg_stats</code>, <code>rg_graphics</code>, <code>dd_vdesc</code>, …).</li>
+<strong>VNAME</strong> — the DGF column the piece reads
+(<code>rg_stats</code>, <code>rg_graphics</code>, <code>dd_vdesc</code>,
+…).</li>
 <li>
 <strong>LABEL</strong> — the heading shown above it.</li>
 <li>
-<strong>FUNCTION</strong> — the <strong>name of the reporting function</strong> that renders that column.</li>
+<strong>FUNCTION</strong> — the <strong>name of the reporting
+function</strong> that renders that column.</li>
 </ul>
-<p>Here is the full recipe for a <strong>numeric</strong> variable — the mapping that produced the histogram and tables you saw in the other vignettes:</p>
+<p>Here is the full recipe for a <strong>numeric</strong> variable — the
+mapping that produced the histogram and tables you saw in the other
+vignettes:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">TYPE</span> <span class="op">==</span> <span class="st">"number"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DIV"</span>, <span class="st">"VNAME"</span>, <span class="st">"LABEL"</span>, <span class="st">"FUNCTION"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;     DIV              VNAME              LABEL                 FUNCTION</span></span>
-<span><span class="co">#&gt; 1  div2          dd_vlabel                                    v_to_txt</span></span>
-<span><span class="co">#&gt; 2  div3  desired_data_type          DATA TYPE                 v_to_txt</span></span>
-<span><span class="co">#&gt; 3  div3 desired_data_class              CLASS                 v_to_txt</span></span>
-<span><span class="co">#&gt; 4  div3       dd_data_unit               UNIT                 v_to_txt</span></span>
-<span><span class="co">#&gt; 5  div3         rg_max_chr          MAX NCHAR                 v_to_txt</span></span>
-<span><span class="co">#&gt; 6  div4           dd_vdesc        DESCRIPTION                 v_to_txt</span></span>
-<span><span class="co">#&gt; 7  div5         rg_preview            PREVIEW              paste_label</span></span>
-<span><span class="co">#&gt; 8  div6         rg_preview                           paste_preview_num</span></span>
-<span><span class="co">#&gt; 9  div7      rg_properties         PROPERTIES         paste_properties</span></span>
-<span><span class="co">#&gt; 10 div8        rg_graphics                             paste_histogram</span></span>
-<span><span class="co">#&gt; 11 div9           rg_stats              STATS   paste_stats_horizontal</span></span>
-<span><span class="co">#&gt; 12 div9           rg_stats DISTRIBUTION SHAPE paste_distribution_shape</span></span></code></pre>
-<p>Read the last two rows: in slot <code>div8</code>, the <code>rg_graphics</code> column is rendered by <code>paste_histogram</code>; in <code>div9</code>, <code>rg_stats</code> is rendered by <code>paste_stats_horizontal</code>. Swap the type and the functions change — a <code>categorical</code> row sends <code>rg_graphics</code> to <code>paste_treemap</code>, a <code>text</code> row to <code>v_to_wordcloud</code>.</p>
+<pre><code><span><span class="co">#&gt;     DIV            VNAME              LABEL                 FUNCTION</span></span>
+<span><span class="co">#&gt; 1  div2        dd_vlabel                                    v_to_txt</span></span>
+<span><span class="co">#&gt; 2  div3   dg_render_type          DATA MODE                 v_to_txt</span></span>
+<span><span class="co">#&gt; 3  div3 dg_semantic_type          DATA TYPE                 v_to_txt</span></span>
+<span><span class="co">#&gt; 4  div3     dd_data_unit               UNIT                 v_to_txt</span></span>
+<span><span class="co">#&gt; 5  div3       rg_max_chr          MAX NCHAR                 v_to_txt</span></span>
+<span><span class="co">#&gt; 6  div4         dd_vdesc        DESCRIPTION                 v_to_txt</span></span>
+<span><span class="co">#&gt; 7  div5       rg_preview            PREVIEW              paste_label</span></span>
+<span><span class="co">#&gt; 8  div6       rg_preview                           paste_preview_num</span></span>
+<span><span class="co">#&gt; 9  div7    rg_properties         PROPERTIES         paste_properties</span></span>
+<span><span class="co">#&gt; 10 div8      rg_graphics                             paste_histogram</span></span>
+<span><span class="co">#&gt; 11 div9         rg_stats              STATS   paste_stats_horizontal</span></span>
+<span><span class="co">#&gt; 12 div9         rg_stats DISTRIBUTION SHAPE paste_distribution_shape</span></span></code></pre>
+<p>Read the last two rows: in slot <code>div8</code>, the
+<code>rg_graphics</code> column is rendered by
+<code>paste_histogram</code>; in <code>div9</code>,
+<code>rg_stats</code> is rendered by
+<code>paste_stats_horizontal</code>. Swap the type and the functions
+change — a <code>categorical</code> row sends <code>rg_graphics</code>
+to <code>paste_treemap</code>, a <code>text</code> row to
+<code>v_to_wordcloud</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="how-the-mapping-is-parsed-and-applied">How the mapping is parsed and applied<a class="anchor" aria-label="anchor" href="#how-the-mapping-is-parsed-and-applied"></a>
 </h2>
-<p>Internally each layout is written as a compact string, <code>"div ;; column ;; LABEL ;; function"</code>, and two helpers turn it into action:</p>
+<p>Internally each layout is written as a compact string,
+<code>"div ;; column ;; LABEL ;; function"</code>, and two helpers turn
+it into action:</p>
 <ul>
 <li>
-<code><a href="../reference/parse_design.html">parse_design()</a></code> splits those strings into the <code>DIV / VNAME / LABEL / FUNCTION</code> data frame above;</li>
-<li>at render time the <strong>FUNCTION name is looked up and called</strong> on the named DGF column (<code><a href="../reference/parse_functions.html">parse_functions()</a></code> first checks every name resolves, so a typo fails loudly instead of rendering nothing).</li>
+<code><a href="../reference/parse_design.html">parse_design()</a></code> splits those strings into the
+<code>DIV / VNAME / LABEL / FUNCTION</code> data frame above;</li>
+<li>at render time the <strong>FUNCTION name is looked up and
+called</strong> on the named DGF column (<code><a href="../reference/parse_functions.html">parse_functions()</a></code>
+first checks every name resolves, so a typo fails loudly instead of
+rendering nothing).</li>
 </ul>
-<p>So “aesthetics” reduces to a lookup: <em>for this type, draw this column, with this function.</em> Change the lookup and you change the report.</p>
+<p>So “aesthetics” reduces to a lookup: <em>for this type, draw this
+column, with this function.</em> Change the lookup and you change the
+report.</p>
 </div>
 <div class="section level2">
 <h2 id="customizing-change-the-functions-or-change-the-mapping">Customizing: change the functions, or change the mapping<a class="anchor" aria-label="anchor" href="#customizing-change-the-functions-or-change-the-mapping"></a>
 </h2>
-<p><strong>1. Override a reporting function.</strong> Because the design stores a function <em>name</em>, defining your own function of that name makes the guide call yours — no change to the mapping. This is the usual way to restyle: redefine a renderer (or a formatter such as <code>dollarize</code>) in your project’s <code>DG.R</code>.</p>
+<p><strong>1. Override a reporting function.</strong> Because the design
+stores a function <em>name</em>, defining your own function of that name
+makes the guide call yours — no change to the mapping. This is the usual
+way to restyle: redefine a renderer (or a formatter such as
+<code>dollarize</code>) in your project’s <code>DG.R</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># in DG.R — restyle the numeric graphic without touching the design:</span></span>
 <span><span class="va">paste_histogram</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">VNAME</span>, <span class="va">LABEL</span> <span class="op">=</span> <span class="st">"HISTOGRAM"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># ... your own plot from the rg_graphics payload ...</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><strong>2. Change the mapping itself.</strong> Pass a replacement layout to <code><a href="../reference/get_design.html">get_design()</a></code> (the same hook <code><a href="../reference/create_rg.html">create_rg()</a></code>’s scaffold uses). Here is a slimmed numeric section — label, properties, and stats only, no histogram:</p>
+<p><strong>2. Change the mapping itself.</strong> Pass a replacement
+layout to <code><a href="../reference/get_design.html">get_design()</a></code> (the same hook
+<code><a href="../reference/create_rg.html">create_rg()</a></code>’s scaffold uses). Here is a slimmed numeric
+section — label, properties, and stats only, no histogram:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_number</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"div2 ;; dd_vlabel     ;;            ;; v_to_txt"</span>,</span>
@@ -154,13 +191,24 @@
 <span><span class="co">#&gt; 1 div2     dd_vlabel                          v_to_txt</span></span>
 <span><span class="co">#&gt; 2 div7 rg_properties PROPERTIES       paste_properties</span></span>
 <span><span class="co">#&gt; 3 div9      rg_stats      STATS paste_stats_horizontal</span></span></code></pre>
-<p>The numeric section is now three rows instead of nine, and the histogram is gone. You can drop sections, reorder them, relabel them, or point a slot at a different function — all by editing the character vector.</p>
-<p><strong>3. Shadow a layout globally.</strong> Defining <code>layout.numeric</code> (or <code>layout.character</code>, <code>layout.logical</code>, …) in your session or <code>DG.R</code> shadows the package default for that type, so every guide you render picks it up without passing <code>layouts</code> each time.</p>
+<p>The numeric section is now three rows instead of nine, and the
+histogram is gone. You can drop sections, reorder them, relabel them, or
+point a slot at a different function — all by editing the character
+vector.</p>
+<p><strong>3. Shadow a layout globally.</strong> Defining
+<code>layout.numeric</code> (or <code>layout.character</code>,
+<code>layout.logical</code>, …) in your session or <code>DG.R</code>
+shadows the package default for that type, so every guide you render
+picks it up without passing <code>layouts</code> each time.</p>
 </div>
 <div class="section level2">
 <h2 id="where-this-fits">Where this fits<a class="anchor" aria-label="anchor" href="#where-this-fits"></a>
 </h2>
-<p><code><a href="../reference/create_rg.html">create_rg()</a></code> scaffolds a project with a <code>DG.R</code> precisely so these overrides live <em>beside</em> your data, not in the package — the design travels with the project and the package stays untouched. For the functions a design points at, see <em>Data Reporting Functions</em>.</p>
+<p><code><a href="../reference/create_rg.html">create_rg()</a></code> scaffolds a project with a <code>DG.R</code>
+precisely so these overrides live <em>beside</em> your data, not in the
+package — the design travels with the project and the package stays
+untouched. For the functions a design points at, see <em>Data Reporting
+Functions</em>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -173,7 +221,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -9,7 +9,7 @@ desc_field <- function(f) {
 }
 
 test_that("templates attach datagoodr and nothing else", {
-  for (t in c("RG.qmd", "DD.qmd")) {
+  for (t in c("RG.qmd", "RG-vintage.qmd", "DD.qmd")) {
     p <- system.file("templates", t, package = "datagoodr")
     skip_if(!nzchar(p))
     libs <- grep("library\\(", readLines(p, warn = FALSE), value = TRUE)
@@ -22,7 +22,7 @@ test_that("templates attach datagoodr and nothing else", {
 
 test_that("templates never attach a Suggested package", {
   sug <- desc_field("Suggests")
-  for (t in c("RG.qmd", "DD.qmd")) {
+  for (t in c("RG.qmd", "RG-vintage.qmd", "DD.qmd")) {
     p <- system.file("templates", t, package = "datagoodr")
     skip_if(!nzchar(p))
     txt <- readLines(p, warn = FALSE)

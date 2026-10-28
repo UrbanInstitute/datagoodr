@@ -41,12 +41,14 @@
     <li><a class="dropdown-item" href="../articles/stabilizing-datasets.html">Stabilizing Datasets</a></li>
     <li><a class="dropdown-item" href="../articles/data-profiling.html">Data Profiling</a></li>
     <li><a class="dropdown-item" href="../articles/research-guides.html">Profiles and Research Guides</a></li>
+    <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -77,8 +79,21 @@
 <div class="section level2">
 <h2 id="what-datagoodr-is-for">What datagoodr is for<a class="anchor" aria-label="anchor" href="#what-datagoodr-is-for"></a>
 </h2>
-<p>A CSV is just text. Whether <code>47401</code> is a ZIP code, a county FIPS, or a count is invisible to the file — so every program that opens it has to <em>guess</em>, and they guess differently. A leading zero disappears (<code>06037</code> becomes <code>6037</code>), a date is read in the wrong order, a column of codes is averaged as if it were a quantity. These small, silent errors are how ungoverned data quietly corrupts analysis.</p>
-<p><code>datagoodr</code> fixes this by pairing a dataset with a <strong>Data Governance File (DGF)</strong> — a small table, one row per variable, that records how each column is stored, how it should be read, and what it means. From that one artifact it produces a clean, self-describing dataset and a readable profile of it. It is built for the CSV world and meant to be edited in a spreadsheet, so governance does not require adopting a heavyweight platform. (For the bigger picture, see <em>Rule-Based Data Governance</em>.)</p>
+<p>A CSV is just text. Whether <code>47401</code> is a ZIP code, a
+county FIPS, or a count is invisible to the file — so every program that
+opens it has to <em>guess</em>, and they guess differently. A leading
+zero disappears (<code>06037</code> becomes <code>6037</code>), a date
+is read in the wrong order, a column of codes is averaged as if it were
+a quantity. These small, silent errors are how ungoverned data quietly
+corrupts analysis.</p>
+<p><code>datagoodr</code> fixes this by pairing a dataset with a
+<strong>Data Governance File (DGF)</strong> — a small table, one row per
+variable, that records how each column is stored, how it should be read,
+and what it means. From that one artifact it produces a clean,
+self-describing dataset and a readable profile of it. It is built for
+the CSV world and meant to be edited in a spreadsheet, so governance
+does not require adopting a heavyweight platform. (For the bigger
+picture, see <em>Rule-Based Data Governance</em>.)</p>
 </div>
 <div class="section level2">
 <h2 id="the-three-things-datagoodr-produces">The three things datagoodr produces<a class="anchor" aria-label="anchor" href="#the-three-things-datagoodr-produces"></a>
@@ -88,15 +103,25 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"lecy/formex"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"UrbanInstitute/datagoodr"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datagoodr</span><span class="op">)</span></span></code></pre></div>
-<p><strong>1. The DGF — a governed data dictionary.</strong> <code><a href="../reference/create_dgf.html">create_dgf()</a></code> reads your data, profiles every column, and types it with the help of <a href="https://lecy.github.io/formex/" class="external-link">formex</a>. The result is a table you can open in Excel and curate.</p>
+<p><strong>1. The DGF — a governed data dictionary.</strong>
+<code><a href="../reference/create_dgf.html">create_dgf()</a></code> reads your data, profiles every column, and
+types it with the help of <a href="https://lecy.github.io/formex/" class="external-link">formex</a>. The result is a table
+you can open in Excel and curate.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dgf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_dgf.html">create_dgf</a></span><span class="op">(</span><span class="va">raw_data</span>, file <span class="op">=</span> <span class="st">"DGF"</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co"># writes DGF.csv and DGF.xlsx, and returns the DGF data frame</span></span></code></pre></div>
-<p><strong>2. A stabilized dataset — a governed CSV.</strong> <code><a href="../reference/stabilize_data.html">stabilize_data()</a></code> applies the DGF’s rules to a raw extract, producing a version that imports to the correct type where possible and <em>safely</em> (without data loss) where not — a date becomes ISO <code>2019-03-15</code>, a ZIP keeps its leading zero.</p>
+<p><strong>2. A stabilized dataset — a governed CSV.</strong>
+<code><a href="../reference/stabilize_data.html">stabilize_data()</a></code> applies the DGF’s rules to a raw extract,
+producing a version that imports to the correct type where possible and
+<em>safely</em> (without data loss) where not — a date becomes ISO
+<code>2019-03-15</code>, a ZIP keeps its leading zero.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stable</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stabilize_data.html">stabilize_data</a></span><span class="op">(</span><span class="va">raw_data</span>, <span class="va">dgf</span>, use_v7 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/write_stable_csv.html">write_stable_csv</a></span><span class="op">(</span><span class="va">stable</span>, <span class="st">"data-governed.csv"</span>, dgf <span class="op">=</span> <span class="va">dgf</span><span class="op">)</span></span></code></pre></div>
-<p><strong>3. A Research Guide — a rendered data profile.</strong> <code><a href="../reference/create_rg.html">create_rg()</a></code> scaffolds a self-contained report that shows each variable with a visual tuned to its type (a histogram for a number, a treemap for a category, a calendar heat-map for a date).</p>
+<p><strong>3. A Research Guide — a rendered data profile.</strong>
+<code><a href="../reference/create_rg.html">create_rg()</a></code> scaffolds a self-contained report that shows
+each variable with a visual tuned to its type (a histogram for a number,
+a treemap for a category, a calendar heat-map for a date).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/create_rg.html">create_rg</a></span><span class="op">(</span><span class="va">dgf</span>, file <span class="op">=</span> <span class="st">"research-guide"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -106,24 +131,34 @@
 <pre><code>raw CSV ──create_dgf()──▶ DGF ──┬── stabilize_data() ──▶ governed CSV
                  (profile + type)│
      you curate labels &amp; types ──┘── create_rg() ───────▶ Research Guide</code></pre>
-<p><code><a href="../reference/create_dgf.html">create_dgf()</a></code> does the heavy first pass. Your job is to curate — add labels and definitions, confirm or correct the guessed types — in the spreadsheet. Then the same DGF drives both outputs, and <code><a href="../reference/update_dgf.html">update_dgf()</a></code> re-profiles the data when it changes while keeping everything you curated.</p>
+<p><code><a href="../reference/create_dgf.html">create_dgf()</a></code> does the heavy first pass. Your job is to
+curate — add labels and definitions, confirm or correct the guessed
+types — in the spreadsheet. Then the same DGF drives both outputs, and
+<code><a href="../reference/update_dgf.html">update_dgf()</a></code> re-profiles the data when it changes while
+keeping everything you curated.</p>
 </div>
 <div class="section level2">
 <h2 id="where-to-go-next">Where to go next<a class="anchor" aria-label="anchor" href="#where-to-go-next"></a>
 </h2>
 <ul>
 <li>
-<strong>The datagoodr Workflow</strong> — the mental model, with a look at a real DGF and sample data profiles.</li>
+<strong>The datagoodr Workflow</strong> — the mental model, with a
+look at a real DGF and sample data profiles.</li>
 <li>
-<strong>Rule-Based Data Governance</strong> — why the DGF is the command center, and what “rule-based governance” means.</li>
+<strong>Rule-Based Data Governance</strong> — why the DGF is the
+command center, and what “rule-based governance” means.</li>
 <li>
-<strong>Stabilizing Datasets</strong> — how messy formats become stable, type-correct, and loss-free.</li>
+<strong>Stabilizing Datasets</strong> — how messy formats become
+stable, type-correct, and loss-free.</li>
 <li>
-<strong>Data Profiling</strong> and <strong>Profiles &amp; Research Guides</strong> — what is measured, and how it is rendered.</li>
+<strong>Data Profiling</strong> and <strong>Profiles &amp; Research
+Guides</strong> — what is measured, and how it is rendered.</li>
 <li>
-<strong>Documenting Data with the DGF</strong> — turning the DGF’s template fields into published documentation.</li>
+<strong>Documenting Data with the DGF</strong> — turning the DGF’s
+template fields into published documentation.</li>
 </ul>
-<p>Type detection itself lives in the companion package <a href="https://lecy.github.io/formex/" class="external-link">formex</a>; datagoodr is the workflow around it.</p>
+<p>Type detection itself lives in the companion package <a href="https://lecy.github.io/formex/" class="external-link">formex</a>; datagoodr is the
+workflow around it.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -136,7 +171,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -4,7 +4,7 @@
 \alias{paste_preview_num}
 \title{Print Preview of a Numeric Variable into RG}
 \usage{
-paste_preview_num(VNAME, LABEL = "PREVIEW", size = 68)
+paste_preview_num(VNAME, LABEL = "PREVIEW", size = 68, digits = 3)
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout
@@ -13,7 +13,11 @@ passes `"rg_preview"`).}
 \item{LABEL}{A character string for the section title. Defaults to
 `"PREVIEW"`.}
 
-\item{size}{Maximum line width, in characters. Defaults to `80`.}
+\item{size}{Maximum line width, in characters. Defaults to `68`.}
+
+\item{digits}{Decimal places kept for long decimals, so `0.3333333333`
+shows as `0.333`. Shorter numbers are shown as stored. `NULL` turns
+rounding off. Defaults to `3`.}
 }
 \value{
 No return value; prints the preview block to the RG.

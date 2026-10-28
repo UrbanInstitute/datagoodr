@@ -31,9 +31,10 @@ test_that("guess_dgf_types refines coarse types and flags keys", {
   expect_equal(r$desired_data_type[4], "temporal")       # date string
   expect_equal(r$desired_data_class[4], "date.calendar") # calendar date -> date graphic
 
-  # a generic number with no confident match is left untouched
+  # a generic number keeps its type; a confident depth-3 route (a resolved
+  # semantic type with no format leaf) now records its class
   expect_equal(r$desired_data_type[5], "number")
-  expect_equal(r$desired_data_class[5], "")              # no detector: blank class
+  expect_equal(r$desired_data_class[5], "quantity.measurement")
 })
 
 test_that("create_dgf populates ontology columns and dd_is_join_key", {

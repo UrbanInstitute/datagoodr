@@ -173,8 +173,12 @@ is_factor <- function(        # --------------------
     }
   }
   
-  # only test integers 
+  # only test integers
   x <- hablar::retype(x)
+  # blanks retype to NA; drop them so the integer checks below (x < 0,
+  # min/max, sequence tests) compare real values instead of erroring on NA
+  x <- x[ ! is.na(x) ]
+  if( length(x) == 0 ) return(FALSE)
 
   if( "numeric" %in% class(x) )
   { 

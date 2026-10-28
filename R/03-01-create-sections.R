@@ -145,7 +145,7 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
         defaults[[ key ]]
     }
     # List keys are the ontology data_type that create_div matches against
-    # desired_data_type; the resolve() keys are the R-flavoured layout names
+    # dg_render_type(); the resolve() keys are the R-flavoured layout names
     # (numeric/character/factor/logical) users override by.
     layouts <- list(
       number      = resolve("numeric"),
@@ -215,16 +215,23 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
 #' Writes a formatted `div1` block to the quarto document. `div1` is the
 #' variable name for all variable types.
 #'
-#' @param x Character string, the label or variable name to include
-#'   in the header. Defaults to `"var_name"`.
+#' @param x Character string, the variable name shown as the header.
+#'   Defaults to `"var_name"`.
+#' @param label Optional plain-language variable label, printed on the same
+#'   line as the name. Left out when blank or identical to the name.
 #'
 #' @return No return value, called for side effects (writes markdown text).
 #'
 #' @export
-create_div1 <- function( x="var_name" )
+create_div1 <- function( x="var_name", label="" )
 {
+  if( is.null(label) || length(label) == 0 || is.na(label) ) label <- ""
+  label <- trimws( as.character(label) )
   cat( "::: {.div1} \n\n" )
   cat( paste0( "#### ", x, "\n\n" ) )
+  # the label sits beside the heading, not in it, so the TOC lists only names
+  if( nzchar(label) && label != x )
+  { cat( paste0( "<p class=\"dg-vlabel\">", label, "</p>\n\n" ) ) }
   cat( "::: \n\n" )
 }
 
@@ -252,7 +259,9 @@ create_div <- function( div.num="div2", all.layouts ) {
   if( grepl("^blank", div.num) )
   { cat( paste0( "::: {.", div.num, "} \n\n::: \n\n" ) ); return( invisible(NULL) ) }
 
-  DATA_TYPE <- get_xx()[["desired_data_type"]]
+  xx <- get_xx()
+  DATA_TYPE <- if( "dg_render_type" %in% names(xx) ) xx[["dg_render_type"]]
+               else dg_render_type( xx )
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
 
   # skip div if not included in design
@@ -274,6 +283,24 @@ create_div <- function( div.num="div2", all.layouts ) {
      } )
 
   cat( "\n\n::: \n\n" )
+}
+
+
+## Add the two derived fields the attribute block displays to one variable's
+## render context: dg_render_type (the template type, shown as DATA MODE) and
+## dg_semantic_type (desired_semantic_type, shown as DATA TYPE only when it is
+## more specific than the mode - "usd", not "number").
+#' @noRd
+.add_render_fields <- function( xx ) {
+  rt  <- dg_render_type( xx )
+  sem <- if( "desired_semantic_type" %in% names(xx) )
+           trimws( as.character( xx[["desired_semantic_type"]] ) ) else ""
+  if( ! length(sem) || is.na(sem) ) sem <- ""
+  sem <- .sem_leaf( sem )              # a formex path displays as its leaf
+  if( sem %in% c(.render_types, "string") ) sem <- ""
+  xx[["dg_render_type"]]   <- rt
+  xx[["dg_semantic_type"]] <- sem
+  xx
 }
 
 
@@ -302,18 +329,29 @@ create_section <- function( VNAME="EIN", all.layouts, L ) {
 
   xx <- L[[ VNAME ]]
   xx[["VNAME"]] <- VNAME
+  xx <- .add_render_fields( xx )
   set_xx( xx )                         # publish to the render context
 
-  DATA_TYPE <- xx[["desired_data_type"]]
+  DATA_TYPE <- xx[["dg_render_type"]]
   layout.type <- dplyr::filter( all.layouts, TYPE == DATA_TYPE )
   all.divs <- unique( layout.type$DIV )
   all.divs <- all.divs[ ! all.divs == "div1" ]
+
+  # A layout that shows the variable label (div2 <- dd_vlabel) prints it on the
+  # title line instead of as its own row.
+  label <- ""
+  is.div2 <- trimws( layout.type$DIV ) == "div2"
+  if( any( is.div2 & trimws( layout.type$VNAME ) == "dd_vlabel" ) ) {
+    if( "dd_vlabel" %in% names(xx) ) label <- xx[["dd_vlabel"]]
+    if( all( trimws( layout.type$VNAME[ is.div2 ] ) == "dd_vlabel" ) )
+      all.divs <- all.divs[ ! all.divs == "div2" ]
+  }
 
   cat( "{{< pagebreak >}} \n\n")
 
   # The title sits OUTSIDE the grid so it stays flush-left (full-width rule)
   # while the grid content below is indented under it (see .parent in the CSS).
-  create_div1( VNAME )
+  create_div1( VNAME, label )
 
   cat( "::::: {.parent} \n\n" )
   purrr::walk( all.divs, create_div, layout.type )

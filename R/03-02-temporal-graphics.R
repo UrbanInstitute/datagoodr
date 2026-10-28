@@ -3,7 +3,9 @@
 # is chosen HERE, at render, from stable_data_unit. So a user can retype the
 # unit in the DGF and re-render without rebuilding:
 #
-#   date         -> calendar heatmap        (calendar_heat)
+#   date         -> calendar heatmap        (calendar_heat; one row per year.
+#                   Spans > 3 years: options(datagoodr.calendar =) "top3"
+#                   (default), "spread", or "fold")
 #   hour / week  -> connected scatterplot   (the crash-by-hour / by-week form)
 #   dow / month  -> barchart
 #   year         -> histogram if the span is wide (> 25), else a barchart
@@ -19,10 +21,16 @@
 #' @param VNAME Character; the DGF column to read (the layout passes
 #'   `"rg_graphics"`).
 #' @param LABEL Optional section label.
+#' @param calendar For dates spanning more than three calendar years: `"top3"`
+#'   (the three most populated years, in order), `"spread"` (a random early,
+#'   middle and late year), or `"fold"` (all years on one calendar). Defaults
+#'   to `getOption("datagoodr.calendar", "top3")`, so a project can set it once
+#'   in `DG.R`.
 #'
 #' @return No return value; draws a plot.
 #' @noRd
-paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
+paste_temporal_graphic <- function( VNAME, LABEL = "",
+                                    calendar = getOption( "datagoodr.calendar", "top3" ) ) {
 
   info <- get_xx()[[VNAME]]
   if( is.null(info) || all(is.na(info)) || ! nzchar( trimws(as.character(info)) ) )
@@ -33,29 +41,61 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   val <- as.character( tab$Value )
   cnt <- suppressWarnings( as.numeric( as.character( tab$Count ) ) )
 
-  # The render grain (date/hour/week/dow/month/year) now travels in
-  # desired_data_class (period.month, phase.day_of_week, ...); derive it there
-  # instead of from a separate unit column.
-  cs   <- as.character( get_xx()[["desired_data_class"]] )
-  unit <- if( length(cs) && ! is.na(cs) && nzchar(trimws(cs)) )
-            .temporal_grain( cs ) else ""
+  # The render grain (date/hour/week/dow/month/year) comes from
+  # desired_semantic_type (year, month, day_of_week, calendar, ...). A bare data
+  # type there ("temporal") names no grain, so a DGF built before the v7 columns
+  # falls back to its legacy desired_data_class (period.month, ...).
+  xx  <- get_xx()
+  pick <- function( nm ) {
+    if( ! nm %in% names(xx) ) return( "" )
+    v <- as.character( xx[[nm]] )
+    if( ! length(v) || is.na(v) ) "" else trimws(v)
+  }
+  sem  <- .sem_leaf( pick( "desired_semantic_type" ) )   # path -> leaf
+  cs   <- pick( "desired_data_class" )
+  unit <- if( nzchar(sem) && ! sem %in% c(.render_types, "string") )
+            .temporal_grain( paste0( "x.", sem ) )
+          else if( nzchar(cs) ) .temporal_grain( cs )
+          else ""
 
   if( nzchar( trimws(LABEL) ) ) cat( "**", LABEL, "**:\n\n", sep = "" )
 
   # --- date: calendar heatmap (falls back to a bar if values aren't dates) ---
+  # Up to 3 calendar years: the daily calendar heatmap, one row per year.
+  # Longer spans, by `calendar` (default from options(datagoodr.calendar)):
+  #   "top3"   - the three years with the most observations, in year order
+  #   "spread" - one year drawn at random from each of the early, middle and
+  #              late thirds of the populated years (repeatable per variable)
+  #   "fold"   - every year folded onto one calendar: each cell is the total
+  #              for that month and day (on leap year 2000, so Feb 29 has a
+  #              cell); weekday names hidden, panel titled with the year range
   if( unit == "date" ) {
     d <- parse_dates( val )
     if( mean( !is.na(d) ) >= 0.8 ) {
       ok <- !is.na(d)
       dd <- d[ok]; cc <- cnt[ok]
-      # Keep only the two calendar years holding the most observations so the
-      # heatmap fills its space instead of stretching across many sparse years.
-      yr    <- as.integer( format( dd, "%Y" ) )
-      by.yr <- tapply( cc, yr, sum )
-      top2  <- as.integer( names( sort( by.yr, decreasing = TRUE ) ) )
-      top2  <- top2[ seq_len( min(2, length(top2)) ) ]
-      keep2 <- yr %in% top2
-      calendar_heat( dd[keep2], cc[keep2], varname = "" )
+      yr <- as.integer( format( dd, "%Y" ) )
+      mode <- .calendar_mode( calendar )
+      # cap both tails of the colour scale (see calendar_heat's `winsor`);
+      # NULL turns it off
+      w <- getOption( "datagoodr.calendar.winsor", c( 0.05, 0.95 ) )
+      if( diff( range(yr) ) + 1 <= 3 ) {
+        calendar_heat( dd, cc, varname = "", color = "w2g2b", winsor = w )
+      } else if( mode %in% c("top3", "spread") ) {
+        by.yr    <- tapply( cc, yr, sum )
+        show.yrs <- .pick_calendar_years( by.yr, mode, key = pick( "VNAME" ) )
+        keep     <- yr %in% show.yrs
+        calendar_heat( dd[keep], cc[keep], varname = "", color = "w2g2b",
+                       years = show.yrs, winsor = w )
+      } else {
+        md  <- format( dd, "%m-%d" )
+        agg <- tapply( cc, md, sum )
+        calendar_heat( as.Date( paste0( "2000-", names(agg) ) ), as.numeric(agg),
+                       varname = "", color = "w2g2b", weekday.labels = FALSE,
+                       winsor = w,
+                       year.label = paste0( min(yr), "-", max(yr),
+                                            ", all years by month and day" ) )
+      }
       return( invisible(NULL) )
     }
     # not real dates -> fall through to the default bar
@@ -111,6 +151,52 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
 }
 
 
+## Validate the calendar mode; an unknown value falls back to "top3".
+#' @noRd
+.calendar_mode <- function( calendar ) {
+  modes <- c( "top3", "spread", "fold" )
+  calendar <- as.character( calendar )[1]
+  if( is.na(calendar) || ! calendar %in% modes ) {
+    warning( "Unknown calendar mode '", calendar, "'; using \"top3\". ",
+             "Choose one of: ", paste( modes, collapse = ", " ), ".", call. = FALSE )
+    return( "top3" )
+  }
+  calendar
+}
+
+
+#' Choose which years a long date span shows as calendars (internal)
+#'
+#' @param by.yr Named numeric: observations per year (names are years).
+#' @param mode `"top3"` or `"spread"`.
+#' @param key A string (the variable name) that seeds the random pick, so a
+#'   re-render shows the same years. The global random state is left as it was.
+#' @return Up to three years, ascending.
+#' @noRd
+.pick_calendar_years <- function( by.yr, mode = c("top3", "spread"), key = "" ) {
+  mode  <- match.arg( mode )
+  by.yr <- by.yr[ ! is.na(by.yr) & by.yr > 0 ]
+  years <- sort( as.integer( names(by.yr) ) )
+  if( length(years) <= 3 ) return( years )
+
+  if( mode == "top3" ) {
+    top <- names( sort( by.yr, decreasing = TRUE ) )[ 1:3 ]
+    return( sort( as.integer(top) ) )
+  }
+
+  # spread: one year from each third of the populated years
+  had.seed <- exists( ".Random.seed", envir = globalenv(), inherits = FALSE )
+  if( had.seed ) old.seed <- get( ".Random.seed", envir = globalenv() )
+  on.exit( if( had.seed ) assign( ".Random.seed", old.seed, envir = globalenv() )
+           else rm( ".Random.seed", envir = globalenv() ) )
+  set.seed( sum( utf8ToInt( paste0( "dg-calendar-", key ) ) ) )
+  third <- cut( seq_along(years), 3, labels = FALSE )
+  sort( vapply( split( years, third ),
+                function( y ) if( length(y) == 1 ) y else sample( y, 1 ),
+                integer(1) ) )
+}
+
+
 #' Extract the hour-of-day (0-23) from clock-ish values (internal)
 #'
 #' @param val Character times: `"8:13am"`, `"2:54pm"`, `"14:30"`, `"08:13:00"`,
@@ -151,6 +237,9 @@ parse_dates <- function( val ) {
   val <- as.character( val )
   formats <- c( "%Y-%m-%d", "%Y/%m/%d",
                 "%m-%d-%Y", "%d-%m-%Y", "%m/%d/%Y", "%d/%m/%Y",
+                # written-out months: "Dec 27, 1981", "December 27, 1981",
+                # "27 Dec 1981", "27-Dec-1981"
+                "%b %d, %Y", "%B %d, %Y", "%b %d %Y", "%d %b %Y", "%d-%b-%Y",
                 "%m-%d-%y", "%d-%m-%y", "%m/%d/%y", "%d/%m/%y" )
   out <- rep( as.Date(NA), length(val) )
   for( fmt in formats ) {

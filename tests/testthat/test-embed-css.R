@@ -2,20 +2,28 @@
 # of calling datagoodr_css() at render, so a power user can edit the rules in
 # place. The trade is that an embedded copy stops tracking the packaged CSS.
 
-scaffold_css <- function(embed) {
+scaffold_css <- function(embed, style = "rail") {
   d <- tempfile("css-proj"); dir.create(d)
   dgf <- build_demo_dgf()
   suppressMessages(suppressWarnings(utils::capture.output(
     create_rg(dgf = dgf, dir = d, file = "rg.qmd", embed_css = embed,
-              render = FALSE, overwrite = TRUE)
+              render = FALSE, overwrite = TRUE, style = style)
   )))
   list(dir = d, qmd = file.path(d, "rg.qmd"))
+}
+
+embedded_lines <- function(txt) {
+  start <- grep("^```\\{css[ }]", txt)
+  fences <- grep("^```\\s*$", txt)
+  end <- fences[fences > start][1]
+  out <- txt[(start + 1):(end - 1)]
+  out[!grepl("^/\\* Embedded copy|^   embedded, it no longer", out)]
 }
 
 test_that("default keeps the runtime datagoodr_css() call", {
   p <- scaffold_css(embed = FALSE)
   txt <- readLines(p$qmd, warn = FALSE)
-  expect_true(any(grepl("datagoodr_css\\(", txt)))
+  expect_true(any(grepl('datagoodr_css("rail")', txt, fixed = TRUE)))
   expect_false(any(grepl("^```\\{css[ }]", txt)))
 })
 
@@ -30,24 +38,19 @@ test_that("embed_css writes the stylesheet in and drops the runtime chunk", {
   expect_false(any(grepl("^\\s*cat\\(.*datagoodr_css\\(", txt)))
   # ... replaced by a css chunk ...
   expect_true(any(grepl("^```\\{css[ }]", txt)))
-  # ... carrying the actual rules
-  expect_true(any(grepl("--dg-serif", txt)))
-  expect_true(any(grepl("\\.parent", txt)))
+  # ... carrying the actual rail rules
+  expect_true(any(grepl("--accent", txt, fixed = TRUE)))
+  expect_true(any(grepl(".dg-unit", txt, fixed = TRUE)))
 })
 
 test_that("the embedded copy matches the packaged stylesheet", {
-  p <- scaffold_css(embed = TRUE)
-  txt <- readLines(p$qmd, warn = FALSE)
-  start <- grep("^```\\{css[ }]", txt)
-  fences <- grep("^```\\s*$", txt)
-  end <- fences[fences > start][1]
-
-  embedded <- txt[(start + 1):(end - 1)]
-  embedded <- embedded[!grepl("^/\\* Embedded copy|^   embedded, it no longer", embedded)]
-
-  packaged <- strsplit(datagoodr_css(), "\n", fixed = TRUE)[[1]]
-  # every packaged rule should be present verbatim
-  expect_setequal(intersect(packaged, embedded), packaged)
+  for (style in c("rail", "vintage")) {
+    p <- scaffold_css(embed = TRUE, style = style)
+    embedded <- embedded_lines(readLines(p$qmd, warn = FALSE))
+    packaged <- strsplit(datagoodr_css(style), "\n", fixed = TRUE)[[1]]
+    # every packaged rule should be present verbatim
+    expect_setequal(intersect(packaged, embedded), packaged)
+  }
 })
 
 test_that("embed_css errors rather than half-writing if the anchor is gone", {
@@ -72,5 +75,5 @@ test_that("an embedded report renders and is styled", {
   html <- file.path(d, "rg.html")
   expect_true(file.exists(html))
   # the CSS reached the page even though the package was never called at render
-  expect_true(any(grepl("dg-serif", readLines(html, warn = FALSE))))
+  expect_true(any(grepl("dg-unit", readLines(html, warn = FALSE))))
 })

@@ -86,9 +86,16 @@
 ## measurably better on those.
 #' @keywords internal
 #' @noRd
+## TRUE when the route resolved a semantic TYPE confidently (depth >= 3), even
+## if it stopped short of a format leaf (depth 4). A confident categorical/
+## geographic at depth 3 (e.g. a birthCity column) still carries a usable
+## data_type + class, so it should be adopted rather than discarded to text; the
+## format_label/variant is simply left blank. The confidence bar still applies,
+## so a genuinely low-confidence path (a non-US-heavy place column at 0.77) is
+## not forced.
 .route_is_leaf <- function(route, threshold = 0.8) {
   !is.null(route) &&
-    isTRUE(as.integer(route$depth) >= 4L) &&
+    isTRUE(as.integer(route$depth) >= 3L) &&
     !is.na(route$confidence) && route$confidence >= threshold &&
     !is.na(route$semantic_family) && !is.na(route$semantic_type)
 }
@@ -278,7 +285,15 @@ guess_dgf_types <- function(df, base_type, distinct_threshold = 0.9,
     ## installed formex emits them, else derives them from v6 format_label/dd_unit.
     if (!is.null(r)) {
       ax <- .route_axes(r)
-      out$guess_semantic_type[i] <- if (is.na(r$semantic_type)) "" else r$semantic_type
+      ## DEV: record the full resolved path (data_type:semantic_family:
+      ## semantic_type), truncated to the lowest level the route actually
+      ## reached, so the DGF shows where typing stopped. The functional
+      ## consumers (.dgf_fx_format, .desired_default_style) take the leaf.
+      out$guess_semantic_type[i] <- {
+        p <- c(r$data_type, r$semantic_family, r$semantic_type)
+        p <- p[!is.na(p) & nzchar(p)]
+        if (length(p)) paste(p, collapse = ":") else ""
+      }
       out$guess_format_style[i]  <- if (is.na(ax$format_style)) "" else ax$format_style
       out$guess_unit_type[i]     <- if (is.na(ax$unit_type)) "" else ax$unit_type
       out$guess_match_kind[i]    <- if (is.null(r$match_kind) || is.na(r$match_kind)) "" else r$match_kind

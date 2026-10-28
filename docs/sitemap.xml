@@ -3,6 +3,7 @@
 <url><loc>/articles/data-governance-workflow.html</loc></url>
 <url><loc>/articles/data-profiling.html</loc></url>
 <url><loc>/articles/documenting-data.html</loc></url>
+<url><loc>/articles/example-guides.html</loc></url>
 <url><loc>/articles/getting-started.html</loc></url>
 <url><loc>/articles/guessing-data-types.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
@@ -12,7 +13,11 @@
 <url><loc>/articles/stabilizing-datasets.html</loc></url>
 <url><loc>/articles/workflow-overview.html</loc></url>
 <url><loc>/authors.html</loc></url>
+<url><loc>/examples/baseball.html</loc></url>
+<url><loc>/examples/mtcars.html</loc></url>
+<url><loc>/examples/starwars.html</loc></url>
 <url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
 <url><loc>/reference/abbrev_num.html</loc></url>
 <url><loc>/reference/align_dec.html</loc></url>
 <url><loc>/reference/apply_name_aliases.html</loc></url>
@@ -33,8 +38,11 @@
 <url><loc>/reference/datagoodr.html</loc></url>
 <url><loc>/reference/datagoodr_css.html</loc></url>
 <url><loc>/reference/dgf_from_stable.html</loc></url>
+<url><loc>/reference/dg_baseball.html</loc></url>
+<url><loc>/reference/dg_baseball_dictionary.html</loc></url>
 <url><loc>/reference/dg_demo.html</loc></url>
 <url><loc>/reference/dg_element.html</loc></url>
+<url><loc>/reference/dg_render_type.html</loc></url>
 <url><loc>/reference/dg_section.html</loc></url>
 <url><loc>/reference/dollarize.html</loc></url>
 <url><loc>/reference/draft_detector_prompt.html</loc></url>
@@ -81,6 +89,9 @@
 <url><loc>/reference/paste_stats_num.html</loc></url>
 <url><loc>/reference/paste_treemap.html</loc></url>
 <url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/rail_contents.html</loc></url>
+<url><loc>/reference/rail_groups.html</loc></url>
+<url><loc>/reference/rail_sections.html</loc></url>
 <url><loc>/reference/read_date.html</loc></url>
 <url><loc>/reference/read_ein.html</loc></url>
 <url><loc>/reference/read_mm.html</loc></url>

@@ -39,3 +39,10 @@ test_that("first_n returns up to n unique formatted values", {
 test_that("parse_nm splits and de-raw_duplicated a delimited alias string", {
   expect_equal(parse_nm("name1 ;; name2 ;; name1"), c("name1", "name2"))
 })
+
+test_that("is_factor handles a whole-number column with blanks", {
+  # blanks retype to NA; the integer checks used to error on any(x < 0)
+  x <- c(as.character(sample(1:40, 300, TRUE)), rep("", 50))
+  expect_no_error(capture.output(r <- is_factor(x)))
+  expect_type(r, "logical")
+})

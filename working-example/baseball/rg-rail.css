@@ -1,0 +1,227 @@
+/* ==========================================================================
+   EXPERIMENTAL "rail" stylesheet for research-guide-rail.qmd (draft)
+   Type, colour and grid borrowed from the econometrics course site:
+   Zilla Slab headings, Source Sans body, a 15rem left rail, orange accent.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+
+:root {
+  --ground: #ffffff;
+  --surface: #f3f4f6;
+  --ink: #1f2429;
+  --ink-mid: #4d565f;
+  --ink-soft: #6d7681;
+  --rule: #dcdfe4;
+  --rule-strong: #c3c8cf;
+  --accent: #bd5416;
+  --accent-ink: #8f3f10;
+  --accent-wash: #fbf0e7;
+  --navy: #153243;
+
+  --font-display: "Zilla Slab", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-math: "Source Serif 4", Cambria, Georgia, serif;
+  --font-mono: "Anonymous Pro", Consolas, Menlo, monospace;
+
+  --step--2: .75rem;
+  --step--1: .8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5rem;
+  --step-4: 2.75rem;
+
+  --rail: 15rem;
+  --page: 64rem;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+}
+
+/* --- page width ----------------------------------------------------------- */
+#quarto-content { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem; display: block; }
+#quarto-content main.content { max-width: none; margin: 0; padding: 0; }
+#title-block-header { max-width: var(--page); margin: 0 auto; padding: 2.5rem 1.5rem 0; }
+#quarto-margin-sidebar, #quarto-sidebar { display: none; }
+
+/* --- masthead ------------------------------------------------------------- */
+#title-block-header .title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--step-4);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+#title-block-header .subtitle {
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  color: var(--ink-soft);
+  margin-top: .4rem;
+}
+
+/* --- sticky top bar ------------------------------------------------------- */
+.dg-bar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--ground) 92%, transparent);
+  backdrop-filter: saturate(160%) blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin-top: 1.5rem;
+}
+.dg-bar-inner { display: flex; align-items: baseline; gap: 1.25rem; flex-wrap: wrap; padding: .65rem 0; }
+.dg-bar-brand {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--step-0);
+  color: var(--ink); text-decoration: none; white-space: nowrap;
+}
+.dg-bar-nav { display: flex; gap: .15rem; flex-wrap: wrap; margin-left: auto; }
+.dg-bar-nav a {
+  font-size: var(--step--1); font-weight: 600; color: var(--ink-soft);
+  text-decoration: none; padding: .15rem .45rem; border-radius: 2px;
+}
+.dg-bar-nav a:hover { color: var(--accent-ink); background: var(--accent-wash); }
+
+/* --- contents ------------------------------------------------------------- */
+.dg-contents { padding: 2.5rem 0 1rem; }
+.dg-contents h2 {
+  font-family: var(--font-body); font-size: var(--step--1); letter-spacing: .12em;
+  text-transform: uppercase; font-weight: 600; color: var(--ink-soft);
+  margin: 0 0 1.1rem; border: 0;
+}
+.toc-part {
+  font-family: var(--font-body); font-size: var(--step--2); letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700; color: var(--accent-ink);
+  margin: 1.6rem 0 .5rem;
+}
+.dg-contents .toc-part:first-of-type { margin-top: 0; }
+.toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.toc > li {
+  display: grid; grid-template-columns: var(--rail) 1fr; gap: .35rem 2rem;
+  border-bottom: 1px solid var(--rule); padding: .45rem .2rem;
+}
+.toc-unit { display: flex; gap: .7rem; align-items: baseline; text-decoration: none; color: var(--ink); }
+.toc-unit:hover { color: var(--accent-ink); }
+.toc .n {
+  font-family: var(--font-math); font-variant-numeric: tabular-nums;
+  font-size: var(--step--1); font-weight: 600; color: inherit; flex: 0 0 auto;
+}
+.toc .t { font-family: var(--font-mono); font-weight: 700; font-size: var(--step--1); line-height: 1.35; }
+.toc-items { list-style: none; margin: 0; padding: 0; }
+.toc-items li { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .5rem; }
+.toc-items .it { font-size: var(--step--1); color: var(--ink-mid); line-height: 1.35; }
+.toc-items .chips { display: inline-flex; flex-wrap: wrap; gap: .25rem; }
+.chip {
+  font-size: var(--step--2); font-weight: 600; line-height: 1; white-space: nowrap;
+  padding: .22rem .4rem; border-radius: 2px;
+  border: 1px solid var(--rule-strong); color: var(--ink-soft); background: var(--ground);
+}
+.chip--mode { border-color: var(--accent); color: var(--accent-ink); }
+
+/* --- group headers (Boolean / Numeric / ...) ------------------------------- */
+/* light gray band with dark small-caps text (a softer take on the site's
+   "Section one" headers) */
+main h2.dg-part, main .dg-part > h2, main h2 {
+  font-family: var(--font-body); font-size: var(--step-0); letter-spacing: .16em;
+  text-transform: uppercase; font-weight: 700;
+  color: var(--ink); background: #e9ecef;
+  border: 0; border-radius: 10px;
+  margin: 3.5rem 0 2.5rem; padding: 1rem 2.1rem;
+}
+main h2 .anchorjs-link { color: var(--ink-soft); }
+.dg-contents h2 { color: var(--ink-soft); background: none; padding: 0; border-radius: 0; margin-top: 0; }
+
+/* --- one variable = one unit: rail + body ---------------------------------- */
+.dg-unit {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  gap: 3rem;
+  padding: 2.25rem 0;
+  border-top: 1px solid var(--rule);
+}
+main h2 + .dg-unit { border-top: 0; }
+.dg-rail { position: sticky; top: 3.5rem; align-self: start; min-width: 0; }
+/* The right column is measured in the preview font: 84ch = one full preview
+   line (rail_cols in rg-rail.R), so graphics and preview text end at the same
+   edge and the page keeps some open space on the right. Every block inside
+   sets its own font, so this font only sizes the column and the preview. */
+.dg-body {
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  max-width: 84ch;
+}
+
+.dg-kind {
+  font-family: var(--font-math); font-variant-numeric: tabular-nums;
+  font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 600; color: var(--accent); margin: 0 0 .45rem;
+}
+.dg-label {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--step-2);
+  line-height: 1.15; letter-spacing: -0.015em; color: var(--ink);
+  margin: 0 0 .4rem; text-wrap: balance; overflow-wrap: anywhere;
+}
+.dg-label--code { font-family: var(--font-mono); font-size: var(--step-1); letter-spacing: 0; }
+.dg-vname { margin: 0 0 .6rem; }
+.dg-vname code {
+  font-family: var(--font-mono); font-size: .85rem; font-weight: 700;
+  color: var(--ink-mid); background: var(--surface);
+  padding: .1rem .35rem; border-radius: 2px; overflow-wrap: anywhere;
+}
+.dg-desc {
+  margin: 0; color: var(--ink-soft); font-size: var(--step--1);
+  line-height: 1.5; font-style: italic;
+}
+
+/* --- blocks: a small-caps title over a hairline, like the site's block-title */
+.dg-block { margin-top: 1.6rem; }
+.dg-body > .dg-block:first-child { margin-top: 0; }
+.dg-rail .dg-block { margin-top: 1.4rem; }
+
+/* the package prints block titles as "**STATS**:" - hide the colon, keep the word */
+.dg-block p:has(> strong) {
+  font-size: 0; margin: 0 0 .5rem; padding-bottom: .35rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.dg-block p:has(> strong) ~ p:has(> strong) { margin-top: 1.2rem; }
+.dg-block p > strong {
+  font-family: var(--font-body); font-size: var(--step--2); letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
+}
+
+/* --- tables ---------------------------------------------------------------- */
+.dg-unit table { width: auto; margin: 0; border-collapse: collapse; font-size: .8rem; }
+.dg-unit .table > :not(caption) > * > * { padding: .12rem .75rem .12rem 0; background: none; box-shadow: none; }
+.dg-unit tbody, .dg-unit thead, .dg-unit tr, .dg-unit td, .dg-unit th { border: 0; }
+.dg-unit tr { border-bottom: 1px solid var(--rule); }
+.dg-unit td { font-family: var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.dg-unit th {
+  font-family: var(--font-body); font-size: .68rem; letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
+  border-bottom: 1px solid var(--rule-strong);
+}
+.dg-props thead, .dg-shape thead { display: none; }
+.dg-props table { width: 100%; }
+.dg-stats { max-height: 26rem; overflow-y: auto; }
+
+/* --- preview and graphics -------------------------------------------------- */
+pre.dg-preview {
+  font-family: inherit; font-size: 1em; line-height: 1.5;
+  white-space: pre-wrap; overflow: visible; color: var(--ink-mid);
+  background: none; border: 0; padding: 0; margin: 0;
+}
+.dg-unit img, .dg-unit svg { max-width: 100%; height: auto; }
+.dg-graphic p { margin: 0; }
+
+/* --- narrow screens: stack the rail above the body ------------------------- */
+@media (max-width: 46rem) {
+  .toc > li { grid-template-columns: 1fr; }
+  .dg-unit { grid-template-columns: 1fr; gap: 1.25rem; }
+  .dg-rail { position: static; }
+  .dg-bar-nav { display: none; }
+}

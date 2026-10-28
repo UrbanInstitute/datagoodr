@@ -22,11 +22,11 @@ test_that("create_all_sections renders markdown for each variable type", {
                 info = paste("no parent div for type", ty))
     expect_true(any(grepl("pagebreak", out)),
                 info = paste("no pagebreak for type", ty))
-    # DATA TYPE and MAX NCHAR are always populated. The ontology coordinate
+    # DATA MODE and MAX NCHAR are always populated. The ontology coordinate
     # rows (SUBTYPE/CLASS/FORMAT) render only when non-blank, so the generic
     # demo columns (no subtype/class/format) show just these two and omit the
     # empty attribute rows.
-    expect_true(any(grepl("DATA TYPE", out)))
+    expect_true(any(grepl("DATA MODE", out)))
     expect_true(any(grepl("MAX NCHAR", out)))
     expect_false(any(grepl("SUBTYPE", out)))   # blank -> conditionally hidden
   }
@@ -54,15 +54,19 @@ test_that("ontology attribute rows render only when populated", {
   # a plain column carries no subtype/class/format -> those rows are omitted
   plain <- suppressMessages(suppressWarnings(
     capture.output(create_all_sections(dgf[dgf$var_name == "num", ]))))
-  expect_true(any(grepl("DATA TYPE", plain)))
+  expect_true(any(grepl("DATA MODE", plain)))
   expect_false(any(grepl("SUBTYPE", plain)))
   expect_false(any(grepl("FORMAT", plain)))
 
-  # stamp the class.subclass coordinate on a column and it appears
+  # a bare data type in desired_semantic_type adds no DATA TYPE row ...
+  expect_false(any(grepl("DATA TYPE", plain)))
+
+  # ... but a specific semantic type appears, and routes the template
   i <- dgf$var_name == "cat"
-  dgf$desired_data_class[i] <- "mutually_exclusive.geographic"
+  dgf$desired_semantic_type[i] <- "unordered"
   filled <- suppressMessages(suppressWarnings(
     capture.output(create_all_sections(dgf[i, ]))))
-  expect_true(any(grepl("CLASS", filled)))
-  expect_true(any(grepl("mutually_exclusive.geographic", filled)))
+  expect_true(any(grepl("DATA TYPE", filled)))
+  expect_true(any(grepl("unordered", filled)))
+  expect_true(any(grepl("categorical", filled)))
 })

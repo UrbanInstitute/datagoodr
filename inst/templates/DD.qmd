@@ -21,7 +21,7 @@ params:
 
      Customize without editing the package:
        - DG.R           custom functions & layout overrides
-       - datagoodr.css  the page grid, fonts, and colors
+       - datagoodr-vintage.css  the page grid, fonts, and colors
      See vignette("customizing", package = "datagoodr").
 
      Render from the console with:  quarto::quarto_render("data-dictionary.qmd")
@@ -47,7 +47,7 @@ if( file.exists("DG.R") ) source("DG.R")
 # The DGF drives the whole report. The path comes from the `dgf_file` param, so
 # this document renders on its own - and update_rg() can point it at a
 # different DGF at render time without editing this file.
-dgf <- readxl::read_excel( params$dgf_file )
+dgf <- load_dgf( params$dgf_file, reader = "readxl" )
 
 # Optional raw dataset; see the research guide template. Not used by the
 # descriptor-only layouts, but available to DG.R and custom chunks.
@@ -58,18 +58,20 @@ raw.data <- if( is.null( params$data_file ) ) NULL else
 # Each variable type needs its own section because each plot type
 # needs its own fig width and height. 
 # To add a new variable type, 
-# 1. add new desired_data_type to the dgf
-# 2. add new layout to R/layouts.R
-# 3. add necessary funciton that the new layout object needs to read
-# 4. add new layout div tags to the end of this file 
-# 5. add new dfg.TYPE data frame and section to this file to run create_all_sections( dgf.TYPE )
+# 1. add new layout to R/03-01-layouts.R
+# 2. add necessary function that the new layout object needs to read
+# 3. add new layout div tags to the end of this file
+# 4. add new dgf.TYPE data frame and section to this file to run create_all_sections( dgf.TYPE )
+# dg_render_type() picks each variable's template from desired_semantic_type
+# (or a legacy desired_data_type); types without a template fall back to text.
 
-dgf.log  <-  dgf[dgf$desired_data_type == "boolean",     ]
-dgf.fact <-  dgf[dgf$desired_data_type == "categorical", ]
-dgf.chr  <-  dgf[dgf$desired_data_type %in% c("text","string"), ]
-dgf.num  <-  dgf[dgf$desired_data_type == "number",      ]
-dgf.id   <-  dgf[dgf$desired_data_type == "identifier",  ]
-dgf.time <-  dgf[dgf$desired_data_type == "temporal",    ]
+rtype    <-  dg_render_type( dgf )
+dgf.log  <-  dgf[ rtype == "boolean",     ]
+dgf.fact <-  dgf[ rtype == "categorical", ]
+dgf.chr  <-  dgf[ rtype == "text",        ]
+dgf.num  <-  dgf[ rtype == "number",      ]
+dgf.id   <-  dgf[ rtype == "identifier",  ]
+dgf.time <-  dgf[ rtype == "temporal",    ]
 
 
 ```
@@ -116,9 +118,9 @@ create_all_sections( dgf.time, style = "dd" )
 
 
 ```{r datagoodr-style, echo=FALSE, results="asis"}
-# The report stylesheet comes from a single source: datagoodr.css (a local
+# The report stylesheet comes from a single source: datagoodr-vintage.css (a local
 # copy overrides the packaged one). Edit that file to restyle the report.
-cat( "<style>\n", datagoodr_css(), "\n</style>\n" )
+cat( "<style>\n", datagoodr_css("vintage"), "\n</style>\n" )
 ```
 
 ```{r datagoodr-record, echo=FALSE, results="asis"}

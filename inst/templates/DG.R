@@ -19,6 +19,19 @@
 # }
 
 
+## Calendar heatmaps for dates spanning more than three years: show the three
+## most populated years ("top3", the default), a random early / middle / late
+## year ("spread"), or all years folded onto one calendar ("fold").
+##
+# options( datagoodr.calendar = "top3" )
+##
+## The calendar's colour scale fits the days shown, with both tails capped at
+## the 5th / 95th percentiles so one extreme day doesn't wash out the rest.
+## Change the cut points, or set NULL to colour the raw counts.
+##
+# options( datagoodr.calendar.winsor = c( 0.05, 0.95 ) )
+
+
 ## 2. Add a custom render function --------------------------------------------
 ## A function named in a layout object must exist here (or in the qmd) at
 ## render time. It receives (VNAME, LABEL); read the cell value with xx[[VNAME]]
@@ -37,7 +50,7 @@
 ##
 # layout.character <- c(
 #   "div2  ;; dd_vlabel        ;; LABEL       ;; v_to_txt",
-#   "div3  ;; desired_data_type   ;; DATA TYPE   ;; v_to_txt",
+#   "div3  ;; dg_render_type   ;; DATA MODE   ;; v_to_txt",
 #   "div4  ;; dd_vdesc         ;; DESCRIPTION ;; v_to_txt",
 #   "div4  ;; dd_vname_alias ;; ALIAS       ;; paste_note",
 #   "div10 ;; rg_properties ;; PROPERTIES  ;; paste_properties",

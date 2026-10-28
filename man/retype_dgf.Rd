@@ -17,10 +17,11 @@ to a `.csv`). Needed to recompute the profile.}
 `"categorical"`, `"boolean"`, `"text"`).}
 
 \item{units}{A named character vector mapping variable name to a temporal
-grain (e.g. `c(founded = "year")`), written into `desired_data_class` as
-`period.year` / `phase.day_of_week` / ... - the coordinate the render engine
-reads to pick the graphic. Temporal only; may name variables already the
-right type but needing a grain.}
+grain (e.g. `c(founded = "year")`), written into `desired_semantic_type` as
+the matching temporal semantic type (`year`, `month`, `day_of_week`,
+`calendar`, ...) - what the render engine reads to pick the graphic - and
+into the legacy `desired_data_class` when present. Temporal only; may name
+variables already the right type but needing a grain.}
 
 \item{env}{Environment for any rule functions (unused today; reserved).}
 }

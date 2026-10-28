@@ -1,0 +1,65 @@
+---
+title: "Research Guide"
+subtitle: "Motor Trend road tests, 32 cars (mtcars)"
+format:
+  html:
+    embed-resources: true
+    page-layout: full
+    toc: false
+params:
+  dgf_file: "DGF.xlsx"
+---
+
+<!-- EXPERIMENTAL "rail" layout (draft). Same DGF and the same blocks as
+     research-guide.qmd, rearranged after the econometrics course site:
+     a left rail per variable and a numbered two-column contents list.
+     Layout code: rg-rail.R   Styles: rg-rail.css
+     Render:  quarto::quarto_render("research-guide-rail.qmd") -->
+
+```{r setup, include=FALSE}
+library( datagoodr )
+source( "rg-rail.R" )
+
+dgf <- load_dgf( params$dgf_file, reader = "readxl" )
+
+rtype  <- dg_render_type( dgf )
+groups <- list(
+  Boolean     = dgf[ rtype == "boolean",     ],
+  Categorical = dgf[ rtype == "categorical", ],
+  Numeric     = dgf[ rtype == "number",      ],
+  Text        = dgf[ rtype == "text",        ],
+  Identifier  = dgf[ rtype == "identifier",  ],
+  Temporal    = dgf[ rtype == "temporal",    ] )
+```
+
+```{r style, echo=FALSE, results="asis"}
+cat( "<style>\n", paste( readLines( "rg-rail.css", warn = FALSE ), collapse = "\n" ), "\n</style>\n" )
+```
+
+```{r contents, echo=FALSE, results="asis"}
+rail_toc( groups )
+```
+
+```{r boolean, echo=FALSE, results="asis", fig.width=8, fig.height=2.6}
+rail_group( groups$Boolean, "Boolean" )
+```
+
+```{r categorical, echo=FALSE, results="asis", fig.width=8, fig.height=3.5}
+rail_group( groups$Categorical, "Categorical" )
+```
+
+```{r numeric, echo=FALSE, results="asis", fig.width=8, fig.height=2}
+rail_group( groups$Numeric, "Numeric" )
+```
+
+```{r text, echo=FALSE, results="asis", fig.width=8, fig.height=3.5}
+rail_group( groups$Text, "Text" )
+```
+
+```{r identifier, echo=FALSE, results="asis"}
+rail_group( groups$Identifier, "Identifier" )
+```
+
+```{r temporal, echo=FALSE, results="asis", fig.width=8, fig.height=4}
+rail_group( groups$Temporal, "Temporal" )
+```
