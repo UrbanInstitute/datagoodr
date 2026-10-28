@@ -10,7 +10,8 @@ is_factor(
   unique.n = 100,
   top.n = 25,
   max.variance = 2,
-  b.to.f = FALSE
+  b.to.f = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -30,6 +31,11 @@ treated as categorical. Default `2`.}
 
 \item{b.to.f}{Logical; if `TRUE`, binary (0/1 or single-value) vectors are
 converted to factors. Default `FALSE`.}
+
+\item{verbose}{Logical; print the per-column reasoning to the console.
+Default `TRUE`. `FALSE` skips building those diagnostic strings entirely,
+which is why the batch path ([is_factor_df()]) is markedly faster - the
+decision itself is unchanged.}
 }
 \value{
 A single logical value: `TRUE` if `x` should be treated as a

@@ -4,10 +4,13 @@
 \alias{is_factor_df}
 \title{Guess factor columns across a data frame}
 \usage{
-is_factor_df(df)
+is_factor_df(df, verbose = FALSE)
 }
 \arguments{
 \item{df}{A data frame.}
+
+\item{verbose}{Logical; print [is_factor()]'s per-column reasoning. Default
+`FALSE` - the diagnostics were previously generated and then discarded.}
 }
 \value{
 A named logical vector, one element per column, indicating which
