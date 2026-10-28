@@ -153,3 +153,35 @@ unreachable rather than guessed.
 - `fx_dgf_fields()` depth-scale reconciliation.
 
 Full engine-side detail: `formex/ONTOLOGY-V7-PLAN.md`.
+
+> **Update 5 — 2026-10-27 — your v7-dgf-integration-plan gating items have shipped, and the starwars report is addressed.**
+>
+> Re `dev/v7-dgf-integration-plan.md` "Not landed yet (our testing gate)":
+> all three are now on formex `main`, so you can unfreeze that integration:
+> 1. The `format_style` + `unit_type` split is built (ONTOLOGY-V7-PLAN §5 steps 1–4).
+> 2. `guess_data_type()$route` now carries `format_style` (resolved from the variant).
+> 3. `fx_transforms()` is generated from the ontology recipes (a `read_<style>`
+>    edge per row), not just the seed — plus `write_numeric` for number types.
+>
+> Your `dplyr::starwars` detection-quality report, item by item:
+> - `name` → now `text/person` (was `organization`).
+> - `hair_color` / `eye_color` → now `text/color/color_name` (new `is_color_name()`
+>   + a curated color-word lexicon; the words "brown"/"auburn"/"orange" are also
+>   US places, which was the leak). No longer `geographic`.
+> - `mass` (`measurement` → `numeric`) → now reachable: a plain number has a
+>   `write_numeric` edge, so `fx_plan_transform(fx_format("measurement"),
+>   fx_format("measurement","numeric"))` returns a plan instead of "no path".
+> - list columns `a|b|c` → still unrecognized; a flat-delimited set is best modeled
+>   as `categorical/multiselect/tags` (not `structured`, which is for bracketed
+>   JSON/arrays). A delimiter-split `tags` detector is the recommended next step —
+>   not built yet.
+>
+> Also new and relevant to your audit / raw-stats TO-DO: `fx_stabilize()` now
+> returns a **`conversion_log`** (n present / stabilized / dropped / rate / reason
+> / examples) and **warns** when present values become NA, so a column losing
+> values is surfaced, not silent. Wire this into the governance file so a reviewer
+> sees drops before the cleaned CSV is written.
+>
+> Still open on our side: `convert_fiscal_calendar` (needs your fiscal-year-end
+> convention) and the `tags` detector above. Coverage is now 47/97 variants
+> implemented; 91 detectors.
