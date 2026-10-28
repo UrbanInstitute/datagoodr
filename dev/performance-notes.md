@@ -13,7 +13,8 @@ the two.
 
 The root cause in formex has since been found and fixed (§2): ~86% of its
 per-call cost was the router, and most of *that* was input-independent work
-recomputed on every single call. Net result, verified end to end:
+recomputed on every single call. The fix in isolation, holding everything else
+equal:
 
 | Frame | Before | After | |
 |---|---|---|---|
@@ -21,8 +22,16 @@ recomputed on every single call. Net result, verified end to end:
 | 95 cols, `workers = 7` | 49.47s | **22.41s** | 2.2x |
 
 **The written DGF is bit-identical before and after** (`identical()` on the
-whole 19 x 43 data frame). One consequence to note up front: with the formex
-fix in place, `workers` no longer buys anything on a narrow frame — see §3.
+whole 19 x 43 data frame).
+
+**What a default build costs today is a separate question.** The time the fix
+freed was then spent, deliberately, on `guess_n_sample = 300` (§3) — so a
+`bb.csv` build lands around **9.3s**, near the 9.9s it took before any of this
+work. The gain was taken as *quality*, not speed: the build is now reproducible
+and four columns are typed better. Two further consequences up front: `workers`
+no longer buys anything on a narrow frame (§3), and the speed work did **not**
+fix the long-text `is_date()` abort, so `.cap_bytes()` is still needed
+(§2.3 item 6, and §2.3a).
 
 ## 0. Method, and a warning about noise
 
@@ -242,6 +251,37 @@ warnings will see fewer.
 5. **Still no cross-call memoisation of the guess itself** (§1.2 item 3). The
    same column guessed twice still costs the same twice; only the
    input-independent *internals* are now cached.
+6. **`is_date()` still aborts on a long value** — `input string is too long` on
+   anything from about 1,000 bytes. The date-format pre-filter of §2.1(a) does
+   **not** fix this: the abort happens inside `strptime()` on the values, not in
+   the choice of formats, so it fires even for a value containing a colon, which
+   is exactly what the pre-filter keys on. Found and verified against this very
+   commit by the degenerate-column work — see
+   `dev/degenerate-columns-and-preflight.md` §5 (check B2). **Ask:** have
+   `is_date()` treat `nchar(x, "bytes") >= 1000` as a non-date rather than
+   passing it to `strptime()`. `R/20-fx-stabilize.R` has a similar unguarded
+   `strptime()` call worth checking at the same time.
+
+### 2.3a Cross-reference: the degenerate-column and pre-flight work
+
+These notes profile the *speed* of a DGF build. A parallel strand looked at what
+makes one **fail or hang** — degenerate columns, and the long-text abort above —
+and landed `create_dgf(preflight = )` plus a `.cap_bytes()` guard on the values
+handed to formex. The two met in the merge at `07a9578`, which is why
+`.formex_guess_all()` now caps `vals` once up front: the PSOCK worker added here
+calls `formex::guess_data_type()` directly and so bypasses `.formex_guess()`,
+where the cap would otherwise have lived. Capping in one place keeps the serial,
+fallback and parallel paths on identical input, and `.cap_bytes()` is idempotent
+so the remaining cap inside `.formex_guess()` is harmless.
+
+Read `dev/degenerate-columns-and-preflight.md` alongside this note. Two of its
+findings bear directly on the numbers here:
+
+* **`.cap_bytes()` is still required** after the formex speed-up (item 6 above).
+* **The formex fix changed no DGF cell** on a 30,000 x 194 sample of the 990
+  file — an independent check of §2.2's equivalence claim on much wider, messier
+  data than `bb.csv`. It did not re-measure the speed-up; the 1.7x-2.2x here
+  remains this note's own measurement.
 
 ### 2.4 `n_sample = 100` is too small, and makes confidence a coin flip
 
