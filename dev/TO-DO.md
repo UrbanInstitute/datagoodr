@@ -7,17 +7,14 @@ workflow the v7 columns implement is described in
 
 ## Priorities (2026-10-27)
 
-1. **Profile on the desired type, not the legacy type.** *(blocks dropping the
-   legacy columns)* The `rg_stats` / `rg_graphics` profiles are built for the
-   build-time class (`vclass`, which tracks `desired_data_type`). Rendering now
-   routes through `dg_render_type()`, which uses `desired_semantic_type` when no
-   legacy `desired_data_type` is present. When the two disagree, the stored
-   profile does not fit the template. Verified with `dplyr::starwars`:
-   `homeworld` is profiled as text (word-cloud data) but its semantic type
-   `geographic` routes to categorical, and `paste_treemap()` errors. Fix: in
-   `create_dgf()` / `retype_dgf()`, choose the profile from
-   `dg_render_type()` of the v7 columns, so profile and template always agree.
-   This is the "confirm-before-profile" reorder below in its smallest form.
+1. ~~Profile on the render type.~~ **Done 2026-10-27** (see below).
+   Remaining: whenever the guarded type and the semantic guess disagree,
+   `create_dgf()` overwrites `desired_semantic_type` with the guarded type
+   (`homeworld`: `geographic` -> `text`; a `"$1,234"` column with no ready
+   stabilizer -> `text`). The guess survives in `guess_semantic_type`, but the
+   user loses the target. Better, once profiling runs on stabilized values
+   everywhere: keep the target and flag the row ("awaiting stabilizer" /
+   "needs review") instead.
 2. **Flip `create_dgf()` to `dgf_schema_cols_v7()`**, once item 1 lands and
    every function in the inventory below reads the v7 columns.
 3. **Stabilize step (see `dev/stabilization-workflow.md`, "Gaps"):**
@@ -50,6 +47,21 @@ workflow the v7 columns implement is described in
       `if(is.null(format))` line.
 - [x] `dplyr::starwars |> create_dgf() |> create_rg(render = TRUE)` runs end to
       end and renders all 14 variables.
+- [x] **Profile type = render type.** `create_dgf()` profiles each variable on
+      the first type its values can carry: the enriched legacy guess (it keeps
+      the storage gate, cardinality tie-break and identifier/temporal
+      detectors) -> the v7 target (`dg_render_type()` of
+      `desired_semantic_type`) -> the storage type. The target goes first when
+      its `ready` stabilizer actually converts the values to numbers. The chosen
+      type is written to `desired_data_type`, and to `desired_semantic_type`
+      wherever the two would route differently, so legacy and v7 routing agree
+      with the stored profile. `dd_f_levels` is now built for every
+      categorical / boolean variable from the profiled values.
+      `retype_dgf()` also updates `desired_semantic_type`. Verified: starwars
+      renders all 14 variables both with and without the legacy columns.
+      Trade-off: a semantic guess that disagrees with the guarded type is
+      overwritten in `desired_semantic_type` (starwars `homeworld`:
+      `geographic` -> `text`); it is kept in `guess_semantic_type`.
 
 ---
 
@@ -108,7 +120,7 @@ before `create_dgf()` can flip to `dgf_schema_cols_v7()`.
 | `create_dgf()` (01-00) | writes all six; `desired_data_import_rule` / `stable_data_format` / `stable_data_type` are also arguments | write the v7 set; replace the rule arguments with `desired_semantic_type` overrides (see "Arguments" below) | open |
 | `dgf_schema_cols()` (01-01) | defines them | becomes `dgf_schema_cols_v7()` | open (the flip) |
 | `dg_render_type()` (01-01) | reads `desired_data_type` first, for back-compat | drop the legacy branch after the flip | done (bridge) |
-| `retype_dgf()`, `.dgf_vclass_of()` (01-05) | writes `desired_data_type` / `desired_data_class`; units into class | write `desired_semantic_type` / `desired_unit_type`; profile via `dg_render_type()` | open |
+| `retype_dgf()`, `.dgf_vclass_of()` (01-05) | writes `desired_data_type` / `desired_data_class`; units into class | write `desired_semantic_type` / `desired_unit_type`; profile via `dg_render_type()` | partial (writes `desired_semantic_type`; units still go to `desired_data_class`) |
 | `guess_dgf_types()` (01-06) | returns `desired_data_type` / `desired_data_class` | return only `guess_*` + `dd_is_join_key`; desired_* defaulted in 01-08 | open |
 | `inspect_dgf()` (02-06) | validates `desired_data_type`; checks functions in `desired_data_import_rule` / `stable_data_format` | validates `desired_semantic_type` (added); check functions in `stabilizer` / `load_rule` | partial |
 | `check_dgf_rules()` (02-07) | runs `raw_to_stable_transform` / `desired_data_import_rule` | run `stabilizer` / `load_rule` | open |
@@ -237,13 +249,20 @@ live in formex. Track them there.
 
 ### Detection quality seen on `dplyr::starwars` (report to formex)
 
-- `name` guessed `organization` (person names).
-- `hair_color`, `eye_color` guessed `geographic`.
-- `mass` -> `not-transformable: no path from [c|measurement|NA] to
-  [w|measurement|numeric]`: a plain-number measurement with no `format_style`
-  has no read edge.
-- `height`, `birth_year`, `skin_color`, `species`: no route at all.
-- List columns, now collapsed to `a|b|c`, are not recognised as `tags`.
+Re-checked 2026-10-27 against formex `1a1334e`:
+
+- [x] `mass` -> fixed in formex `ff20e2b`: now `{{ write_numeric }}`, status
+      `ready`, preview correct.
+- [ ] `hair_color`, `eye_color` still guessed `geographic` (depth 3). formex
+      `7803a35` added `is_color_name()` and a `color_name` leaf, and the detector
+      passes 93% of `eye_color` and 50% of `hair_color` values, but the route
+      still lands on `geographic`. Likely causes: compound values
+      (`"brown, grey"`, `"blue-gray"`) and non-color fillers (`"none"`,
+      `"unknown"`) keep the pass rate below the router's threshold.
+- [ ] `name` guessed `organization` (person names).
+- [ ] `height`, `birth_year`, `skin_color`, `species`: no route at all.
+- [ ] List columns, now collapsed to `a|b|c`, are not recognised as `tags`
+      (formex lists a tags detector as its next item).
 
 ---
 

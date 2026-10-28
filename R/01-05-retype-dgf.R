@@ -79,6 +79,10 @@ retype_dgf <- function( dgf, data, types = NULL, units = NULL,
     ty <- types[[v]]
     vc <- .dgf_vclass_of( ty )
     dgf$desired_data_type[i] <- ty
+    # keep the v7 target in step, so dg_render_type() routes the variable to
+    # the template its new profile was built for (a data type name is a valid
+    # desired_semantic_type; the user can refine it to a semantic type)
+    if( "desired_semantic_type" %in% names(dgf) ) dgf$desired_semantic_type[i] <- ty
 
     # recompute the profile from the raw column for the corrected type
     dgf$rg_properties[i] <- get_properties( v, data )

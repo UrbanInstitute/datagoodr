@@ -15,6 +15,79 @@
 }
 
 
+## Choose each variable's profile type so the stored rg_* profile always fits
+## the template it renders with (see "PROFILE TYPE = RENDER TYPE" in
+## create_dgf()). For each column, the first candidate whose values can carry
+## the type wins: legacy guess -> target (the v7 desired type) -> storage, with
+## the target promoted to first when its stabilizer converted the values.
+##
+## A target that the raw values cannot carry yet (a number written "$1,234")
+## is tried again on the stabilized values when its v7 stabilizer is ready -
+## the confirm-before-profile idea in its smallest form.
+##
+## Returns the chosen `type` and `target_type` per column, plus df_stats / df
+## with columns cast to what each profile function expects: factors for
+## categorical and boolean, character for text, the stabilized values where a
+## stabilizer was applied.
+#' @noRd
+.align_profile_types <- function( df_stats, df, target_type, legacy_type,
+                                  storage_type, guess = NULL, desired = NULL ) {
+
+  can_carry <- function( type, x ) switch( type,
+    number  = is.numeric( x ),
+    boolean = length( unique( x[ ! is.na(x) ] ) ) <= 2,
+    TRUE )
+
+  n <- ncol( df_stats )
+  type <- character( n )
+  for( i in seq_len(n) ) {
+
+    x <- df_stats[[i]]
+    stabilized <- FALSE
+    if( target_type[i] == "number" && ! is.numeric(x) && ! is.null(desired) &&
+        identical( desired$stabilizer_status[i], "ready" ) ) {
+      st <- stabilize_col_v7(
+              as.character( x ),
+              guess   = list( semantic_type = guess$guess_semantic_type[i],
+                              format_style  = guess$guess_format_style[i],
+                              unit_type     = guess$guess_unit_type[i] ),
+              desired = list( semantic_type = desired$desired_semantic_type[i],
+                              format_style  = desired$desired_format_style[i],
+                              unit_type     = desired$desired_unit_type[i] ) )
+      if( isTRUE(st$applied) && is.numeric(st$value) ) {
+        df_stats[[i]] <- st$value
+        df[[i]]       <- st$value
+        x <- st$value
+        stabilized <- TRUE
+      }
+    }
+
+    # The legacy guess comes first: it carries create_dgf()'s guards (the
+    # storage-safety gate, the cardinality tie-break, the identifier and
+    # temporal detectors) that a raw semantic route lacks - e.g. rnorm()
+    # doubles route to text/web/domain at confidence 1. The semantic target
+    # wins first only when its stabilizer has actually converted the values.
+    cand <- if( stabilized )
+              c( target_type[i], legacy_type[i], storage_type[i] )
+            else
+              c( legacy_type[i], target_type[i], storage_type[i] )
+    cand[ cand == "string" ] <- "text"
+    ok <- vapply( cand, function(ty) ty %in% .render_types && can_carry( ty, x ),
+                  logical(1) )
+    type[i] <- if( any(ok) ) cand[ ok ][1] else "text"
+
+    if( type[i] %in% c("categorical", "boolean") && ! is.factor(x) && ! is.logical(x) ) {
+      df_stats[[i]] <- factor( x )
+      df[[i]]       <- factor( df[[i]] )
+    } else if( type[i] == "text" && is.factor(x) ) {
+      df_stats[[i]] <- as.character( x )
+    }
+  }
+
+  list( type = type, target_type = target_type, df_stats = df_stats, df = df )
+}
+
+
 #' @title create DGF file
 #'
 #' @description
@@ -219,38 +292,6 @@ create_dgf <- function(         # ----------------
   data_type_converted <- primary_class( df )
 
 
-
-  dd_f_levels <- mapply(function(var_name, type, df, max_factor_levels){
-    # any(): a column can carry a multi-class class() - an ordered factor is
-    # c("ordered","factor"), and readr's type guess can hand back a POSIXct
-    # datetime as c("POSIXct","POSIXt"). A scalar `type %in% ...` errors on
-    # those ("condition has length > 1").
-    if(any(type %in% c("factor", "logical"))){
-      # Store a two-column dictionary: the level code and an editable label.
-      # The label is seeded to the code so users can add human-readable
-      # descriptions (e.g. "AR" -> "Arts") in Excel during Step 2.
-      # Use [[ ]] so a single column is returned as a vector even when df is a
-      # tibble (df[, var_name] on a tibble returns a 1-column tibble, whose
-      # levels() is NULL).
-      lv <- levels(df[[var_name]])
-      # Cap high-cardinality factors at the most frequent max_factor_levels
-      # levels. This matches the frequency-ranked FACTOR LEVELS table (see
-      # get_stats_fact) and keeps the cell under Excel's 32,767-char limit.
-      if( length(lv) > max_factor_levels ){
-        counts <- sort( table( df[[var_name]] ), decreasing = TRUE )
-        lv <- names(counts)[ seq_len(max_factor_levels) ]
-      }
-      tab <- data.frame(level = lv, label = lv)
-      tab <- jsonify_df(tab)
-      return(tab)
-      }else{
-        return("")
-      }
-    },
-    var_name = var_name, type=data_type_converted,
-    MoreArgs = list(df = df, max_factor_levels = max_factor_levels) )
-
-
   ## Need to guess factor it is logical, to make class
   vclass <- data_type_converted
   # The build-time stat/graphic dispatch keys on "numeric"; collapse the R
@@ -367,13 +408,49 @@ create_dgf <- function(         # ----------------
   no.sem <- is.na( .v7$desired_semantic_type ) | ! nzchar( .v7$desired_semantic_type )
   .v7$desired_semantic_type[ no.sem ] <- desired_data_type[ no.sem ]
 
-  ## Reconcile the build-time profile class (vclass, which drives rg_stats/
-  ## rg_graphics below) with the enriched type. The detector library is the
-  ## single source of truth: a column it promoted to temporal or identifier -
-  ## e.g. a text-month date detect_temporal's numeric formats miss - must be
-  ## profiled as that type, not left on the character path.
-  vclass[ desired_data_type == "temporal"   & vclass != "temporal"   ] <- "temporal"
-  vclass[ desired_data_type == "identifier" & vclass != "identifier" ] <- "identifier"
+  ## ---- PROFILE TYPE = RENDER TYPE -------------------------------------------
+  ## The rg_* profile must fit the template the variable is rendered with, and
+  ## the template comes from dg_render_type(). Profile each variable on the
+  ## first of these types its values can carry:
+  ##   1. the enriched legacy guess (desired_data_type), which carries the
+  ##      storage gate and detector guards - unless the target's stabilizer
+  ##      converted the values, in which case the target comes first
+  ##   2. the v7 target's type (dg_render_type() of desired_semantic_type)
+  ##   3. the storage type
+  ## then write that type to desired_data_type, and to desired_semantic_type
+  ## when the target could not be honoured, so legacy and v7 routing both agree
+  ## with the stored profile. formex's suggestion stays in guess_semantic_type.
+  aligned <- .align_profile_types(
+    df_stats, df,
+    target_type  = dg_render_type( data.frame(
+                     desired_semantic_type = .v7$desired_semantic_type,
+                     guess_variant_id      = guess_variant_id,
+                     stringsAsFactors = FALSE ) ),
+    legacy_type  = desired_data_type,
+    storage_type = dg_type_of( vclass ),
+    guess = .enriched, desired = .v7 )
+  df_stats          <- aligned$df_stats
+  df                <- aligned$df
+  desired_data_type <- aligned$type
+  vclass            <- vapply( aligned$type, .dgf_vclass_of, character(1),
+                               USE.NAMES = FALSE )
+  moved <- aligned$type != aligned$target_type
+  .v7$desired_semantic_type[ moved ] <- aligned$type[ moved ]
+
+  ## FACTOR LEVEL DICTIONARY for every categorical / boolean variable: a
+  ## two-column level/label table (label seeded to the code so users can add
+  ## readable labels in Excel). Capped at the max_factor_levels most frequent
+  ## levels, matching the FACTOR LEVELS table and Excel's cell limit.
+  dd_f_levels <- vapply( seq_len(N_col), function(i) {
+    if( ! desired_data_type[i] %in% c("categorical", "boolean") ) return( "" )
+    x  <- df_stats[[i]]
+    lv <- if( is.factor(x) ) levels(x) else sort( unique( as.character( x[ ! is.na(x) ] ) ) )
+    if( length(lv) > max_factor_levels ) {
+      counts <- sort( table( x ), decreasing = TRUE )
+      lv <- names(counts)[ seq_len(max_factor_levels) ]
+    }
+    jsonify_df( data.frame( level = lv, label = lv ) )
+  }, character(1) )
 
   # Temporal grain now lives in desired_data_class (period.month, phase.*, ...),
   # which the render engine reads to pick the graphic - no separate unit column.
