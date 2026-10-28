@@ -148,6 +148,29 @@
 #'   `.xlsx`. Defaults to `"DGF"`. Resolved relative to `dir` unless absolute.
 #' @param open Logical; open the new DGF in Excel once created. Defaults to
 #'   [interactive()] — on at the console, off in scripts, tests, and CI.
+#' @param workers Integer; how many processes to spread the per-column type
+#'   guessing over. Type guessing is the dominant cost of a DGF build (measured
+#'   at 63% of `create_dgf()` on a 4,620 x 19 frame, against under 7% for the
+#'   `rg_*` profiles), it is flat in the number of rows, and it is independent
+#'   per column — so columns, not rows, are what parallelises. Defaults to `1`
+#'   (in-process); worth raising for wide frames, where the pool's start-up cost
+#'   is amortised over more columns. Also settable with
+#'   `options( datagoodr.workers = )`.
+#' @param guess_seed Integer or `NULL`; seed for the 100-value sample
+#'   `formex::guess_data_type()` draws internally. Fixed by default so repeated
+#'   builds of the same data produce the same DGF — left to the session RNG, the
+#'   guessed types genuinely vary between runs. `NULL` restores that older
+#'   behaviour. Also settable with `options( datagoodr.guess_seed = )`.
+#' @param guess_n_sample Integer or `NULL`; how many values per column
+#'   `formex::guess_data_type()` samples when guessing its type. `NULL` (the
+#'   default) leaves formex's own default of 100. That default is smaller than
+#'   the distinct-value count of many real columns, so a column whose route
+#'   confidence lands near the acceptance threshold is decided by the sample:
+#'   measured on `bb.csv`'s `birthState`, confidence spans 0.631-0.905 at 100
+#'   and is a flat 0.813 at 300, where the column correctly resolves to a
+#'   geographic categorical instead of falling back to text. Raising it costs
+#'   extra time on high-cardinality columns. Also settable with
+#'   `options( datagoodr.guess_n_sample = )`.
 #' @param vtypes,guess.dates,dd,keep.dd.cols,preview_dd,preview_dp Accepted but
 #'   currently ignored; the features they were intended to steer (explicit type
 #'   overrides, date/time detection, and data-dictionary merging) are not
@@ -179,7 +202,10 @@ create_dgf <- function(         # ----------------
          preview_dp= F,
          dir=".",
          file="DGF",
-         open = interactive())
+         open = interactive(),
+         workers = getOption("datagoodr.workers", 1L),
+         guess_seed = getOption("datagoodr.guess_seed", 1L),
+         guess_n_sample = getOption("datagoodr.guess_n_sample", NULL))
 
  {  # ---------------------------------------------
 
@@ -389,7 +415,9 @@ create_dgf <- function(         # ----------------
   ## semantic columns (a ZIP -> geographic, an ORCID -> identifier, a date string
   ## -> temporal), and flag near-unique keys. Columns with no confident match are
   ## untouched.
-  .enriched <- guess_dgf_types( df, desired_data_type )
+  .enriched <- guess_dgf_types( df, desired_data_type,
+                                workers = workers, seed = guess_seed,
+                                n_sample = guess_n_sample )
   desired_data_type  <- .enriched$desired_data_type
   desired_data_class <- .enriched$desired_data_class
   dd_is_join_key     <- .enriched$dd_is_join_key
