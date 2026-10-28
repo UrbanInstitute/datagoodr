@@ -185,3 +185,30 @@ Full engine-side detail: `formex/ONTOLOGY-V7-PLAN.md`.
 > Still open on our side: `convert_fiscal_calendar` (needs your fiscal-year-end
 > convention) and the `tags` detector above. Coverage is now 47/97 variants
 > implemented; 91 detectors.
+
+> **Update 6 — 2026-10-27 — baseball report: dates fixed; other items triaged.**
+>
+> On `data-dev/bb.csv`:
+> - **Dates recognize correctly** on formex `main` — `birthDate` ("Dec 27, 1981")
+>   and `debut`/`finalGame` (ISO) → `temporal/date/calendar`, `birthYear` →
+>   `temporal/period/year` (not a date). The real gap was the write side: a
+>   calendar's canonical value is already ISO, but there was no edge to the
+>   `yyyymmdd` default, so stabilizing returned "no path". **Fixed** (formex
+>   `886acc4`): the registry now generates an identity write edge to each row's
+>   `desired_default_format`, so a date → `yyyymmdd`, a number/measurement →
+>   `numeric`, a year → `yyyy` all stabilize. This also covers `SLUG` (`ratio`).
+> - **Still on formex:** `hair_color`/`eye_color` can still land on `geographic`
+>   because compound values (`"brown, grey"`, `"blue-gray"`) and fillers
+>   (`"none"`, `"unknown"`) drop the color pass rate below the router's
+>   threshold. A color-detector refinement (split compound values, ignore
+>   fillers) is the next formex item.
+> - **On datagoodr, not formex:** `throws` (`R`/`L`) → boolean is the
+>   "2 levels ⇒ boolean" rule here; formex's `is_boolean` keys on a yes/no/t/f/
+>   0/1 *vocabulary*, which `R`/`L` is not, so the fix is to require boolean-like
+>   values before collapsing a 2-level code. `birthState`/`birthCity` text-vs-
+>   `geographic` is the profiling-overwrites-guess item (your priority 1).
+>
+> Also, for development visibility: `guess_dgf_types()` now records
+> `guess_semantic_type` as the **full resolved path** (`temporal:date:calendar`),
+> truncated to the lowest level the route reached, instead of just the leaf. The
+> stabilizer takes the leaf, so behaviour is unchanged.

@@ -92,6 +92,9 @@
 #' @noRd
 .dgf_fx_format <- function(semantic_type, format_style = NA, unit_type = NA) {
   if (!.formex_has_v7()) stop("formex v7 transform-path API not available")
+  ## accept a path (data_type:...:leaf) and use the leaf -- guess_semantic_type
+  ## may carry the full path for display; formex keys on the bare semantic_type.
+  semantic_type <- sub(".*:", "", as.character(semantic_type))
   na_if_blank <- function(x) if (is.na(x) || !nzchar(trimws(x))) NA_character_ else x
   formex::fx_format(semantic_type,
                     format_style = na_if_blank(as.character(format_style)),
@@ -191,7 +194,7 @@ plan_stabilizer <- function(guess, desired, raw_first5 = NULL) {
   by_st  <- tapply(ont$desired_default_format, ont$semantic_type,
                    function(x) { x <- x[nzchar(x)]; if (length(x)) x[1] else NA_character_ })
   vapply(seq_len(n), function(i) {
-    v <- variant_id[i]; s <- semantic_type[i]
+    v <- variant_id[i]; s <- sub(".*:", "", semantic_type[i])   # accept a path; match on the leaf
     d <- if (nzchar(v) && v %in% names(by_var)) by_var[[v]] else NA_character_
     if (is.na(d) || !nzchar(d)) d <- if (nzchar(s) && s %in% names(by_st)) by_st[[s]] else NA_character_
     if (is.na(d)) "" else d
