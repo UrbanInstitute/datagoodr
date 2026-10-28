@@ -23,6 +23,22 @@
 }
 
 
+# Cast the columns named in `types` from text to what each target type's profile
+# expects (used when retype_dgf() reads a .csv as text). Columns not named are left
+# as text; a column that is not in `data` is skipped (retype_dgf() warns about it).
+#' @noRd
+.cast_for_types <- function( data, types ) {
+  for( v in intersect( names(types), names(data) ) ) {
+    data[[v]] <- switch( types[[v]],
+      number      = suppressWarnings( as.numeric( data[[v]] ) ),
+      categorical = factor( data[[v]] ),
+      boolean     = factor( data[[v]] ),
+      data[[v]] )                      # text / identifier / temporal stay character
+  }
+  data
+}
+
+
 #' Correct a variable's type in a DGF and re-profile it
 #'
 #' `create_dgf()` guesses types roughly; this applies your corrections and
@@ -67,8 +83,16 @@ retype_dgf <- function( dgf, data, types = NULL, units = NULL,
                         env = parent.frame() ) {
 
   if( is.character(dgf) && length(dgf) == 1 ) dgf <- load_dgf( dgf )
-  if( is.character(data) && length(data) == 1 )
-    data <- as.data.frame( suppressMessages( readr::read_csv( data ) ) )
+  if( is.character(data) && length(data) == 1 ) {
+    # Read every column as text, as create_dgf() does (`read_as_text = TRUE`).
+    # Letting readr infer types turned "00" into 0 and "06037" into 6037 before the
+    # corrected type was ever profiled -- exactly the columns a user retypes to
+    # `identifier` or `categorical` to protect. Only the columns being retyped are
+    # then cast, to what their new type's profile expects.
+    data <- as.data.frame( suppressMessages(
+      readr::read_csv( data, col_types = readr::cols( .default = readr::col_character() ) ) ) )
+    data <- .cast_for_types( data, types )
+  }
 
   stopifnot( is.data.frame(dgf), is.data.frame(data), "var_name" %in% names(dgf) )
 
@@ -90,6 +114,15 @@ retype_dgf <- function( dgf, data, types = NULL, units = NULL,
     dgf$rg_preview[i]    <- get_examples( v, df = data )
     dgf$rg_stats[i]      <- as.character( get_stats( v, data, vc ) )
     dgf$rg_graphics[i]   <- as.character( get_graphics( v, data, vc ) )
+
+    # The level dictionary belongs to the type too. It kept the old spellings
+    # (e.g. 0/1/false/true after a recode to boolean) and was empty for a variable
+    # newly made categorical, so the report printed stale or missing CATEGORY LABELS.
+    # Rebuild it from the data, keeping any label the user already edited for a
+    # level that still exists. A type with no levels is left as it was, so a retype
+    # never discards labels someone curated.
+    if( "dd_f_levels" %in% names(dgf) && ty %in% c("categorical", "boolean") )
+      dgf$dd_f_levels[i] <- merge_level_labels( dgf$dd_f_levels[i], .levels_json( data[[v]] ) )
   }
 
   ## `units` names a temporal grain (year/month/date/dow/...); the grain now

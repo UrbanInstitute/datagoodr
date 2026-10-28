@@ -59,6 +59,29 @@ When neither modality is confident the column keeps its base type, and the
 route's `depth` is recorded rather than discarded — a truncated path is a valid
 partial answer for a reviewer to deepen, not a failure.
 
+### Pre-flight check for degenerate columns
+
+`create_dgf()` profiles every column, which takes minutes on a large file, and a
+column the profilers could not handle used to surface as a crash partway through,
+with an error that named no column. A new pre-flight step finds those columns
+first, and reports all of them at once.
+
+* **`preflight_dgf(df)`** scans each column and returns one row per finding
+  (`var_name`, `rule`, `severity`, `detail`, `suggestion`). Rules: `constant`,
+  `single_value_with_blanks` (an `X`/blank checkbox), `all_missing`,
+  `duplicate_column`, `mixed_boolean_encoding` (`0`/`1`/`true`/`false`),
+  `non_finite`, `placeholder_value`, `long_values`, `leading_zero_code` and
+  `high_cardinality_temporal`. On a 568,000-row, 199-column file it takes about
+  40 seconds; the build took about 22 minutes there (with the formex release before
+  its 2026-10-28 speed-up). `smoke_n = 5000` also
+  builds a DGF from a random sample and reports a failure by variable.
+* **`create_dgf(preflight = )`** runs it automatically: `"warn"` (the default)
+  prints a one-line summary and continues, `"error"` stops before any profiling
+  if a column is flagged, `"off"` skips it. The findings are kept on the result as
+  `attr(dgf, "preflight")`.
+* **Errors now name the variable.** A failure while profiling is reported as
+  `create_dgf(): statistics (factor) failed for variable 'x': ...`.
+
 ## Breaking changes
 
 ### Type detection moved to the formex package
@@ -155,6 +178,45 @@ formex-stabilized EIN are now the same string.
 
 * **`read_yyyymm()` validates its input** rather than silently slicing any
   string, and accepts an already-hyphenated value.
+
+* **A column with one distinct value no longer aborts `create_dgf()`.** A constant
+  column, or one value plus blanks (an `X`/blank checkbox, which datagoodr reads as
+  one level), failed with `'names' attribute [2] must be the same length as the
+  vector [1]` (or `replacement has 0 rows, data has 1`). Subsetting a one-element
+  table dropped it to a bare vector, so the frequency table lost its `Freq` column.
+  The factor statistics, the treemap data and the word-cloud words now keep the
+  table intact; output for every other column is unchanged.
+
+* **Free text of 1,000 bytes or more no longer aborts type detection.** base R's
+  `strptime()` refuses such input, and both datagoodr's temporal detector and the
+  call into formex's date detector passed raw cell values to it. Whether a build
+  crashed depended on whether a long value fell in the first 50 rows (or in
+  formex's random sample of 100), so it could pass or fail on the same file.
+
+* **An all-missing column no longer aborts the build.** Its character statistics
+  failed with `invalid number of 'breaks'`, and its preview was `"NA"`. It now
+  profiles as empty and renders.
+
+* **`retype_dgf()` reads a `.csv` as text.** It used `readr`'s type inference, which
+  turned `"00"` into 0 and `"06037"` into 6037 before profiling the type you had
+  just chosen to protect them.
+
+* **`retype_dgf()` refreshes `dd_f_levels`.** After retyping a variable to
+  categorical or boolean the level dictionary kept the old spellings
+  (`0`/`1`/`false`/`true`) or stayed empty, so the guide printed stale or missing
+  category labels. Labels already edited for a level that still exists are kept;
+  a type with no levels is left untouched.
+
+* **A timestamp column no longer stores one graphic row per distinct value.** On a
+  568,000-row file two timestamp variables each stored a 39.7-million-character
+  cell, past Excel's cell limit. Above `getOption("datagoodr.temporal.max_values",
+  10000)` distinct values, ISO timestamps are stored at the finest of minute, hour
+  or day that fits. A column under the cap is stored exactly as before.
+
+* **`create_rg()` bakes a DGF path the render can resolve.** A DGF outside the
+  report's folder is now written relative to it (`../dgf/DGF.xlsx`); Quarto resolves
+  the path from the `.qmd`, so the old as-given path failed with `path does not
+  exist`.
 
 ## Internal
 
