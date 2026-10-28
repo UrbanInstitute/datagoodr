@@ -127,7 +127,7 @@ before `create_dgf()` can flip to `dgf_schema_cols_v7()`.
 | `default_layouts()` (03-01) | displays `desired_data_type`, `desired_data_class`, `dd_data_unit` in the attributes block | show `guess_label` / `desired_semantic_type`, `desired_format_style`, `desired_unit_type` | open |
 | `create_section()`, `create_div()` (03-01) | routed on `desired_data_type` | `dg_render_type()` | done |
 | `set_dg_context()` (03-03) | returned `desired_data_type` | `dg_render_type()` | done |
-| `paste_temporal_graphic()` (03-02) | reads the grain from `desired_data_class` (`period.month`, ...) | derive the grain from `desired_semantic_type` (`year`, `month`, `day_of_week`, ...) via `.temporal_grain()` | open |
+| `paste_temporal_graphic()` (03-02) | reads the grain from `desired_data_class` (`period.month`, ...) | derive the grain from `desired_semantic_type` (`year`, `month`, `day_of_week`, ...) via `.temporal_grain()` | done (falls back to `desired_semantic_type`) |
 | `update_dgf()` (04-00) | carries `desired_data_import_rule` / `stable_data_format` across; keys level carry-over on `desired_data_type` | carry `desired_*`, `stabilizer`, `load_rule`; key on `dg_render_type()` | open |
 | `stabilize_data()` (09) | runs `desired_data_import_rule` then `raw_to_stable_transform`; v7 plan opt-in | `stabilizer` only (formex plan or a bare `DG.R` function); then drop `use_v7` | open |
 | RG.qmd / DD.qmd templates | routed on `desired_data_type` | `dg_render_type()` | done |
@@ -246,6 +246,45 @@ RG/DD templates use `readxl::read_excel()` (tibble, empty columns as logical
 The detector library, its rebuild orchestration, and the deferred
 protocol/scientific message formats (SWIFT, FIX, NMEA, FASTA, SMILES, ...) now
 live in formex. Track them there.
+
+### Baseball test dataset (`data-dev/bb.csv`, checked 2026-10-27)
+
+4,620 players x 19 columns plus `data-dev/bb-data-dictionary.csv` (label,
+description, source, category, verified). Good stabilization test: written
+dates (`"Dec 27, 1981"`), ISO dates, `"$851,950"` salaries, `R`/`L`/`B` codes,
+non-US places in `birthState` (`"La Romana"`). Read with
+`colClasses = "character"`, labels and descriptions passed through `dd_vlabel` /
+`dd_vdesc`. Renders all 19 variables with and without the legacy columns.
+
+Fixed while testing:
+- [x] `salary` (`usd`, `{{ read_usd :: write_numeric }}` ready) was profiled as
+      text: formex's `write_numeric` returns number-like strings, not numbers.
+      `create_dgf()` now accepts those; `salary` profiles as a number and keeps
+      `usd` as its target.
+- [x] `paste_temporal_graphic()` read `desired_data_class` unconditionally, so a
+      v7-only DGF errored on the first temporal variable. It now falls back to
+      `desired_semantic_type` for the grain.
+
+Open:
+- [ ] Date stabilizers: `birthDate` (`"Dec 27, 1981"`), `debut` / `finalGame`
+      (already ISO `yyyy-mm-dd`) and `birthYear` all report
+      `not-transformable: no path from [w|calendar|...]`. An ISO date should be
+      `identity`. Report to formex.
+- [ ] `SLUG` (`ratio`): `not-transformable`, though `AVG` (`measurement`) gets
+      `write_numeric`. Same family of formex gap as `mass` was.
+- [ ] `birthState` / `birthCity` guessed `geographic` but profiled as text
+      (too many levels); the semantic guess is overwritten in
+      `desired_semantic_type` (priority 1 follow-up).
+- [ ] `throws` (`R`/`L`) becomes boolean because it has 2 levels; `bats`
+      (`R`/`L`/`B`) is categorical. A 2-level code is not a yes/no flag; the
+      boolean rule should require boolean-like values (`TRUE`/`FALSE`, `Y`/`N`,
+      `0`/`1`), not just 2 levels.
+- [ ] Use the dictionary file directly: this is the `dd` / `keep.dd.cols`
+      argument of `create_dgf()`. The file also exercises dictionary checks
+      `inspect_dgf()` could run: `birthDay` is documented but not in the data;
+      `finalGame`'s description repeats `debut`'s ("first major league
+      appearance"); one `source` value is a placeholder joke; `verified = 0`
+      rows could be flagged in the Research Guide.
 
 ### Detection quality seen on `dplyr::starwars` (report to formex)
 

@@ -54,10 +54,14 @@
               desired = list( semantic_type = desired$desired_semantic_type[i],
                               format_style  = desired$desired_format_style[i],
                               unit_type     = desired$desired_unit_type[i] ) )
-      if( isTRUE(st$applied) && is.numeric(st$value) ) {
-        df_stats[[i]] <- st$value
-        df[[i]]       <- st$value
-        x <- st$value
+      # formex's write_numeric returns number-like strings ("851950"); accept
+      # them when every non-missing value converts
+      val <- if( isTRUE(st$applied) ) suppressWarnings( as.numeric( st$value ) ) else NULL
+      if( ! is.null(val) && any( ! is.na(val) ) &&
+          all( is.na(st$value) == is.na(val) ) ) {
+        df_stats[[i]] <- val
+        df[[i]]       <- val
+        x <- val
         stabilized <- TRUE
       }
     }

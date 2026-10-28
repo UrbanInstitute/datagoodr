@@ -33,12 +33,20 @@ paste_temporal_graphic <- function( VNAME, LABEL = "" ) {
   val <- as.character( tab$Value )
   cnt <- suppressWarnings( as.numeric( as.character( tab$Count ) ) )
 
-  # The render grain (date/hour/week/dow/month/year) now travels in
-  # desired_data_class (period.month, phase.day_of_week, ...); derive it there
-  # instead of from a separate unit column.
-  cs   <- as.character( get_xx()[["desired_data_class"]] )
-  unit <- if( length(cs) && ! is.na(cs) && nzchar(trimws(cs)) )
-            .temporal_grain( cs ) else ""
+  # The render grain (date/hour/week/dow/month/year) comes from the legacy
+  # desired_data_class (period.month, phase.day_of_week, ...) when present,
+  # else from the v7 desired_semantic_type (month, day_of_week, ...).
+  xx  <- get_xx()
+  pick <- function( nm ) {
+    if( ! nm %in% names(xx) ) return( "" )
+    v <- as.character( xx[[nm]] )
+    if( ! length(v) || is.na(v) ) "" else trimws(v)
+  }
+  cs   <- pick( "desired_data_class" )
+  sem  <- pick( "desired_semantic_type" )
+  unit <- if( nzchar(cs) ) .temporal_grain( cs )
+          else if( nzchar(sem) ) .temporal_grain( paste0( "x.", sem ) )
+          else ""
 
   if( nzchar( trimws(LABEL) ) ) cat( "**", LABEL, "**:\n\n", sep = "" )
 
