@@ -101,6 +101,29 @@ booleplot <- function(
   # Initiate the plotting frame so physical device dimensions are available
   graphics::plot.new()
 
+  # The category names are drawn in the LEFT MARGIN, so a name wider than the
+  # margin is clipped at the device edge with no warning. That margin was sized
+  # for level codes; a curated label ("0 (V-shaped)") is several times longer.
+  # Scale the name text down to what fits, to a floor, and only shorten the
+  # label itself if even that is not enough.
+  # axis() sets its labels mgp[2] lines in from the axis, so the room actually
+  # available is less than the margin itself -- missing that is what left "0
+  # (V-shaped)" still clipped after a first attempt at this.
+  margin_in <- max( mar[2] - graphics::par("mgp")[2] - 0.3, 0.5 ) *
+               graphics::par("csi")
+  widest_in <- max( graphics::strwidth( labels, units = "inches", cex = cex.names ) )
+
+  if( widest_in > margin_in && margin_in > 0 ) {
+    cex.names <- cex.names * max( margin_in / widest_in, 0.55 )
+    w <- graphics::strwidth( labels, units = "inches", cex = cex.names )
+    too.wide <- w > margin_in
+    if( any(too.wide) ) {
+      keep <- pmax( 3, floor( nchar(labels) * margin_in / w ) - 1 )
+      labels[too.wide] <- paste0( substr( labels[too.wide], 1, keep[too.wide] ),
+                                  "…" )
+    }
+  }
+
   # Geometry in arbitrary vertical user-coordinate units. Bars are 1 unit tall.
   bar_height <- 1
   gap_height <- gap_ratio * bar_height
@@ -188,8 +211,18 @@ paste_booleplot <- function( VNAME, LABEL = "VALUES" ) {
   if( nzchar(trimws(LABEL)) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
 
   # sorting (desc, NA last), colours and the count/share labels all live in
-  # booleplot(); here we just hand it a named count vector.
-  booleplot( stats::setNames( v$Freq, v$f ) )
+  # booleplot(); here we just hand it a named count vector, under the curated
+  # level labels where the DGF has them. booleplot() finds the missing
+  # category by the literal "NA", which no dictionary carries, so it is
+  # unaffected by the swap.
+  lab <- .level_labels( v$f )
+
+  # The names are drawn in the left margin, whose default is sized for level
+  # codes. A curated label is several times longer, so ask for a margin that
+  # fits it: booleplot() will still scale the text down if this guess is
+  # short, but it should not have to.
+  lines <- max( 6, 0.8 * max( nchar(lab) ) + 2.5 )
+  booleplot( stats::setNames( v$Freq, lab ), mar = c( 0, lines, 0, 1.5 ) )
 
   cat( "\n\n" )
 }

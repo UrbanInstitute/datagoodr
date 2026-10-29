@@ -16,6 +16,7 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/examples/baseball-compact.html</loc></url>
 <url><loc>/examples/baseball.html</loc></url>
+<url><loc>/examples/mtcars-compact.html</loc></url>
 <url><loc>/examples/mtcars.html</loc></url>
 <url><loc>/examples/starwars.html</loc></url>
 <url><loc>/index.html</loc></url>
@@ -25,6 +26,7 @@
 <url><loc>/reference/apply_name_aliases.html</loc></url>
 <url><loc>/reference/apply_raw_convert_fx.html</loc></url>
 <url><loc>/reference/as_id.html</loc></url>
+<url><loc>/reference/boolebar.html</loc></url>
 <url><loc>/reference/booleplot.html</loc></url>
 <url><loc>/reference/check_dgf_rules.html</loc></url>
 <url><loc>/reference/check_length.html</loc></url>
@@ -71,6 +73,7 @@
 <url><loc>/reference/parse_design.html</loc></url>
 <url><loc>/reference/parse_functions.html</loc></url>
 <url><loc>/reference/parse_nm.html</loc></url>
+<url><loc>/reference/paste_boolebar.html</loc></url>
 <url><loc>/reference/paste_booleplot.html</loc></url>
 <url><loc>/reference/paste_distribution_shape.html</loc></url>
 <url><loc>/reference/paste_histogram.html</loc></url>

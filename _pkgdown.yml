@@ -27,6 +27,8 @@ navbar:
       - text: "Styles"
       - text: Baseball players, compact
         href: examples/baseball-compact.html
+      - text: Motor Trend cars, compact
+        href: examples/mtcars-compact.html
 
 articles:
 - title: User guide

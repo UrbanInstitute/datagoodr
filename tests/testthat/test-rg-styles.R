@@ -116,10 +116,17 @@ test_that("compact layouts condense the design without dropping blocks", {
   expect_true("paste_distribution_shape" %in% trimws(rg$FUNCTION))
   expect_false("paste_distribution_shape" %in% trimws(cp$FUNCTION))
 
-  # every other block survives, type for type
-  drop <- function(d) d[!trimws(d$FUNCTION) %in%
-                          c("paste_properties", "paste_properties_horizontal",
-                            "paste_distribution_shape"), c("TYPE", "DIV", "FUNCTION")]
+  # booleans are drawn as one divided bar instead of a stack of bars
+  expect_true("paste_booleplot" %in% trimws(rg$FUNCTION))
+  expect_false("paste_booleplot" %in% trimws(cp$FUNCTION))
+  expect_true("paste_boolebar" %in% trimws(cp$FUNCTION))
+
+  # every other block survives, type for type: the three above are the whole
+  # difference between the two designs
+  swapped <- c("paste_properties", "paste_properties_horizontal",
+               "paste_distribution_shape", "paste_booleplot", "paste_boolebar")
+  drop <- function(d) d[!trimws(d$FUNCTION) %in% swapped,
+                        c("TYPE", "DIV", "FUNCTION")]
   expect_equal(drop(cp), drop(rg), ignore_attr = TRUE)
 })
 
@@ -167,4 +174,65 @@ test_that("paste_properties_horizontal transposes the properties table", {
   expect_equal(sum(startsWith(tbl, "|")), 3)
   expect_true(any(grepl("ROWS", tbl, fixed = TRUE)))
   expect_true(any(grepl("DISTINCT", tbl, fixed = TRUE)))
+})
+
+test_that("the contents list glimpses the data", {
+  g <- rail_groups(build_demo_dgf())
+  out <- suppressMessages(suppressWarnings(capture.output(rail_contents(g))))
+  expect_true(any(grepl('class="gl"', out, fixed = TRUE)))
+
+  # glimpse = 0 leaves the data out entirely
+  none <- suppressMessages(suppressWarnings(
+    capture.output(rail_contents(g, glimpse = 0))))
+  expect_false(any(grepl('class="gl"', none, fixed = TRUE)))
+})
+
+test_that("the glimpse prefers stabilized values, falling back to the preview", {
+  gl <- datagoodr:::.toc_glimpse
+
+  # create_dgf() fills stable_first5 only where a stabilizer runs, so the
+  # fallback is the common path, not an edge case
+  both <- list(stable_first5 = "2023-02-18 ;; 2023-11-17",
+               rg_preview    = "02/18/2023 ;; 11/17/2023")
+  expect_equal(gl(both), "2023-02-18 \u00b7 2023-11-17")
+
+  only.preview <- list(stable_first5 = "", rg_preview = "South ;; North")
+  expect_equal(gl(only.preview), "South \u00b7 North")
+
+  expect_equal(gl(list(stable_first5 = "", rg_preview = "")), "")
+})
+
+test_that("the glimpse keeps whole values rather than filling the budget", {
+  gl <- datagoodr:::.toc_glimpse
+  xx <- list(stable_first5 = "alpha ;; bravo ;; charlie ;; delta")
+
+  # 20 characters fits "alpha · bravo" (13); adding "charlie" would reach 23,
+  # so it stops rather than cutting the value short
+  expect_equal(gl(xx, size = 20), "alpha \u00b7 bravo")
+  expect_lte(nchar(gl(xx, size = 20)), 20)
+
+  # a value that fits exactly is kept
+  expect_equal(gl(xx, size = 13), "alpha \u00b7 bravo")
+  expect_equal(gl(xx, size = 12), "alpha")
+})
+
+test_that("a single over-long value is trimmed rather than dropped", {
+  gl <- datagoodr:::.toc_glimpse
+  long <- paste(rep("x", 80), collapse = "")
+  out  <- gl(list(stable_first5 = long), size = 20)
+
+  # one trimmed value beats an empty cell, but it is the ONLY case that trims
+  expect_equal(nchar(out), 20)
+  expect_true(endsWith(out, "\u2026"))
+})
+
+test_that("the glimpse rounds long decimals like the preview does", {
+  gl <- datagoodr:::.toc_glimpse
+  xx <- list(stable_first5 = "0.07142857142857142 ;; 0.30006373242477 ;; 0.5")
+  out <- gl(xx, size = 48)
+  expect_equal(out, "0.071 \u00b7 0.3 \u00b7 0.5")
+
+  # a value that is not a plain decimal is left exactly as stored
+  expect_equal(gl(list(stable_first5 = "$851,950 ;; 2023-02-18")),
+               "$851,950 \u00b7 2023-02-18")
 })

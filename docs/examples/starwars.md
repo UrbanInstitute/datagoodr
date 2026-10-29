@@ -13,42 +13,56 @@
 
 - [01hair_color](#var-hair_color)
   - 
+  - none · brown · black · white · blond · auburn
 - [02eye_color](#var-eye_color)
   - 
+  - brown · blue · yellow · black · orange · red
 - [03sex](#var-sex)
   - 
+  - male · female · none · hermaphroditic
 - [04gender](#var-gender)
   - 
+  - masculine · feminine
 - [05homeworld](#var-homeworld)
   - 
+  - Naboo · Tatooine · Alderaan · Coruscant · Kamino
 - [06films](#var-films)
   - 
+  - Attack of the Clones · The Phantom Menace
 - [07vehicles](#var-vehicles)
   - 
+  - Tribubble bongo · AT-ST · Flitknot speeder
 - [08starships](#var-starships)
   - 
+  - X-wing · Millennium Falcon
 
 ### Numeric — 3 variables
 
 - [09height](#var-height)
   - 
+  - 183 · 180 · 188 · 170 · 178 · 175 · 191 · 193
 - [10mass](#var-mass)
   - 
+  - 77 · 75 · 32 · 136 · 49
 - [11birth_year](#var-birth_year)
   - 
+  - 19 · 41.9 · 48 · 52 · 72 · 82 · 92 · 8 · 15 · 21
 
 ### Text — 3 variables
 
 - [12name](#var-name)
   - 
+  - Ackbar · Adi Gallia · Anakin Skywalker
 - [13skin_color](#var-skin_color)
   - 
+  - fair · light · dark · green · grey · pale
 - [14species](#var-species)
   - 
+  - Human · Droid · Gungan · Kaminoan · Mirialan
 
 ## Categorical
 
-categorical · geographic
+categorical
 
 hair_color
 
@@ -85,7 +99,7 @@ blonde · brown, grey · grey
 |         1 |  (1.1%) | brown, grey   |
 |         1 |  (1.1%) | grey          |
 
-categorical · geographic
+categorical
 
 eye_color
 

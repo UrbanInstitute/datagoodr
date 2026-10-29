@@ -116,7 +116,11 @@ default_layouts <- function() {
 #'   rather than a five-to-six row vertical table, and loses its block title,
 #'   which the strip's own column headers (ROWS, DISTINCT, ...) already say;
 #' * the numeric DISTRIBUTION SHAPE block is dropped, since skew and kurtosis
-#'   are already drawn above the histogram.
+#'   are already drawn above the histogram;
+#' * booleans are drawn by `paste_boolebar` --- one bar divided into its
+#'   categories over a tenths scale --- rather than `paste_booleplot`'s stack
+#'   of one bar per category. It is a third of the height and reads as shares
+#'   of a whole, which is what a boolean is.
 #'
 #' Everything else is the default layout, so a compact guide shows the same
 #' blocks, in the same order, for the same types.
@@ -143,6 +147,7 @@ compact_layouts <- function() {
 
   lapply( default_layouts(), function( rows ) {
     rows <- vapply( rows, condense, character(1), USE.NAMES = FALSE )
+    rows <- sub( "paste_booleplot[[:space:]]*$", "paste_boolebar", rows )
     rows[ ! grepl( "paste_distribution_shape", rows ) ]
   } )
 }

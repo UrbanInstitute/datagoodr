@@ -291,6 +291,45 @@ levels_customized <- function( level, label ) {
 }
 
 
+#' Swap stored level codes for their curated labels (internal)
+#'
+#' Looks each code up in the current variable's level dictionary
+#' (`dd_f_levels`) and returns the label someone typed for it, so a graphic can
+#' say `V-shaped` where the data says `0`.
+#'
+#' @param codes Character vector of level codes, as stored in `rg_graphics`.
+#'
+#' @return A character vector the same length as `codes`.
+#'
+#' @details Returns the codes untouched unless the dictionary has actually been
+#'   curated --- the same [levels_customized()] test the FACTOR LEVELS table
+#'   uses to decide whether to show its Meaning column --- so an uncurated DGF
+#'   keeps printing codes rather than repeating them in both rows. A code with
+#'   no entry keeps itself, which is what leaves the missing category as `NA`:
+#'   the dictionary describes the data's levels and has no row for missingness.
+#'
+#'   Reads the current variable from the render context via [get_xx()], so it
+#'   is only meaningful inside a section render.
+#' @noRd
+.level_labels <- function( codes ) {
+
+  codes <- as.character( codes )
+  dict  <- get_xx()[["dd_f_levels"]]
+  if( is.null(dict) || ! length(dict) || is.na(dict) || trimws(dict) == "" )
+  { return( codes ) }
+
+  tab <- json_to_df( dict )
+  if( nrow(tab) == 0 || ncol(tab) < 2 ) return( codes )
+
+  lvl <- trimws( as.character( tab[[1]] ) )
+  lab <- trimws( as.character( tab[[2]] ) )
+  if( ! levels_customized( lvl, lab ) ) return( codes )
+
+  i <- match( trimws(codes), lvl )
+  ifelse( is.na(i) | is.na( lab[i] ) | ! nzchar( lab[i] ), codes, lab[i] )
+}
+
+
 ### Factor levels + frequency (+ optional meaning) --------------------------
 #' Print the combined FACTOR LEVELS table into the RG
 #'

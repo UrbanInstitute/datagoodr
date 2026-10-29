@@ -77,8 +77,12 @@
 
     x <- df_stats[[i]]
     stabilized <- FALSE
+    # A zero-padded code ("0155", "00") or an over-long ID converts to numbers without an
+    # NA, so the all-converted check below would accept it and the leading zeros would be
+    # gone. .safe_numeric() is the rule everywhere else; refuse the conversion here too.
     if( target_type[i] == "number" && ! is.numeric(x) && ! is.null(desired) &&
-        identical( desired$stabilizer_status[i], "ready" ) ) {
+        identical( desired$stabilizer_status[i], "ready" ) &&
+        ! .lossy_as_number( x ) ) {
       st <- stabilize_col_v7(
               as.character( x ),
               guess   = list( semantic_type = guess$guess_semantic_type[i],
@@ -111,7 +115,9 @@
     cand[ cand == "string" ] <- "text"
     ok <- vapply( cand, function(ty) ty %in% .render_types && can_carry( ty, x ),
                   logical(1) )
-    type[i] <- if( any(ok) ) cand[ ok ][1] else "text"
+    # Nothing can carry it: a factor is a code with a few states (a 00/11 code is not a flag,
+    # and not a number), so it is categorical; anything else is text.
+    type[i] <- if( any(ok) ) cand[ ok ][1] else if( is.factor(x) ) "categorical" else "text"
 
     if( type[i] %in% c("categorical", "boolean") && ! is.factor(x) && ! is.logical(x) ) {
       df_stats[[i]] <- factor( x )
