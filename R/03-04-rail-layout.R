@@ -55,6 +55,46 @@
 
 .rail_id <- function( v ) paste0( "var-", gsub( "[^A-Za-z0-9_-]+", "-", v ) )
 
+# A peek at the data for the contents list.
+#
+# Reads `stable_first5` -- the first values as the stabilizer will write them
+# -- and falls back to `rg_preview` when there is no stabilizer to preview,
+# which is the common case: create_dgf() fills stable_first5 only for a
+# variable whose format actually changes, so a glimpse built on it alone would
+# be blank for most rows.
+#
+# Whole values only. A reader learns more from one complete value than from
+# five cut off mid-word, so values are packed until the next one would break
+# the budget rather than trimmed to fill it. The one exception is a first
+# value that is longer than the whole budget: that gets an ellipsis, since the
+# alternative is an empty cell.
+.toc_glimpse <- function( xx, size = 48, sep = " · " ) {
+
+  raw <- .rail_field( xx, "stable_first5" )
+  if( ! nzchar(raw) ) raw <- .rail_field( xx, "rg_preview" )
+  if( ! nzchar(raw) ) return( "" )
+
+  vals <- trimws( strsplit( raw, ";;", fixed = TRUE )[[1]] )
+  vals <- vals[ nzchar(vals) ]
+  if( ! length(vals) || ! is.finite(size) || size < 1 ) return( "" )
+
+  # Same rounding the PREVIEW block applies: a stored ratio arrives at full
+  # float precision (0.07142857142857142), which would eat the whole budget
+  # on one value and tell the reader nothing the rounded form does not.
+  vals <- round_preview( vals, digits = 3 )
+
+  out <- character(0)
+  for( v in vals ) {
+    if( nchar( paste( c( out, v ), collapse = sep ) ) > size ) break
+    out <- c( out, v )
+  }
+
+  if( ! length(out) )
+  { return( paste0( substr( vals[1], 1, max( 1, size - 1 ) ), "…" ) ) }
+
+  paste( out, collapse = sep )
+}
+
 .rail_field <- function( xx, f ) {
   v <- if( f %in% names(xx) ) xx[[f]] else ""
   if( is.null(v) || ! length(v) || is.na(v) ) return( "" )
@@ -176,11 +216,17 @@ rail_groups <- function( dgf ) {
 #' @param groups A named list of DGF subsets, as returned by [rail_groups()].
 #'   Empty groups are skipped.
 #' @param brand Text for the top bar. Defaults to `"Research Guide"`.
+#' @param glimpse Characters of example data to show under each variable's
+#'   label: the stabilized first values (`stable_first5`), or the preview
+#'   values for a variable the stabilizer leaves alone. Whole values only ---
+#'   the glimpse stops before the value that would break the budget rather
+#'   than cutting it --- so the count varies by how long they are. `0` leaves
+#'   the data out. Defaults to `48`.
 #'
 #' @return No return value; prints raw HTML.
 #' @seealso [rail_sections()]
 #' @export
-rail_contents <- function( groups, brand = "Research Guide" ) {
+rail_contents <- function( groups, brand = "Research Guide", glimpse = 48 ) {
 
   groups <- groups[ vapply( groups, nrow, 1L ) > 0 ]
   h <- character()
@@ -204,12 +250,15 @@ rail_contents <- function( groups, brand = "Research Guide" ) {
     for( v in names(ctx) ) {
       n   <- n + 1
       lab <- .rail_field( ctx[[v]], "dd_vlabel" ); if( lab == v ) lab <- ""
+      gl  <- .toc_glimpse( ctx[[v]], size = glimpse )
       add( '<li><a class="toc-unit" href="#', .rail_id(v), '">',
            '<span class="n">', sprintf( "%02d", n ), '</span>',
            '<span class="t">', .rail_esc(v), '</span></a>',
            '<ul class="toc-items"><li>',
            if( nzchar(lab) ) paste0( '<span class="it">', .rail_esc(lab), '</span>' ) else "",
-           '</li></ul></li>' )
+           '</li>',
+           if( nzchar(gl) ) paste0( '<li><span class="gl">', .rail_esc(gl), '</span></li>' ) else "",
+           '</ul></li>' )
     }
     add( '</ul>' )
   }

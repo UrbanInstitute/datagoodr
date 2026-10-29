@@ -4,13 +4,20 @@
 \alias{rail_contents}
 \title{Print the research guide's top bar and contents list}
 \usage{
-rail_contents(groups, brand = "Research Guide")
+rail_contents(groups, brand = "Research Guide", glimpse = 48)
 }
 \arguments{
 \item{groups}{A named list of DGF subsets, as returned by [rail_groups()].
 Empty groups are skipped.}
 
 \item{brand}{Text for the top bar. Defaults to `"Research Guide"`.}
+
+\item{glimpse}{Characters of example data to show under each variable's
+label: the stabilized first values (`stable_first5`), or the preview
+values for a variable the stabilizer leaves alone. Whole values only ---
+the glimpse stops before the value that would break the budget rather
+than cutting it --- so the count varies by how long they are. `0` leaves
+the data out. Defaults to `48`.}
 }
 \value{
 No return value; prints raw HTML.
