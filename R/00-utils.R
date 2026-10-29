@@ -343,6 +343,9 @@ get_dupes <- function( df, vhash ) {
 ## rule that decides which character columns may become numbers, and therefore
 ## the rule that keeps 06037 from silently becoming 6037.
 
+## A plain decimal / integer / scientific number: no thousands separators, currency symbols, etc.
+.plain_number_re <- "^-?([0-9]+\\.?[0-9]*|\\.[0-9]+)([eE][-+]?[0-9]+)?$"
+
 #' Is a character column SAFE to promote to numeric? (internal)
 #'
 #' Used by `create_dgf(read_as_text = TRUE)`: after reading every column as
@@ -367,7 +370,7 @@ get_dupes <- function( df, vhash ) {
   v <- v[!is.na(v) & nzchar(trimws(v))]
   if (length(v) == 0L) return(FALSE)
   u <- unique(trimws(v))
-  if (!all(grepl("^-?([0-9]+\\.?[0-9]*|\\.[0-9]+)([eE][-+]?[0-9]+)?$", u)))
+  if (!all(grepl(.plain_number_re, u)))
     return(FALSE)
   if (any(grepl("^-?0[0-9]", u))) return(FALSE)          # leading-zero integer
   int_like <- !grepl("[.eE]", u)
@@ -375,4 +378,23 @@ get_dupes <- function( df, vhash ) {
       max(nchar(gsub("[^0-9]", "", u[int_like]))) > 15L)  # past 2^53 exact range
     return(FALSE)
   TRUE
+}
+
+#' Would converting a character column to numbers LOSE information? (internal)
+#'
+#' TRUE when every non-blank value is a plain number (so `as.numeric()` converts all of
+#' them without an `NA`) yet `.safe_numeric()` refuses the column: a leading-zero integer
+#' (`"0155"` -> 155, `"00"` -> 0) or an integer past the 2^53 exact range. Such a column
+#' is a code or an ID, and a conversion that "succeeds" on it has silently corrupted it.
+#' Columns that need real cleaning to become numbers (`"$1,234"`) are NOT lossy in this
+#' sense: `as.numeric()` cannot read them, so only a stabilizer can.
+#'
+#' @param x A vector (coerced to character).
+#' @return A single logical.
+#' @keywords internal
+#' @noRd
+.lossy_as_number <- function(x) {
+  v <- trimws(as.character(x))
+  v <- v[!is.na(v) & nzchar(v)]
+  length(v) > 0L && all(grepl(.plain_number_re, unique(v))) && !.safe_numeric(v)
 }
