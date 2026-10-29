@@ -78,7 +78,7 @@ dgf.time <-  dgf[ rtype == "temporal",    ]
 
 ## Logical
 
-```{r logical, results="asis", echo=FALSE}
+```{r logical, results="asis", fig.width=8, fig.height=1.7, echo=FALSE}
 create_all_sections( dgf.log )
 
 ```

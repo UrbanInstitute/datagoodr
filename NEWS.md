@@ -22,14 +22,25 @@ data out.
 
 `boolebar()` draws a boolean variable as a single full-width bar split into its
 TRUE / FALSE / NA parts --- counts and shares printed on the bar in the report's
-accent orange, categories named above, and a tenths scale beneath. The scale is
-the point: without one a divided bar says only "these are the parts", and with
-one it says where each part sits in the whole.
+accent orange, categories named above in a light grey, and a tenths scale
+beneath. The scale is the point: without one a divided bar says only "these are
+the parts", and with one it says where each part sits in the whole.
 
-It replaces the stack of one-bar-per-category (`booleplot()`, still the default
-guide's graphic) in the compact style, where it is also shorter. A part too
-narrow to hold its own count carries it above the bar instead, with a leader
-back to the part, so a 0.1% missing category still says what it is.
+**It is now every style's boolean graphic**, not just the compact one. A part
+too narrow to hold its own count carries it above the bar instead, with a
+leader back to the part, so a 0.1% missing category still says what it is.
+Both boolean graphics also name their categories by the curated labels in
+`dd_f_levels` where a DGF has them, so a bar reads `0 (V-shaped)` rather
+than `0`.
+
+`booleplot()`, the stack of one bar per category, is still exported and still
+works --- a project that prefers it can put it back from `DG.R`:
+
+```r
+# in DG.R
+layout.logical <- sub( "paste_boolebar", "paste_booleplot",
+                       datagoodr:::default_layouts()$logical )
+```
 
 ### A compact research guide, for documentation
 

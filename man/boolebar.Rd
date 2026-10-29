@@ -12,13 +12,14 @@ boolebar(
   na_border = "#6E8498",
   tick_col = "#C3C8CF",
   axis_col = "#9AA3AC",
-  label_col = "#2B3339",
+  label_col = "#8A939B",
+  label_gap = 0.13,
   family = .report_family(),
   inset = 0.1,
   cex.label = 1.15,
   cex.value = 0.85,
   cex.axis = 0.85,
-  mar = c(1.9, 0.3, 1.4, 0.3)
+  mar = c(1.9, 0.3, 1.8, 0.3)
 )
 }
 \arguments{
@@ -39,7 +40,13 @@ that without it the bar has no edge against the page.}
 
 \item{tick_col, axis_col}{Colours for the tenth ticks and their numbers.}
 
-\item{label_col}{Colour of the category labels above the bar.}
+\item{label_col}{Colour of the category labels above the bar. A light grey
+by default: the labels name the parts, the counts on the bar carry the
+numbers, and setting them back keeps the two from competing.}
+
+\item{label_gap}{Distance from the top of the bar to the labels, in the
+plot's own units (the bar is 0.46 tall). Enough air that the labels read
+as a row of their own rather than as part of the bar.}
 
 \item{family}{Font family for every label on the plot. Defaults to the
 first of the report's own body stack that is installed, so the chart text
@@ -52,8 +59,8 @@ bar does not run edge to edge. Defaults to `0.10`.}
 in-bar counts, and the scale numbers.}
 
 \item{mar}{Plot margins, in lines. The defaults leave room for the labels
-above and the scale below and nothing else --- the bar itself runs the
-full width of the figure.}
+above (which sit `label_gap` clear of the bar, so the top margin carries
+them) and the scale below, and nothing else.}
 }
 \value{
 No return value; draws the bar on the active device.
