@@ -4,7 +4,7 @@
 \alias{get_design}
 \title{Compile the section design for each variable type}
 \usage{
-get_design(style = c("rg", "dd"), layouts = NULL)
+get_design(style = c("rg", "dd"), layouts = NULL, compact = FALSE)
 }
 \arguments{
 \item{style}{Either `"rg"` (research guide — the full data profile) or
@@ -14,6 +14,11 @@ table). Defaults to `"rg"`.}
 \item{layouts}{Optional named list of layout character vectors
 (`numeric`/`character`/`factor`/`logical`) that overrides the package
 defaults. Defaults to `NULL`.}
+
+\item{compact}{Logical; use the condensed layouts behind
+`create_rg(style = "compact")` as the defaults instead of the standard
+ones. Defaults to `FALSE`. A `layout.*` override in the global environment
+still wins either way, and an explicit `layouts` list ignores this.}
 }
 \value{
 A data frame containing the compiled layout design with columns

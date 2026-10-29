@@ -2,6 +2,46 @@
 
 ## New
 
+### A compact research guide, for documentation
+
+`create_rg(dgf, style = "compact")` scaffolds the same guide as the default
+`"rail"` style, condensed so a reader can scan several variables per screen
+instead of one. Nothing is left out --- the same blocks appear in the same
+order, for the same types:
+
+* **PROPERTIES is transposed** into a one-row strip at the top of each
+  variable's body (`paste_properties_horizontal()`), instead of a five-to-six
+  row table in the rail. In the rail that table is what set a unit's height, so
+  condensing anything else first would have shortened nothing.
+* **The long tables and the preview are kept short.** A block function that
+  declares `size`, `max.lines` or `max.rows` is handed the active style's
+  values at render time, so one layout row lists 8 factor levels over 2 preview
+  lines in a compact guide and 50 over 4 in the default one. Length is a
+  property of the style, not of the layout.
+* **The numeric DISTRIBUTION SHAPE block is dropped** --- skew and kurtosis are
+  already drawn above the histogram.
+* **Smaller graphics and roughly half the whitespace**, via `RG-compact.qmd`
+  and `datagoodr-compact.css`.
+
+On the package's demo dataset that is a 35% shorter page, and a median variable
+of 380px against 610px. The compact guide is the rail renderer at a higher
+density, so everything that customizes a rail guide --- `DG.R` overrides, a
+`layout.*` shadow, a local stylesheet --- works on it unchanged. `get_design(compact
+= TRUE)` returns its design, and `rail_sections(style = "compact")` draws it,
+which also lets one document mix densities group by group.
+
+`vignette("report-styles")` compares the three styles and shows how to switch,
+and the documentation site carries the baseball guide in both the default and
+the compact style for comparison.
+
+### A truncated FACTOR LEVELS table now says what it left out
+
+The table has always listed at most 50 levels and simply stopped. It now closes
+with the tally it was hiding (`+ 10 more levels`), counted against the
+variable's DISTINCT property rather than against the levels in hand --- the DGF
+itself stores only the 50 most frequent, so counting those would under-report.
+This is the one output change to an existing guide.
+
 ### The DGF carries a two-axis guess and a suggested stabilizer (formex v7)
 
 formex v7 models a value's format as `(semantic_type, format_style, unit_type)`
@@ -194,6 +234,16 @@ formex-stabilized EIN are now the same string.
 
 ## Bug fixes
 
+* **A zero-padded code is no longer typed `number`.** A group exemption number (`0155`), a
+  `00`/`11` code and a zero-padded key (`000123`) were typed `number` and lost their leading
+  zeros. `create_dgf()` accepts a formex stabilizer's conversion to numbers whenever every value
+  converts without an `NA`, and `as.numeric("0155")` does. It now refuses the conversion when every
+  value is a plain number that `.safe_numeric()` rejects (a leading-zero integer, or one past
+  2^53), the same rule `read_as_text` uses. A column that needs real cleaning to become a number
+  (`"$1,234"`) is unaffected. A two-state code that is not a flag now falls back to `categorical`
+  instead of `text`, so such a code is typed the same whether it is read from a data frame
+  or a `.csv` path.
+
 * **A compact date label now reads the run-together form.**
   `as_yyyymmdd("20190315")` returned `NA` — the exact case the compact label
   exists for. A label names the element *order*, not the punctuation, so
@@ -245,6 +295,12 @@ formex-stabilized EIN are now the same string.
   report's folder is now written relative to it (`../dgf/DGF.xlsx`); Quarto resolves
   the path from the `.qmd`, so the old as-given path failed with `path does not
   exist`.
+
+* **`booleplot()` no longer fails on a short figure.** It snapshotted the whole
+  graphics parameter list and put it back on exit; restoring the device-derived
+  `"pin"` it had captured errored with `invalid value specified for graphical
+  parameter` whenever the chunk's `fig.height` was small — which every compact
+  guide's boolean section is. It now saves and restores only the margin it sets.
 
 ## Internal
 

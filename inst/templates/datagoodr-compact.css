@@ -1,0 +1,239 @@
+/* ==========================================================================
+   datagoodr research guide stylesheet -- "compact" style
+   Served by datagoodr_css("compact"). A project-local datagoodr-compact.css
+   overrides it. The default guide uses datagoodr.css; the vintage grid and the
+   data dictionary use datagoodr-vintage.css.
+
+   Same structure and the same tokens as datagoodr.css -- this is that
+   stylesheet at documentation density: smaller type steps, roughly half the
+   vertical rhythm, and a PROPERTIES strip in the body instead of a table in
+   the rail (see .rail_unit in R/03-04-rail-layout.R). Tweak the tokens in
+   :root to restyle the whole report.
+   ========================================================================== */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+
+:root {
+  --ground: #ffffff;
+  --surface: #f3f4f6;
+  --ink: #1f2429;
+  --ink-mid: #4d565f;
+  --ink-soft: #6d7681;
+  --rule: #dcdfe4;
+  --rule-strong: #c3c8cf;
+  --accent: #bd5416;
+  --accent-ink: #8f3f10;
+  --accent-wash: #fbf0e7;
+  --navy: #153243;
+
+  --font-display: "Zilla Slab", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-math: "Source Serif 4", Cambria, Georgia, serif;
+  --font-mono: "Anonymous Pro", Consolas, Menlo, monospace;
+
+  /* one step down from the default guide across the board */
+  --step--2: .6875rem;
+  --step--1: .75rem;
+  --step-0: .9375rem;
+  --step-1: 1.0625rem;
+  --step-2: 1.1875rem;
+  --step-4: 2rem;
+
+  --rail: 13rem;
+  --page: 62rem;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.4;
+}
+
+/* --- page width ----------------------------------------------------------- */
+#quarto-content { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem; display: block; }
+#quarto-content main.content { max-width: none; margin: 0; padding: 0; }
+#title-block-header { max-width: var(--page); margin: 0 auto; padding: 1.5rem 1.5rem 0; }
+#quarto-margin-sidebar, #quarto-sidebar { display: none; }
+
+/* --- masthead ------------------------------------------------------------- */
+#title-block-header .title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--step-4);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+#title-block-header .subtitle {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  color: var(--ink-soft);
+  margin-top: .25rem;
+}
+
+/* --- sticky top bar ------------------------------------------------------- */
+.dg-bar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--ground) 92%, transparent);
+  backdrop-filter: saturate(160%) blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin-top: .9rem;
+}
+.dg-bar-inner { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .4rem 0; }
+.dg-bar-brand {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--step-0);
+  color: var(--ink); text-decoration: none; white-space: nowrap;
+}
+.dg-bar-nav { display: flex; gap: .15rem; flex-wrap: wrap; margin-left: auto; }
+.dg-bar-nav a {
+  font-size: var(--step--1); font-weight: 600; color: var(--ink-soft);
+  text-decoration: none; padding: .1rem .4rem; border-radius: 2px;
+}
+.dg-bar-nav a:hover { color: var(--accent-ink); background: var(--accent-wash); }
+
+/* --- contents ------------------------------------------------------------- */
+.dg-contents { padding: 1.25rem 0 .5rem; }
+.dg-contents h2 {
+  font-family: var(--font-body); font-size: var(--step--1); letter-spacing: .12em;
+  text-transform: uppercase; font-weight: 600; color: var(--ink-soft);
+  margin: 0 0 .6rem; border: 0;
+}
+.toc-part {
+  font-family: var(--font-body); font-size: var(--step--2); letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700; color: var(--accent-ink);
+  margin: .9rem 0 .3rem;
+}
+.dg-contents .toc-part:first-of-type { margin-top: 0; }
+.toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.toc > li {
+  display: grid; grid-template-columns: var(--rail) 1fr; gap: .2rem 1.5rem;
+  border-bottom: 1px solid var(--rule); padding: .2rem .2rem;
+}
+.toc-unit { display: flex; gap: .6rem; align-items: baseline; text-decoration: none; color: var(--ink); }
+.toc-unit:hover { color: var(--accent-ink); }
+.toc .n {
+  font-family: var(--font-math); font-variant-numeric: tabular-nums;
+  font-size: var(--step--1); font-weight: 600; color: inherit; flex: 0 0 auto;
+}
+.toc .t { font-family: var(--font-mono); font-weight: 700; font-size: var(--step--1); line-height: 1.3; }
+.toc-items { list-style: none; margin: 0; padding: 0; }
+.toc-items li { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .4rem; }
+.toc-items .it { font-size: var(--step--1); color: var(--ink-mid); line-height: 1.3; }
+.toc-items .chips { display: inline-flex; flex-wrap: wrap; gap: .2rem; }
+.chip {
+  font-size: var(--step--2); font-weight: 600; line-height: 1; white-space: nowrap;
+  padding: .18rem .35rem; border-radius: 2px;
+  border: 1px solid var(--rule-strong); color: var(--ink-soft); background: var(--ground);
+}
+.chip--mode { border-color: var(--accent); color: var(--accent-ink); }
+
+/* --- group headers (Boolean / Numeric / ...) ------------------------------- */
+main h2.dg-part, main .dg-part > h2, main h2 {
+  font-family: var(--font-body); font-size: var(--step--1); letter-spacing: .16em;
+  text-transform: uppercase; font-weight: 700;
+  color: var(--ink); background: #e9ecef;
+  border: 0; border-radius: 6px;
+  margin: 1.9rem 0 1rem; padding: .45rem 1.1rem;
+}
+main h2 .anchorjs-link { color: var(--ink-soft); }
+.dg-contents h2 { color: var(--ink-soft); background: none; padding: 0; border-radius: 0; margin-top: 0; }
+
+/* --- one variable = one unit: rail + body ---------------------------------- */
+.dg-unit {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  gap: 1.75rem;
+  padding: .9rem 0;
+  border-top: 1px solid var(--rule);
+}
+main h2 + .dg-unit { border-top: 0; }
+/* The rail is text only in this style -- its PROPERTIES table moves into the
+   body as a one-row strip -- so it is short enough not to need stickiness. */
+.dg-rail { align-self: start; min-width: 0; }
+/* 96ch of the preview font = one full preview line (.compact_cols in
+   R/03-04-rail-layout.R), so graphics and preview text end at the same edge. */
+.dg-body {
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  max-width: 96ch;
+}
+
+.dg-kind {
+  font-family: var(--font-math); font-variant-numeric: tabular-nums;
+  font-size: var(--step--2); letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 600; color: var(--accent); margin: 0 0 .2rem;
+}
+.dg-label {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--step-1);
+  line-height: 1.15; letter-spacing: -0.01em; color: var(--ink);
+  margin: 0 0 .2rem; text-wrap: balance; overflow-wrap: anywhere;
+}
+.dg-label--code { font-family: var(--font-mono); font-size: var(--step-0); letter-spacing: 0; }
+.dg-vname { margin: 0 0 .3rem; }
+.dg-vname code {
+  font-family: var(--font-mono); font-size: .75rem; font-weight: 700;
+  color: var(--ink-mid); background: var(--surface);
+  padding: .05rem .3rem; border-radius: 2px; overflow-wrap: anywhere;
+}
+.dg-desc {
+  margin: 0; color: var(--ink-soft); font-size: var(--step--1);
+  line-height: 1.4; font-style: italic;
+}
+
+/* --- blocks: a small-caps title over a hairline ---------------------------- */
+.dg-block { margin-top: .75rem; }
+.dg-body > .dg-block:first-child { margin-top: 0; }
+.dg-rail .dg-block { margin-top: .7rem; }
+
+/* the package prints block titles as "**STATS**:" - hide the colon, keep the word */
+.dg-block p:has(> strong) {
+  font-size: 0; margin: 0 0 .3rem; padding-bottom: .18rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.dg-block p:has(> strong) ~ p:has(> strong) { margin-top: .7rem; }
+.dg-block p > strong {
+  font-family: var(--font-body); font-size: var(--step--2); letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
+}
+
+/* --- tables ---------------------------------------------------------------- */
+.dg-unit table { width: auto; margin: 0; border-collapse: collapse; font-size: .72rem; }
+.dg-unit .table > :not(caption) > * > * { padding: .05rem .7rem .05rem 0; background: none; box-shadow: none; }
+.dg-unit tbody, .dg-unit thead, .dg-unit tr, .dg-unit td, .dg-unit th { border: 0; }
+.dg-unit tr { border-bottom: 1px solid var(--rule); }
+.dg-unit td { font-family: var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.dg-unit th {
+  font-family: var(--font-body); font-size: .62rem; letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
+  border-bottom: 1px solid var(--rule-strong);
+}
+/* PROPERTIES is transposed in this style and sits in the body, so its header
+   row carries the property names and has to stay visible. A vertical
+   PROPERTIES table in the rail -- a rail-style section drawn inside a compact
+   document -- still hides the "STAT VAL" header, which is noise. */
+.dg-rail .dg-props thead, .dg-shape thead { display: none; }
+.dg-rail .dg-props table { width: 100%; }
+.dg-stats { max-height: 13rem; overflow-y: auto; }
+/* the tally under a truncated level table ("+ 12 more levels") */
+.dg-stats em, .dg-stats p em { font-family: var(--font-body); color: var(--ink-soft); font-size: var(--step--2); }
+
+/* --- preview and graphics -------------------------------------------------- */
+pre.dg-preview {
+  font-family: inherit; font-size: 1em; line-height: 1.4;
+  white-space: pre-wrap; overflow: visible; color: var(--ink-mid);
+  background: none; border: 0; padding: 0; margin: 0;
+}
+.dg-unit img, .dg-unit svg { max-width: 100%; height: auto; }
+.dg-graphic p { margin: 0; }
+
+/* --- narrow screens: stack the rail above the body ------------------------- */
+@media (max-width: 46rem) {
+  .toc > li { grid-template-columns: 1fr; }
+  .dg-unit { grid-template-columns: 1fr; gap: .75rem; }
+  .dg-bar-nav { display: none; }
+}

@@ -4,7 +4,7 @@
 \alias{paste_levels_freq}
 \title{Print the combined FACTOR LEVELS table into the RG}
 \usage{
-paste_levels_freq(VNAME, LABEL = "FACTOR LEVELS")
+paste_levels_freq(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50)
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout
@@ -12,6 +12,10 @@ passes `"dd_f_levels"`).}
 
 \item{LABEL}{A character string for the section title. Defaults to
 `"FACTOR LEVELS"`.}
+
+\item{max.rows}{Most levels to list. The rest are summarised as a
+"+ N more levels" line rather than dropped silently. Defaults to `50`;
+the compact guide passes a much smaller number (see `.rail_knobs`).}
 }
 \value{
 No return value; prints the table to the RG.

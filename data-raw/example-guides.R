@@ -1,30 +1,39 @@
 ###############################################################################
 ### Build the example research guides shown on the documentation site
 ###############################################################################
-# Renders three research guides with the default (rail) style and copies them to
+# Renders the example research guides and copies them to
 # pkgdown/assets/examples/, which pkgdown publishes at <site>/examples/:
 #
-#   baseball.html   dg_baseball (shipped with datagoodr) + its dictionary
-#   starwars.html   dplyr::starwars
-#   mtcars.html     datasets::mtcars, with the car names split into make/model
+#   baseball.html          dg_baseball (shipped with datagoodr) + its dictionary
+#   baseball-compact.html  the same DGF in the compact style, for comparison
+#   starwars.html          dplyr::starwars
+#   mtcars.html            datasets::mtcars, with the names split into make/model
 #
 # vignettes/example-guides.Rmd shows the same code and links to the pages.
 # Needs quarto and the suggested graphics packages (treemap, wordcloud, ...).
 # Re-run from the package root after changing the report:
-#   Rscript data-raw/example-guides.R
+#
+#   Rscript data-raw/example-guides.R                   # all of them
+#   Rscript data-raw/example-guides.R baseball-compact  # just this one
+#
+# Each page is a few megabytes and is committed, so rebuild only what changed.
 
 library( datagoodr )
 
 out <- "pkgdown/assets/examples"
 dir.create( out, recursive = TRUE, showWarnings = FALSE )
 
+only <- commandArgs( trailingOnly = TRUE )
+
 # Build in a temp folder (quarto writes scratch files next to the document),
 # then keep just the self-contained .html.
-build_guide <- function( dgf, name ) {
+build_guide <- function( dgf, name, style = "rail" ) {
+  if( length(only) && ! name %in% only )
+  { message( "Skipping ", name ); return( invisible(NULL) ) }
   work <- file.path( tempdir(), paste0( "rg-", name ) )
   unlink( work, recursive = TRUE ); dir.create( work )
   suppressMessages( create_rg( dgf, dir = work, file = paste0( name, ".qmd" ),
-                               render = TRUE, overwrite = TRUE ) )
+                               style = style, render = TRUE, overwrite = TRUE ) )
   file.copy( file.path( work, paste0( name, ".html" ) ), out, overwrite = TRUE )
   message( "Built ", file.path( out, paste0( name, ".html" ) ) )
 }
@@ -49,6 +58,9 @@ dgf <- label_levels( dgf, list(
   bats   = c( R = "right", L = "left", B = "both" ),
   throws = c( R = "right", L = "left" ) ) )
 build_guide( dgf, "baseball" )
+
+# the same DGF, drawn in the compact style: same blocks, documentation density
+build_guide( dgf, "baseball-compact", style = "compact" )
 
 
 ## starwars -------------------------------------------------------------------

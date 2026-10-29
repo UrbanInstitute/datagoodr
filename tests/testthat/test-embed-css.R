@@ -44,7 +44,7 @@ test_that("embed_css writes the stylesheet in and drops the runtime chunk", {
 })
 
 test_that("the embedded copy matches the packaged stylesheet", {
-  for (style in c("rail", "vintage")) {
+  for (style in c("rail", "vintage", "compact")) {
     p <- scaffold_css(embed = TRUE, style = style)
     embedded <- embedded_lines(readLines(p$qmd, warn = FALSE))
     packaged <- strsplit(datagoodr_css(style), "\n", fixed = TRUE)[[1]]

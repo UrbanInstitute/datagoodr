@@ -100,6 +100,37 @@ function — all by editing the character vector.
 package default for that type, so every guide you render picks it up without
 passing `layouts` each time.
 
+## Density is a style, not a layout
+
+`create_rg(style = "compact")` is the same design drawn shorter. Its layouts
+differ from the defaults in only two rows — PROPERTIES is transposed into a
+one-row strip, and the numeric DISTRIBUTION SHAPE block goes, since skew and
+kurtosis are already drawn above the histogram:
+
+```{r compact-design}
+cp <- get_design(compact = TRUE)
+cp[cp$TYPE == "number", c("DIV", "VNAME", "LABEL", "FUNCTION")]
+```
+
+How *long* each block is does not live in the design at all. A reporting
+function can declare `size` (characters per line), `max.lines` (preview rows)
+or `max.rows` (table rows), and the renderer hands it the active style's
+values — so the one `paste_levels_freq` row above lists 8 factor levels in a
+compact guide and 50 in the default one. Write your own renderer with those
+arguments and it condenses with the rest:
+
+```{r density, eval=FALSE}
+# in DG.R - a renderer that respects the guide's density
+paste_levels_freq <- function(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50) {
+  # ... your own table, trimmed to max.rows ...
+}
+```
+
+The third lever is the document: `RG-compact.qmd` sets a smaller `fig.height`
+per group, and `datagoodr-compact.css` halves the spacing. Both are yours to
+edit in a scaffolded project. `vignette("report-styles")` compares the styles
+and shows how to switch between them.
+
 ## Where this fits
 
 `create_rg()` scaffolds a project with a `DG.R` precisely so these overrides live

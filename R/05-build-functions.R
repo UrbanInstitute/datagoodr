@@ -17,6 +17,8 @@
 #'
 #' @param style Which stylesheet:
 #'   * `"rail"` - the default research guide (`datagoodr.css`).
+#'   * `"compact"` - the condensed research guide
+#'     (`datagoodr-compact.css`), used by `create_rg(style = "compact")`.
 #'   * `"vintage"` - the original three-column grid, used by
 #'     `create_rg(style = "vintage")` and by the data dictionary
 #'     (`datagoodr-vintage.css`).
@@ -27,11 +29,11 @@
 #'
 #' @details A project-local copy in the render directory takes precedence over
 #'   the packaged one, so a scaffolded project can be restyled by editing its
-#'   own copy: `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage. A
-#'   local `datagoodr.css` that is not a rail stylesheet (an older project's
-#'   copy of the vintage one) is skipped for `"rail"`, so it cannot break a new
-#'   rail guide, and still serves `"vintage"` when no `datagoodr-vintage.css`
-#'   exists.
+#'   own copy: `datagoodr.css` for rail, `datagoodr-compact.css` for compact,
+#'   `datagoodr-vintage.css` for vintage. A local `datagoodr.css` that is not a
+#'   rail stylesheet (an older project's copy of the vintage one) is skipped for
+#'   `"rail"`, so it cannot break a new rail guide, and still serves
+#'   `"vintage"` when no `datagoodr-vintage.css` exists.
 #'
 #' @return A single character string of CSS (empty if no stylesheet is found).
 #' @export
@@ -44,9 +46,13 @@ datagoodr_css <- function( style = NULL ) {
   path <- if( is.null(style) ) {
     if( file.exists(local) ) local else pkg( "datagoodr-vintage.css" )
   } else {
-    style <- match.arg( style, c("rail", "vintage") )
+    style <- match.arg( style, c("rail", "vintage", "compact") )
     if( style == "rail" ) {
       if( file.exists(local) && is_rail(local) ) local else pkg( "datagoodr.css" )
+    } else if( style == "compact" ) {
+      # compact has its own filename, so a local copy needs no sniffing
+      if( file.exists("datagoodr-compact.css") ) "datagoodr-compact.css"
+      else pkg( "datagoodr-compact.css" )
     } else {
       if( file.exists("datagoodr-vintage.css") ) "datagoodr-vintage.css"
       else if( file.exists(local) && ! is_rail(local) ) local
@@ -77,21 +83,23 @@ datagoodr_css <- function( style = NULL ) {
 #'   standard name (`research-guide.qmd` / `data-dictionary.qmd`). The template
 #'   is written straight to this name, so the overwrite guard applies to the
 #'   file you actually asked for --- naming one report never touches another.
-#' @param style Research guide style: `"rail"` (the default) or `"vintage"`
-#'   (the original three-column grid). Ignored for the data dictionary, which
-#'   always uses the vintage grid.
+#' @param style Research guide style: `"rail"` (the default), `"compact"` (the
+#'   same guide condensed for documentation) or `"vintage"` (the original
+#'   three-column grid). Ignored for the data dictionary, which always uses the
+#'   vintage grid.
 #'
 #' @return Invisibly, the path to the copied template.
 #' @seealso [create_rg()], [create_dd()]
 #' @export
 use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
-                                    dg = TRUE, overwrite = FALSE,
-                                    file = NULL, style = c("rail", "vintage") ) {
+                                    dg = TRUE, overwrite = FALSE, file = NULL,
+                                    style = c("rail", "vintage", "compact") ) {
 
   flavor   <- match.arg( flavor )
   style    <- if( flavor == "dd" ) "vintage" else match.arg( style )
   template <- if( flavor == "dd" ) "DD.qmd"
-              else if( style == "vintage" ) "RG-vintage.qmd" else "RG.qmd"
+              else switch( style, vintage = "RG-vintage.qmd",
+                                  compact = "RG-compact.qmd", "RG.qmd" )
   out.name <- if( ! is.null(file) && nzchar(file) ) file
               else if( flavor == "rg" ) "research-guide.qmd"
               else "data-dictionary.qmd"
@@ -116,7 +124,8 @@ use_datagoodr_template <- function( dir = ".", flavor = c("rg", "dd"),
 
   # ship a local copy of the style's stylesheet so the project can be restyled
   # (never overwriting one the user may have edited)
-  css.name <- if( style == "vintage" ) "datagoodr-vintage.css" else "datagoodr.css"
+  css.name <- switch( style, vintage = "datagoodr-vintage.css",
+                             compact = "datagoodr-compact.css", "datagoodr.css" )
   css.dest <- file.path( dir, css.name )
   if( ! file.exists(css.dest) )
   { file.copy( system.file("templates", css.name, package = "datagoodr"),
@@ -266,7 +275,9 @@ embed_css_block <- function( path, style = "rail" ) {
   # quarto rejects the R form outright.
   block <- c( "```{css echo=FALSE}",
               paste0( "/* Embedded copy of ",
-                      if( style == "vintage" ) "datagoodr-vintage.css" else "datagoodr.css",
+                      switch( style, vintage = "datagoodr-vintage.css",
+                                     compact = "datagoodr-compact.css",
+                                     "datagoodr.css" ),
                       " - edit freely. Because it is" ),
               "   embedded, it no longer tracks the packaged stylesheet. */",
               strsplit( css, "\n", fixed = TRUE )[[1]],
@@ -315,7 +326,11 @@ embed_css_block <- function( path, style = "rail" ) {
 #' @param style Layout style. `"rail"` (the default) gives each variable a
 #'   left rail (data type, label, name, description, properties) beside its
 #'   graphic, preview and stats, grouped by data type under a numbered contents
-#'   list. `"vintage"` is the original three-column grid.
+#'   list. `"compact"` is that same guide condensed for documentation: the same
+#'   blocks in the same order, but PROPERTIES becomes a one-row strip, the
+#'   preview and the long tables are kept short, the graphics are drawn smaller,
+#'   and the whitespace is roughly halved --- several variables to a screen
+#'   instead of one. `"vintage"` is the original three-column grid.
 #'
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
 #'
@@ -325,14 +340,15 @@ embed_css_block <- function( path, style = "rail" ) {
 #'   and leaves your edits to the document intact.
 #'
 #'   Each style ships its own stylesheet next to the document:
-#'   `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage.
+#'   `datagoodr.css` for rail, `datagoodr-compact.css` for compact,
+#'   `datagoodr-vintage.css` for vintage.
 #'
 #' @seealso [create_dd()], [update_rg()], [use_datagoodr_template()]
 #' @export
 create_rg <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
                        file = "research-guide.qmd", embed_css = FALSE,
                        render = FALSE, overwrite = FALSE,
-                       style = c("rail", "vintage") ) {
+                       style = c("rail", "vintage", "compact") ) {
   style <- match.arg( style )
   build_report( dgf, data, dir, file, flavor = "rg", embed_css = embed_css,
                 render = render, overwrite = overwrite, style = style )

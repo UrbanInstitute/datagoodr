@@ -11,15 +11,16 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, comment = "#>")
 ```
 
-Three finished research guides, each built from a familiar dataset with a few
-lines of code. Open one to see what `create_rg()` produces, then read the code
-below it to see how little it took.
+Finished research guides, each built from a familiar dataset with a few lines
+of code. Open one to see what `create_rg()` produces, then read the code below
+it to see how little it took.
 
 | Guide | Data | What it shows |
 |---|---|---|
 | [Baseball players](../examples/baseball.html) | `dg_baseball`, shipped with datagoodr | messy as-entered text: written dates, `$851,950` salaries, coded levels |
 | [Star Wars characters](../examples/starwars.html) | `dplyr::starwars` | list columns (films, vehicles) and missing values |
 | [Motor Trend cars](../examples/mtcars.html) | `datasets::mtcars` | a small numeric dataset with 0/1 codes retyped as true/false |
+| [Baseball players, compact](../examples/baseball-compact.html) | the baseball DGF again | the same guide in the `"compact"` style: same blocks, 35% shorter page |
 
 The links open the guides on the package website; they are built by
 `data-raw/example-guides.R` in the source repository.
@@ -38,8 +39,11 @@ variable is one unit:
   and distribution shape for numbers, factor levels for categories, the most
   common values for text.
 
-This is the default `"rail"` style. The original three-column grid is still
-available as `create_rg(style = "vintage")`.
+This is the default `"rail"` style. `create_rg(style = "compact")` draws the
+same units condensed for documentation -- the properties table becomes a
+one-row strip above the graphic, the preview and the long tables are kept
+short, and the whitespace is roughly halved. The original three-column grid is
+still available as `create_rg(style = "vintage")`.
 
 ## Baseball players
 
@@ -71,6 +75,17 @@ create_rg(dgf, dir = "baseball", render = TRUE)
 ```
 
 [Open the baseball guide](../examples/baseball.html)
+
+The same DGF renders in any style, so publishing a condensed copy beside the
+full one is one more call with a different file name:
+
+```{r}
+create_rg(dgf, dir = "baseball", file = "baseball-compact.qmd",
+          style = "compact", render = TRUE)
+```
+
+[Open the compact baseball guide](../examples/baseball-compact.html) --- same
+blocks, same order, a 35% shorter page. See `vignette("report-styles")`.
 
 ## Star Wars characters
 

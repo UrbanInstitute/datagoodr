@@ -9,6 +9,8 @@ datagoodr_css(style = NULL)
 \arguments{
 \item{style}{Which stylesheet:
 * `"rail"` - the default research guide (`datagoodr.css`).
+* `"compact"` - the condensed research guide
+  (`datagoodr-compact.css`), used by `create_rg(style = "compact")`.
 * `"vintage"` - the original three-column grid, used by
   `create_rg(style = "vintage")` and by the data dictionary
   (`datagoodr-vintage.css`).
@@ -29,9 +31,9 @@ rules in your project `.qmd`).
 \details{
 A project-local copy in the render directory takes precedence over
   the packaged one, so a scaffolded project can be restyled by editing its
-  own copy: `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage. A
-  local `datagoodr.css` that is not a rail stylesheet (an older project's
-  copy of the vintage one) is skipped for `"rail"`, so it cannot break a new
-  rail guide, and still serves `"vintage"` when no `datagoodr-vintage.css`
-  exists.
+  own copy: `datagoodr.css` for rail, `datagoodr-compact.css` for compact,
+  `datagoodr-vintage.css` for vintage. A local `datagoodr.css` that is not a
+  rail stylesheet (an older project's copy of the vintage one) is skipped for
+  `"rail"`, so it cannot break a new rail guide, and still serves
+  `"vintage"` when no `datagoodr-vintage.css` exists.
 }

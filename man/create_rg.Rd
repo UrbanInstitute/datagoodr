@@ -12,7 +12,7 @@ create_rg(
   embed_css = FALSE,
   render = FALSE,
   overwrite = FALSE,
-  style = c("rail", "vintage")
+  style = c("rail", "vintage", "compact")
 )
 }
 \arguments{
@@ -43,7 +43,11 @@ packaged stylesheet.}
 \item{style}{Layout style. `"rail"` (the default) gives each variable a
 left rail (data type, label, name, description, properties) beside its
 graphic, preview and stats, grouped by data type under a numbered contents
-list. `"vintage"` is the original three-column grid.}
+list. `"compact"` is that same guide condensed for documentation: the same
+blocks in the same order, but PROPERTIES becomes a one-row strip, the
+preview and the long tables are kept short, the graphics are drawn smaller,
+and the whitespace is roughly halved --- several variables to a screen
+instead of one. `"vintage"` is the original three-column grid.}
 }
 \value{
 Invisibly, the path to the scaffolded (or rendered) document.
@@ -59,7 +63,8 @@ The DGF path is baked into the document's YAML, so it renders on its
   and leaves your edits to the document intact.
 
   Each style ships its own stylesheet next to the document:
-  `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage.
+  `datagoodr.css` for rail, `datagoodr-compact.css` for compact,
+  `datagoodr-vintage.css` for vintage.
 }
 \seealso{
 [create_dd()], [update_rg()], [use_datagoodr_template()]

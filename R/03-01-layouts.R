@@ -104,3 +104,45 @@ default_layouts <- function() {
       "div8 ;; rg_graphics    ;;             ;; paste_temporal_graphic" )
   )
 }
+
+
+#' Compact section layouts
+#'
+#' The layouts behind `create_rg(style = "compact")`: the default set (see
+#' \link{default_layouts}) with the two edits that shorten a variable's unit
+#' most ---
+#'
+#' * PROPERTIES is drawn by `paste_properties_horizontal`, a one-row strip
+#'   rather than a five-to-six row vertical table, and loses its block title,
+#'   which the strip's own column headers (ROWS, DISTINCT, ...) already say;
+#' * the numeric DISTRIBUTION SHAPE block is dropped, since skew and kurtosis
+#'   are already drawn above the histogram.
+#'
+#' Everything else is the default layout, so a compact guide shows the same
+#' blocks, in the same order, for the same types.
+#'
+#' @return A named list of character-vector layouts, keyed as
+#'   \link{default_layouts}.
+#'
+#' @details How *long* a block is --- preview lines, table rows --- is not a
+#'   layout property: the renderer passes the active style's limits to any block
+#'   function that declares them (see `.rail_knobs`), so one layout row prints 8
+#'   factor levels in a compact guide and 50 in the default one.
+#' @keywords internal
+#' @noRd
+compact_layouts <- function() {
+
+  # "div ;; column ;; LABEL ;; function" -> the same row drawn horizontally,
+  # with no label of its own
+  condense <- function( row ) {
+    p <- trimws( strsplit( row, ";;" )[[1]] )
+    if( length(p) == 4 && p[4] == "paste_properties" )
+      row <- paste( p[1], p[2], "", "paste_properties_horizontal", sep = " ;; " )
+    row
+  }
+
+  lapply( default_layouts(), function( rows ) {
+    rows <- vapply( rows, condense, character(1), USE.NAMES = FALSE )
+    rows[ ! grepl( "paste_distribution_shape", rows ) ]
+  } )
+}

@@ -4,7 +4,7 @@
 \alias{paste_preview_chr}
 \title{Print Preview of a Character Variable into RG}
 \usage{
-paste_preview_chr(VNAME, LABEL = "PREVIEW", size = 68)
+paste_preview_chr(VNAME, LABEL = "PREVIEW", size = 68, max.lines = 4)
 }
 \arguments{
 \item{VNAME}{A character string naming the DGF column to read (the layout
@@ -14,6 +14,10 @@ passes `"rg_preview"`).}
 `"PREVIEW"`.}
 
 \item{size}{Maximum line width, in characters. Defaults to `80`.}
+
+\item{max.lines}{Maximum wrapped rows to print, which is what keeps the
+preview to a short strip. Defaults to `4`; the compact guide passes fewer
+(see `.rail_knobs`).}
 }
 \value{
 No return value; prints the preview block to the RG.

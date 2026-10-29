@@ -207,8 +207,12 @@ main h2 + .dg-unit { border-top: 0; }
   text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
   border-bottom: 1px solid var(--rule-strong);
 }
-.dg-props thead, .dg-shape thead { display: none; }
-.dg-props table { width: 100%; }
+/* A PROPERTIES table in the rail is vertical, so its header row ("STAT VAL")
+   is noise. The compact style transposes that table into a strip in the body,
+   where the header row carries the property names and has to stay - hence the
+   placement in the selector, not just the class. */
+.dg-rail .dg-props thead, .dg-shape thead { display: none; }
+.dg-rail .dg-props table { width: 100%; }
 .dg-stats { max-height: 26rem; overflow-y: auto; }
 
 /* --- preview and graphics -------------------------------------------------- */
