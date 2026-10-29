@@ -38,8 +38,11 @@ variable is one unit:
   and distribution shape for numbers, factor levels for categories, the most
   common values for text.
 
-This is the default `"rail"` style. The original three-column grid is still
-available as `create_rg(style = "vintage")`.
+This is the default `"rail"` style. `create_rg(style = "compact")` draws the
+same units condensed for documentation -- the properties table becomes a
+one-row strip above the graphic, the preview and the long tables are kept
+short, and the whitespace is roughly halved. The original three-column grid is
+still available as `create_rg(style = "vintage")`.
 
 ## Baseball players
 

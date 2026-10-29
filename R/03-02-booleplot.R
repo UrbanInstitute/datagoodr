@@ -90,9 +90,13 @@ booleplot <- function(
   right_lab <- paste0( abbrev_num(values), "  (",
                        formatC( share, format = "f", digits = 1 ), "%)" )
 
-  old_par <- graphics::par( no.readonly = TRUE )
+  # Save and restore ONLY the parameter this function sets. Snapshotting the
+  # whole par list (no.readonly = TRUE) and putting it back fails on a short
+  # device -- restoring the device-derived "pin" it captured errors with
+  # "invalid value specified for graphical parameter", which is what a compact
+  # guide's small fig.height hit.
+  old_par <- graphics::par( mar = mar )
   on.exit( graphics::par(old_par) )
-  graphics::par( mar = mar )
 
   # Initiate the plotting frame so physical device dimensions are available
   graphics::plot.new()

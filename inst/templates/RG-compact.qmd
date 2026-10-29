@@ -1,0 +1,107 @@
+---
+title: "Research Guide"
+format:
+  html:
+    embed-resources: true
+    page-layout: full
+    toc: false
+execute:
+  keep-md: true
+params:
+  dgf_file: "DGF.xlsx"
+  data_file: null
+---
+
+<!-- datagoodr research guide template ("compact" style).
+
+     The same guide as the default "rail" template, condensed for
+     documentation: each variable is still a unit with a left rail (data type,
+     label, name, description) and a right column, but PROPERTIES is a one-row
+     strip, the preview and the long tables are kept short, the graphics are
+     drawn smaller, and the whitespace is roughly halved -- several variables
+     to a screen instead of one. Nothing is left out.
+
+     For the taller default guide use create_rg(style = "rail"), and for the
+     original three-column grid create_rg(style = "vintage").
+
+     Customize without editing the package:
+       - DG.R                   custom functions & layout overrides
+       - datagoodr-compact.css  fonts, colors and spacing
+     See vignette("report-aesthetics", package = "datagoodr").
+
+     Render from the console with:  quarto::quarto_render("research-guide.qmd")
+     or re-render against a different DGF/dataset without editing this file:
+       datagoodr::update_rg("research-guide.qmd", DGF = "DGF-V2.xlsx") -->
+
+```{r setup, include=FALSE}
+
+# datagoodr is the only package this report needs to attach. Everything it
+# renders is a datagoodr function, and those load what they need themselves.
+library( datagoodr )
+
+# Source the project customization file (custom functions / layout overrides)
+# if it sits next to this document.
+if( file.exists("DG.R") ) source("DG.R")
+
+# The DGF drives the whole report. The path comes from the `dgf_file` param, so
+# this document renders on its own - and update_rg() can point it at a
+# different DGF at render time without editing this file.
+dgf <- load_dgf( params$dgf_file, reader = "readxl" )
+
+# Optional raw dataset. The report renders from the DGF alone - every statistic
+# and graphic is already stored in its rg_* columns - so this stays NULL unless
+# a caller supplies `data_file`. When supplied it is read once here and left
+# available to DG.R and to any custom chunk that needs the underlying values.
+raw.data <- if( is.null( params$data_file ) ) NULL else
+            suppressMessages( readr::read_csv( params$data_file ) )
+
+# One group per report template (dg_render_type), in display order. Each group
+# gets its own chunk below because each graphic needs its own fig size.
+groups <- rail_groups( dgf )
+```
+
+```{r contents, echo=FALSE, results="asis"}
+rail_contents( groups )
+```
+
+```{r boolean, echo=FALSE, results="asis", fig.width=8, fig.height=1.6}
+rail_sections( groups$Boolean, "Boolean", style = "compact" )
+```
+
+```{r categorical, echo=FALSE, results="asis", fig.width=8, fig.height=2.2}
+rail_sections( groups$Categorical, "Categorical", style = "compact" )
+```
+
+```{r numeric, echo=FALSE, results="asis", fig.width=8, fig.height=1.5}
+rail_sections( groups$Numeric, "Numeric", style = "compact" )
+```
+
+```{r text, echo=FALSE, results="asis", fig.width=8, fig.height=2.2}
+rail_sections( groups$Text, "Text", style = "compact" )
+```
+
+```{r identifier, echo=FALSE, results="asis"}
+rail_sections( groups$Identifier, "Identifier", style = "compact" )
+```
+
+```{r temporal, echo=FALSE, results="asis", fig.width=8, fig.height=2.6}
+rail_sections( groups$Temporal, "Temporal", style = "compact" )
+```
+
+```{r datagoodr-style, echo=FALSE, results="asis"}
+# The report stylesheet comes from a single source: datagoodr-compact.css (a
+# local copy overrides the packaged one). Edit that file to restyle the report.
+cat( "<style>\n", datagoodr_css("compact"), "\n</style>\n" )
+```
+
+```{r datagoodr-record, echo=FALSE, results="asis"}
+# Provenance for this render - which DGF produced this file, its content hash,
+# package/R/quarto versions, and when. Written as an HTML comment, so it travels
+# with the report without appearing in it; read it back with
+# datagoodr::read_render_record("research-guide.html").
+#
+#   visible  = TRUE  also prints it as a table in the report
+#   identify = TRUE  adds your username and absolute paths. Off by default:
+#                    this file is meant to be shared.
+render_record( dgf, params$dgf_file, params$data_file )
+```

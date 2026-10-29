@@ -110,6 +110,10 @@ check_length <- function(x) {
 #' @param layouts Optional named list of layout character vectors
 #'   (`numeric`/`character`/`factor`/`logical`) that overrides the package
 #'   defaults. Defaults to `NULL`.
+#' @param compact Logical; use the condensed layouts behind
+#'   `create_rg(style = "compact")` as the defaults instead of the standard
+#'   ones. Defaults to `FALSE`. A `layout.*` override in the global environment
+#'   still wins either way, and an explicit `layouts` list ignores this.
 #'
 #' @return A data frame containing the compiled layout design with columns
 #'   `TYPE`, `DIV`, `VNAME`, `LABEL`, and `FUNCTION`.
@@ -120,7 +124,8 @@ check_length <- function(x) {
 #'
 #' @seealso [parse_design()]
 #' @export
-get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
+get_design  <- function( style = c("rg", "dd"), layouts = NULL,
+                         compact = FALSE ) {
 
   style <- match.arg( style )
 
@@ -133,10 +138,10 @@ get_design  <- function( style = c("rg", "dd"), layouts = NULL ) {
 
   if( is.null(layouts) ) {
     # Single source of truth: the package defaults come from default_layouts()
-    # (R/03-01-layouts.R). A user can still shadow any one by defining
-    # layout.numeric / layout.character / ... in the global environment (e.g. a
-    # project DG.R or the QMD itself).
-    defaults <- default_layouts()
+    # (R/03-01-layouts.R), or compact_layouts() for the condensed guide. A user
+    # can still shadow any one by defining layout.numeric / layout.character /
+    # ... in the global environment (e.g. a project DG.R or the QMD itself).
+    defaults <- if( isTRUE(compact) ) compact_layouts() else default_layouts()
     resolve <- function( key ) {
       nm <- paste0( "layout.", key )
       if( exists( nm, envir = globalenv(), inherits = FALSE ) )

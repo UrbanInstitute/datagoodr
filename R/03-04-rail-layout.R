@@ -12,11 +12,34 @@
 #   rail : div7 PROPERTIES
 #   body : div8 graphic, then div5/div6 PREVIEW, then div9 stats tables
 # The div2/div3/div4 descriptor rows are replaced by the rail header.
+#
+# The "compact" style is this same renderer at a higher density: compact
+# layouts (compact_layouts()), the length knobs in .rail_knobs(), and div7
+# moved to the top of the body as a one-row strip.
 
 # Characters per preview line. The right column is exactly this many characters
 # of the preview font wide (84ch in datagoodr.css), so graphics and preview text
 # end at the same edge.
 .rail_cols <- 84
+
+# Characters per preview line in the compact guide, which sets a smaller
+# preview font and so fits more of them in the same column (96ch in
+# datagoodr-compact.css).
+.compact_cols <- 96
+
+# How dense a style draws: the width of a body line, how many preview lines to
+# print, and how many rows a long table keeps. `.rail_run` hands these to any
+# block function that declares them (`size`, `max.lines`, `max.rows`), so the
+# SAME layout row prints 8 factor levels over 2 preview lines in a compact
+# guide and 50 over 4 in the default one -- length is a property of the style,
+# not of the layout.
+.rail_knobs <- function( style = c("rail", "compact") ) {
+  style <- match.arg( style )
+  if( style == "compact" )
+    list( size = .compact_cols, max.lines = 2, max.rows = 8 )
+  else
+    list( size = .rail_cols,    max.lines = 4, max.rows = 50 )
+}
 
 # Group order and titles for the rail guide, keyed by dg_render_type().
 .rail_groups <- c( boolean = "Boolean", categorical = "Categorical",
@@ -58,27 +81,36 @@
 
 # run layout rows in order; a function defined by the user (e.g. in DG.R) wins
 # over the package's own of the same name
-.rail_run <- function( rows ) {
+.rail_run <- function( rows, knobs = .rail_knobs() ) {
   for( i in seq_len( nrow(rows) ) ) {
     fn <- trimws( rows$FUNCTION[i] )
     f  <- if( exists( fn, envir = globalenv() ) ) get( fn, envir = globalenv() )
           else get( fn, envir = asNamespace("datagoodr") )
     args <- list( VNAME = rows$VNAME[i], LABEL = rows$LABEL[i] )
-    if( "size" %in% names( formals(f) ) ) args$size <- .rail_cols
+    # a block function opts into a knob by declaring it as an argument
+    for( k in names(knobs) )
+      if( k %in% names( formals(f) ) ) args[[k]] <- knobs[[k]]
     txt <- do.call( f, args )
     if( is.character(txt) ) cat( txt, sep = "\n" )
   }
 }
 
-.rail_block <- function( rows, class ) {
+.rail_block <- function( rows, class, knobs = .rail_knobs() ) {
   if( ! nrow(rows) ) return( invisible(NULL) )
   cat( "::: {.dg-block .", class, "}\n\n", sep = "" )
-  .rail_run( rows )
+  .rail_run( rows, knobs )
   cat( "\n\n:::\n\n" )
 }
 
-# one variable unit
-.rail_unit <- function( v, xx, design ) {
+# one variable unit. The compact style keeps the same blocks but moves
+# PROPERTIES out of the rail and into the body as a one-row strip: in the rail
+# its vertical table is what sets the unit's height, so condensing the body
+# alone would shorten nothing.
+.rail_unit <- function( v, xx, design, style = c("rail", "compact") ) {
+
+  style   <- match.arg( style )
+  compact <- style == "compact"
+  knobs   <- .rail_knobs( style )
 
   set_xx( xx )
   rows <- design[ design$TYPE == xx[["dg_render_type"]], , drop = FALSE ]
@@ -102,14 +134,15 @@
   }
   if( nzchar(desc) ) cat( '<p class="dg-desc">', .rail_esc(desc), "</p>\n", sep = "" )
   cat( "```\n\n" )
-  .rail_block( divs("div7"), "dg-props" )
+  if( ! compact ) .rail_block( divs("div7"), "dg-props", knobs )
   cat( "::::\n\n" )
 
-  # right column: graphic / preview / stats
+  # right column: properties (compact only) / graphic / preview / stats
   cat( ":::: {.dg-body}\n\n" )
-  .rail_block( divs("div8"),            "dg-graphic" )
-  .rail_block( divs(c("div5", "div6")), "dg-preview" )
-  .rail_block( divs("div9"),            "dg-stats" )
+  if( compact ) .rail_block( divs("div7"), "dg-props", knobs )
+  .rail_block( divs("div8"),            "dg-graphic", knobs )
+  .rail_block( divs(c("div5", "div6")), "dg-preview", knobs )
+  .rail_block( divs("div9"),            "dg-stats",   knobs )
   cat( "::::\n\n" )
 
   cat( ":::::\n\n" )
@@ -200,14 +233,22 @@ rail_contents <- function( groups, brand = "Research Guide" ) {
 #'   (lower-cased), which [rail_contents()] links to.
 #' @param layouts Optional named list of layout vectors overriding the package
 #'   defaults; passed to [get_design()].
+#' @param style `"rail"` (the default) or `"compact"`. Compact prints the same
+#'   blocks condensed for documentation: PROPERTIES as a one-row strip at the
+#'   top of the body rather than a table in the rail, a shorter preview, and
+#'   fewer rows in the long tables. Use the compact stylesheet with it
+#'   (`datagoodr_css("compact")`), which is what `create_rg(style =
+#'   "compact")` scaffolds.
 #'
 #' @return No return value; prints markdown.
 #' @seealso [rail_contents()], [create_all_sections()] for the vintage grid
 #' @export
-rail_sections <- function( dgf, title, layouts = NULL ) {
+rail_sections <- function( dgf, title, layouts = NULL,
+                           style = c("rail", "compact") ) {
   if( ! nrow(dgf) ) return( invisible(NULL) )
-  design <- get_design( layouts = layouts )
+  style  <- match.arg( style )
+  design <- get_design( layouts = layouts, compact = style == "compact" )
   cat( "## ", title, " {#", tolower(title), " .dg-part}\n\n", sep = "" )
   ctx <- .rail_context( dgf )
-  for( v in names(ctx) ) .rail_unit( v, ctx[[v]], design )
+  for( v in names(ctx) ) .rail_unit( v, ctx[[v]], design, style )
 }

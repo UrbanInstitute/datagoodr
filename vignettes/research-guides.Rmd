@@ -31,10 +31,13 @@ the governance file alone — the raw data is not needed again.
 
 The guide opens with a numbered contents list and groups variables by data type.
 Each variable gets a left rail (data type, label, name, description, properties)
-beside its graphic, data preview and stats. That is the default `"rail"` style;
-`create_rg(dgf, style = "vintage")` gives the original three-column grid. See
-`vignette("example-guides")` for finished guides built from three familiar
-datasets.
+beside its graphic, data preview and stats. That is the default `"rail"` style.
+`create_rg(dgf, style = "compact")` gives the same guide condensed for
+documentation — the same blocks, but a one-row properties strip, short tables
+and preview, smaller graphics and about half the whitespace, so several
+variables fit on a screen. `create_rg(dgf, style = "vintage")` gives the
+original three-column grid. See `vignette("example-guides")` for finished
+guides built from three familiar datasets.
 
 ## One guide, a different style for each type
 

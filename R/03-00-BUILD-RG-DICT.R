@@ -160,6 +160,62 @@ paste_properties <- function(VNAME, LABEL = "PROPERTIES"){
 }
 
 
+### Properties laid out horizontally --------------------------------------
+#' Print the PROPERTIES table transposed across one row
+#'
+#' The compact research guide's PROPERTIES block: the same properties
+#' \link{paste_properties} stacks in a vertical table --- rows, distinct
+#' values, missing, zeros, infinities --- laid out horizontally instead, one
+#' column per property holding its count and share (`3 (5.0%)`), so the block
+#' is two lines tall rather than five or six.
+#'
+#' @param VNAME A character string naming the DGF column to read (the layout
+#'   passes `"rg_properties"`).
+#' @param LABEL A character string for the section title. Defaults to
+#'   `"PROPERTIES"`.
+#'
+#' @return No return value; prints the table to the RG. Nothing is printed when
+#'   the variable has no properties payload.
+#'
+#' @details Like \link{paste_properties}, the rows shown in their own blocks
+#'   (Most Common, Skew, Kurtosis) are filtered out, so a DGF built before they
+#'   moved renders without them.
+#'
+#' @seealso [paste_properties()], the vertical form the default guide uses.
+#' @import knitr
+#' @export
+paste_properties_horizontal <- function( VNAME, LABEL = "PROPERTIES" ){
+
+  info <- get_xx()[[VNAME]]
+  if( is.null(info) || is.na(info) || trimws(info) == "" )
+  { return( invisible(NULL) ) }
+
+  tab <- json_to_df(info)
+  if( nrow(tab) == 0 || ! "STAT" %in% names(tab) )
+  { return( invisible(NULL) ) }
+
+  tab$STAT <- trimws( as.character( tab$STAT ) )
+  tab <- tab[ ! tab$STAT %in% c("Most Common", "Skew", "Kurtosis"), , drop = FALSE ]
+  if( nrow(tab) == 0 ) return( invisible(NULL) )
+
+  # one column per property, holding the count and its share: "3 (5.0%)". Rows
+  # carries no share, so it reads as a plain count.
+  val <- trimws( as.character( tab$VAL ) ); val[ is.na(val) ] <- ""
+  per <- if( "PER" %in% names(tab) ) trimws( as.character( tab$PER ) ) else
+         rep( "", nrow(tab) )
+  per[ is.na(per) ] <- ""
+
+  out <- as.data.frame( as.list( ifelse( nzchar(per), paste( val, per ), val ) ),
+                        stringsAsFactors = FALSE, check.names = FALSE )
+  names(out) <- toupper( tab$STAT )
+
+  if( nzchar(trimws(LABEL)) ) cat( "**", LABEL, "**:\n\n", sep = "" )
+  k <- knitr::kable( out, align = rep("r", ncol(out)) )
+  cat( paste0( k, " \n" ) )
+  cat( "\n\n" )
+}
+
+
 ###########################################
 ### Paste factor/logical levels
 ###########################################
@@ -247,11 +303,14 @@ levels_customized <- function( level, label ) {
 #'   passes `"dd_f_levels"`).
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"FACTOR LEVELS"`.
+#' @param max.rows Most levels to list. The rest are summarised as a
+#'   "+ N more levels" line rather than dropped silently. Defaults to `50`;
+#'   the compact guide passes a much smaller number (see `.rail_knobs`).
 #'
 #' @return No return value; prints the table to the RG.
 #' @import knitr
 #' @export
-paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
+paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS", max.rows = 50 ){
 
   freq <- get_xx()[["rg_stats"]]
   dict <- get_xx()[["dd_f_levels"]]
@@ -277,8 +336,22 @@ paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
     }
   }
 
-  # keep up to 50 rows; the full-width cell is height-capped and scrolls (CSS)
-  if( nrow(ftab) > 50 ) { ftab <- ftab[ 1:50, ]; meaning <- meaning[ 1:50 ] }
+  # Keep the most frequent `max.rows` levels; the full-width cell is
+  # height-capped and scrolls (CSS). What is left over is counted, not dropped
+  # silently: the tally prints under the table. It counts against the variable's
+  # DISTINCT property rather than against the rows in hand, because create_dgf()
+  # itself stores only the 50 most frequent levels -- counting what is trimmed
+  # here would under-report a variable with more than that.
+  # DISTINCT counts NA as one of the values; the frequency table does not, so
+  # take it back off before comparing the two.
+  distinct <- stat_from_properties( "Distinct" )
+  if( ! is.na(distinct) && ! is.na( stat_from_properties( "Missing/NA" ) ) )
+  { distinct <- distinct - 1 }
+  dropped  <- max( 0, nrow(ftab) - max.rows )
+  if( ! is.na(distinct) && distinct > nrow(ftab) )
+  { dropped <- max( dropped, distinct - max.rows ) }
+  if( nrow(ftab) > max.rows )
+  { keep <- seq_len(max.rows); ftab <- ftab[ keep, ]; meaning <- meaning[ keep ] }
   freq.fmt <- formatC( ftab$Frequency, big.mark = ",", format = "d" )
 
   # each level's share of all records; fall back to the frequency total when the
@@ -300,6 +373,9 @@ paste_levels_freq <- function( VNAME, LABEL = "FACTOR LEVELS" ){
     k <- knitr::kable( out, align = c("r","r","l") )
   }
   cat( paste0( k, " \n" ) )
+  if( dropped > 0 )
+  { cat( "\n*+ ", formatC( dropped, big.mark = ",", format = "d" ),
+         " more level", if( dropped > 1 ) "s" else "", "*\n", sep = "" ) }
   cat( "\n\n" )
 }
 
@@ -711,15 +787,28 @@ paste_stats_chr_common <- function( VNAME, LABEL = "MOST COMMON" ){
 #' @details Takes no arguments: it reads the current variable from the render
 #'   context via [get_xx()], so it is only meaningful inside a section render.
 #' @noRd
-total_rows_from_properties <- function() {
+total_rows_from_properties <- function() stat_from_properties( "Rows" )
+
+
+#' One count out of the current variable's PROPERTIES table (internal)
+#'
+#' @param stat The STAT to read, e.g. `"Rows"` or `"Distinct"`.
+#'
+#' @return The count as a numeric, or `NA_real_` when the properties table is
+#'   missing or has no such entry.
+#'
+#' @details Reads the current variable from the render context via [get_xx()],
+#'   so it is only meaningful inside a section render.
+#' @noRd
+stat_from_properties <- function( stat ) {
   info <- get_xx()[["rg_properties"]]
   if( is.null(info) || length(info) == 0 || is.na(info) || trimws(info) == "" )
   { return( NA_real_ ) }
   props <- json_to_df( info )
   if( ! all( c("STAT","VAL") %in% names(props) ) ) return( NA_real_ )
-  val <- props$VAL[ trimws(as.character(props$STAT)) == "Rows" ]
+  val <- props$VAL[ trimws(as.character(props$STAT)) == stat ]
   if( length(val) == 0 ) return( NA_real_ )
-  as.numeric( gsub( ",", "", as.character( val[1] ) ) )
+  suppressWarnings( as.numeric( gsub( ",", "", as.character( val[1] ) ) ) )
 }
 
 
@@ -934,6 +1023,9 @@ paste_label <- function( VNAME, LABEL = "PREVIEW" ){
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"PREVIEW"`.
 #' @param size Maximum line width, in characters. Defaults to `68`.
+#' @param max.lines Maximum wrapped rows to print, which is what keeps the
+#'   preview to a short strip. Defaults to `4`; the compact guide passes fewer
+#'   (see `.rail_knobs`).
 #' @param digits Decimal places kept for long decimals, so `0.3333333333`
 #'   shows as `0.333`. Shorter numbers are shown as stored. `NULL` turns
 #'   rounding off. Defaults to `3`.
@@ -944,8 +1036,10 @@ paste_label <- function( VNAME, LABEL = "PREVIEW" ){
 #' Internal to `create_div` in R/03-01-create-sections.R.
 #'
 #' @export
-paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68, digits = 3 ){
-  paste_preview_block( VNAME, LABEL, size = size, digits = digits )
+paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68,
+                                max.lines = 4, digits = 3 ){
+  paste_preview_block( VNAME, LABEL, size = size, max.lines = max.lines,
+                       digits = digits )
 }
 
 
@@ -960,6 +1054,9 @@ paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68, digits = 3 
 #' @param LABEL A character string for the section title. Defaults to
 #'   `"PREVIEW"`.
 #' @param size Maximum line width, in characters. Defaults to `80`.
+#' @param max.lines Maximum wrapped rows to print, which is what keeps the
+#'   preview to a short strip. Defaults to `4`; the compact guide passes fewer
+#'   (see `.rail_knobs`).
 #'
 #' @return No return value; prints the preview block to the RG.
 #'
@@ -967,7 +1064,8 @@ paste_preview_num  <- function( VNAME, LABEL = "PREVIEW", size = 68, digits = 3 
 #' Internal to `create_div` in R/03-01-create-sections.R.
 #'
 #' @export
-paste_preview_chr <- function( VNAME, LABEL = "PREVIEW", size = 68 ){
-  paste_preview_block( VNAME, LABEL, size = size )
+paste_preview_chr <- function( VNAME, LABEL = "PREVIEW", size = 68,
+                               max.lines = 4 ){
+  paste_preview_block( VNAME, LABEL, size = size, max.lines = max.lines )
 }
 
