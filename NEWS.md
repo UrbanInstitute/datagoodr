@@ -194,6 +194,16 @@ formex-stabilized EIN are now the same string.
 
 ## Bug fixes
 
+* **A zero-padded code is no longer typed `number`.** A group exemption number (`0155`), a
+  `00`/`11` code and a zero-padded key (`000123`) were typed `number` and lost their leading
+  zeros. `create_dgf()` accepts a formex stabilizer's conversion to numbers whenever every value
+  converts without an `NA`, and `as.numeric("0155")` does. It now refuses the conversion when every
+  value is a plain number that `.safe_numeric()` rejects (a leading-zero integer, or one past
+  2^53), the same rule `read_as_text` uses. A column that needs real cleaning to become a number
+  (`"$1,234"`) is unaffected. A two-state code that is not a flag now falls back to `categorical`
+  instead of `text`, so such a code is typed the same whether it is read from a data frame
+  or a `.csv` path.
+
 * **A compact date label now reads the run-together form.**
   `as_yyyymmdd("20190315")` returned `NA` — the exact case the compact label
   exists for. A label names the element *order*, not the punctuation, so
