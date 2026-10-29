@@ -8,19 +8,36 @@ panel (P00 + P01 + P08: 568,214 returns x 196 columns)
 from `main`). **[from source]** = read in the code, not executed. Every claim in §1 and §3 is
 verified; in §2 the verb behaviour is verified and the end-to-end plan was not run (see there).
 
+**Update, later on 2026-10-29: F1 is fixed in formex; F2 and F3 are still open.** formex `main`
+now carries `b06ef9d` (*Guard date parsing against >=1000-byte values*), which is the one-line guard
+suggested in §F1 (see `dev/formex-b2-strptime-fix.md`). I re-ran the F1, F2 and F3 checks below
+against formex `main` at `ca82926`, loaded read-only with `pkgload::load_all()` **[verified]**:
+
+| check | `7fcf2f5` (this note was written against) | `ca82926` (formex `main` now) |
+|---|---|---|
+| F1 `is_date(c(<1,500-byte value>, "2020-01-15", NA, "x"))` | ERROR | `FALSE TRUE NA FALSE` |
+| F1 `.fx_parse_iso_date(c(<1,500-byte value>, "2020-01-15"))` | ERROR | `NA "2020-01-15"` |
+| F1 `guess_data_type()` on long + dates, and on long text only | ERROR, ERROR | OK, OK |
+| F2 `as_number` / `as_integer` on `c("0155","0925","00","11")` | `155 925 0 11` | `155 925 0 11` (unchanged) |
+| F3 warnings from `guess_data_type()` on 400 large integers | 1 | 2 (same message) |
+
+The installed formex in the personal R library is still `7fcf2f5`, so a datagoodr build there still
+needs `.cap_bytes()` until formex is reinstalled. The F1 text below is left as written, as the record
+of what was found and how the fix was checked.
+
 Three things belong to formex. They are ordered by how much they cost us. datagoodr works around
 the first and guards against the second at its own seam, so none of this is blocking, but each
 workaround is code we would like to delete.
 
 | # | Problem | Cost | datagoodr workaround |
 |---|---|---|---|
-| F1 | `strptime()` aborts on any value over 1000 bytes (3 entry points) | `create_dgf()` died minutes into a build, with an error that names no column | `.cap_bytes()` trims values before the call into formex |
+| F1 | `strptime()` aborts on any value over 1000 bytes (3 entry points) — **fixed in formex `b06ef9d`** | `create_dgf()` died minutes into a build, with an error that names no column | `.cap_bytes()` trims values before the call into formex |
 | F2 | the numeric verbs turn `"0155"` into `155` with no signal | a group exemption number and a `00`/`11` code were typed `number` and lost their zeros | `.lossy_as_number()` refuses the conversion (branch `fix-zero-padded-codes-typed-number`) |
 | F3 | `guess_data_type()` emits `NAs introduced by coercion to integer range` on large integers | one warning per large-number column on a wide frame | muffled by message in `.formex_guess()` |
 
 ---
 
-## F1. `strptime()` aborts on values over 1000 bytes — still present
+## F1. `strptime()` aborts on values over 1000 bytes — fixed in formex `b06ef9d` (text below is the original finding)
 
 Base R's `strptime()` raises `input string is too long` on any input **longer than 1000 bytes**
 (**[verified]**: 1,000 bytes parses, 1,001 fails). formex hands it raw cell values with no length
@@ -133,7 +150,7 @@ build produced, not run directly.
 
 ## F3. Coercion warning on large integers
 
-`guess_data_type()` on 400 integers around 5e9 emits exactly one warning, `NAs introduced by
+`guess_data_type()` on 400 integers around 5e9 emits one warning (two on formex `ca82926`), `NAs introduced by
 coercion to integer range` **[verified]**. The likely source is the `as_integer` verb
 (`R/20-fx-stabilize.R:86`: `as.character(as.integer(round(v)))`), a probe that is *supposed* to fail
 for a non-integer candidate **[from source; I did not trace the call]**. Profiling a wide frame emits it once per large-number column.
