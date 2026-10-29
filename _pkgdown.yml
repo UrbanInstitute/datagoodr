@@ -1,7 +1,11 @@
-url: ~
+url: https://urbaninstitute.github.io/datagoodr/
 destination: docs
+
+# The site style -- colours, fonts, navbar, the light/dark switch -- comes from
+# the shared NODC template package, pkgstyle. Settings here override it, so do
+# not add a bslib block or pkgdown/extra.css unless this site has to differ.
 template:
-  bootstrap: 5
+  package: pkgstyle
 
 # An "Examples" menu of finished research guides. The guides are self-contained
 # pages built by data-raw/example-guides.R into pkgdown/assets/examples/, which

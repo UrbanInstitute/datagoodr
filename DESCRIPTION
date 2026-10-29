@@ -10,6 +10,9 @@ Description: Tools for documenting and profiling research datasets. datagoodr
     summary statistics, and graphics needed to describe a dataset, then renders
     a formatted Research Guide (RG) report from that file. Gooder data means
     gooder research.
+URL: https://urbaninstitute.github.io/datagoodr,
+    https://github.com/UrbanInstitute/datagoodr
+BugReports: https://github.com/UrbanInstitute/datagoodr/issues
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -56,3 +59,4 @@ Depends:
 Config/testthat/edition: 3
 Remotes:
     lecy/formex
+Config/Needs/website: Nonprofit-Open-Data-Collective/pkgstyle

@@ -6,8 +6,9 @@ Machines can measure and type a column, but they cannot know that
 `grade` is coded `1 = Freshman … 4 = Senior`, or that `rev` means net
 revenue in thousands of dollars. That meaning has to come from a person.
 datagoodr’s approach is to make supplying it as light as possible:
-[`create_dgf()`](../reference/create_dgf.md) pre-builds the **template
-fields** for documentation, and you fill them in — in a spreadsheet.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+pre-builds the **template fields** for documentation, and you fill them
+in — in a spreadsheet.
 
 The division of labor is clean: the machine measures and types; the
 human supplies the meaning the data cannot carry on its own.
@@ -26,8 +27,9 @@ they belong to the variable from then on.
 ## The factor template: the real time-saver
 
 The field that saves the most work is the one for **factors**. When a
-column is categorical, [`create_dgf()`](../reference/create_dgf.md) does
-not just note “categorical” — it enumerates the levels into
+column is categorical,
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+does not just note “categorical” — it enumerates the levels into
 `dd_f_levels` as a template, one entry per level, each waiting for a
 human-readable label and definition. A coded column arrives in the DGF
 already expanded into the rows you need to annotate:
@@ -62,9 +64,9 @@ outputs:
 - **The governed CSV.** The portable families of the DGF — the `dd_`
   dictionary, the `stable_` descriptors, and the `validate_` rules — are
   **embedded in the governed CSV** written by
-  [`write_stable_csv()`](../reference/write_stable_csv.md). So the
-  labels and definitions travel *with the data* to the next tool or
-  repository, not as a detachable sidecar, and map cleanly toward
+  [`write_stable_csv()`](https://urbaninstitute.github.io/datagoodr/reference/write_stable_csv.md).
+  So the labels and definitions travel *with the data* to the next tool
+  or repository, not as a detachable sidecar, and map cleanly toward
   archival standards (such as DDI) for deposit.
 
 ## Why edit in a spreadsheet
@@ -75,9 +77,10 @@ query language, and a colleague who does not use R can still read,
 review, and contribute. That is the whole premise: governance and
 documentation that meet people where they are.
 
-Re-profiling with [`update_dgf()`](../reference/update_dgf.md) preserves
-every hand-edited label and definition, so documentation accumulates as
-the data evolves rather than being redone each cycle.
+Re-profiling with
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
+preserves every hand-edited label and definition, so documentation
+accumulates as the data evolves rather than being redone each cycle.
 
 ## Where this fits
 

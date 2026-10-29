@@ -5,11 +5,12 @@ mislead, a profile: a column with a single value, an all-missing column,
 values too long for a date parser, a yes/no flag spelled several ways,
 zero-padded codes, duplicate columns, placeholder values, non-finite
 numbers, and timestamp columns with too many distinct values to store
-whole. It is much faster than [`create_dgf`](create_dgf.md) (about 40
-seconds on a file of 568,000 rows and 199 columns, where the build took
-about 22 minutes with the formex release before its 2026-10-28
-speed-up), and it reports **every** finding at once instead of the first
-failure.
+whole. It is much faster than
+[`create_dgf`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+(about 40 seconds on a file of 568,000 rows and 199 columns, where the
+build took about 22 minutes with the formex release before its
+2026-10-28 speed-up), and it reports **every** finding at once instead
+of the first failure.
 
 ## Usage
 
@@ -22,7 +23,9 @@ preflight_dgf(df, max_chr = 1000L, smoke_n = NULL, seed = 1L)
 - df:
 
   A data frame, or the path to a `.csv` file (read with every column as
-  text, as [`create_dgf`](create_dgf.md) does).
+  text, as
+  [`create_dgf`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+  does).
 
 - max_chr:
 
@@ -33,11 +36,12 @@ preflight_dgf(df, max_chr = 1000L, smoke_n = NULL, seed = 1L)
 - smoke_n:
 
   `NULL` (the default), or a number of rows. If given, also runs
-  [`create_dgf`](create_dgf.md) on a random sample of that many rows
-  (written to a temporary folder, with the pre-flight off) and reports
-  any failure as a `smoke_test_failed` finding that names the variable.
-  A sample of a few thousand rows finds most crashes in about a minute,
-  even on a file whose full build takes half an hour.
+  [`create_dgf`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+  on a random sample of that many rows (written to a temporary folder,
+  with the pre-flight off) and reports any failure as a
+  `smoke_test_failed` finding that names the variable. A sample of a few
+  thousand rows finds most crashes in about a minute, even on a file
+  whose full build takes half an hour.
 
 - seed:
 
@@ -53,12 +57,13 @@ own [`print()`](https://rdrr.io/r/base/print.html) method.
 
 ## Details
 
-[`create_dgf`](create_dgf.md) runs this itself (see its `preflight`
-argument); call it directly to look at a dataset before committing to a
-build.
+[`create_dgf`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+runs this itself (see its `preflight` argument); call it directly to
+look at a dataset before committing to a build.
 
 Missing means `NA` or blank (empty or whitespace-only), as in
-[`create_dgf`](create_dgf.md). The rules, with their severity:
+[`create_dgf`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md).
+The rules, with their severity:
 
 - `smoke_test_failed` (error):
 
@@ -110,7 +115,7 @@ stops on either.
 
 ## See also
 
-[`create_dgf`](create_dgf.md)
+[`create_dgf`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
 
 ## Examples
 

@@ -120,10 +120,11 @@ Reporting Functions* opens up the machinery.)
 ## The loop
 
 Governance is not one-shot. You clean a column, correct a type, add a
-label; and [`update_dgf()`](../reference/update_dgf.md) reconciles the
-DGF with the new data — recomputing the profile for what changed while
-preserving everything you curated. The DGF is a living document, not a
-snapshot.
+label; and
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
+reconciles the DGF with the new data — recomputing the profile for what
+changed while preserving everything you curated. The DGF is a living
+document, not a snapshot.
 
 ## Next
 

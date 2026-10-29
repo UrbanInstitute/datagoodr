@@ -7,8 +7,9 @@ can inspect it, and change it, without touching the package.
 
 ## The design is a table of data type → reporting function
 
-[`get_design()`](../reference/get_design.md) returns the active design
-as a data frame. Each row places one piece of a variable’s section:
+[`get_design()`](https://urbaninstitute.github.io/datagoodr/reference/get_design.md)
+returns the active design as a data frame. Each row places one piece of
+a variable’s section:
 
 ``` r
 
@@ -70,13 +71,14 @@ Internally each layout is written as a compact string,
 `"div ;; column ;; LABEL ;; function"`, and two helpers turn it into
 action:
 
-- [`parse_design()`](../reference/parse_design.md) splits those strings
-  into the `DIV / VNAME / LABEL / FUNCTION` data frame above;
+- [`parse_design()`](https://urbaninstitute.github.io/datagoodr/reference/parse_design.md)
+  splits those strings into the `DIV / VNAME / LABEL / FUNCTION` data
+  frame above;
 - at render time the **FUNCTION name is looked up and called** on the
   named DGF column
-  ([`parse_functions()`](../reference/parse_functions.md) first checks
-  every name resolves, so a typo fails loudly instead of rendering
-  nothing).
+  ([`parse_functions()`](https://urbaninstitute.github.io/datagoodr/reference/parse_functions.md)
+  first checks every name resolves, so a typo fails loudly instead of
+  rendering nothing).
 
 So “aesthetics” reduces to a lookup: *for this type, draw this column,
 with this function.* Change the lookup and you change the report.
@@ -98,10 +100,11 @@ paste_histogram <- function(VNAME, LABEL = "HISTOGRAM") {
 ```
 
 **2. Change the mapping itself.** Pass a replacement layout to
-[`get_design()`](../reference/get_design.md) (the same hook
-[`create_rg()`](../reference/create_rg.md)’s scaffold uses). Here is a
-slimmed numeric section — label, properties, and stats only, no
-histogram:
+[`get_design()`](https://urbaninstitute.github.io/datagoodr/reference/get_design.md)
+(the same hook
+[`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)’s
+scaffold uses). Here is a slimmed numeric section — label, properties,
+and stats only, no histogram:
 
 ``` r
 
@@ -173,13 +176,13 @@ paste_levels_freq <- function(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50) {
 The third lever is the document: `RG-compact.qmd` sets a smaller
 `fig.height` per group, and `datagoodr-compact.css` halves the spacing.
 Both are yours to edit in a scaffolded project.
-[`vignette("report-styles")`](../articles/report-styles.md) compares the
-styles and shows how to switch between them.
+[`vignette("report-styles")`](https://urbaninstitute.github.io/datagoodr/articles/report-styles.md)
+compares the styles and shows how to switch between them.
 
 ## Where this fits
 
-[`create_rg()`](../reference/create_rg.md) scaffolds a project with a
-`DG.R` precisely so these overrides live *beside* your data, not in the
-package — the design travels with the project and the package stays
-untouched. For the functions a design points at, see *Data Reporting
-Functions*.
+[`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)
+scaffolds a project with a `DG.R` precisely so these overrides live
+*beside* your data, not in the package — the design travels with the
+project and the package stays untouched. For the functions a design
+points at, see *Data Reporting Functions*.

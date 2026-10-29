@@ -23,4 +23,5 @@ A named character vector of length four with names \`"DIV"\`,
 
 ## Details
 
-Used in [parse_design](parse_design.md).
+Used in
+[parse_design](https://urbaninstitute.github.io/datagoodr/reference/parse_design.md).

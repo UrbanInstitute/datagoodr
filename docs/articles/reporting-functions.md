@@ -4,8 +4,10 @@ A Research Guide is not a monolith — it is assembled from small,
 composable reporting functions, one stage at a time. This vignette opens
 the hood and runs the whole pipeline on a **single raw vector**: guess
 its type, measure it, report the numbers as a table, and draw the
-visual. [`create_dgf()`](../reference/create_dgf.md) does exactly this
-for every column of a dataset at once; here we do it for one, by hand.
+visual.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+does exactly this for every column of a dataset at once; here we do it
+for one, by hand.
 
 ``` r
 
@@ -118,8 +120,9 @@ dg_stats(dgf, "revenue")        # the numeric statistics, as a table
 ## Stage 4 — create the visual
 
 The graphic is chosen by type too:
-[`dg_graphic()`](../reference/dg_element.md) dispatches a number to the
-histogram renderer, reading the same stored profile.
+[`dg_graphic()`](https://urbaninstitute.github.io/datagoodr/reference/dg_element.md)
+dispatches a number to the histogram renderer, reading the same stored
+profile.
 
 ``` r
 
@@ -138,6 +141,7 @@ date to the calendar heat-map, free text to the word cloud. That
 type-to-function mapping is itself a setting you can inspect and change
 — see *Report Aesthetics and Customization*.
 
-[`create_dgf()`](../reference/create_dgf.md) runs stages 1–2 for every
-column and stores the result; the Research Guide runs stages 3–4.
-Everything in this vignette is what happens inside those two calls.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+runs stages 1–2 for every column and stores the result; the Research
+Guide runs stages 3–4. Everything in this vignette is what happens
+inside those two calls.

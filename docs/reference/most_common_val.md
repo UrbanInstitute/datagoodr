@@ -1,7 +1,8 @@
 # Most common value
 
-Internal function for [get_properties](get_properties.md) to find most
-common value.
+Internal function for
+[get_properties](https://urbaninstitute.github.io/datagoodr/reference/get_properties.md)
+to find most common value.
 
 ## Usage
 
@@ -21,4 +22,5 @@ most common value in \`x\`
 
 ## Details
 
-internal function for [get_properties](get_properties.md)
+internal function for
+[get_properties](https://urbaninstitute.github.io/datagoodr/reference/get_properties.md)

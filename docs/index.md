@@ -41,19 +41,22 @@ named rules attached to your data, not a platform you have to adopt.
 At the center is the **Data Governance File (DGF)**: a table with one
 row per variable that is both a *governed data dictionary* and the
 *control center* for the whole workflow.
-[`create_dgf()`](reference/create_dgf.md) profiles every column and
-types it (using the [formex](https://lecy.github.io/formex/) detection
-engine); you curate the result in a spreadsheet — adding labels,
-definitions, and corrected types; and the DGF then drives two outputs:
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+profiles every column and types it (using the
+[formex](https://lecy.github.io/formex/) detection engine); you curate
+the result in a spreadsheet — adding labels, definitions, and corrected
+types; and the DGF then drives two outputs:
 
 - **a stabilized Governed CSV**
-  ([`stabilize_data()`](reference/stabilize_data.md)) that imports to
-  the correct type where possible, and *safely* — without data loss —
-  where not; and
-- **a Research Guide** ([`create_rg()`](reference/create_rg.md)): a
-  rendered data profile with a visual tuned to each column’s type.
+  ([`stabilize_data()`](https://urbaninstitute.github.io/datagoodr/reference/stabilize_data.md))
+  that imports to the correct type where possible, and *safely* —
+  without data loss — where not; and
+- **a Research Guide**
+  ([`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)):
+  a rendered data profile with a visual tuned to each column’s type.
 
-As the data changes, [`update_dgf()`](reference/update_dgf.md)
+As the data changes,
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
 re-profiles it while preserving everything you curated.
 
 > **Acronyms.** **DGF** = Data Governance File · **RG** = Research
@@ -92,7 +95,8 @@ workflow* and formex is *the engine*.
 - **A clearer rule vocabulary.** Ingest rules were renamed `as_*` →
   `read_*` (the name now states the format a rule *reads*), with
   deprecated shims.
-- **Dual-modality typing.** [`create_dgf()`](reference/create_dgf.md)
+- **Dual-modality typing.**
+  [`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
   reads both of formex’s predictions (the ontology route and the legacy
   detectors) with a storage-safety gate that protects zero-padded keys
   (FIPS, ZIP, EIN) from being coerced to numbers.

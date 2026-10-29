@@ -22,19 +22,31 @@ the budget, or `0` leaves the data out.
 
 #### A boolean reads as one divided bar
 
-[`boolebar()`](../reference/boolebar.md) draws a boolean variable as a
-single full-width bar split into its TRUE / FALSE / NA parts — counts
-and shares printed on the bar in the report’s accent orange, categories
-named above, and a tenths scale beneath. The scale is the point: without
-one a divided bar says only “these are the parts”, and with one it says
-where each part sits in the whole.
+[`boolebar()`](https://urbaninstitute.github.io/datagoodr/reference/boolebar.md)
+draws a boolean variable as a single full-width bar split into its TRUE
+/ FALSE / NA parts — counts and shares printed on the bar in the
+report’s accent orange, categories named above in a light grey, and a
+tenths scale beneath. The scale is the point: without one a divided bar
+says only “these are the parts”, and with one it says where each part
+sits in the whole.
 
-It replaces the stack of one-bar-per-category
-([`booleplot()`](../reference/booleplot.md), still the default guide’s
-graphic) in the compact style, where it is also shorter. A part too
-narrow to hold its own count carries it above the bar instead, with a
-leader back to the part, so a 0.1% missing category still says what it
-is.
+**It is now every style’s boolean graphic**, not just the compact one. A
+part too narrow to hold its own count carries it above the bar instead,
+with a leader back to the part, so a 0.1% missing category still says
+what it is. Both boolean graphics also name their categories by the
+curated labels in `dd_f_levels` where a DGF has them, so a bar reads
+`0 (V-shaped)` rather than `0`.
+
+[`booleplot()`](https://urbaninstitute.github.io/datagoodr/reference/booleplot.md),
+the stack of one bar per category, is still exported and still works — a
+project that prefers it can put it back from `DG.R`:
+
+``` r
+
+# in DG.R
+layout.logical <- sub( "paste_boolebar", "paste_booleplot",
+                       datagoodr:::default_layouts()$logical )
+```
 
 #### A compact research guide, for documentation
 
@@ -45,7 +57,7 @@ in the same order, for the same types:
 
 - **PROPERTIES is transposed** into a one-row strip at the top of each
   variable’s body
-  ([`paste_properties_horizontal()`](../reference/paste_properties_horizontal.md)),
+  ([`paste_properties_horizontal()`](https://urbaninstitute.github.io/datagoodr/reference/paste_properties_horizontal.md)),
   instead of a five-to-six row table in the rail. In the rail that table
   is what set a unit’s height, so condensing anything else first would
   have shortened nothing.
@@ -67,10 +79,10 @@ unchanged. `get_design(compact = TRUE)` returns its design, and
 `rail_sections(style = "compact")` draws it, which also lets one
 document mix densities group by group.
 
-[`vignette("report-styles")`](../articles/report-styles.md) compares the
-three styles and shows how to switch, and the documentation site carries
-the baseball guide in both the default and the compact style for
-comparison.
+[`vignette("report-styles")`](https://urbaninstitute.github.io/datagoodr/articles/report-styles.md)
+compares the three styles and shows how to switch, and the documentation
+site carries the baseball guide in both the default and the compact
+style for comparison.
 
 #### A truncated FACTOR LEVELS table now says what it left out
 
@@ -94,7 +106,8 @@ a transform-path search. datagoodr now records and acts on that:
   column), and `guess_variant_id`/`guess_depth`/`guess_confidence`.
 - **`desired_*` gains the matching target form**
   (`desired_semantic_type`, `desired_format_style`,
-  `desired_unit_type`), and [`create_dgf()`](../reference/create_dgf.md)
+  `desired_unit_type`), and
+  [`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
   fills a suggested **`stabilizer`** — a `read :: [convert] :: write`
   plan from
   [`formex::fx_plan_transform()`](https://lecy.github.io/formex/reference/fx_plan_transform.html)
@@ -151,13 +164,15 @@ is a valid partial answer for a reviewer to deepen, not a failure.
 draws its sample from the session RNG, so the same data produced
 different types on different runs — across three builds of the baseball
 dataset `nameLast` moved text -\> categorical and `AB` categorical -\>
-text. [`create_dgf()`](../reference/create_dgf.md) now seeds it
-(`guess_seed`, default `1`), so repeated builds of the same data produce
-an identical DGF.
+text.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+now seeds it (`guess_seed`, default `1`), so repeated builds of the same
+data produce an identical DGF.
 
 Seeding makes the draw repeatable, not correct. formex samples from a
 column’s **distinct** values and its confidence is stable only when the
-sample covers them all, so [`create_dgf()`](../reference/create_dgf.md)
+sample covers them all, so
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
 also raises `guess_n_sample` to **300** (formex’s own default is 100).
 On the baseball dataset that fixes `birthState`, which now resolves to
 `mutually_exclusive.geographic` instead of falling back to `text`, and
@@ -179,11 +194,11 @@ only worth raising on wide frames.
 
 #### Pre-flight check for degenerate columns
 
-[`create_dgf()`](../reference/create_dgf.md) profiles every column,
-which takes minutes on a large file, and a column the profilers could
-not handle used to surface as a crash partway through, with an error
-that named no column. A new pre-flight step finds those columns first,
-and reports all of them at once.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+profiles every column, which takes minutes on a large file, and a column
+the profilers could not handle used to surface as a crash partway
+through, with an error that named no column. A new pre-flight step finds
+those columns first, and reports all of them at once.
 
 - **`preflight_dgf(df)`** scans each column and returns one row per
   finding (`var_name`, `rule`, `severity`, `detail`, `suggestion`).
@@ -231,10 +246,11 @@ library(formex)          # attach it, and existing calls keep working
 formex::is_ein(x)        # or qualify each call
 ```
 
-[`is_factor()`](../reference/is_factor.md) and
-[`is_factor_df()`](../reference/is_factor_df.md) are **not** affected —
-those are datagoodr’s own cardinality helpers, not detectors, and remain
-exported.
+[`is_factor()`](https://urbaninstitute.github.io/datagoodr/reference/is_factor.md)
+and
+[`is_factor_df()`](https://urbaninstitute.github.io/datagoodr/reference/is_factor_df.md)
+are **not** affected — those are datagoodr’s own cardinality helpers,
+not detectors, and remain exported.
 
 Also moved to formex: the `data_type_tests` dataset, the `data-types/`
 ontology tree, the internal geography/code lookups in `sysdata.rda`, and
@@ -252,9 +268,9 @@ remotes::install_github("lecy/formex")
 #### Rule functions renamed: `as_*` -\> `read_*`
 
 A rule that *ingests* a written format now says so in its name.
-[`as_mmddyyyy()`](../reference/datagoodr-deprecated.md) never produced
-`mm/dd/yyyy` — it consumed it and returned a `Date`. The name said the
-opposite of the function.
+[`as_mmddyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md)
+never produced `mm/dd/yyyy` — it consumed it and returned a `Date`. The
+name said the opposite of the function.
 
 The convention is now:
 
@@ -270,19 +286,19 @@ rule sitting in the wrong column is now visible without running it.
 |----|----|
 | `as_date(x, format)` | `read_date(x, format)` |
 | `as_datetime(x, format)` | `read_datetime(x, format)` |
-| [`as_yyyymmdd()`](../reference/datagoodr-deprecated.md) | [`read_yyyymmdd()`](../reference/read_date.md) |
-| [`as_mmddyyyy()`](../reference/datagoodr-deprecated.md) | [`read_mmddyyyy()`](../reference/read_date.md) |
-| [`as_ddmmyyyy()`](../reference/datagoodr-deprecated.md) | [`read_ddmmyyyy()`](../reference/read_date.md) |
-| [`as_mdyyyy()`](../reference/datagoodr-deprecated.md) | [`read_mdyyyy()`](../reference/read_date.md) |
-| [`as_dMyyyy()`](../reference/datagoodr-deprecated.md) | [`read_dMyyyy()`](../reference/read_date.md) |
-| [`as_Mdyyyy()`](../reference/datagoodr-deprecated.md) | [`read_Mdyyyy()`](../reference/read_date.md) |
-| [`as_yyyymmddHHiiss()`](../reference/datagoodr-deprecated.md) | [`read_yyyymmddHHiiss()`](../reference/read_date.md) |
-| [`as_mmddyyyyhhiiA()`](../reference/datagoodr-deprecated.md) | [`read_mmddyyyyhhiiA()`](../reference/read_date.md) |
-| [`as_yyyymm()`](../reference/datagoodr-deprecated.md) | [`read_yyyymm()`](../reference/read_yyyymm.md) |
-| [`as_yyyy()`](../reference/datagoodr-deprecated.md) | [`read_yyyy()`](../reference/read_yyyy.md) |
-| [`as_mm()`](../reference/datagoodr-deprecated.md) | [`read_mm()`](../reference/read_mm.md) |
-| [`as_EIN()`](../reference/datagoodr-deprecated.md) | [`read_ein()`](../reference/read_ein.md) |
-| [`as_id()`](../reference/as_id.md) | [`as_id()`](../reference/as_id.md) (unchanged — it names a type) |
+| [`as_yyyymmdd()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_yyyymmdd()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_mmddyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_mmddyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_ddmmyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_ddmmyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_mdyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_mdyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_dMyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_dMyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_Mdyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_Mdyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_yyyymmddHHiiss()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_yyyymmddHHiiss()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_mmddyyyyhhiiA()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_mmddyyyyhhiiA()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md) |
+| [`as_yyyymm()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_yyyymm()`](https://urbaninstitute.github.io/datagoodr/reference/read_yyyymm.md) |
+| [`as_yyyy()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_yyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_yyyy.md) |
+| [`as_mm()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_mm()`](https://urbaninstitute.github.io/datagoodr/reference/read_mm.md) |
+| [`as_EIN()`](https://urbaninstitute.github.io/datagoodr/reference/datagoodr-deprecated.md) | [`read_ein()`](https://urbaninstitute.github.io/datagoodr/reference/read_ein.md) |
+| [`as_id()`](https://urbaninstitute.github.io/datagoodr/reference/as_id.md) | [`as_id()`](https://urbaninstitute.github.io/datagoodr/reference/as_id.md) (unchanged — it names a type) |
 
 The old names still work as deprecated shims that warn once per session,
 so a DGF whose rule cells carry them keeps running. **They will be
@@ -302,35 +318,38 @@ string.
 - **A zero-padded code is no longer typed `number`.** A group exemption
   number (`0155`), a `00`/`11` code and a zero-padded key (`000123`)
   were typed `number` and lost their leading zeros.
-  [`create_dgf()`](../reference/create_dgf.md) accepts a formex
-  stabilizer’s conversion to numbers whenever every value converts
-  without an `NA`, and `as.numeric("0155")` does. It now refuses the
-  conversion when every value is a plain number that `.safe_numeric()`
-  rejects (a leading-zero integer, or one past 2^53), the same rule
-  `read_as_text` uses. A column that needs real cleaning to become a
-  number (`"$1,234"`) is unaffected. A two-state code that is not a flag
-  now falls back to `categorical` instead of `text`, so such a code is
-  typed the same whether it is read from a data frame or a `.csv` path.
+  [`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+  accepts a formex stabilizer’s conversion to numbers whenever every
+  value converts without an `NA`, and `as.numeric("0155")` does. It now
+  refuses the conversion when every value is a plain number that
+  `.safe_numeric()` rejects (a leading-zero integer, or one past 2^53),
+  the same rule `read_as_text` uses. A column that needs real cleaning
+  to become a number (`"$1,234"`) is unaffected. A two-state code that
+  is not a flag now falls back to `categorical` instead of `text`, so
+  such a code is typed the same whether it is read from a data frame or
+  a `.csv` path.
 
 - **A compact date label now reads the run-together form.**
   `as_yyyymmdd("20190315")` returned `NA` — the exact case the compact
   label exists for. A label names the element *order*, not the
-  punctuation, so [`read_date()`](../reference/read_date.md) now
-  compiles both a delimited and a run-together pattern and picks per
+  punctuation, so
+  [`read_date()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md)
+  now compiles both a delimited and a run-together pattern and picks per
   value. `read_yyyymmdd("20190315")` and `read_yyyymmdd("2019-03-15")`
   both parse.
 
-- **[`read_yyyy()`](../reference/read_yyyy.md) accepts a fiscal-year
-  prefix.** `read_yyyy("FY2019")` returns `"2019"`.
+- **[`read_yyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_yyyy.md)
+  accepts a fiscal-year prefix.** `read_yyyy("FY2019")` returns
+  `"2019"`.
 
-- **[`read_yyyymm()`](../reference/read_yyyymm.md) validates its input**
-  rather than silently slicing any string, and accepts an
-  already-hyphenated value.
+- **[`read_yyyymm()`](https://urbaninstitute.github.io/datagoodr/reference/read_yyyymm.md)
+  validates its input** rather than silently slicing any string, and
+  accepts an already-hyphenated value.
 
 - **A column with one distinct value no longer aborts
-  [`create_dgf()`](../reference/create_dgf.md).** A constant column, or
-  one value plus blanks (an `X`/blank checkbox, which datagoodr reads as
-  one level), failed with
+  [`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md).**
+  A constant column, or one value plus blanks (an `X`/blank checkbox,
+  which datagoodr reads as one level), failed with
   `'names' attribute [2] must be the same length as the vector [1]` (or
   `replacement has 0 rows, data has 1`). Subsetting a one-element table
   dropped it to a bare vector, so the frequency table lost its `Freq`
@@ -350,17 +369,17 @@ string.
   statistics failed with `invalid number of 'breaks'`, and its preview
   was `"NA"`. It now profiles as empty and renders.
 
-- **[`retype_dgf()`](../reference/retype_dgf.md) reads a `.csv` as
-  text.** It used `readr`’s type inference, which turned `"00"` into 0
-  and `"06037"` into 6037 before profiling the type you had just chosen
-  to protect them.
+- **[`retype_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/retype_dgf.md)
+  reads a `.csv` as text.** It used `readr`’s type inference, which
+  turned `"00"` into 0 and `"06037"` into 6037 before profiling the type
+  you had just chosen to protect them.
 
-- **[`retype_dgf()`](../reference/retype_dgf.md) refreshes
-  `dd_f_levels`.** After retyping a variable to categorical or boolean
-  the level dictionary kept the old spellings (`0`/`1`/`false`/`true`)
-  or stayed empty, so the guide printed stale or missing category
-  labels. Labels already edited for a level that still exists are kept;
-  a type with no levels is left untouched.
+- **[`retype_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/retype_dgf.md)
+  refreshes `dd_f_levels`.** After retyping a variable to categorical or
+  boolean the level dictionary kept the old spellings
+  (`0`/`1`/`false`/`true`) or stayed empty, so the guide printed stale
+  or missing category labels. Labels already edited for a level that
+  still exists are kept; a type with no levels is left untouched.
 
 - **A timestamp column no longer stores one graphic row per distinct
   value.** On a 568,000-row file two timestamp variables each stored a
@@ -369,15 +388,16 @@ string.
   ISO timestamps are stored at the finest of minute, hour or day that
   fits. A column under the cap is stored exactly as before.
 
-- **[`create_rg()`](../reference/create_rg.md) bakes a DGF path the
-  render can resolve.** A DGF outside the report’s folder is now written
-  relative to it (`../dgf/DGF.xlsx`); Quarto resolves the path from the
-  `.qmd`, so the old as-given path failed with `path does not exist`.
+- **[`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)
+  bakes a DGF path the render can resolve.** A DGF outside the report’s
+  folder is now written relative to it (`../dgf/DGF.xlsx`); Quarto
+  resolves the path from the `.qmd`, so the old as-given path failed
+  with `path does not exist`.
 
-- **[`booleplot()`](../reference/booleplot.md) no longer fails on a
-  short figure.** It snapshotted the whole graphics parameter list and
-  put it back on exit; restoring the device-derived `"pin"` it had
-  captured errored with
+- **[`booleplot()`](https://urbaninstitute.github.io/datagoodr/reference/booleplot.md)
+  no longer fails on a short figure.** It snapshotted the whole graphics
+  parameter list and put it back on exit; restoring the device-derived
+  `"pin"` it had captured errored with
   `invalid value specified for graphical parameter` whenever the chunk’s
   `fig.height` was small — which every compact guide’s boolean section
   is. It now saves and restores only the margin it sets.
@@ -394,21 +414,21 @@ string.
   reads only formex’s public return value and touches no internals.
 
 - **DGF builds are roughly a third faster, via formex.** Profiling
-  [`create_dgf()`](../reference/create_dgf.md) showed type guessing was
-  63% of a build and the `rg_*` data profiles under 7% — so the work
-  went into
+  [`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+  showed type guessing was 63% of a build and the `rg_*` data profiles
+  under 7% — so the work went into
   [`formex::guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html),
   which cost ~130ms per column even for a ten-value input. Most of that
   floor was input-independent work recomputed on every call (the
   verifier’s foil-leak loop, the ontology’s own example signatures) plus
   a 730-format `strptime` sweep that non-date columns paid in full.
   Fixed upstream in `lecy/formex@3d812d2`; with it installed,
-  [`create_dgf()`](../reference/create_dgf.md) on the 4,620 x 19
-  baseball dataset goes 9.92s -\> 6.86s and the guess itself 6.20s -\>
-  3.59s. **The written DGF is byte-identical** — this is purely caching
-  and short-circuiting, with no change to any detection verdict. One
-  visible side effect: formex’s `as_integer` “NAs introduced by
-  coercion” warning now fires about once per session instead of once per
-  candidate per column (datagoodr already muffled it). Requires the
-  updated formex; older versions still work, just slower. Full
-  measurements and method in `dev/performance-notes.md`.
+  [`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+  on the 4,620 x 19 baseball dataset goes 9.92s -\> 6.86s and the guess
+  itself 6.20s -\> 3.59s. **The written DGF is byte-identical** — this
+  is purely caching and short-circuiting, with no change to any
+  detection verdict. One visible side effect: formex’s `as_integer` “NAs
+  introduced by coercion” warning now fires about once per session
+  instead of once per candidate per column (datagoodr already muffled
+  it). Requires the updated formex; older versions still work, just
+  slower. Full measurements and method in `dev/performance-notes.md`.

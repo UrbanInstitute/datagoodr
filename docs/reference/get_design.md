@@ -39,7 +39,8 @@ A data frame containing the compiled layout design with columns
 
 ## Details
 
-Used in [create_all_sections](create_all_sections.md)
+Used in
+[create_all_sections](https://urbaninstitute.github.io/datagoodr/reference/create_all_sections.md)
 
 ## See also
 

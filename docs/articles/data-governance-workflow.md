@@ -94,9 +94,11 @@ A rule name tells you which stage it belongs to:
 - **`as_<type>()`** *coerces* a value into a target type — the name
   states the **output**. These go in `desired_data_import_rule`.
 
-So [`read_ddmmyyyy()`](../reference/read_date.md) reads `15/03/2019` and
-returns a `Date`; it does not *produce* `dd/mm/yyyy`. A rule sitting in
-the wrong column is visible without running it.
+So
+[`read_ddmmyyyy()`](https://urbaninstitute.github.io/datagoodr/reference/read_date.md)
+reads `15/03/2019` and returns a `Date`; it does not *produce*
+`dd/mm/yyyy`. A rule sitting in the wrong column is visible without
+running it.
 
 Every rule has a matching **`is_*` guard** from the detector library,
 which lives in the [formex](https://lecy.github.io/formex/) package.
@@ -108,9 +110,10 @@ corruption. That single idea ties the system together:
 
 - **governance** — drop a rule name in a cell and it is applied;
 - **safety** — its `is_*` guard validates the precondition;
-- **iteration** — [`update_dgf()`](../reference/update_dgf.md) re-runs
-  the guards against the *current* data and flags rules that no longer
-  fit (because you cleaned the file).
+- **iteration** —
+  [`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
+  re-runs the guards against the *current* data and flags rules that no
+  longer fit (because you cleaned the file).
 
 ## The workflow
 
@@ -126,8 +129,8 @@ library(datagoodr)
 dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)
 ```
 
-[`create_dgf()`](../reference/create_dgf.md) does the heavy first guess;
-**your job is to curate two things**:
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+does the heavy first guess; **your job is to curate two things**:
 
 **(a) Move the data from raw to canonical** — add reformat rules to
 `raw_to_stable_transform` so the governed CSV is clean and
@@ -160,18 +163,19 @@ dgf <- update_dgf(dgf, raw_data)   # re-runs guards, recomputes rg_* for changed
 
 ## A suggested stabilizer you can preview (formex v7)
 
-[`create_dgf()`](../reference/create_dgf.md) does not only guess the
-type — it proposes *how to standardize* the column and shows you the
-result before you commit. Each variable carries a machine guess in
-`guess_*` (the detected leaf as two axes, `guess_format_style` and
-`guess_unit_type`, with a readable `guess_label` like
-`calendar {{ date :: temporal }}`), a `desired_*` target form you can
-edit, and a suggested **`stabilizer`** — a `read :: [convert] :: write`
-plan resolved by formex’s transform-path search. Its effect on the first
-few values is previewed in **`stable_first5`**, so a mis-detected date
-order is visible on sight. A reformat formex cannot reach (say a
-fiscal-to-calendar year, with no registered converter) is reported
-`not-transformable` rather than guessed.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+does not only guess the type — it proposes *how to standardize* the
+column and shows you the result before you commit. Each variable carries
+a machine guess in `guess_*` (the detected leaf as two axes,
+`guess_format_style` and `guess_unit_type`, with a readable
+`guess_label` like `calendar {{ date :: temporal }}`), a `desired_*`
+target form you can edit, and a suggested **`stabilizer`** — a
+`read :: [convert] :: write` plan resolved by formex’s transform-path
+search. Its effect on the first few values is previewed in
+**`stable_first5`**, so a mis-detected date order is visible on sight. A
+reformat formex cannot reach (say a fiscal-to-calendar year, with no
+registered converter) is reported `not-transformable` rather than
+guessed.
 
 Executing those plans is opt-in, so the suggestion only runs when you
 ask:
@@ -187,10 +191,11 @@ stable <- stabilize_data(raw_data, dgf, use_v7 = TRUE)
 ## Why the split pays off
 
 - **Iterative improvement.** Governance is not one-shot. You clean a
-  column, and [`update_dgf()`](../reference/update_dgf.md) reconciles
-  the DGF with the new state — the `desired_` interpretation is stable,
-  while the `raw_`/`stable_` storage and the rules needed to bridge to
-  it evolve as the data improves.
+  column, and
+  [`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
+  reconciles the DGF with the new state — the `desired_` interpretation
+  is stable, while the `raw_`/`stable_` storage and the rules needed to
+  bridge to it evolve as the data improves.
 - **Portability.** Because `stable_data_unit`/`stable_data_format`
   describe the data as it is, and the `desired_` fields describe intent,
   the governed CSV carries enough to be understood by non-R tools — and

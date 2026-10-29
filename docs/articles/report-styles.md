@@ -3,7 +3,7 @@
 One DGF can be published in more than one shape. The **style** decides
 how much room a variable gets on the page; the **design** decides which
 blocks it gets at all (see
-[`vignette("report-aesthetics")`](../articles/report-aesthetics.md)).
+[`vignette("report-aesthetics")`](https://urbaninstitute.github.io/datagoodr/articles/report-aesthetics.md)).
 This article is about the first.
 
 Every style opens with the same contents list, and every row of it
@@ -21,8 +21,9 @@ leaves the data out.
 | **Vintage** | `"vintage"` | The original three-column grid, kept so guides built with it still render. |
 
 Compare the same dataset in the first two:
-[baseball](../examples/baseball.md) and [baseball,
-compact](../examples/baseball-compact.md).
+[baseball](https://urbaninstitute.github.io/datagoodr/examples/baseball.md)
+and [baseball,
+compact](https://urbaninstitute.github.io/datagoodr/examples/baseball-compact.md).
 
 ## Switching
 
@@ -56,8 +57,9 @@ create_rg(dgf, file = "research-guide-compact.qmd", style = "compact")
 
 Changing the style of a guide you have already annotated means
 scaffolding the new one beside it rather than converting in place —
-[`update_rg()`](../reference/update_rg.md) re-renders an existing
-document against a different DGF, but it does not restyle it.
+[`update_rg()`](https://urbaninstitute.github.io/datagoodr/reference/update_rg.md)
+re-renders an existing document against a different DGF, but it does not
+restyle it.
 
 ## What compact actually changes
 
@@ -69,9 +71,10 @@ same types. What changes is how much page each one takes.
   rail. In the rail that table is what set a variable’s height, so
   condensing anything else first would have shortened nothing.
 - **Booleans are drawn as one divided bar**
-  ([`boolebar()`](../reference/boolebar.md)) rather than a stack of one
-  bar per category: the parts share a length, over a tenths scale, so
-  they read as shares of a whole — which is what a boolean is.
+  ([`boolebar()`](https://urbaninstitute.github.io/datagoodr/reference/boolebar.md))
+  rather than a stack of one bar per category: the parts share a length,
+  over a tenths scale, so they read as shares of a whole — which is what
+  a boolean is.
 - **The long tables and the preview are kept short** — 8 factor levels
   instead of 50, 2 preview lines instead of 4. A truncated table says
   what it left out (`+ 444 more levels`) rather than stopping silently.
@@ -110,10 +113,11 @@ paste_levels_freq <- function(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50) {
 
 ## Mixing styles in one document
 
-[`rail_sections()`](../reference/rail_sections.md) takes the style per
-call, so a document can draw the groups that deserve room at full size
-and the rest condensed — for example a guide whose numeric variables are
-the point and whose identifiers are just inventory:
+[`rail_sections()`](https://urbaninstitute.github.io/datagoodr/reference/rail_sections.md)
+takes the style per call, so a document can draw the groups that deserve
+room at full size and the rest condensed — for example a guide whose
+numeric variables are the point and whose identifiers are just
+inventory:
 
 ``` r
 

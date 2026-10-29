@@ -3,9 +3,9 @@
 ## You should not have to type every column by hand
 
 A dataset can have hundreds of columns.
-[`create_dgf()`](../reference/create_dgf.md) does not ask you to
-classify each one from scratch — it **guesses**, by handing every column
-to [formex](https://lecy.github.io/formex/)
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+does not ask you to classify each one from scratch — it **guesses**, by
+handing every column to [formex](https://lecy.github.io/formex/)
 ([`formex::guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html),
 with the variable’s name as a hint), and records the guess in the DGF
 for you to confirm or override. This vignette is about *reading* those
@@ -19,7 +19,9 @@ column into DGF coordinates and leaves the final say to you.
 ## Two answers per column, and why datagoodr keeps both
 
 formex returns two predictions, and they are **complementary** — neither
-dominates, so [`create_dgf()`](../reference/create_dgf.md) reads both:
+dominates, so
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+reads both:
 
 - The **route** (`$route`) walks a four-level ontology path
   (`data_type / semantic_family / semantic_type / format_style`) and
@@ -31,8 +33,8 @@ dominates, so [`create_dgf()`](../reference/create_dgf.md) reads both:
   numeric key (FIPS, ZIP, EIN) and email address.
 
 You never call these directly;
-[`create_dgf()`](../reference/create_dgf.md) resolves them into the
-DGF’s `guess_*` columns.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+resolves them into the DGF’s `guess_*` columns.
 
 ## What the guess looks like in the DGF
 
@@ -118,9 +120,10 @@ dgf$desired_format_style[dgf$var_name == "founded"]   <- "yyyymmdd"   # stabiliz
 ```
 
 Once the desired form differs from the guess,
-[`create_dgf()`](../reference/create_dgf.md) proposes a `stabilizer` to
-bridge them and previews it in `stable_first5` — see the *Rule-Based
-Data Governance* vignette for that half of the workflow.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+proposes a `stabilizer` to bridge them and previews it in
+`stable_first5` — see the *Rule-Based Data Governance* vignette for that
+half of the workflow.
 
 ## Where detection lives
 

@@ -27,4 +27,6 @@ No return value; prints the QUANTILES table to the RG.
 
 ## Details
 
-Internal to [create_div](create_div.md) in R/03-01-create-sections.R.
+Internal to
+[create_div](https://urbaninstitute.github.io/datagoodr/reference/create_div.md)
+in R/03-01-create-sections.R.

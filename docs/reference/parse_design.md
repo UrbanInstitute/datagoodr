@@ -25,7 +25,8 @@ represented as a row.
 
 ## Details
 
-Used inside [get_design](get_design.md).
+Used inside
+[get_design](https://urbaninstitute.github.io/datagoodr/reference/get_design.md).
 
 ## See also
 

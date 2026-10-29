@@ -19,7 +19,8 @@ create_section(VNAME = "EIN", all.layouts, L)
 
 - all.layouts:
 
-  Output of [get_design](get_design.md).
+  Output of
+  [get_design](https://urbaninstitute.github.io/datagoodr/reference/get_design.md).
 
 - L:
 

@@ -27,5 +27,7 @@ when the variable has no levels.
 
 ## Details
 
-Internal to [create_div](create_div.md) in R/03-01-create-sections.R.
-The table is capped at the first 50 levels.
+Internal to
+[create_div](https://urbaninstitute.github.io/datagoodr/reference/create_div.md)
+in R/03-01-create-sections.R. The table is capped at the first 50
+levels.

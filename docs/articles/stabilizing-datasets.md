@@ -9,10 +9,11 @@ ZIP codes that a spreadsheet already mangled into `6037`. A
 that behaves — one that the next program reads correctly instead of
 guessing.
 
-[`stabilize_data()`](../reference/stabilize_data.md) applies the DGF’s
-rules to a raw extract and returns that clean version, which
-[`write_stable_csv()`](../reference/write_stable_csv.md) writes as a
-*governed CSV* carrying its own DGF and provenance.
+[`stabilize_data()`](https://urbaninstitute.github.io/datagoodr/reference/stabilize_data.md)
+applies the DGF’s rules to a raw extract and returns that clean version,
+which
+[`write_stable_csv()`](https://urbaninstitute.github.io/datagoodr/reference/write_stable_csv.md)
+writes as a *governed CSV* carrying its own DGF and provenance.
 
 ``` r
 

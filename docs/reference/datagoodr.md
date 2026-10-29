@@ -35,9 +35,10 @@ datagoodr(
 - create.dgf.params:
 
   list of function arguments for creating the dgf. See
-  [create_dgf](create_dgf.md) for available function arguments (df
-  argument is not needed). Defaul is NULL which uses the default
-  arguments for [create_dgf](create_dgf.md).
+  [create_dgf](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+  for available function arguments (df argument is not needed). Defaul
+  is NULL which uses the default arguments for
+  [create_dgf](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md).
 
 - rg.name:
 

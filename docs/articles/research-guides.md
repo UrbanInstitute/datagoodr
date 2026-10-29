@@ -16,10 +16,11 @@ dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)  # type + profile
 create_rg(dgf, file = "research-guide")                  # scaffold the guide
 ```
 
-[`create_rg()`](../reference/create_rg.md) builds a self-contained
-report pointed at your DGF. Because the DGF already carries every
-column’s profile (the `rg_*` cells), the guide renders from the
-governance file alone — the raw data is not needed again.
+[`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)
+builds a self-contained report pointed at your DGF. Because the DGF
+already carries every column’s profile (the `rg_*` cells), the guide
+renders from the governance file alone — the raw data is not needed
+again.
 
 The guide opens with a numbered contents list and groups variables by
 data type. Each variable gets a left rail (data type, label, name,
@@ -29,10 +30,11 @@ gives the same guide condensed for documentation — the same blocks, but
 a one-row properties strip, short tables and preview, smaller graphics
 and about half the whitespace, so several variables fit on a screen.
 `create_rg(dgf, style = "vintage")` gives the original three-column
-grid. [`vignette("report-styles")`](../articles/report-styles.md)
+grid.
+[`vignette("report-styles")`](https://urbaninstitute.github.io/datagoodr/articles/report-styles.md)
 compares the three and shows how to switch;
-[`vignette("example-guides")`](../articles/example-guides.md) has
-finished guides built from familiar datasets.
+[`vignette("example-guides")`](https://urbaninstitute.github.io/datagoodr/articles/example-guides.md)
+has finished guides built from familiar datasets.
 
 ## One guide, a different style for each type
 
@@ -59,8 +61,8 @@ that reads best — without you choosing any of it.
 
 Build a DGF from the package’s demo data (one column per type) and
 render each column’s graphic with
-[`dg_graphic()`](../reference/dg_element.md) — the very function the
-guide calls:
+[`dg_graphic()`](https://urbaninstitute.github.io/datagoodr/reference/dg_element.md)
+— the very function the guide calls:
 
 ``` r
 
@@ -125,12 +127,12 @@ and the storage-safety gate — see **Guessing Data Types**.
 
 The guide is regenerated from the DGF, so improving documentation is a
 loop: curate a label or fix a type, re-profile with
-[`update_dgf()`](../reference/update_dgf.md), and re-render. Nothing you
-hand-edited is lost. For customizing layout, formatting, and narrative
-around the generated sections,
-[`create_rg()`](../reference/create_rg.md) scaffolds an editable project
-(a Quarto document plus a `DG.R` you can override) — see the package
-reference.
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md),
+and re-render. Nothing you hand-edited is lost. For customizing layout,
+formatting, and narrative around the generated sections,
+[`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)
+scaffolds an editable project (a Quarto document plus a `DG.R` you can
+override) — see the package reference.
 
 ## Next
 

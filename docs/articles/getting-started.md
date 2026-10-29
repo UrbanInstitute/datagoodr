@@ -29,8 +29,8 @@ library(datagoodr)
 ```
 
 **1. The DGF — a governed data dictionary.**
-[`create_dgf()`](../reference/create_dgf.md) reads your data, profiles
-every column, and types it with the help of
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+reads your data, profiles every column, and types it with the help of
 [formex](https://lecy.github.io/formex/). The result is a table you can
 open in Excel and curate.
 
@@ -41,10 +41,11 @@ dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)
 ```
 
 **2. A stabilized dataset — a governed CSV.**
-[`stabilize_data()`](../reference/stabilize_data.md) applies the DGF’s
-rules to a raw extract, producing a version that imports to the correct
-type where possible and *safely* (without data loss) where not — a date
-becomes ISO `2019-03-15`, a ZIP keeps its leading zero.
+[`stabilize_data()`](https://urbaninstitute.github.io/datagoodr/reference/stabilize_data.md)
+applies the DGF’s rules to a raw extract, producing a version that
+imports to the correct type where possible and *safely* (without data
+loss) where not — a date becomes ISO `2019-03-15`, a ZIP keeps its
+leading zero.
 
 ``` r
 
@@ -53,10 +54,10 @@ write_stable_csv(stable, "data-governed.csv", dgf = dgf)
 ```
 
 **3. A Research Guide — a rendered data profile.**
-[`create_rg()`](../reference/create_rg.md) scaffolds a self-contained
-report that shows each variable with a visual tuned to its type (a
-histogram for a number, a treemap for a category, a calendar heat-map
-for a date).
+[`create_rg()`](https://urbaninstitute.github.io/datagoodr/reference/create_rg.md)
+scaffolds a self-contained report that shows each variable with a visual
+tuned to its type (a histogram for a number, a treemap for a category, a
+calendar heat-map for a date).
 
 ``` r
 
@@ -69,11 +70,13 @@ create_rg(dgf, file = "research-guide")
                      (profile + type)│
          you curate labels & types ──┘── create_rg() ───────▶ Research Guide
 
-[`create_dgf()`](../reference/create_dgf.md) does the heavy first pass.
-Your job is to curate — add labels and definitions, confirm or correct
-the guessed types — in the spreadsheet. Then the same DGF drives both
-outputs, and [`update_dgf()`](../reference/update_dgf.md) re-profiles
-the data when it changes while keeping everything you curated.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+does the heavy first pass. Your job is to curate — add labels and
+definitions, confirm or correct the guessed types — in the spreadsheet.
+Then the same DGF drives both outputs, and
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
+re-profiles the data when it changes while keeping everything you
+curated.
 
 ## Where to go next
 

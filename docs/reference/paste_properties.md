@@ -28,5 +28,6 @@ the RG as html code
 
 ## Details
 
-The function is an internal function of [create_div](create_div.md) in
-R/03-01-create-sections.R.
+The function is an internal function of
+[create_div](https://urbaninstitute.github.io/datagoodr/reference/create_div.md)
+in R/03-01-create-sections.R.

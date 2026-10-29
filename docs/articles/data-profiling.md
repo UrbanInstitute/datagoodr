@@ -9,9 +9,10 @@ the values themselves and stored in the DGF. Because the profile travels
 with the governance file, anyone can audit what the data actually looked
 like, without re-reading the raw file.
 
-[`create_dgf()`](../reference/create_dgf.md) profiles every column as it
-builds the DGF; [`update_dgf()`](../reference/update_dgf.md) recomputes
-the profile for any column whose data has changed.
+[`create_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/create_dgf.md)
+profiles every column as it builds the DGF;
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md)
+recomputes the profile for any column whose data has changed.
 
 ## Universal quality metrics — measured for every column
 
@@ -109,9 +110,10 @@ as **JSON text**:
 Storing them as JSON (not nested R objects) is deliberate: it survives
 the `.xlsx` round trip that a nested column would not, so the profile is
 portable and the raw data is no longer needed to render the guide. When
-you re-profile with [`update_dgf()`](../reference/update_dgf.md), only
-the changed columns’ `rg_*` cells are rewritten; curated dictionary text
-is left untouched.
+you re-profile with
+[`update_dgf()`](https://urbaninstitute.github.io/datagoodr/reference/update_dgf.md),
+only the changed columns’ `rg_*` cells are rewritten; curated dictionary
+text is left untouched.
 
 > **Note.** Today’s universal metrics are the integrity counts above.
 > Richer summaries of spread and balance — such as an entropy or
