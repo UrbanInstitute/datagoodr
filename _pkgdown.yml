@@ -23,6 +23,10 @@ navbar:
         href: examples/starwars.html
       - text: Motor Trend cars
         href: examples/mtcars.html
+      - text: -------
+      - text: "Styles"
+      - text: Baseball players, compact
+        href: examples/baseball-compact.html
 
 articles:
 - title: User guide
@@ -37,6 +41,7 @@ articles:
   - example-guides
   - documenting-data
   - reporting-functions
+  - report-styles
   - report-aesthetics
   - guessing-data-types
 

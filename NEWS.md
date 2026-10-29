@@ -27,7 +27,12 @@ On the package's demo dataset that is a 35% shorter page, and a median variable
 of 380px against 610px. The compact guide is the rail renderer at a higher
 density, so everything that customizes a rail guide --- `DG.R` overrides, a
 `layout.*` shadow, a local stylesheet --- works on it unchanged. `get_design(compact
-= TRUE)` returns its design, and `rail_sections(style = "compact")` draws it.
+= TRUE)` returns its design, and `rail_sections(style = "compact")` draws it,
+which also lets one document mix densities group by group.
+
+`vignette("report-styles")` compares the three styles and shows how to switch,
+and the documentation site carries the baseball guide in both the default and
+the compact style for comparison.
 
 ### A truncated FACTOR LEVELS table now says what it left out
 

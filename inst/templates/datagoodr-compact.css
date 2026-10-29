@@ -212,8 +212,12 @@ main h2 + .dg-unit { border-top: 0; }
   text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
   border-bottom: 1px solid var(--rule-strong);
 }
-/* PROPERTIES is transposed in this style, so unlike the default guide its
-   header row carries the property names and has to stay visible. */
+/* PROPERTIES is transposed in this style and sits in the body, so its header
+   row carries the property names and has to stay visible. A vertical
+   PROPERTIES table in the rail -- a rail-style section drawn inside a compact
+   document -- still hides the "STAT VAL" header, which is noise. */
+.dg-rail .dg-props thead, .dg-shape thead { display: none; }
+.dg-rail .dg-props table { width: 100%; }
 .dg-stats { max-height: 13rem; overflow-y: auto; }
 /* the tally under a truncated level table ("+ 12 more levels") */
 .dg-stats em, .dg-stats p em { font-family: var(--font-body); color: var(--ink-soft); font-size: var(--step--2); }

@@ -128,7 +128,8 @@ paste_levels_freq <- function(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50) {
 
 The third lever is the document: `RG-compact.qmd` sets a smaller `fig.height`
 per group, and `datagoodr-compact.css` halves the spacing. Both are yours to
-edit in a scaffolded project.
+edit in a scaffolded project. `vignette("report-styles")` compares the styles
+and shows how to switch between them.
 
 ## Where this fits
 
