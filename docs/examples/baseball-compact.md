@@ -13,51 +13,70 @@
 
 - [01birthState](#var-birthState)
   - state of birth
+  - CA · TX · FL · Distrito Nacional · GA · TN · IL
 - [02birthCity](#var-birthCity)
   - city of birth
+  - Santo Domingo · Valencia · Dallas
 - [03height](#var-height)
   - height (inches)
+  - 74 · 75 · 73 · 72 · 76 · 71 · 70 · 77 · 69 · 78
 - [04bats](#var-bats)
   - side of plate (R/L/B)
+  - R · L · B
 - [05throws](#var-throws)
   - throwing hand (L/R)
+  - R · L
 
 ### Numeric — 7 variables
 
 - [06weight](#var-weight)
   - weight (lbs)
+  - 235 · 235 · 205 · 217 · 205
 - [07G](#var-G)
   - games
+  - 47 · 153 · 104 · 121 · 28
 - [08AB](#var-AB)
   - at bats
+  - 1 · 2 · 4 · 3 · 5 · 50 · 17 · 30 · 35 · 179 · 9
 - [09H](#var-H)
   - hits
+  - 0 · 1 · 2 · 4 · 8 · 3 · 6 · 7 · 20 · 5 · 37 · 98
 - [10AVG](#var-AVG)
   - batting average
+  - 0.071 · 0.3 · 0.217 · 0.218 · 0
 - [11SLUG](#var-SLUG)
   - slugging percentage
+  - 0 · 0.5 · 0.071 · 0.111 · 0.143 · 0.056 · 0.059
 - [12salary](#var-salary)
   - 
+  - 753280 · 9110889 · 2460000 · 509500 · 507700
 
 ### Text — 2 variables
 
 - [13nameFirst](#var-nameFirst)
   - first name
+  - Chris · Matt · Brandon · Michael · Jose · Josh
 - [14nameLast](#var-nameLast)
   - last name
+  - Perez · Garcia · Alvarez · Martinez · Ramirez
 
 ### Temporal — 5 variables
 
 - [15birthDate](#var-birthDate)
   - date of birth
+  - 1985-12-17 · 1987-01-29 · 1988-02-26
 - [16birthYear](#var-birthYear)
   - year of birth
+  - 1985 · 1987 · 1988 · 1991 · 1986
 - [17birthMonth](#var-birthMonth)
   - month of birth (Mon)
+  - Aug · Sep · Jan · Oct · May · Nov · Jul · Mar
 - [18debut](#var-debut)
   - date of first appearance
+  - 2010-07-28 · 2014-03-31 · 2011-06-17
 - [19finalGame](#var-finalGame)
   - date of last appearance
+  - 2021-10-01 · 2022-10-04 · 2016-05-29
 
 ## Categorical
 

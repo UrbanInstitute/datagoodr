@@ -12,6 +12,8 @@
   type-conversion functions to raw columns
 - [`as_id()`](as_id.md) : Coerce a column to an identifier (character,
   trimmed)
+- [`boolebar()`](boolebar.md) : Draw a boolean variable as one divided
+  bar
 - [`booleplot()`](booleplot.md) : Draw a compact horizontal bar plot
   with consistent bar geometry
 - [`check_dgf_rules()`](check_dgf_rules.md) : Check that a DGF's rules
@@ -96,6 +98,8 @@
   conversion functions named in a DGF
 - [`parse_nm()`](parse_nm.md) : Split a delimited alias string into
   unique names
+- [`paste_boolebar()`](paste_boolebar.md) : Print a boolean variable's
+  divided bar into the RG
 - [`paste_booleplot()`](paste_booleplot.md) : Print the bar plot of a
   logical variable into the RG
 - [`paste_distribution_shape()`](paste_distribution_shape.md) : Print

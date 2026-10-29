@@ -11,6 +11,7 @@ below it to see how little it took.
 | [Star Wars characters](../examples/starwars.md) | [`dplyr::starwars`](https://dplyr.tidyverse.org/reference/starwars.html) | list columns (films, vehicles) and missing values |
 | [Motor Trend cars](../examples/mtcars.md) | [`datasets::mtcars`](https://rdrr.io/r/datasets/mtcars.html) | a small numeric dataset with 0/1 codes retyped as true/false |
 | [Baseball players, compact](../examples/baseball-compact.md) | the baseball DGF again | the same guide in the `"compact"` style: same blocks, 35% shorter page |
+| [Motor Trend cars, compact](../examples/mtcars-compact.md) | the mtcars DGF again | the compact style’s boolean graphic — `vs` and `am` as one divided bar over a tenths scale |
 
 The links open the guides on the package website; they are built by
 `data-raw/example-guides.R` in the source repository.

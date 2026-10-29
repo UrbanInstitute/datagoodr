@@ -44,6 +44,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
     <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
+    <li><a class="dropdown-item" href="../examples/mtcars-compact.html">Motor Trend cars, compact</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -64,6 +65,16 @@
 <h2 class="pkg-version" data-toc-text="development version" id="datagoodr-development-version">datagoodr (development version)<a class="anchor" aria-label="anchor" href="#datagoodr-development-version"></a></h2>
 <div class="section level3">
 <h3 id="new-development-version">New<a class="anchor" aria-label="anchor" href="#new-development-version"></a></h3>
+<div class="section level4">
+<h4 id="the-contents-list-glimpses-the-data-development-version">The contents list glimpses the data<a class="anchor" aria-label="anchor" href="#the-contents-list-glimpses-the-data-development-version"></a></h4>
+<p>Every row of a research guide’s contents list now carries example values under the variable’s label, so the opening page says what the data looks like and not just what the columns are called. The values come from <code>stable_first5</code> — the first values as the stabilizer will write them — and fall back to the <code>rg_preview</code> sample for a variable the stabilizer leaves alone, which is most of them.</p>
+<p>Whole values only: the glimpse packs values until the next one would break its character budget rather than trimming one to fill it, because one complete value tells a reader more than five cut off mid-word. A single value longer than the whole budget is the one exception, trimmed with an ellipsis rather than left out. <code>rail_contents(glimpse = )</code> sets the budget, or <code>0</code> leaves the data out.</p>
+</div>
+<div class="section level4">
+<h4 id="a-boolean-reads-as-one-divided-bar-development-version">A boolean reads as one divided bar<a class="anchor" aria-label="anchor" href="#a-boolean-reads-as-one-divided-bar-development-version"></a></h4>
+<p><code><a href="../reference/boolebar.html">boolebar()</a></code> draws a boolean variable as a single full-width bar split into its TRUE / FALSE / NA parts — counts and shares printed on the bar in the report’s accent orange, categories named above, and a tenths scale beneath. The scale is the point: without one a divided bar says only “these are the parts”, and with one it says where each part sits in the whole.</p>
+<p>It replaces the stack of one-bar-per-category (<code><a href="../reference/booleplot.html">booleplot()</a></code>, still the default guide’s graphic) in the compact style, where it is also shorter. A part too narrow to hold its own count carries it above the bar instead, with a leader back to the part, so a 0.1% missing category still says what it is.</p>
+</div>
 <div class="section level4">
 <h4 id="a-compact-research-guide-for-documentation-development-version">A compact research guide, for documentation<a class="anchor" aria-label="anchor" href="#a-compact-research-guide-for-documentation-development-version"></a></h4>
 <p><code>create_rg(dgf, style = "compact")</code> scaffolds the same guide as the default <code>"rail"</code> style, condensed so a reader can scan several variables per screen instead of one. Nothing is left out — the same blocks appear in the same order, for the same types:</p>

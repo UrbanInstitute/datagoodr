@@ -6,6 +6,12 @@ blocks it gets at all (see
 [`vignette("report-aesthetics")`](../articles/report-aesthetics.md)).
 This article is about the first.
 
+Every style opens with the same contents list, and every row of it
+glimpses the variable’s data — the first values as the stabilizer will
+write them, or the preview sample where no stabilizer runs.
+`rail_contents(glimpse = )` sets how many characters it may use, or `0`
+leaves the data out.
+
 ## The three styles
 
 | Style | `create_rg(style = )` | For |
@@ -62,6 +68,10 @@ same types. What changes is how much page each one takes.
   body (`ROWS DISTINCT MISSING/NA`) instead of a vertical table in the
   rail. In the rail that table is what set a variable’s height, so
   condensing anything else first would have shortened nothing.
+- **Booleans are drawn as one divided bar**
+  ([`boolebar()`](../reference/boolebar.md)) rather than a stack of one
+  bar per category: the parts share a length, over a tenths scale, so
+  they read as shares of a whole — which is what a boolean is.
 - **The long tables and the preview are kept short** — 8 factor levels
   instead of 50, 2 preview lines instead of 4. A truncated table says
   what it left out (`+ 444 more levels`) rather than stopping silently.

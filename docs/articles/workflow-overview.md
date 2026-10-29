@@ -59,7 +59,7 @@ knitr::kable(dgf[, c("var_name", "guess_label", "desired_data_type",
 |:---|:---|:---|:---|:---|
 | event_date | event_date | mdy_slash {{ date :: temporal }} | temporal | genome |
 | region | region | geographic {{ mutually_exclusive :: categorical }} | categorical |  |
-| is_active | is_active | unordered {{ mutually_exclusive :: categorical }} | boolean |  |
+| is_active | is_active | indicator {{ binary :: boolean }} | boolean | mask |
 | revenue | revenue | measurement {{ quantity :: number }} | number |  |
 | county_fips | county_fips | county_fips {{ mutually_exclusive :: categorical }} | identifier | mask+lexicon |
 | notes | notes | unordered {{ mutually_exclusive :: categorical }} | categorical |  |

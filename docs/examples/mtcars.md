@@ -13,39 +13,52 @@
 
 - [01vs](#var-vs)
   - engine shape
+  - 0 · 1
 - [02am](#var-am)
   - transmission
+  - 0 · 1
 
 ### Categorical — 1 variable
 
 - [03make](#var-make)
   - manufacturer
+  - Merc · Fiat · Hornet · Mazda · Toyota · AMC
 
 ### Numeric — 9 variables
 
 - [04mpg](#var-mpg)
   - miles per gallon
+  - 10.4 · 15.2 · 19.2 · 21 · 21.4 · 22.8 · 30.4
 - [05cyl](#var-cyl)
   - cylinders
+  - 8 · 4 · 6
 - [06disp](#var-disp)
   - displacement (cu. in.)
+  - 275.8 · 160 · 167.6 · 360 · 71.1 · 75.7 · 78.7
 - [07hp](#var-hp)
   - gross horsepower
+  - 110 · 175 · 180 · 66 · 123 · 150 · 245 · 52 · 62
 - [08drat](#var-drat)
   - rear axle ratio
+  - 3.07 · 3.92 · 2.76 · 3.08 · 3.15 · 3.9 · 4.08
 - [09wt](#var-wt)
   - weight (1,000 lbs)
+  - 3.44 · 3.57 · 1.513 · 1.615 · 1.835 · 1.935
 - [10qsec](#var-qsec)
   - quarter-mile time (sec)
+  - 17.02 · 18.9 · 14.5 · 14.6 · 15.41 · 15.5
 - [11gear](#var-gear)
   - forward gears
+  - 3 · 4 · 5
 - [12carb](#var-carb)
   - carburetors
+  - 2 · 4 · 1 · 3 · 6 · 8
 
 ### Identifier — 1 variable
 
 - [13model](#var-model)
   - 
+  - 128 · 142E · 230 · 240D · 280 · 280C · 360
 
 ## Boolean
 
@@ -163,7 +176,7 @@ Porsche · Valiant · Volvo
 
 ## Numeric
 
-number · measurement
+number
 
 miles per gallon
 
@@ -200,7 +213,7 @@ Fuel economy in miles per (US) gallon
 | Skew     |  0.61 | MED            |
 | Kurtosis | -0.37 | LOW            |
 
-number · rank
+number
 
 cylinders
 
@@ -236,7 +249,7 @@ Number of engine cylinders
 | Skew     | -0.17 | LOW            |
 | Kurtosis | -1.76 | MED            |
 
-number · measurement
+number
 
 displacement (cu. in.)
 
@@ -274,7 +287,7 @@ Engine displacement in cubic inches
 | Skew     |  0.38 | LOW            |
 | Kurtosis | -1.21 | MED            |
 
-number · count
+number
 
 gross horsepower
 
@@ -311,7 +324,7 @@ Gross horsepower
 | Skew     |  0.73 | MED            |
 | Kurtosis | -0.14 | LOW            |
 
-number · measurement
+number
 
 rear axle ratio
 
@@ -348,7 +361,7 @@ Rear axle ratio
 | Skew     |  0.27 | LOW            |
 | Kurtosis | -0.71 | LOW            |
 
-number · measurement
+number
 
 weight (1,000 lbs)
 
@@ -386,7 +399,7 @@ Vehicle weight in thousands of pounds
 | Skew     |  0.42 | LOW            |
 | Kurtosis | -0.02 | LOW            |
 
-number · measurement
+number
 
 quarter-mile time (sec)
 
@@ -424,7 +437,7 @@ Fastest quarter-mile time from a standing start, in seconds
 | Skew     | 0.37 | LOW            |
 | Kurtosis | 0.34 | LOW            |
 
-number · rank
+number
 
 forward gears
 

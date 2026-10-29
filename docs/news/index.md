@@ -4,6 +4,38 @@
 
 ### New
 
+#### The contents list glimpses the data
+
+Every row of a research guide’s contents list now carries example values
+under the variable’s label, so the opening page says what the data looks
+like and not just what the columns are called. The values come from
+`stable_first5` — the first values as the stabilizer will write them —
+and fall back to the `rg_preview` sample for a variable the stabilizer
+leaves alone, which is most of them.
+
+Whole values only: the glimpse packs values until the next one would
+break its character budget rather than trimming one to fill it, because
+one complete value tells a reader more than five cut off mid-word. A
+single value longer than the whole budget is the one exception, trimmed
+with an ellipsis rather than left out. `rail_contents(glimpse = )` sets
+the budget, or `0` leaves the data out.
+
+#### A boolean reads as one divided bar
+
+[`boolebar()`](../reference/boolebar.md) draws a boolean variable as a
+single full-width bar split into its TRUE / FALSE / NA parts — counts
+and shares printed on the bar in the report’s accent orange, categories
+named above, and a tenths scale beneath. The scale is the point: without
+one a divided bar says only “these are the parts”, and with one it says
+where each part sits in the whole.
+
+It replaces the stack of one-bar-per-category
+([`booleplot()`](../reference/booleplot.md), still the default guide’s
+graphic) in the compact style, where it is also shorter. A part too
+narrow to hold its own count carries it above the bar instead, with a
+leader back to the part, so a 0.1% missing category still says what it
+is.
+
 #### A compact research guide, for documentation
 
 `create_rg(dgf, style = "compact")` scaffolds the same guide as the

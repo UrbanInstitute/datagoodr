@@ -61,6 +61,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
     <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
+    <li><a class="dropdown-item" href="../examples/mtcars-compact.html">Motor Trend cars, compact</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -96,6 +97,11 @@
 page; the <strong>design</strong> decides which blocks it gets at all
 (see <code><a href="../articles/report-aesthetics.html">vignette("report-aesthetics")</a></code>). This article is about
 the first.</p>
+<p>Every style opens with the same contents list, and every row of it
+glimpses the variable’s data — the first values as the stabilizer will
+write them, or the preview sample where no stabilizer runs.
+<code>rail_contents(glimpse = )</code> sets how many characters it may
+use, or <code>0</code> leaves the data out.</p>
 <div class="section level2">
 <h2 id="the-three-styles">The three styles<a class="anchor" aria-label="anchor" href="#the-three-styles"></a>
 </h2>
@@ -174,6 +180,11 @@ the top of the body (<code>ROWS  DISTINCT  MISSING/NA</code>) instead of
 a vertical table in the rail. In the rail that table is what set a
 variable’s height, so condensing anything else first would have
 shortened nothing.</li>
+<li>
+<strong>Booleans are drawn as one divided bar</strong>
+(<code><a href="../reference/boolebar.html">boolebar()</a></code>) rather than a stack of one bar per category:
+the parts share a length, over a tenths scale, so they read as shares of
+a whole — which is what a boolean is.</li>
 <li>
 <strong>The long tables and the preview are kept short</strong> — 8
 factor levels instead of 50, 2 preview lines instead of 4. A truncated

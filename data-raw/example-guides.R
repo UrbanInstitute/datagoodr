@@ -101,3 +101,8 @@ dgf <- label_levels( dgf, list( vs = c( "0" = "V-shaped", "1" = "straight" ),
                                 am = c( "0" = "automatic", "1" = "manual" ) ) )
 dgf$desired_semantic_type[ dgf$var_name == "make" ] <- "categorical"
 build_guide( dgf, "mtcars" )
+
+# mtcars is the only example dataset with boolean variables (vs, am), so the
+# compact style's boolean graphic -- one divided bar, boolebar() -- can only be
+# seen on this one. Built compact for that reason.
+build_guide( dgf, "mtcars-compact", style = "compact" )
