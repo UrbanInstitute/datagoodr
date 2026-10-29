@@ -57,12 +57,19 @@ test_that("paste_boolebar draws from the DGF's graphics payload", {
   expect_true(any(grepl("**VALUES**", out, fixed = TRUE)))
 })
 
-test_that("the compact guide draws booleans as a bar, the default as a stack", {
-  rg <- get_design()
-  cp <- get_design(compact = TRUE)
-  expect_true("paste_booleplot" %in% trimws(rg$FUNCTION))
-  expect_false("paste_booleplot" %in% trimws(cp$FUNCTION))
-  expect_true("paste_boolebar" %in% trimws(cp$FUNCTION))
+test_that("every style draws booleans as one divided bar", {
+  for (d in list(get_design(), get_design(compact = TRUE), get_design("dd"))) {
+    expect_false("paste_booleplot" %in% trimws(d$FUNCTION))
+  }
+  expect_true("paste_boolebar" %in% trimws(get_design()$FUNCTION))
+  expect_true("paste_boolebar" %in% trimws(get_design(compact = TRUE)$FUNCTION))
+})
+
+test_that("booleplot is still exported for anyone who wants the stack", {
+  # no longer in any layout, but it remains a working renderer: a project can
+  # put it back from DG.R without the package shipping it
+  expect_true(is.function(booleplot))
+  expect_true(is.function(paste_booleplot))
 })
 
 test_that("a curated level dictionary names the categories on the bar", {

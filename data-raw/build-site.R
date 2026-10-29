@@ -80,8 +80,13 @@ sources <- function( root ) {
 if( synced ) {
 
   # Short on purpose: tempdir() under a deep profile path overflows PATH_MAX
-  # once pkgdown nests its own folders under it.
-  work <- file.path( dirname( tempdir() ), "pkgdown-build" )
+  # once pkgdown nests its own folders under it. The process id keeps two
+  # builds running at once from sharing one scratch folder -- when they did,
+  # whichever started second cleared the folder out from under the first, and
+  # the first died partway through the reference with pkgdown's "Run
+  # init_site() first", its deps having disappeared mid-build.
+  work <- file.path( dirname( tempdir() ),
+                     paste0( "pkgdown-build-", Sys.getpid() ) )
   unlink( work, recursive = TRUE, force = TRUE )
   dir.create( work, recursive = TRUE, showWarnings = FALSE )
   if( nchar(work) > 60 )

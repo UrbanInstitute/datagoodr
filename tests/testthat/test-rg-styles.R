@@ -116,15 +116,14 @@ test_that("compact layouts condense the design without dropping blocks", {
   expect_true("paste_distribution_shape" %in% trimws(rg$FUNCTION))
   expect_false("paste_distribution_shape" %in% trimws(cp$FUNCTION))
 
-  # booleans are drawn as one divided bar instead of a stack of bars
-  expect_true("paste_booleplot" %in% trimws(rg$FUNCTION))
-  expect_false("paste_booleplot" %in% trimws(cp$FUNCTION))
+  # the boolean bar is every style's graphic now, so it is NOT a difference
+  expect_true("paste_boolebar" %in% trimws(rg$FUNCTION))
   expect_true("paste_boolebar" %in% trimws(cp$FUNCTION))
 
-  # every other block survives, type for type: the three above are the whole
+  # every other block survives, type for type: the two above are the whole
   # difference between the two designs
   swapped <- c("paste_properties", "paste_properties_horizontal",
-               "paste_distribution_shape", "paste_booleplot", "paste_boolebar")
+               "paste_distribution_shape")
   drop <- function(d) d[!trimws(d$FUNCTION) %in% swapped,
                         c("TYPE", "DIV", "FUNCTION")]
   expect_equal(drop(cp), drop(rg), ignore_attr = TRUE)

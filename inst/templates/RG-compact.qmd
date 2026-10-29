@@ -64,7 +64,7 @@ groups <- rail_groups( dgf )
 rail_contents( groups )
 ```
 
-```{r boolean, echo=FALSE, results="asis", fig.width=8, fig.height=1.35}
+```{r boolean, echo=FALSE, results="asis", fig.width=8, fig.height=1.5}
 rail_sections( groups$Boolean, "Boolean", style = "compact" )
 ```
 
