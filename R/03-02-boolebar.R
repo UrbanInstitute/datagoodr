@@ -300,8 +300,10 @@ paste_boolebar <- function( VNAME, LABEL = "VALUES" ) {
 
   if( nzchar( trimws(LABEL) ) ) cat( paste0( "**", LABEL, "**", ": ", "\n\n" ) )
 
+  # Order on the stored codes -- TRUE / yes / 1 is recognised there, not in a
+  # curated label like "1 (straight)" -- then show the curated labels.
   i <- .boolebar_order( v$f, v$Freq )
-  boolebar( stats::setNames( v$Freq[i], v$f[i] ) )
+  boolebar( stats::setNames( v$Freq[i], .level_labels( v$f[i] ) ) )
 
   cat( "\n\n" )
 }
