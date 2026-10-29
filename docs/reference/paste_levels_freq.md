@@ -8,7 +8,7 @@ customised away from the raw level codes.
 ## Usage
 
 ``` r
-paste_levels_freq(VNAME, LABEL = "FACTOR LEVELS")
+paste_levels_freq(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50)
 ```
 
 ## Arguments
@@ -22,6 +22,12 @@ paste_levels_freq(VNAME, LABEL = "FACTOR LEVELS")
 
   A character string for the section title. Defaults to \`"FACTOR
   LEVELS"\`.
+
+- max.rows:
+
+  Most levels to list. The rest are summarised as a "+ N more levels"
+  line rather than dropped silently. Defaults to \`50\`; the compact
+  guide passes a much smaller number (see \`.rail_knobs\`).
 
 ## Value
 

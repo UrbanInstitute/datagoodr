@@ -31,6 +31,7 @@ wrapped text block (see [wrap_preview()])."></head><body>
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul></li>
@@ -42,6 +43,9 @@ wrapped text block (see [wrap_preview()])."></head><body>
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -66,7 +70,13 @@ wrapped text block (see [wrap_preview()]).</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">paste_preview_num</span><span class="op">(</span><span class="va">VNAME</span>, LABEL <span class="op">=</span> <span class="st">"PREVIEW"</span>, size <span class="op">=</span> <span class="fl">68</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">paste_preview_num</span><span class="op">(</span></span>
+<span>  <span class="va">VNAME</span>,</span>
+<span>  LABEL <span class="op">=</span> <span class="st">"PREVIEW"</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">68</span>,</span>
+<span>  max.lines <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,6 +95,12 @@ passes `"rg_preview"`).</p></dd>
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
 <dd><p>Maximum line width, in characters. Defaults to `68`.</p></dd>
+
+
+<dt id="arg-max-lines">max.lines<a class="anchor" aria-label="anchor" href="#arg-max-lines"></a></dt>
+<dd><p>Maximum wrapped rows to print, which is what keeps the
+preview to a short strip. Defaults to `4`; the compact guide passes fewer
+(see `.rail_knobs`).</p></dd>
 
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>

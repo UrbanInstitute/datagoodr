@@ -11,6 +11,7 @@ dataset has a first, complete Research Guide before you have written a
 single label.
 
 ``` r
+
 dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)  # type + profile
 create_rg(dgf, file = "research-guide")                  # scaffold the guide
 ```
@@ -23,10 +24,15 @@ governance file alone — the raw data is not needed again.
 The guide opens with a numbered contents list and groups variables by
 data type. Each variable gets a left rail (data type, label, name,
 description, properties) beside its graphic, data preview and stats.
-That is the default `"rail"` style; `create_rg(dgf, style = "vintage")`
-gives the original three-column grid. See
-[`vignette("example-guides")`](../articles/example-guides.md) for
-finished guides built from three familiar datasets.
+That is the default `"rail"` style. `create_rg(dgf, style = "compact")`
+gives the same guide condensed for documentation — the same blocks, but
+a one-row properties strip, short tables and preview, smaller graphics
+and about half the whitespace, so several variables fit on a screen.
+`create_rg(dgf, style = "vintage")` gives the original three-column
+grid. [`vignette("report-styles")`](../articles/report-styles.md)
+compares the three and shows how to switch;
+[`vignette("example-guides")`](../articles/example-guides.md) has
+finished guides built from familiar datasets.
 
 ## One guide, a different style for each type
 
@@ -57,11 +63,13 @@ render each column’s graphic with
 guide calls:
 
 ``` r
+
 library(datagoodr)
 dgf <- create_dgf(dg_demo, file = tempfile("dgf"), open = FALSE)
 ```
 
 ``` r
+
 dg_graphic(dgf, "revenue", label = "")      # number -> histogram
 ```
 
@@ -69,12 +77,14 @@ dg_graphic(dgf, "revenue", label = "")      # number -> histogram
 revenue](research-guides_files/figure-html/g-number-1.png)
 
 ``` r
+
 dg_graphic(dgf, "region", label = "")       # categorical -> treemap
 ```
 
 ![Treemap of region](research-guides_files/figure-html/g-cat-1.png)
 
 ``` r
+
 dg_graphic(dgf, "is_active", label = "")    # boolean -> two-bar chart
 ```
 
@@ -82,6 +92,7 @@ dg_graphic(dgf, "is_active", label = "")    # boolean -> two-bar chart
 is_active](research-guides_files/figure-html/g-bool-1.png)
 
 ``` r
+
 dg_graphic(dgf, "event_date", label = "")   # temporal -> calendar heat-map
 ```
 
@@ -89,6 +100,7 @@ dg_graphic(dgf, "event_date", label = "")   # temporal -> calendar heat-map
 event_date](research-guides_files/figure-html/g-temporal-1.png)
 
 ``` r
+
 dg_graphic(dgf, "notes", label = "")        # text -> word cloud
 ```
 

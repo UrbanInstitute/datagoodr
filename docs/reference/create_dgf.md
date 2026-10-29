@@ -29,7 +29,11 @@ create_dgf(
   preview_dp = F,
   dir = ".",
   file = "DGF",
-  open = interactive()
+  open = interactive(),
+  workers = getOption("datagoodr.workers", 1L),
+  guess_seed = getOption("datagoodr.guess_seed", 1L),
+  guess_n_sample = getOption("datagoodr.guess_n_sample", 300L),
+  preflight = c("warn", "error", "off")
 )
 ```
 
@@ -119,10 +123,61 @@ create_dgf(
   Logical; open the new DGF in Excel once created. Defaults to
   \[interactive()\] — on at the console, off in scripts, tests, and CI.
 
+- workers:
+
+  Integer; how many processes to spread the per-column type guessing
+  over. Type guessing is the dominant cost of a DGF build (measured at
+  63 \`rg\_\*\` profiles), it is flat in the number of rows, and it is
+  independent per column — so columns, not rows, are what parallelises.
+  Defaults to \`1\` (in-process); worth raising for wide frames, where
+  the pool's start-up cost is amortised over more columns. Also settable
+  with \`options( datagoodr.workers = )\`.
+
+- guess_seed:
+
+  Integer or \`NULL\`; seed for the 100-value sample
+  \`formex::guess_data_type()\` draws internally. Fixed by default so
+  repeated builds of the same data produce the same DGF — left to the
+  session RNG, the guessed types genuinely vary between runs. \`NULL\`
+  restores that older behaviour. Also settable with \`options(
+  datagoodr.guess_seed = )\`.
+
+- guess_n_sample:
+
+  Integer or \`NULL\`; how many values per column
+  \`formex::guess_data_type()\` samples when guessing its type. Defaults
+  to \`300\`; \`NULL\` hands control back to formex, whose own default
+  is 100.
+
+  formex samples from a column's \*\*distinct\*\* values, so its
+  reported confidence is stable exactly when \`guess_n_sample \>=
+  n_distinct\` — below that line it is a sample statistic, and a column
+  whose confidence lands near the acceptance threshold is decided by
+  which values were drawn. Measured on \`bb.csv\`'s \`birthState\` (210
+  distinct), confidence spans 0.631-0.905 at 100 and is a flat 0.813 at
+  300, where the column resolves to a geographic categorical instead of
+  falling back to text. 300 exhaustively covers most real columns;
+  raising it further costs time on high-cardinality ones, where the draw
+  is merely reproducible (see \`guess_seed\`) rather than complete. Also
+  settable with \`options( datagoodr.guess_n_sample = )\`.
+
+- preflight:
+
+  What to do with the findings of \[preflight_dgf()\], which runs (far
+  faster than a build) \*before\* any profiling and looks for degenerate
+  columns (single-valued, all-missing, over-long values, a flag spelled
+  several ways, duplicate columns, ...). \`"warn"\` (the default) prints
+  a summary and goes on; \`"error"\` stops if any column is flagged as a
+  warning or an error, for pipelines that must not proceed on
+  questionable data; \`"off"\` skips the check. The findings are kept on
+  the result: \`attr(dgf, "preflight")\`.
+
 ## Value
 
 The DGF as a data frame, one row per variable. Also writes
-\`\<file\>.csv\` and \`\<file\>.xlsx\` as a side effect.
+\`\<file\>.csv\` and \`\<file\>.xlsx\` as a side effect. The
+\[preflight_dgf()\] findings are attached as \`attr(, "preflight")\`
+(\`NULL\` when \`preflight = "off"\`).
 
 ## Details
 
@@ -132,6 +187,16 @@ is profiled into the \`rg\_\*\` columns. The result is meant to be
 curated by hand - in Excel or via the \`v\*\` arguments - and fed to
 \[create_rg()\].
 
+A timestamp column stores one graphic row per distinct value, which for
+a column that is nearly unique would make the DGF enormous. Above
+\`getOption("datagoodr.temporal.max_values", 10000)\` distinct values,
+ISO timestamps are stored at the finest of minute, hour or day that fits
+(see \[preflight_dgf()\], rule \`high_cardinality_temporal\`).
+
+If profiling a variable fails, the error names the variable and the
+step.
+
 ## See also
 
-\[create_rg()\], \[update_dgf()\], \[inspect_dgf()\]
+\[preflight_dgf()\], \[create_rg()\], \[update_dgf()\],
+\[inspect_dgf()\]

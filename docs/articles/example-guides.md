@@ -1,7 +1,7 @@
 # Example Research Guides
 
-Three finished research guides, each built from a familiar dataset with
-a few lines of code. Open one to see what
+Finished research guides, each built from a familiar dataset with a few
+lines of code. Open one to see what
 [`create_rg()`](../reference/create_rg.md) produces, then read the code
 below it to see how little it took.
 
@@ -10,6 +10,7 @@ below it to see how little it took.
 | [Baseball players](../examples/baseball.md) | `dg_baseball`, shipped with datagoodr | messy as-entered text: written dates, `$851,950` salaries, coded levels |
 | [Star Wars characters](../examples/starwars.md) | [`dplyr::starwars`](https://dplyr.tidyverse.org/reference/starwars.html) | list columns (films, vehicles) and missing values |
 | [Motor Trend cars](../examples/mtcars.md) | [`datasets::mtcars`](https://rdrr.io/r/datasets/mtcars.html) | a small numeric dataset with 0/1 codes retyped as true/false |
+| [Baseball players, compact](../examples/baseball-compact.md) | the baseball DGF again | the same guide in the `"compact"` style: same blocks, 35% shorter page |
 
 The links open the guides on the package website; they are built by
 `data-raw/example-guides.R` in the source repository.
@@ -28,8 +29,12 @@ Temporal). Each variable is one unit:
   stats: quantiles and distribution shape for numbers, factor levels for
   categories, the most common values for text.
 
-This is the default `"rail"` style. The original three-column grid is
-still available as `create_rg(style = "vintage")`.
+This is the default `"rail"` style. `create_rg(style = "compact")` draws
+the same units condensed for documentation – the properties table
+becomes a one-row strip above the graphic, the preview and the long
+tables are kept short, and the whitespace is roughly halved. The
+original three-column grid is still available as
+`create_rg(style = "vintage")`.
 
 ## Baseball players
 
@@ -40,6 +45,7 @@ and description for each column;
 `dd_vlabel` and `dd_vdesc`.
 
 ``` r
+
 library(datagoodr)
 
 dd  <- dg_baseball_dictionary
@@ -54,6 +60,7 @@ labels live in the DGF’s `dd_f_levels` column (a level/label table),
 which you can edit in Excel or set in code before rendering:
 
 ``` r
+
 i <- match("bats", dgf$var_name)
 dgf$dd_f_levels[i] <- jsonlite::toJSON(data.frame(
   level = c("R", "L", "B"),
@@ -64,6 +71,19 @@ create_rg(dgf, dir = "baseball", render = TRUE)
 
 [Open the baseball guide](../examples/baseball.md)
 
+The same DGF renders in any style, so publishing a condensed copy beside
+the full one is one more call with a different file name:
+
+``` r
+
+create_rg(dgf, dir = "baseball", file = "baseball-compact.qmd",
+          style = "compact", render = TRUE)
+```
+
+[Open the compact baseball guide](../examples/baseball-compact.md) —
+same blocks, same order, a 35% shorter page. See
+[`vignette("report-styles")`](../articles/report-styles.md).
+
 ## Star Wars characters
 
 No preparation at all: [`create_dgf()`](../reference/create_dgf.md)
@@ -71,6 +91,7 @@ collapses list columns such as `films` to `a|b|c` text and profiles the
 rest.
 
 ``` r
+
 dgf <- create_dgf(dplyr::starwars, dir = "starwars")
 create_rg(dgf, dir = "starwars", render = TRUE)
 ```
@@ -86,6 +107,7 @@ turns them into true/false variables, and level labels give the codes
 their meaning.
 
 ``` r
+
 cars <- data.frame(make  = sub(" .*", "", rownames(mtcars)),
                    model = sub("^\\S+ ?", "", rownames(mtcars)),
                    lapply(mtcars, as.character))

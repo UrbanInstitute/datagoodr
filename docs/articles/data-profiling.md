@@ -59,11 +59,13 @@ the universal quality counts for any column, and the numeric statistics
 table:
 
 ``` r
+
 library(datagoodr)
 dgf <- create_dgf(dg_demo, file = tempfile("dgf"), open = FALSE)
 ```
 
 ``` r
+
 dg_properties(dgf, "revenue")   # universal: distinct, missing, zeros, ...
 ```
 
@@ -75,6 +77,7 @@ dg_properties(dgf, "revenue")   # universal: distinct, missing, zeros, ...
 | Distinct |  60 | (100.0%) |
 
 ``` r
+
 dg_stats(dgf, "revenue")        # type-specific: the numeric statistics
 ```
 

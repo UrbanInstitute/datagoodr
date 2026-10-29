@@ -31,6 +31,7 @@ DGF, plus a starter `DG.R`, ready to customize and render."></head><body>
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul></li>
@@ -42,6 +43,9 @@ DGF, plus a starter `DG.R`, ready to customize and render."></head><body>
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -74,7 +78,7 @@ DGF, plus a starter `DG.R`, ready to customize and render.</p>
 <span>  embed_css <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  render <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rail"</span>, <span class="st">"vintage"</span><span class="op">)</span></span>
+<span>  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rail"</span>, <span class="st">"vintage"</span>, <span class="st">"compact"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -124,7 +128,11 @@ packaged stylesheet.</p></dd>
 <dd><p>Layout style. `"rail"` (the default) gives each variable a
 left rail (data type, label, name, description, properties) beside its
 graphic, preview and stats, grouped by data type under a numbered contents
-list. `"vintage"` is the original three-column grid.</p></dd>
+list. `"compact"` is that same guide condensed for documentation: the same
+blocks in the same order, but PROPERTIES becomes a one-row strip, the
+preview and the long tables are kept short, the graphics are drawn smaller,
+and the whitespace is roughly halved — several variables to a screen
+instead of one. `"vintage"` is the original three-column grid.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -138,7 +146,8 @@ list. `"vintage"` is the original three-column grid.</p></dd>
   use [update_rg()] rather than re-scaffolding: it overrides at render time
   and leaves your edits to the document intact.</p>
 <p>Each style ships its own stylesheet next to the document:
-  `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage.</p>
+  `datagoodr.css` for rail, `datagoodr-compact.css` for compact,
+  `datagoodr-vintage.css` for vintage.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

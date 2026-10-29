@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
@@ -57,6 +58,9 @@
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -107,10 +111,15 @@ alone — the raw data is not needed again.</p>
 <p>The guide opens with a numbered contents list and groups variables by
 data type. Each variable gets a left rail (data type, label, name,
 description, properties) beside its graphic, data preview and stats.
-That is the default <code>"rail"</code> style;
+That is the default <code>"rail"</code> style.
+<code>create_rg(dgf, style = "compact")</code> gives the same guide
+condensed for documentation — the same blocks, but a one-row properties
+strip, short tables and preview, smaller graphics and about half the
+whitespace, so several variables fit on a screen.
 <code>create_rg(dgf, style = "vintage")</code> gives the original
-three-column grid. See <code><a href="../articles/example-guides.html">vignette("example-guides")</a></code> for
-finished guides built from three familiar datasets.</p>
+three-column grid. <code><a href="../articles/report-styles.html">vignette("report-styles")</a></code> compares the
+three and shows how to switch; <code><a href="../articles/example-guides.html">vignette("example-guides")</a></code>
+has finished guides built from familiar datasets.</p>
 </div>
 <div class="section level2">
 <h2 id="one-guide-a-different-style-for-each-type">One guide, a different style for each type<a class="anchor" aria-label="anchor" href="#one-guide-a-different-style-for-each-type"></a>

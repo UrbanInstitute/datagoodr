@@ -6,7 +6,7 @@ per-column console diagnostics.
 ## Usage
 
 ``` r
-is_factor_df(df)
+is_factor_df(df, verbose = FALSE)
 ```
 
 ## Arguments
@@ -14,6 +14,12 @@ is_factor_df(df)
 - df:
 
   A data frame.
+
+- verbose:
+
+  Logical; print \[is_factor()\]'s per-column reasoning. Default
+  \`FALSE\` - the diagnostics were previously generated and then
+  discarded.
 
 ## Value
 

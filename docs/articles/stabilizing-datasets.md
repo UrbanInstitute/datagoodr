@@ -15,6 +15,7 @@ rules to a raw extract and returns that clean version, which
 *governed CSV* carrying its own DGF and provenance.
 
 ``` r
+
 stable <- stabilize_data(raw_data, dgf, use_v7 = TRUE)
 write_stable_csv(stable, "data-governed.csv", dgf = dgf)
 ```

@@ -8,11 +8,13 @@
 <url><loc>/articles/guessing-data-types.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/articles/report-aesthetics.html</loc></url>
+<url><loc>/articles/report-styles.html</loc></url>
 <url><loc>/articles/reporting-functions.html</loc></url>
 <url><loc>/articles/research-guides.html</loc></url>
 <url><loc>/articles/stabilizing-datasets.html</loc></url>
 <url><loc>/articles/workflow-overview.html</loc></url>
 <url><loc>/authors.html</loc></url>
+<url><loc>/examples/baseball-compact.html</loc></url>
 <url><loc>/examples/baseball.html</loc></url>
 <url><loc>/examples/mtcars.html</loc></url>
 <url><loc>/examples/starwars.html</loc></url>
@@ -79,6 +81,7 @@
 <url><loc>/reference/paste_preview_chr.html</loc></url>
 <url><loc>/reference/paste_preview_num.html</loc></url>
 <url><loc>/reference/paste_properties.html</loc></url>
+<url><loc>/reference/paste_properties_horizontal.html</loc></url>
 <url><loc>/reference/paste_quantiles.html</loc></url>
 <url><loc>/reference/paste_stats_chr.html</loc></url>
 <url><loc>/reference/paste_stats_chr_common.html</loc></url>
@@ -89,6 +92,7 @@
 <url><loc>/reference/paste_stats_num.html</loc></url>
 <url><loc>/reference/paste_treemap.html</loc></url>
 <url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/preflight_dgf.html</loc></url>
 <url><loc>/reference/rail_contents.html</loc></url>
 <url><loc>/reference/rail_groups.html</loc></url>
 <url><loc>/reference/rail_sections.html</loc></url>

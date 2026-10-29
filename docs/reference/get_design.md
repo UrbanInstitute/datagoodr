@@ -8,7 +8,7 @@ its own via \`layouts\`.
 ## Usage
 
 ``` r
-get_design(style = c("rg", "dd"), layouts = NULL)
+get_design(style = c("rg", "dd"), layouts = NULL, compact = FALSE)
 ```
 
 ## Arguments
@@ -24,6 +24,13 @@ get_design(style = c("rg", "dd"), layouts = NULL)
   Optional named list of layout character vectors
   (\`numeric\`/\`character\`/\`factor\`/\`logical\`) that overrides the
   package defaults. Defaults to \`NULL\`.
+
+- compact:
+
+  Logical; use the condensed layouts behind \`create_rg(style =
+  "compact")\` as the defaults instead of the standard ones. Defaults to
+  \`FALSE\`. A \`layout.\*\` override in the global environment still
+  wins either way, and an explicit \`layouts\` list ignores this.
 
 ## Value
 

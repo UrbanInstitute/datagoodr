@@ -6,7 +6,13 @@ a wrapped text block (see \[wrap_preview()\]).
 ## Usage
 
 ``` r
-paste_preview_num(VNAME, LABEL = "PREVIEW", size = 68, digits = 3)
+paste_preview_num(
+  VNAME,
+  LABEL = "PREVIEW",
+  size = 68,
+  max.lines = 4,
+  digits = 3
+)
 ```
 
 ## Arguments
@@ -23,6 +29,12 @@ paste_preview_num(VNAME, LABEL = "PREVIEW", size = 68, digits = 3)
 - size:
 
   Maximum line width, in characters. Defaults to \`68\`.
+
+- max.lines:
+
+  Maximum wrapped rows to print, which is what keeps the preview to a
+  short strip. Defaults to \`4\`; the compact guide passes fewer (see
+  \`.rail_knobs\`).
 
 - digits:
 

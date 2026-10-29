@@ -6,7 +6,7 @@ A dataset can have hundreds of columns.
 [`create_dgf()`](../reference/create_dgf.md) does not ask you to
 classify each one from scratch — it **guesses**, by handing every column
 to [formex](https://lecy.github.io/formex/)
-([`formex::guess_data_type()`](https://rdrr.io/pkg/formex/man/guess_data_type.html),
+([`formex::guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html),
 with the variable’s name as a hint), and records the guess in the DGF
 for you to confirm or override. This vignette is about *reading* those
 guesses: what the package wrote, how confident it is, and when to trust
@@ -37,6 +37,7 @@ DGF’s `guess_*` columns.
 ## What the guess looks like in the DGF
 
 ``` r
+
 library(datagoodr)
 dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)
 
@@ -110,6 +111,7 @@ render engine’s type), and the v7 target form `desired_semantic_type` /
 `desired_format_style` / `desired_unit_type`:
 
 ``` r
+
 # accept the guess (nothing to do), or override where it is wrong:
 dgf$desired_data_type[dgf$var_name == "grade_level"]  <- "categorical"
 dgf$desired_format_style[dgf$var_name == "founded"]   <- "yyyymmdd"   # stabilize to ISO

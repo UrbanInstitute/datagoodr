@@ -8,6 +8,7 @@ visual. [`create_dgf()`](../reference/create_dgf.md) does exactly this
 for every column of a dataset at once; here we do it for one, by hand.
 
 ``` r
+
 library(datagoodr)
 v <- dg_demo$revenue   # a raw vector: dollar amounts
 head(v)
@@ -22,6 +23,7 @@ Typing is the first move, and it comes from the companion package
 read the `$route`:
 
 ``` r
+
 route <- formex::guess_data_type(v, name = "revenue")$route
 c(data_type = route$data_type, semantic_type = route$semantic_type,
   depth = route$depth, confidence = round(route$confidence, 2))
@@ -40,6 +42,7 @@ return the profile as JSON — the exact payload datagoodr stores in the
 DGF’s `rg_*` cells. The **universal** quality counts:
 
 ``` r
+
 df <- data.frame(revenue = v, stringsAsFactors = FALSE)
 get_properties("revenue", df)
 ```
@@ -53,6 +56,7 @@ and the **type-specific** statistics (here, the numeric quantile ladder
 plus mean, skew, and kurtosis):
 
 ``` r
+
 get_stats("revenue", df, "numeric")
 ```
 
@@ -79,10 +83,12 @@ reporting function, which parses the JSON and prints a table. Build a
 one-column DGF and report the stats:
 
 ``` r
+
 dgf <- create_dgf(df, file = tempfile("dgf"), open = FALSE)
 ```
 
 ``` r
+
 dg_properties(dgf, "revenue")   # the universal counts, as a table
 ```
 
@@ -94,6 +100,7 @@ dg_properties(dgf, "revenue")   # the universal counts, as a table
 | Distinct |  60 | (100.0%) |
 
 ``` r
+
 dg_stats(dgf, "revenue")        # the numeric statistics, as a table
 ```
 
@@ -115,6 +122,7 @@ The graphic is chosen by type too:
 histogram renderer, reading the same stored profile.
 
 ``` r
+
 dg_graphic(dgf, "revenue", label = "")
 ```
 

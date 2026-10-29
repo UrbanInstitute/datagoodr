@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
@@ -57,6 +58,9 @@
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -87,8 +91,8 @@
 
     
     
-<p>Three finished research guides, each built from a familiar dataset
-with a few lines of code. Open one to see what <code><a href="../reference/create_rg.html">create_rg()</a></code>
+<p>Finished research guides, each built from a familiar dataset with a
+few lines of code. Open one to see what <code><a href="../reference/create_rg.html">create_rg()</a></code>
 produces, then read the code below it to see how little it took.</p>
 <table class="table">
 <colgroup>
@@ -119,6 +123,13 @@ salaries, coded levels</td>
 <td><code><a href="https://rdrr.io/r/datasets/mtcars.html" class="external-link">datasets::mtcars</a></code></td>
 <td>a small numeric dataset with 0/1 codes retyped as true/false</td>
 </tr>
+<tr class="even">
+<td><a href="../examples/baseball-compact.html">Baseball players,
+compact</a></td>
+<td>the baseball DGF again</td>
+<td>the same guide in the <code>"compact"</code> style: same blocks, 35%
+shorter page</td>
+</tr>
 </tbody>
 </table>
 <p>The links open the guides on the package website; they are built by
@@ -140,9 +151,12 @@ treemap, word cloud, true/false bars, calendar), a PREVIEW of its
 values, and its stats: quantiles and distribution shape for numbers,
 factor levels for categories, the most common values for text.</li>
 </ul>
-<p>This is the default <code>"rail"</code> style. The original
-three-column grid is still available as
-<code>create_rg(style = "vintage")</code>.</p>
+<p>This is the default <code>"rail"</code> style.
+<code>create_rg(style = "compact")</code> draws the same units condensed
+for documentation – the properties table becomes a one-row strip above
+the graphic, the preview and the long tables are kept short, and the
+whitespace is roughly halved. The original three-column grid is still
+available as <code>create_rg(style = "vintage")</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="baseball-players">Baseball players<a class="anchor" aria-label="anchor" href="#baseball-players"></a>
@@ -172,6 +186,14 @@ before rendering:</p>
 <span></span>
 <span><span class="fu"><a href="../reference/create_rg.html">create_rg</a></span><span class="op">(</span><span class="va">dgf</span>, dir <span class="op">=</span> <span class="st">"baseball"</span>, render <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><a href="../examples/baseball.html">Open the baseball guide</a></p>
+<p>The same DGF renders in any style, so publishing a condensed copy
+beside the full one is one more call with a different file name:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/create_rg.html">create_rg</a></span><span class="op">(</span><span class="va">dgf</span>, dir <span class="op">=</span> <span class="st">"baseball"</span>, file <span class="op">=</span> <span class="st">"baseball-compact.qmd"</span>,</span>
+<span>          style <span class="op">=</span> <span class="st">"compact"</span>, render <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><a href="../examples/baseball-compact.html">Open the compact baseball
+guide</a> — same blocks, same order, a 35% shorter page. See
+<code><a href="../articles/report-styles.html">vignette("report-styles")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="star-wars-characters">Star Wars characters<a class="anchor" aria-label="anchor" href="#star-wars-characters"></a>
@@ -179,7 +201,7 @@ before rendering:</p>
 <p>No preparation at all: <code><a href="../reference/create_dgf.html">create_dgf()</a></code> collapses list
 columns such as <code>films</code> to <code>a|b|c</code> text and
 profiles the rest.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dgf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_dgf.html">create_dgf</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/starwars.html" class="external-link">starwars</a></span>, dir <span class="op">=</span> <span class="st">"starwars"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/create_rg.html">create_rg</a></span><span class="op">(</span><span class="va">dgf</span>, dir <span class="op">=</span> <span class="st">"starwars"</span>, render <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><a href="../examples/starwars.html">Open the Star Wars guide</a></p>
@@ -192,7 +214,7 @@ them into <code>make</code> and <code>model</code> first. Its
 <code>vs</code> and <code>am</code> columns are 0/1 codes that the type
 guess reads as counts; <code><a href="../reference/retype_dgf.html">retype_dgf()</a></code> turns them into
 true/false variables, and level labels give the codes their meaning.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>make  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">" .*"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                   model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"^\\S+ ?"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                   <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span></span>

@@ -101,7 +101,7 @@ the wrong column is visible without running it.
 Every rule has a matching **`is_*` guard** from the detector library,
 which lives in the [formex](https://lecy.github.io/formex/) package.
 Before `read_ddmmyyyy` runs,
-[`formex::is_date()`](https://rdrr.io/pkg/formex/man/is_date.html)
+[`formex::is_date()`](https://lecy.github.io/formex/reference/is_date.html)
 checks that the column actually looks like a date; if it does not, the
 rule does not match the data and you get a warning instead of silent
 corruption. That single idea ties the system together:
@@ -115,6 +115,7 @@ corruption. That single idea ties the system together:
 ## The workflow
 
 ``` r
+
 library(datagoodr)
 
 # 1. create_dgf() launches the guessers and populates the pipeline.
@@ -143,6 +144,7 @@ grouping variable. This is where you encode meaning the CSV alone cannot
 carry.
 
 ``` r
+
 # Edit the DGF in Excel, or programmatically:
 dgf$raw_to_stable_transform[dgf$var_name == "founded"] <- "read_mmddyyyy"  # raw -> ISO
 dgf$desired_data_type[dgf$var_name == "grade_level"]   <- "categorical"    # a grade is not a number
@@ -175,6 +177,7 @@ Executing those plans is opt-in, so the suggestion only runs when you
 ask:
 
 ``` r
+
 # Apply the suggested v7 stabilizer plans (read :: [convert] :: write) to a raw
 # extract. A column with a legacy raw_to_stable_transform rule keeps using it;
 # the default (use_v7 = FALSE) leaves behaviour unchanged.

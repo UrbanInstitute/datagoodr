@@ -21,6 +21,7 @@ Governance*.)
 ## The three things datagoodr produces
 
 ``` r
+
 # datagoodr uses the formex package as its type-detection engine
 remotes::install_github("lecy/formex")
 remotes::install_github("UrbanInstitute/datagoodr")
@@ -34,6 +35,7 @@ every column, and types it with the help of
 open in Excel and curate.
 
 ``` r
+
 dgf <- create_dgf(raw_data, file = "DGF", open = FALSE)
 # writes DGF.csv and DGF.xlsx, and returns the DGF data frame
 ```
@@ -45,6 +47,7 @@ type where possible and *safely* (without data loss) where not — a date
 becomes ISO `2019-03-15`, a ZIP keeps its leading zero.
 
 ``` r
+
 stable <- stabilize_data(raw_data, dgf, use_v7 = TRUE)
 write_stable_csv(stable, "data-governed.csv", dgf = dgf)
 ```
@@ -56,6 +59,7 @@ histogram for a number, a treemap for a category, a calendar heat-map
 for a date).
 
 ``` r
+
 create_rg(dgf, file = "research-guide")
 ```
 

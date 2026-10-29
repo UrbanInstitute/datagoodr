@@ -13,7 +13,7 @@ use_datagoodr_template(
   dg = TRUE,
   overwrite = FALSE,
   file = NULL,
-  style = c("rail", "vintage")
+  style = c("rail", "vintage", "compact")
 )
 ```
 
@@ -49,9 +49,10 @@ use_datagoodr_template(
 
 - style:
 
-  Research guide style: \`"rail"\` (the default) or \`"vintage"\` (the
-  original three-column grid). Ignored for the data dictionary, which
-  always uses the vintage grid.
+  Research guide style: \`"rail"\` (the default), \`"compact"\` (the
+  same guide condensed for documentation) or \`"vintage"\` (the original
+  three-column grid). Ignored for the data dictionary, which always uses
+  the vintage grid.
 
 ## Value
 

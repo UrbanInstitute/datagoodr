@@ -35,6 +35,7 @@ rules in your project `.qmd`)."></head><body>
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul></li>
@@ -46,6 +47,9 @@ rules in your project `.qmd`)."></head><body>
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -82,6 +86,8 @@ rules in your project `.qmd`).</p>
 <dl><dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
 <dd><p>Which stylesheet:
 * `"rail"` - the default research guide (`datagoodr.css`).
+* `"compact"` - the condensed research guide
+  (`datagoodr-compact.css`), used by `create_rg(style = "compact")`.
 * `"vintage"` - the original three-column grid, used by
   `create_rg(style = "vintage")` and by the data dictionary
   (`datagoodr-vintage.css`).
@@ -99,11 +105,11 @@ rules in your project `.qmd`).</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A project-local copy in the render directory takes precedence over
   the packaged one, so a scaffolded project can be restyled by editing its
-  own copy: `datagoodr.css` for rail, `datagoodr-vintage.css` for vintage. A
-  local `datagoodr.css` that is not a rail stylesheet (an older project's
-  copy of the vintage one) is skipped for `"rail"`, so it cannot break a new
-  rail guide, and still serves `"vintage"` when no `datagoodr-vintage.css`
-  exists.</p>
+  own copy: `datagoodr.css` for rail, `datagoodr-compact.css` for compact,
+  `datagoodr-vintage.css` for vintage. A local `datagoodr.css` that is not a
+  rail stylesheet (an older project's copy of the vintage one) is skipped for
+  `"rail"`, so it cannot break a new rail guide, and still serves
+  `"vintage"` when no `datagoodr-vintage.css` exists.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

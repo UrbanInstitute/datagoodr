@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
@@ -57,6 +58,9 @@
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -211,6 +215,47 @@ vector.</p>
 <code>layout.logical</code>, …) in your session or <code>DG.R</code>
 shadows the package default for that type, so every guide you render
 picks it up without passing <code>layouts</code> each time.</p>
+</div>
+<div class="section level2">
+<h2 id="density-is-a-style-not-a-layout">Density is a style, not a layout<a class="anchor" aria-label="anchor" href="#density-is-a-style-not-a-layout"></a>
+</h2>
+<p><code>create_rg(style = "compact")</code> is the same design drawn
+shorter. Its layouts differ from the defaults in only two rows —
+PROPERTIES is transposed into a one-row strip, and the numeric
+DISTRIBUTION SHAPE block goes, since skew and kurtosis are already drawn
+above the histogram:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_design.html">get_design</a></span><span class="op">(</span>compact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">cp</span><span class="op">[</span><span class="va">cp</span><span class="op">$</span><span class="va">TYPE</span> <span class="op">==</span> <span class="st">"number"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DIV"</span>, <span class="st">"VNAME"</span>, <span class="st">"LABEL"</span>, <span class="st">"FUNCTION"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;     DIV            VNAME       LABEL                    FUNCTION</span></span>
+<span><span class="co">#&gt; 1  div2        dd_vlabel                                v_to_txt</span></span>
+<span><span class="co">#&gt; 2  div3   dg_render_type   DATA MODE                    v_to_txt</span></span>
+<span><span class="co">#&gt; 3  div3 dg_semantic_type   DATA TYPE                    v_to_txt</span></span>
+<span><span class="co">#&gt; 4  div3     dd_data_unit        UNIT                    v_to_txt</span></span>
+<span><span class="co">#&gt; 5  div3       rg_max_chr   MAX NCHAR                    v_to_txt</span></span>
+<span><span class="co">#&gt; 6  div4         dd_vdesc DESCRIPTION                    v_to_txt</span></span>
+<span><span class="co">#&gt; 7  div5       rg_preview     PREVIEW                 paste_label</span></span>
+<span><span class="co">#&gt; 8  div6       rg_preview                       paste_preview_num</span></span>
+<span><span class="co">#&gt; 9  div7    rg_properties             paste_properties_horizontal</span></span>
+<span><span class="co">#&gt; 10 div8      rg_graphics                         paste_histogram</span></span>
+<span><span class="co">#&gt; 11 div9         rg_stats       STATS      paste_stats_horizontal</span></span></code></pre>
+<p>How <em>long</em> each block is does not live in the design at all. A
+reporting function can declare <code>size</code> (characters per line),
+<code>max.lines</code> (preview rows) or <code>max.rows</code> (table
+rows), and the renderer hands it the active style’s values — so the one
+<code>paste_levels_freq</code> row above lists 8 factor levels in a
+compact guide and 50 in the default one. Write your own renderer with
+those arguments and it condenses with the rest:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># in DG.R - a renderer that respects the guide's density</span></span>
+<span><span class="va">paste_levels_freq</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">VNAME</span>, <span class="va">LABEL</span> <span class="op">=</span> <span class="st">"FACTOR LEVELS"</span>, <span class="va">max.rows</span> <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># ... your own table, trimmed to max.rows ...</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>The third lever is the document: <code>RG-compact.qmd</code> sets a
+smaller <code>fig.height</code> per group, and
+<code>datagoodr-compact.css</code> halves the spacing. Both are yours to
+edit in a scaffolded project. <code><a href="../articles/report-styles.html">vignette("report-styles")</a></code>
+compares the styles and shows how to switch between them.</p>
 </div>
 <div class="section level2">
 <h2 id="where-this-fits">Where this fits<a class="anchor" aria-label="anchor" href="#where-this-fits"></a>

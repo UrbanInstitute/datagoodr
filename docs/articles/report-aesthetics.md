@@ -11,6 +11,7 @@ can inspect it, and change it, without touching the package.
 as a data frame. Each row places one piece of a variable’s section:
 
 ``` r
+
 library(datagoodr)
 d <- get_design()
 head(d)
@@ -39,6 +40,7 @@ Here is the full recipe for a **numeric** variable — the mapping that
 produced the histogram and tables you saw in the other vignettes:
 
 ``` r
+
 d[d$TYPE == "number", c("DIV", "VNAME", "LABEL", "FUNCTION")]
 ```
 
@@ -88,6 +90,7 @@ redefine a renderer (or a formatter such as `dollarize`) in your
 project’s `DG.R`.
 
 ``` r
+
 # in DG.R — restyle the numeric graphic without touching the design:
 paste_histogram <- function(VNAME, LABEL = "HISTOGRAM") {
   # ... your own plot from the rg_graphics payload ...
@@ -101,6 +104,7 @@ slimmed numeric section — label, properties, and stats only, no
 histogram:
 
 ``` r
+
 custom_number <- c(
   "div2 ;; dd_vlabel     ;;            ;; v_to_txt",
   "div7 ;; rg_properties ;; PROPERTIES ;; paste_properties",
@@ -123,6 +127,54 @@ slot at a different function — all by editing the character vector.
 `layout.character`, `layout.logical`, …) in your session or `DG.R`
 shadows the package default for that type, so every guide you render
 picks it up without passing `layouts` each time.
+
+## Density is a style, not a layout
+
+`create_rg(style = "compact")` is the same design drawn shorter. Its
+layouts differ from the defaults in only two rows — PROPERTIES is
+transposed into a one-row strip, and the numeric DISTRIBUTION SHAPE
+block goes, since skew and kurtosis are already drawn above the
+histogram:
+
+``` r
+
+cp <- get_design(compact = TRUE)
+cp[cp$TYPE == "number", c("DIV", "VNAME", "LABEL", "FUNCTION")]
+```
+
+    #>     DIV            VNAME       LABEL                    FUNCTION
+    #> 1  div2        dd_vlabel                                v_to_txt
+    #> 2  div3   dg_render_type   DATA MODE                    v_to_txt
+    #> 3  div3 dg_semantic_type   DATA TYPE                    v_to_txt
+    #> 4  div3     dd_data_unit        UNIT                    v_to_txt
+    #> 5  div3       rg_max_chr   MAX NCHAR                    v_to_txt
+    #> 6  div4         dd_vdesc DESCRIPTION                    v_to_txt
+    #> 7  div5       rg_preview     PREVIEW                 paste_label
+    #> 8  div6       rg_preview                       paste_preview_num
+    #> 9  div7    rg_properties             paste_properties_horizontal
+    #> 10 div8      rg_graphics                         paste_histogram
+    #> 11 div9         rg_stats       STATS      paste_stats_horizontal
+
+How *long* each block is does not live in the design at all. A reporting
+function can declare `size` (characters per line), `max.lines` (preview
+rows) or `max.rows` (table rows), and the renderer hands it the active
+style’s values — so the one `paste_levels_freq` row above lists 8 factor
+levels in a compact guide and 50 in the default one. Write your own
+renderer with those arguments and it condenses with the rest:
+
+``` r
+
+# in DG.R - a renderer that respects the guide's density
+paste_levels_freq <- function(VNAME, LABEL = "FACTOR LEVELS", max.rows = 50) {
+  # ... your own table, trimmed to max.rows ...
+}
+```
+
+The third lever is the document: `RG-compact.qmd` sets a smaller
+`fig.height` per group, and `datagoodr-compact.css` halves the spacing.
+Both are yours to edit in a scaffolded project.
+[`vignette("report-styles")`](../articles/report-styles.md) compares the
+styles and shows how to switch between them.
 
 ## Where this fits
 

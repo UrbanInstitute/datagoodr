@@ -44,18 +44,20 @@ A DGF is an ordinary table. Build one from the package’s demo dataset —
 which carries one column of each type — and scan a few of its cells:
 
 ``` r
+
 library(datagoodr)
 dgf <- create_dgf(dg_demo, file = tempfile("dgf"), open = FALSE)
 ```
 
 ``` r
+
 knitr::kable(dgf[, c("var_name", "guess_label", "desired_data_type",
                      "guess_match_kind")])
 ```
 
 |  | var_name | guess_label | desired_data_type | guess_match_kind |
 |:---|:---|:---|:---|:---|
-| event_date | event_date | calendar {{ date :: temporal }} | temporal | genome |
+| event_date | event_date | mdy_slash {{ date :: temporal }} | temporal | genome |
 | region | region | geographic {{ mutually_exclusive :: categorical }} | categorical |  |
 | is_active | is_active | unordered {{ mutually_exclusive :: categorical }} | boolean |  |
 | revenue | revenue | measurement {{ quantity :: number }} | number |  |
@@ -75,6 +77,7 @@ Research Guide uses. A **numeric** column (`revenue`) becomes a
 histogram and a statistics table:
 
 ``` r
+
 dg_graphic(dgf, "revenue", label = "")
 ```
 
@@ -82,6 +85,7 @@ dg_graphic(dgf, "revenue", label = "")
 column](workflow-overview_files/figure-html/profile-num-plot-1.png)
 
 ``` r
+
 dg_stats(dgf, "revenue")
 ```
 
@@ -100,6 +104,7 @@ A **categorical** column (`region`) becomes a treemap and a frequency
 table:
 
 ``` r
+
 dg_graphic(dgf, "region", label = "")
 ```
 

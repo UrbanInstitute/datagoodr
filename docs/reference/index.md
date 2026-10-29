@@ -116,6 +116,8 @@
   Numeric Variable into RG
 - [`paste_properties()`](paste_properties.md) : Print Properties of a
   Variable into RG
+- [`paste_properties_horizontal()`](paste_properties_horizontal.md) :
+  Print the PROPERTIES table transposed across one row
 - [`paste_quantiles()`](paste_quantiles.md) : Print the quantiles of a
   numeric variable into the RG
 - [`paste_stats_chr()`](paste_stats_chr.md) : Print Statistic of a
@@ -134,6 +136,8 @@
   Numeric Variable into RG
 - [`paste_treemap()`](paste_treemap.md) : Print Graphics of a Factor
   Variable into RG
+- [`preflight_dgf()`](preflight_dgf.md) : Check a dataset for degenerate
+  columns before building a DGF
 - [`rail_contents()`](rail_contents.md) : Print the research guide's top
   bar and contents list
 - [`rail_groups()`](rail_groups.md) : Split a DGF into the research

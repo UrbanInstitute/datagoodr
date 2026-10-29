@@ -17,7 +17,8 @@ is_factor(
   unique.n = 100,
   top.n = 25,
   max.variance = 2,
-  b.to.f = FALSE
+  b.to.f = FALSE,
+  verbose = TRUE
 )
 ```
 
@@ -52,6 +53,13 @@ is_factor(
 
   Logical; if \`TRUE\`, binary (0/1 or single-value) vectors are
   converted to factors. Default \`FALSE\`.
+
+- verbose:
+
+  Logical; print the per-column reasoning to the console. Default
+  \`TRUE\`. \`FALSE\` skips building those diagnostic strings entirely,
+  which is why the batch path (\[is_factor_df()\]) is markedly faster -
+  the decision itself is unchanged.
 
 ## Value
 

@@ -11,5 +11,6 @@
 - [Example Research Guides](example-guides.md):
 - [Documenting Data with the DGF](documenting-data.md):
 - [Data Reporting Functions](reporting-functions.md):
+- [Report Styles](report-styles.md):
 - [Report Aesthetics and Customization](report-aesthetics.md):
 - [Guessing Data Types](guessing-data-types.md):

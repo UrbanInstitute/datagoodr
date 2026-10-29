@@ -4,6 +4,51 @@
 
 ### New
 
+#### A compact research guide, for documentation
+
+`create_rg(dgf, style = "compact")` scaffolds the same guide as the
+default `"rail"` style, condensed so a reader can scan several variables
+per screen instead of one. Nothing is left out — the same blocks appear
+in the same order, for the same types:
+
+- **PROPERTIES is transposed** into a one-row strip at the top of each
+  variable’s body
+  ([`paste_properties_horizontal()`](../reference/paste_properties_horizontal.md)),
+  instead of a five-to-six row table in the rail. In the rail that table
+  is what set a unit’s height, so condensing anything else first would
+  have shortened nothing.
+- **The long tables and the preview are kept short.** A block function
+  that declares `size`, `max.lines` or `max.rows` is handed the active
+  style’s values at render time, so one layout row lists 8 factor levels
+  over 2 preview lines in a compact guide and 50 over 4 in the default
+  one. Length is a property of the style, not of the layout.
+- **The numeric DISTRIBUTION SHAPE block is dropped** — skew and
+  kurtosis are already drawn above the histogram.
+- **Smaller graphics and roughly half the whitespace**, via
+  `RG-compact.qmd` and `datagoodr-compact.css`.
+
+On the package’s demo dataset that is a 35% shorter page, and a median
+variable of 380px against 610px. The compact guide is the rail renderer
+at a higher density, so everything that customizes a rail guide — `DG.R`
+overrides, a `layout.*` shadow, a local stylesheet — works on it
+unchanged. `get_design(compact = TRUE)` returns its design, and
+`rail_sections(style = "compact")` draws it, which also lets one
+document mix densities group by group.
+
+[`vignette("report-styles")`](../articles/report-styles.md) compares the
+three styles and shows how to switch, and the documentation site carries
+the baseball guide in both the default and the compact style for
+comparison.
+
+#### A truncated FACTOR LEVELS table now says what it left out
+
+The table has always listed at most 50 levels and simply stopped. It now
+closes with the tally it was hiding (`+ 10 more levels`), counted
+against the variable’s DISTINCT property rather than against the levels
+in hand — the DGF itself stores only the 50 most frequent, so counting
+those would under-report. This is the one output change to an existing
+guide.
+
 #### The DGF carries a two-axis guess and a suggested stabilizer (formex v7)
 
 formex v7 models a value’s format as
@@ -20,11 +65,11 @@ a transform-path search. datagoodr now records and acts on that:
   `desired_unit_type`), and [`create_dgf()`](../reference/create_dgf.md)
   fills a suggested **`stabilizer`** — a `read :: [convert] :: write`
   plan from
-  [`formex::fx_plan_transform()`](https://rdrr.io/pkg/formex/man/fx_plan_transform.html)
+  [`formex::fx_plan_transform()`](https://lecy.github.io/formex/reference/fx_plan_transform.html)
   — previewing its effect in **`stable_first5`**. A reformat the
   registry cannot reach is reported `not-transformable`, never guessed.
 - **`stabilize_data(use_v7 = TRUE)`** executes those plans with
-  [`formex::fx_apply_plan()`](https://rdrr.io/pkg/formex/man/fx_apply_plan.html)
+  [`formex::fx_apply_plan()`](https://lecy.github.io/formex/reference/fx_apply_plan.html)
   — vectorised and type-preserving. It is opt-in: the default is
   unchanged, and a legacy `raw_to_stable_transform` /
   `desired_data_import_rule`, where set, always takes precedence.
@@ -68,6 +113,64 @@ When neither modality is confident the column keeps its base type, and
 the route’s `depth` is recorded rather than discarded — a truncated path
 is a valid partial answer for a reviewer to deepen, not a failure.
 
+#### `create_dgf()` is reproducible, and guesses from a larger sample
+
+[`formex::guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html)
+draws its sample from the session RNG, so the same data produced
+different types on different runs — across three builds of the baseball
+dataset `nameLast` moved text -\> categorical and `AB` categorical -\>
+text. [`create_dgf()`](../reference/create_dgf.md) now seeds it
+(`guess_seed`, default `1`), so repeated builds of the same data produce
+an identical DGF.
+
+Seeding makes the draw repeatable, not correct. formex samples from a
+column’s **distinct** values and its confidence is stable only when the
+sample covers them all, so [`create_dgf()`](../reference/create_dgf.md)
+also raises `guess_n_sample` to **300** (formex’s own default is 100).
+On the baseball dataset that fixes `birthState`, which now resolves to
+`mutually_exclusive.geographic` instead of falling back to `text`, and
+clears a spurious `text:web:domain` class on `AVG`.
+
+- Both are arguments and options: `guess_seed = NULL` restores the old
+  session-RNG behaviour, and `guess_n_sample = NULL` hands the sample
+  size back to formex. `options(datagoodr.guess_seed = )` /
+  `options(datagoodr.guess_n_sample = )` set them project-wide.
+- **Guessed types can differ from a DGF built before this change** —
+  that is the point, but re-check any curated DGF you regenerate.
+- The larger sample costs roughly what the formex speedup above saves,
+  so a build is about level on time while being reproducible and better
+  typed.
+
+`create_dgf(workers = )` additionally spreads the per-column guess over
+a process pool. It defaults to `1`; with the formex fix in place it is
+only worth raising on wide frames.
+
+#### Pre-flight check for degenerate columns
+
+[`create_dgf()`](../reference/create_dgf.md) profiles every column,
+which takes minutes on a large file, and a column the profilers could
+not handle used to surface as a crash partway through, with an error
+that named no column. A new pre-flight step finds those columns first,
+and reports all of them at once.
+
+- **`preflight_dgf(df)`** scans each column and returns one row per
+  finding (`var_name`, `rule`, `severity`, `detail`, `suggestion`).
+  Rules: `constant`, `single_value_with_blanks` (an `X`/blank checkbox),
+  `all_missing`, `duplicate_column`, `mixed_boolean_encoding`
+  (`0`/`1`/`true`/`false`), `non_finite`, `placeholder_value`,
+  `long_values`, `leading_zero_code` and `high_cardinality_temporal`. On
+  a 568,000-row, 199-column file it takes about 40 seconds; the build
+  took about 22 minutes there (with the formex release before its
+  2026-10-28 speed-up). `smoke_n = 5000` also builds a DGF from a random
+  sample and reports a failure by variable.
+- **`create_dgf(preflight = )`** runs it automatically: `"warn"` (the
+  default) prints a one-line summary and continues, `"error"` stops
+  before any profiling if a column is flagged, `"off"` skips it. The
+  findings are kept on the result as `attr(dgf, "preflight")`.
+- **Errors now name the variable.** A failure while profiling is
+  reported as
+  `create_dgf(): statistics (factor) failed for variable 'x': ...`.
+
 ### Breaking changes
 
 #### Type detection moved to the formex package
@@ -78,19 +181,20 @@ imports.
 
 The two packages split along a clean line: **formex is the engine** (one
 column at a time, stateless — the type ontology, the detectors,
-[`guess_data_type()`](https://rdrr.io/pkg/formex/man/guess_data_type.html),
-[`fx_stabilize()`](https://rdrr.io/pkg/formex/man/fx_stabilize.html)),
+[`guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html),
+[`fx_stabilize()`](https://lecy.github.io/formex/reference/fx_stabilize.html)),
 and **datagoodr is the workflow** (a whole data frame, human-in-the-loop
 — profiling, the Data Governance File, review and override, applying
 stabilization, writing outputs).
 
 **104 functions were removed from datagoodr’s namespace**, including all
 80 `is_*` detectors,
-[`guess_data_type()`](https://rdrr.io/pkg/formex/man/guess_data_type.html),
-[`score_data_type()`](https://rdrr.io/pkg/formex/man/score_data_type.html),
+[`guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html),
+[`score_data_type()`](https://lecy.github.io/formex/reference/score_data_type.html),
 and the AutoType test-case helpers. Code that called them needs one of:
 
 ``` r
+
 library(formex)          # attach it, and existing calls keep working
 formex::is_ein(x)        # or qualify each call
 ```
@@ -109,6 +213,7 @@ on formex’s documentation site.
 Install formex with:
 
 ``` r
+
 remotes::install_github("lecy/formex")
 ```
 
@@ -162,6 +267,19 @@ string.
 
 ### Bug fixes
 
+- **A zero-padded code is no longer typed `number`.** A group exemption
+  number (`0155`), a `00`/`11` code and a zero-padded key (`000123`)
+  were typed `number` and lost their leading zeros.
+  [`create_dgf()`](../reference/create_dgf.md) accepts a formex
+  stabilizer’s conversion to numbers whenever every value converts
+  without an `NA`, and `as.numeric("0155")` does. It now refuses the
+  conversion when every value is a plain number that `.safe_numeric()`
+  rejects (a leading-zero integer, or one past 2^53), the same rule
+  `read_as_text` uses. A column that needs real cleaning to become a
+  number (`"$1,234"`) is unaffected. A two-state code that is not a flag
+  now falls back to `categorical` instead of `text`, so such a code is
+  typed the same whether it is read from a data frame or a `.csv` path.
+
 - **A compact date label now reads the run-together form.**
   `as_yyyymmdd("20190315")` returned `NA` — the exact case the compact
   label exists for. A label names the element *order*, not the
@@ -177,6 +295,61 @@ string.
   rather than silently slicing any string, and accepts an
   already-hyphenated value.
 
+- **A column with one distinct value no longer aborts
+  [`create_dgf()`](../reference/create_dgf.md).** A constant column, or
+  one value plus blanks (an `X`/blank checkbox, which datagoodr reads as
+  one level), failed with
+  `'names' attribute [2] must be the same length as the vector [1]` (or
+  `replacement has 0 rows, data has 1`). Subsetting a one-element table
+  dropped it to a bare vector, so the frequency table lost its `Freq`
+  column. The factor statistics, the treemap data and the word-cloud
+  words now keep the table intact; output for every other column is
+  unchanged.
+
+- **Free text of 1,000 bytes or more no longer aborts type detection.**
+  base R’s [`strptime()`](https://rdrr.io/r/base/strptime.html) refuses
+  such input, and both datagoodr’s temporal detector and the call into
+  formex’s date detector passed raw cell values to it. Whether a build
+  crashed depended on whether a long value fell in the first 50 rows (or
+  in formex’s random sample of 100), so it could pass or fail on the
+  same file.
+
+- **An all-missing column no longer aborts the build.** Its character
+  statistics failed with `invalid number of 'breaks'`, and its preview
+  was `"NA"`. It now profiles as empty and renders.
+
+- **[`retype_dgf()`](../reference/retype_dgf.md) reads a `.csv` as
+  text.** It used `readr`’s type inference, which turned `"00"` into 0
+  and `"06037"` into 6037 before profiling the type you had just chosen
+  to protect them.
+
+- **[`retype_dgf()`](../reference/retype_dgf.md) refreshes
+  `dd_f_levels`.** After retyping a variable to categorical or boolean
+  the level dictionary kept the old spellings (`0`/`1`/`false`/`true`)
+  or stayed empty, so the guide printed stale or missing category
+  labels. Labels already edited for a level that still exists are kept;
+  a type with no levels is left untouched.
+
+- **A timestamp column no longer stores one graphic row per distinct
+  value.** On a 568,000-row file two timestamp variables each stored a
+  39.7-million-character cell, past Excel’s cell limit. Above
+  `getOption("datagoodr.temporal.max_values", 10000)` distinct values,
+  ISO timestamps are stored at the finest of minute, hour or day that
+  fits. A column under the cap is stored exactly as before.
+
+- **[`create_rg()`](../reference/create_rg.md) bakes a DGF path the
+  render can resolve.** A DGF outside the report’s folder is now written
+  relative to it (`../dgf/DGF.xlsx`); Quarto resolves the path from the
+  `.qmd`, so the old as-given path failed with `path does not exist`.
+
+- **[`booleplot()`](../reference/booleplot.md) no longer fails on a
+  short figure.** It snapshotted the whole graphics parameter list and
+  put it back on exit; restoring the device-derived `"pin"` it had
+  captured errored with
+  `invalid value specified for graphical parameter` whenever the chunk’s
+  `fig.height` was small — which every compact guide’s boolean section
+  is. It now saves and restores only the margin it sets.
+
 ### Internal
 
 - `.safe_numeric()` — the rule deciding which character columns
@@ -187,3 +360,23 @@ string.
 
 - `R/01-06-guess-dgf-types.R` is now the documented **formex seam**. It
   reads only formex’s public return value and touches no internals.
+
+- **DGF builds are roughly a third faster, via formex.** Profiling
+  [`create_dgf()`](../reference/create_dgf.md) showed type guessing was
+  63% of a build and the `rg_*` data profiles under 7% — so the work
+  went into
+  [`formex::guess_data_type()`](https://lecy.github.io/formex/reference/guess_data_type.html),
+  which cost ~130ms per column even for a ten-value input. Most of that
+  floor was input-independent work recomputed on every call (the
+  verifier’s foil-leak loop, the ontology’s own example signatures) plus
+  a 730-format `strptime` sweep that non-date columns paid in full.
+  Fixed upstream in `lecy/formex@3d812d2`; with it installed,
+  [`create_dgf()`](../reference/create_dgf.md) on the 4,620 x 19
+  baseball dataset goes 9.92s -\> 6.86s and the guess itself 6.20s -\>
+  3.59s. **The written DGF is byte-identical** — this is purely caching
+  and short-circuiting, with no change to any detection verdict. One
+  visible side effect: formex’s `as_integer` “NAs introduced by
+  coercion” warning now fires about once per session instead of once per
+  candidate per column (datagoodr already muffled it). Requires the
+  updated formex; older versions still work, just slower. Full
+  measurements and method in `dev/performance-notes.md`.

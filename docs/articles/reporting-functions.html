@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/example-guides.html">Example Research Guides</a></li>
     <li><a class="dropdown-item" href="../articles/documenting-data.html">Documenting Data with the DGF</a></li>
     <li><a class="dropdown-item" href="../articles/reporting-functions.html">Data Reporting Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/report-styles.html">Report Styles</a></li>
     <li><a class="dropdown-item" href="../articles/report-aesthetics.html">Report Aesthetics and Customization</a></li>
     <li><a class="dropdown-item" href="../articles/guessing-data-types.html">Guessing Data Types</a></li>
   </ul>
@@ -57,6 +58,9 @@
     <li><a class="dropdown-item" href="../examples/baseball.html">Baseball players</a></li>
     <li><a class="dropdown-item" href="../examples/starwars.html">Star Wars characters</a></li>
     <li><a class="dropdown-item" href="../examples/mtcars.html">Motor Trend cars</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Styles</h6></li>
+    <li><a class="dropdown-item" href="../examples/baseball-compact.html">Baseball players, compact</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -106,7 +110,7 @@ hand.</p>
 <strong>formex</strong>. Hand it the vector (the column name is a useful
 hint) and read the <code>$route</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">route</span> <span class="op">&lt;-</span> <span class="fu">formex</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/formex/man/guess_data_type.html" class="external-link">guess_data_type</a></span><span class="op">(</span><span class="va">v</span>, name <span class="op">=</span> <span class="st">"revenue"</span><span class="op">)</span><span class="op">$</span><span class="va">route</span></span>
+<code class="sourceCode R"><span><span class="va">route</span> <span class="op">&lt;-</span> <span class="fu">formex</span><span class="fu">::</span><span class="fu"><a href="https://lecy.github.io/formex/reference/guess_data_type.html" class="external-link">guess_data_type</a></span><span class="op">(</span><span class="va">v</span>, name <span class="op">=</span> <span class="st">"revenue"</span><span class="op">)</span><span class="op">$</span><span class="va">route</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>data_type <span class="op">=</span> <span class="va">route</span><span class="op">$</span><span class="va">data_type</span>, semantic_type <span class="op">=</span> <span class="va">route</span><span class="op">$</span><span class="va">semantic_type</span>,</span>
 <span>  depth <span class="op">=</span> <span class="va">route</span><span class="op">$</span><span class="va">depth</span>, confidence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">route</span><span class="op">$</span><span class="va">confidence</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;     data_type semantic_type         depth    confidence </span></span>
