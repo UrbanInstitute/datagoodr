@@ -1,5 +1,36 @@
 # datagoodr (development version)
 
+## New
+
+### Versioned data projects with a provenance manifest
+
+A dataset can now live in a **project directory** that keeps its whole history
+in one place and never loses the original. `create_project(raw)` scaffolds a
+folder with `data/raw/` holding the input file --- written once and never
+touched again --- and a seeded `data/manifest.json`. `create_project_dgf()`
+then builds the DGF at the project root and stabilizes it into the first
+governed data version, `data/v01.csv`.
+
+Every time the data is stabilized or cleaned, `create_version()` writes the next
+numbered governed CSV (`v02`, `v03`, …), each built from the version below it, so
+the raw floor is never overwritten. A new version is written automatically
+whenever stabilizing changes the data **or** the DGF carries a new conversion.
+
+The **manifest** logs, per version and per variable, what changed: the
+`stabilizer`, target type and target format, the first five values at read vs
+after the transform, and the start/end content hash of each variable. The first
+version records every variable; later versions record only the ones that
+changed. Because each version is built on the one below it, a variable whose
+read-hash no longer matches the end-hash recorded for the version below it is
+flagged as **changed outside the workflow** (`external_change_detected`).
+
+`read_data(project)` opens a project's data and defaults to the latest version;
+`update_dgf()` accepts a project directory and refreshes against the latest
+version; `create_rg()`/`create_dd()` take a `project` argument that points them
+at the project's DGF. Reuses the existing governed-CSV provenance
+(`write_stable_csv()`/`read_stable_csv()`) and per-variable hashing, so versions
+also carry their lineage inside the file. See `?create_project`.
+
 ## Fixes
 
 ### A uniform factor no longer grows a huge "other" treemap box

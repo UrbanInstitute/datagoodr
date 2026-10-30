@@ -12,7 +12,8 @@ create_rg(
   embed_css = FALSE,
   render = FALSE,
   overwrite = FALSE,
-  style = c("rail", "vintage", "compact")
+  style = c("rail", "vintage", "compact"),
+  project = NULL
 )
 }
 \arguments{
@@ -48,6 +49,10 @@ blocks in the same order, but PROPERTIES becomes a one-row strip, the
 preview and the long tables are kept short, the graphics are drawn smaller,
 and the whitespace is roughly halved --- several variables to a screen
 instead of one. `"vintage"` is the original three-column grid.}
+
+\item{project}{Optional path to a datagoodr project (see [create_project()]).
+When supplied, `dgf` and `dir` default to the project's `DGF.xlsx` and
+root, so `create_rg(project = p)` scaffolds the guide for that project.}
 }
 \value{
 Invisibly, the path to the scaffolded (or rendered) document.

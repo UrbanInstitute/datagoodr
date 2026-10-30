@@ -331,6 +331,9 @@ embed_css_block <- function( path, style = "rail" ) {
 #'   preview and the long tables are kept short, the graphics are drawn smaller,
 #'   and the whitespace is roughly halved --- several variables to a screen
 #'   instead of one. `"vintage"` is the original three-column grid.
+#' @param project Optional path to a datagoodr project (see [create_project()]).
+#'   When supplied, `dgf` and `dir` default to the project's `DGF.xlsx` and
+#'   root, so `create_rg(project = p)` scaffolds the guide for that project.
 #'
 #' @return Invisibly, the path to the scaffolded (or rendered) document.
 #'
@@ -348,8 +351,14 @@ embed_css_block <- function( path, style = "rail" ) {
 create_rg <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
                        file = "research-guide.qmd", embed_css = FALSE,
                        render = FALSE, overwrite = FALSE,
-                       style = c("rail", "vintage", "compact") ) {
+                       style = c("rail", "vintage", "compact"),
+                       project = NULL ) {
   style <- match.arg( style )
+  if( ! is.null( project ) ) {
+    pp <- project_paths( project )
+    if( identical( dir, "." )        ) dir <- pp$root
+    if( identical( dgf, "DGF.xlsx" ) ) dgf <- pp$dgf_xlsx
+  }
   build_report( dgf, data, dir, file, flavor = "rg", embed_css = embed_css,
                 render = render, overwrite = overwrite, style = style )
 }
@@ -369,7 +378,12 @@ create_rg <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
 #' @export
 create_dd <- function( dgf = "DGF.xlsx", data = NULL, dir = ".",
                        file = "data-dictionary.qmd", embed_css = FALSE,
-                       render = FALSE, overwrite = FALSE ) {
+                       render = FALSE, overwrite = FALSE, project = NULL ) {
+  if( ! is.null( project ) ) {
+    pp <- project_paths( project )
+    if( identical( dir, "." )        ) dir <- pp$root
+    if( identical( dgf, "DGF.xlsx" ) ) dgf <- pp$dgf_xlsx
+  }
   build_report( dgf, data, dir, file, flavor = "dd", embed_css = embed_css,
                 render = render, overwrite = overwrite )
 }

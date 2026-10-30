@@ -9,7 +9,9 @@ update_dgf(dgf, df, file = "DGF", verbose = TRUE, open = interactive())
 \arguments{
 \item{dgf}{An existing DGF: a data frame, or a path to a DGF `.xlsx` file.}
 
-\item{df}{The updated dataset: a data frame, or a path to a `.csv` file.}
+\item{df}{The updated dataset: a data frame, a path to a `.csv` file, or a
+datagoodr project directory (see [create_project()]), which resolves to the
+project's latest data version.}
 
 \item{file}{Output path stem (without extension) for the written `.csv` and
 `.xlsx`. Defaults to `"DGF"`.}

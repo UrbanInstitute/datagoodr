@@ -11,7 +11,8 @@ create_dd(
   file = "data-dictionary.qmd",
   embed_css = FALSE,
   render = FALSE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  project = NULL
 )
 }
 \arguments{
@@ -38,6 +39,10 @@ packaged stylesheet.}
 
 \item{overwrite}{Logical; overwrite an existing document. Defaults to
 `FALSE`.}
+
+\item{project}{Optional path to a datagoodr project (see [create_project()]).
+When supplied, `dgf` and `dir` default to the project's `DGF.xlsx` and
+root, so `create_rg(project = p)` scaffolds the guide for that project.}
 }
 \value{
 Invisibly, the path to the scaffolded (or rendered) document.

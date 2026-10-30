@@ -52,7 +52,9 @@ merge_level_labels <- function( old_json, new_json ) {
 #' that still exist.
 #'
 #' @param dgf An existing DGF: a data frame, or a path to a DGF `.xlsx` file.
-#' @param df The updated dataset: a data frame, or a path to a `.csv` file.
+#' @param df The updated dataset: a data frame, a path to a `.csv` file, or a
+#'   datagoodr project directory (see [create_project()]), which resolves to the
+#'   project's latest data version.
 #' @param file Output path stem (without extension) for the written `.csv` and
 #'   `.xlsx`. Defaults to `"DGF"`.
 #' @param verbose Logical; if `TRUE` (default) a summary of what changed is
@@ -72,7 +74,11 @@ update_dgf <- function( dgf, df, file = "DGF", verbose = TRUE,
                         open = interactive() ) {
 
   if( is.character(dgf) && length(dgf) == 1 ) dgf <- load_dgf( dgf )
-  if( is.character(df)  && length(df)  == 1 )
+  # A project directory resolves to its latest data version; a plain path is
+  # read as-is.
+  if( .dgp_is_project( df ) )
+  { df <- read_data( df ) }
+  else if( is.character(df) && length(df) == 1 )
   { df <- suppressMessages( readr::read_csv( df ) ) }
 
   new.names <- names(df)
