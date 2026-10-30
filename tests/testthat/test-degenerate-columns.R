@@ -32,11 +32,16 @@ test_that("fixing the one-level crash changes nothing for ordinary factors", {
   expect_identical(as.character(datagoodr:::get_graphics_fact("a", fx_norm())), EXP_GFX_NORM)
 })
 
-test_that("get_graphics_fact still appends an 'other' row of 0 when every level is >= 2%", {
-  # pre-existing behaviour, kept byte-for-byte: the last row is {other, 0}
+test_that("get_graphics_fact does not append an empty 'other' when every level is >= 2%", {
+  # A factor with no sub-2% tail has nothing to collect, so there must be no
+  # "other" row. A spurious 0-frequency "other" used to be appended here, which
+  # paste_treemap() then inflated into a bucket equal to the whole dataset (it
+  # lumps every level sitting at exactly 2.0% into "other"), double-counting a
+  # uniform factor such as the 50 US states.
   tab <- jsonlite::fromJSON(datagoodr:::get_graphics_fact("a", fx_rare()))
-  expect_equal(tab$x[nrow(tab)], "other")
-  expect_equal(tab$Freq[nrow(tab)], 0)
+  expect_false("other" %in% tab$x)
+  expect_equal(nrow(tab), 17L)
+  expect_true(all(tab$Freq == 1))
 })
 
 test_that("word-cloud words survive a column with a single distinct word", {

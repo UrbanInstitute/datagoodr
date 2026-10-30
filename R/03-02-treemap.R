@@ -35,7 +35,10 @@ paste_treemap <- function(VNAME, LABEL = "MOST COMMON VALUES"){
 
   #groups with less than 2% get thrown into "other" group
   if(min.per < 2){
-    is.l2 <- v$PER <=2
+    # Strictly < 2 so it mirrors the >= 2 keep test above: a level sitting
+    # exactly at 2.0% (every level of a uniform factor, e.g. 50 states) is kept
+    # as its own tile and must not also be summed into "other".
+    is.l2 <- v$PER < 2
     tab <- v[is.l2 | v$x == "other", ]
     other.total <- sum(tab$Freq)
     other.perc <- sum(tab$PER)

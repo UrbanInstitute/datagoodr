@@ -199,8 +199,14 @@ get_graphics_fact <- function(VNAME, df ){
     tab1$is.g2 <- tab1$PER >=2
     tab <- tab1[tab1$is.g2, 1:2]
     tab$x <- as.character(tab$x)
-    tab[nrow(tab)+1, 1] <- "other"
-    tab[nrow(tab), 2] <- sum(tab1$Freq[!tab1$is.g2])
+    # Roll the sub-2% levels into "other" - but only when some exist. A factor
+    # whose levels all sit at or above 2% (e.g. 50 states at 2.0% each) has no
+    # tail to collect; appending an empty "other" row here would otherwise seed
+    # a spurious 0-frequency level that paste_treemap() later inflates.
+    if(any(!tab1$is.g2)){
+      tab[nrow(tab)+1, 1] <- "other"
+      tab[nrow(tab), 2] <- sum(tab1$Freq[!tab1$is.g2])
+    }
   } else {
     # No single level reaches 2% (a flat, high-cardinality factor): keep the top
     # 20 levels by frequency and roll the long tail into "other". Without this

@@ -1,5 +1,17 @@
 # datagoodr (development version)
 
+## Fixes
+
+### A uniform factor no longer grows a huge "other" treemap box
+
+A categorical variable whose levels each held exactly 2% of the rows --- an
+all-distinct key such as the 50 US states --- drew every level as its own tile
+*and* a second `"other"` box as large as the whole dataset. The treemap kept
+levels at `>= 2%` but lumped them at `<= 2%`, so a level sitting on the 2.0%
+line counted both ways and was double-counted into `"other"`. The two tests now
+agree (`< 2` to lump), and `get_graphics_fact()` no longer seeds the bucket by
+appending an empty `"other"` row when a factor has no sub-2% tail.
+
 ## New
 
 ### The contents list glimpses the data
